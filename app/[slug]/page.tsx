@@ -1,20 +1,18 @@
-import { redirect } from 'next/navigation';
-import { demosData } from '@/lib/demos';
+import { notFound } from "next/navigation";
+import { DEMO_DATA } from "@/lib/demos";
+import { ClinicDemoClient } from "@/components/clinic-demo-client";
 
-interface SlugPageProps {
+interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return Object.keys(demosData).map((slug) => ({ slug }));
-}
-
-export default async function SlugPage({ params }: SlugPageProps) {
+export default async function DemoPage({ params }: PageProps) {
   const { slug } = await params;
+  const clinic = DEMO_DATA[slug];
 
-  if (!demosData[slug.toLowerCase()]) {
-    redirect('/');
+  if (!clinic) {
+    return notFound();
   }
 
-  redirect(`/demo/${slug.toLowerCase()}`);
+  return <ClinicDemoClient client={clinic} />;
 }

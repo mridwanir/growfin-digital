@@ -177,4 +177,6 @@ export const DEMO_DATA: Record<string, BusinessDemo> = {
   }
 };
 
+DEMO_DATA["vorta-beauty-clinic-bandung"] = DEMO_DATA["vorta-beauty-clinic---bandung-(vorta-beauty-clinic---bandung)-|-klinik-kecantikan-di-bandung"];
+
 export const demosData = DEMO_DATA;

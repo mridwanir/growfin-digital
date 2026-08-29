@@ -1,3 +1,4 @@
+import { getClinicBySlug } from '@/lib/supabase/queries';
 import { demosData, BusinessDemo } from '@/lib/demos';
 import { ClinicDemoClient } from '@/components/clinic-demo-client';
 import type { Metadata } from 'next';
@@ -14,9 +15,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params, searchParams }: DemoPageProps): Promise<Metadata> {
   const { slug } = await params;
   const sParams = await searchParams;
+  const dbClinic = await getClinicBySlug(slug);
+
   const clientName =
     (sParams.name as string) ||
-    demosData[slug.toLowerCase()]?.name ||
+    dbClinic?.name ||
     slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
   return {
@@ -29,7 +32,7 @@ export default async function DemoPage({ params, searchParams }: DemoPageProps) 
   const { slug } = await params;
   const sParams = await searchParams;
 
-  const baseClient: BusinessDemo | undefined = demosData[slug.toLowerCase()];
+  const dbClinic = await getClinicBySlug(slug);
 
   const defaultFallback: BusinessDemo = {
     name: (sParams.name as string) || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
@@ -98,18 +101,16 @@ export default async function DemoPage({ params, searchParams }: DemoPageProps) 
   };
 
   const client: BusinessDemo = {
-    ...(baseClient || defaultFallback),
-    name: (sParams.name as string) || (baseClient ? baseClient.name : defaultFallback.name),
-    rating: sParams.rating ? parseFloat(sParams.rating as string) : (baseClient ? baseClient.rating : defaultFallback.rating),
-    reviewCount: sParams.reviews ? parseInt(sParams.reviews as string) : (baseClient ? baseClient.reviewCount : defaultFallback.reviewCount),
-    phone: (sParams.phone as string) || (baseClient ? baseClient.phone : defaultFallback.phone),
-    address: (sParams.address as string) || (baseClient ? baseClient.address : defaultFallback.address),
+    ...(dbClinic || defaultFallback),
+    name: (sParams.name as string) || (dbClinic ? dbClinic.name : defaultFallback.name),
+    rating: sParams.rating ? parseFloat(sParams.rating as string) : (dbClinic ? dbClinic.rating : defaultFallback.rating),
+    reviewCount: sParams.reviews ? parseInt(sParams.reviews as string) : (dbClinic ? dbClinic.reviewCount : defaultFallback.reviewCount),
+    phone: (sParams.phone as string) || (dbClinic ? dbClinic.phone : defaultFallback.phone),
+    address: (sParams.address as string) || (dbClinic ? dbClinic.address : defaultFallback.address),
     waNumber: sParams.phone
       ? (sParams.phone as string).replace(/\+/g, '').replace(/\s+/g, '')
-      : (baseClient ? baseClient.waNumber : defaultFallback.waNumber),
+      : (dbClinic ? dbClinic.waNumber : defaultFallback.waNumber),
   };
 
   return <ClinicDemoClient client={client} />;
 }
-
-

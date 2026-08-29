@@ -3,11 +3,112 @@
 import { useState, useEffect } from 'react';
 import { BusinessDemo, MenuItem } from '@/lib/demos';
 
+export type ThemeKey = 'medical-blue' | 'rose-aesthetic' | 'emerald-health' | 'luxury-dark';
+
+export interface ThemeConfig {
+  key: ThemeKey;
+  name: string;
+  icon: string;
+  categoryHint: string;
+  primaryBg: string;
+  primaryHoverBg: string;
+  textAccent: string;
+  lightBg: string;
+  borderColor: string;
+  ringColor: string;
+  badgeStyle: string;
+  shadowGlow: string;
+  gradientHeader: string;
+  cardActiveBorder: string;
+}
+
+export const THEMES: Record<ThemeKey, ThemeConfig> = {
+  'medical-blue': {
+    key: 'medical-blue',
+    name: 'Medical Blue',
+    icon: '🟦',
+    categoryHint: 'Gigi & Umum',
+    primaryBg: 'bg-blue-600',
+    primaryHoverBg: 'hover:bg-blue-700',
+    textAccent: 'text-blue-600',
+    lightBg: 'bg-blue-50',
+    borderColor: 'border-blue-200',
+    ringColor: 'ring-blue-500/20',
+    badgeStyle: 'bg-blue-50 text-blue-700 border-blue-200',
+    shadowGlow: 'shadow-blue-500/25',
+    gradientHeader: 'from-blue-600 to-indigo-600',
+    cardActiveBorder: 'border-blue-600 ring-2 ring-blue-500/20 bg-blue-50/20',
+  },
+  'rose-aesthetic': {
+    key: 'rose-aesthetic',
+    name: 'Rose Aesthetic',
+    icon: '🌸',
+    categoryHint: 'Skincare & Kecantikan',
+    primaryBg: 'bg-rose-500',
+    primaryHoverBg: 'hover:bg-rose-600',
+    textAccent: 'text-rose-500',
+    lightBg: 'bg-rose-50',
+    borderColor: 'border-rose-200',
+    ringColor: 'ring-rose-500/20',
+    badgeStyle: 'bg-rose-50 text-rose-700 border-rose-200',
+    shadowGlow: 'shadow-rose-500/25',
+    gradientHeader: 'from-rose-500 to-pink-600',
+    cardActiveBorder: 'border-rose-500 ring-2 ring-rose-500/20 bg-rose-50/20',
+  },
+  'emerald-health': {
+    key: 'emerald-health',
+    name: 'Emerald Health',
+    icon: '🌿',
+    categoryHint: 'Herbal & Holistic',
+    primaryBg: 'bg-emerald-600',
+    primaryHoverBg: 'hover:bg-emerald-700',
+    textAccent: 'text-emerald-600',
+    lightBg: 'bg-emerald-50',
+    borderColor: 'border-emerald-200',
+    ringColor: 'ring-emerald-500/20',
+    badgeStyle: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    shadowGlow: 'shadow-emerald-500/25',
+    gradientHeader: 'from-emerald-600 to-teal-600',
+    cardActiveBorder: 'border-emerald-600 ring-2 ring-emerald-500/20 bg-emerald-50/20',
+  },
+  'luxury-dark': {
+    key: 'luxury-dark',
+    name: 'Luxury Dark',
+    icon: '🌙',
+    categoryHint: 'Bedah & Estetika Premium',
+    primaryBg: 'bg-amber-500',
+    primaryHoverBg: 'hover:bg-amber-600',
+    textAccent: 'text-amber-500',
+    lightBg: 'bg-amber-950/30',
+    borderColor: 'border-amber-500/30',
+    ringColor: 'ring-amber-500/20',
+    badgeStyle: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    shadowGlow: 'shadow-amber-500/25',
+    gradientHeader: 'from-amber-600 to-slate-950',
+    cardActiveBorder: 'border-amber-500 ring-2 ring-amber-500/30 bg-amber-950/20',
+  },
+};
+
+const getDefaultTheme = (categoryName: string): ThemeKey => {
+  const cat = categoryName.toLowerCase();
+  if (cat.includes('kecantikan') || cat.includes('aesthetic') || cat.includes('skincare')) {
+    return 'rose-aesthetic';
+  }
+  if (cat.includes('herbal') || cat.includes('natural') || cat.includes('holistic')) {
+    return 'emerald-health';
+  }
+  return 'medical-blue';
+};
+
 interface ClinicDemoClientProps {
   client: BusinessDemo;
 }
 
 export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
+  // Theme Switcher State
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>(() => getDefaultTheme(client.category));
+  const activeTheme = THEMES[currentTheme];
+
   // Welcome Screen state (First time visitors only)
   const [showWelcomeScreen, setShowWelcomeScreen] = useState(false);
 
@@ -103,7 +204,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
     }, 1200);
   };
 
-  // Price formatter helper to prevent double "Rp" (e.g. "Rp Rp 120.000")
+  // Price formatter helper to prevent double "Rp"
   const formatPrice = (price?: string) => {
     if (!price) return '';
     const cleaned = price.trim();
@@ -136,11 +237,10 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
     return matchesSearch && matchesCategory;
   });
 
-  // Construct dynamic WhatsApp action URL with Schedule format:
-  // "Halo, saya ingin booking [Scaling Gigi] untuk hari [Jumat, 15:00]."
+  // Construct dynamic WhatsApp action URL with Theme & Schedule format
   const getWaBookingUrl = () => {
     const treatmentText = selectedService ? selectedService.name : 'Treatment Medis';
-    const message = `Halo, saya ingin booking ${treatmentText} untuk hari ${selectedDay}, ${selectedTime}.`;
+    const message = `Halo Growfin Digital, saya tertarik memesan website untuk ${client.name} dengan *Template Desain: ${activeTheme.name}*.\n\nContoh Booking: ${treatmentText} (${selectedDay}, ${selectedTime}).`;
     return `https://wa.me/${client.waNumber}?text=${encodeURIComponent(message)}`;
   };
 
@@ -152,9 +252,39 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F4F8] flex items-center justify-center p-0 sm:p-4 md:p-6 font-sans text-slate-800 antialiased selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#F0F4F8] flex flex-col items-center justify-center p-0 sm:p-4 md:p-6 font-sans text-slate-800 antialiased selection:bg-blue-600 selection:text-white">
+      
+      {/* FLOATING THEME SELECTOR WIDGET */}
+      <div className="w-full max-w-md bg-slate-950 text-white px-4 py-2.5 flex items-center justify-between sm:rounded-t-3xl border-b border-slate-800 text-xs shadow-md z-[70]">
+        <div className="flex items-center gap-1.5 font-bold">
+          <span className="text-amber-400 text-sm">🎨</span>
+          <span className="text-slate-200 hidden sm:inline">Pilih Tema Desain:</span>
+          <span className="text-slate-300 font-extrabold sm:hidden">Tema:</span>
+        </div>
+        <div className="flex items-center gap-1">
+          {Object.values(THEMES).map((t) => {
+            const isSelected = currentTheme === t.key;
+            return (
+              <button
+                key={t.key}
+                onClick={() => setCurrentTheme(t.key)}
+                title={`${t.name} (${t.categoryHint})`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${
+                  isSelected
+                    ? `${t.primaryBg} text-white shadow-md scale-105 ring-2 ring-white/50`
+                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                }`}
+              >
+                <span>{t.icon}</span>
+                <span className="hidden md:inline">{t.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Smartphone Outer Canvas Container */}
-      <div className="w-full max-w-md min-h-screen sm:min-h-[840px] sm:max-h-[920px] bg-white sm:rounded-[40px] shadow-2xl sm:shadow-slate-300/60 overflow-hidden flex flex-col relative border border-slate-200/80">
+      <div className="w-full max-w-md min-h-screen sm:min-h-[840px] sm:max-h-[920px] bg-white sm:rounded-b-[40px] shadow-2xl sm:shadow-slate-300/60 overflow-hidden flex flex-col relative border border-slate-200/80">
 
         {/* Smartphone Top Bar / Status Notch Simulation (Desktop Only) */}
         <div className="hidden sm:flex items-center justify-between px-6 pt-3 pb-2 text-[11px] font-semibold text-slate-500 bg-white border-b border-slate-100">
@@ -168,15 +298,15 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
 
         {/* WELCOME ONBOARDING SCREEN (First-time Visitors Only) */}
         {showWelcomeScreen && (
-          <div className="absolute inset-0 z-[120] bg-gradient-to-b from-blue-50 via-sky-50 to-blue-100 flex flex-col justify-between p-6 overflow-y-auto animate-in fade-in duration-300">
+          <div className="absolute inset-0 z-[120] bg-gradient-to-b from-slate-50 via-white to-slate-100 flex flex-col justify-between p-6 overflow-y-auto animate-in fade-in duration-300">
             {/* Top Header: Logo & Brand Name */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white font-black text-xl shadow-md shadow-blue-500/30">
+                <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${activeTheme.primaryBg} text-white font-black text-xl shadow-md ${activeTheme.shadowGlow}`}>
                   {client.iconEmoji || '🦷'}
                 </span>
                 <span className="text-xl font-black text-slate-900 tracking-tight">
-                  {client.name.split(' ')[0] || 'Denta'}
+                  {client.name.split(' ')[0] || 'Klinik'}
                 </span>
               </div>
               <button
@@ -191,32 +321,32 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             <div className="mt-4 space-y-2 text-center">
               <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 Beautiful Smile<br />
-                <span className="text-blue-600">Confident You</span>
+                <span className={activeTheme.textAccent}>Confident You</span>
               </h1>
               <p className="text-xs text-slate-600 font-medium px-4 max-w-xs mx-auto leading-relaxed">
-                {client.tagline || 'Expert dental & medical care for a healthier, brighter smile'}
+                {client.tagline || 'Layanan medis & perawatan terpercaya untuk senyum sehat dan percaya diri.'}
               </p>
             </div>
 
-            {/* Center 3D Visual Illustration */}
+            {/* Center Visual Illustration */}
             <div className="relative my-4 flex flex-col items-center justify-center">
-              <div className="absolute h-56 w-56 rounded-full bg-blue-400/20 blur-2xl -z-10" />
+              <div className={`absolute h-56 w-56 rounded-full ${activeTheme.lightBg} blur-2xl -z-10`} />
 
-              <div className="relative h-60 w-full max-w-[260px] rounded-3xl overflow-hidden shadow-xl border border-white/60 bg-gradient-to-b from-blue-400/10 to-blue-600/20 flex flex-col items-center justify-center group">
+              <div className="relative h-60 w-full max-w-[260px] rounded-3xl overflow-hidden shadow-xl border border-white/60 bg-slate-900 flex flex-col items-center justify-center group">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=500&auto=format&fit=crop&q=80"
-                  alt="3D Clinic Visual"
+                  alt="Clinic Showcase Visual"
                   className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
 
-                <div className="absolute bottom-3 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-white shadow-lg flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-black shadow-sm">
+                <div className="absolute bottom-3 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-white shadow-lg flex items-center gap-2">
+                  <span className={`flex h-7 w-7 items-center justify-center rounded-full ${activeTheme.primaryBg} text-white text-xs font-black shadow-sm`}>
                     ✓
                   </span>
                   <div className="text-left">
                     <p className="text-[10px] font-black text-slate-900 leading-none">Layanan Terpercaya</p>
-                    <p className="text-[9px] font-semibold text-blue-600 mt-0.5">Dokter Spesialis Medis</p>
+                    <p className={`text-[9px] font-semibold ${activeTheme.textAccent} mt-0.5`}>Dokter Spesialis Medis</p>
                   </div>
                 </div>
               </div>
@@ -226,17 +356,17 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             <div className="space-y-2.5 pb-4 text-center">
               <button
                 onClick={() => handleDismissWelcome('service')}
-                className="w-full flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm sm:text-base font-extrabold rounded-full shadow-lg shadow-blue-600/30 active:scale-98 transition-all group"
+                className={`w-full flex items-center justify-between px-6 py-4 ${activeTheme.primaryBg} ${activeTheme.primaryHoverBg} text-white text-sm sm:text-base font-extrabold rounded-full shadow-lg ${activeTheme.shadowGlow} active:scale-98 transition-all group`}
               >
                 <span>Get Started</span>
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-blue-600 text-sm font-black group-hover:translate-x-1 transition-transform shadow-sm">
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full bg-white ${activeTheme.textAccent} text-sm font-black group-hover:translate-x-1 transition-transform shadow-sm`}>
                   →
                 </span>
               </button>
 
               <button
                 onClick={() => handleDismissWelcome('service')}
-                className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors flex items-center justify-center gap-1.5 w-full py-1"
+                className={`text-xs font-bold text-slate-600 hover:${activeTheme.textAccent} transition-colors flex items-center justify-center gap-1.5 w-full py-1`}
               >
                 <span>Explore Services</span>
                 <span>→</span>
@@ -251,7 +381,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             {/* Header: Logo, Clinic Name, Rating, Notification */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-2xl text-white shadow-md shadow-blue-500/25">
+                <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${activeTheme.primaryBg} text-2xl text-white shadow-md ${activeTheme.shadowGlow}`}>
                   {client.iconEmoji || '🩺'}
                 </div>
                 <div>
@@ -276,12 +406,12 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             <div className="mb-4">
               <h2 className="text-3xl font-black tracking-tight text-slate-900 leading-none">
                 Choose <br />
-                <span className="text-blue-600">a Service</span>
+                <span className={activeTheme.textAccent}>a Service</span>
               </h2>
             </div>
 
             {/* Search Bar */}
-            <div className="mb-4 flex items-center gap-2.5 rounded-full bg-white px-4 py-3 shadow-sm border border-slate-200/80 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+            <div className="mb-4 flex items-center gap-2.5 rounded-full bg-white px-4 py-3 shadow-sm border border-slate-200/80 focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-100 transition-all">
               <span className="text-slate-400 text-base">🔍</span>
               <input
                 type="text"
@@ -305,10 +435,11 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-all ${isActive
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-all ${
+                      isActive
+                        ? `${activeTheme.primaryBg} text-white shadow-md ${activeTheme.shadowGlow}`
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
+                    }`}
                   >
                     {cat}
                   </button>
@@ -327,15 +458,16 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                     <div
                       key={item.id}
                       onClick={() => setSelectedService(item)}
-                      className={`group relative flex items-center justify-between rounded-3xl bg-white p-3.5 shadow-sm border transition-all cursor-pointer ${isSelected
-                          ? 'border-blue-600 ring-2 ring-blue-500/20 bg-blue-50/20 shadow-md'
-                          : 'border-slate-100 hover:border-blue-200 hover:shadow-md'
-                        }`}
+                      className={`group relative flex items-center justify-between rounded-3xl bg-white p-3.5 shadow-sm border transition-all cursor-pointer ${
+                        isSelected
+                          ? activeTheme.cardActiveBorder
+                          : 'border-slate-100 hover:border-slate-200 hover:shadow-md'
+                      }`}
                     >
                       {/* Left Details */}
                       <div className="flex-1 pr-3 min-w-0">
                         {item.tag && (
-                          <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md mb-1 border border-blue-100">
+                          <span className={`inline-block text-[10px] font-bold uppercase tracking-wider ${activeTheme.textAccent} ${activeTheme.lightBg} px-2 py-0.5 rounded-md mb-1 border ${activeTheme.borderColor}`}>
                             {item.tag}
                           </span>
                         )}
@@ -346,7 +478,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                           {item.desc}
                         </p>
                         <div className="mt-2 flex items-center gap-2">
-                          <span className="text-xs font-black text-blue-600">
+                          <span className={`text-xs font-black ${activeTheme.textAccent}`}>
                             {formatPrice(item.price)}
                           </span>
                           <button
@@ -354,7 +486,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                               e.stopPropagation();
                               openBookingModal(item);
                             }}
-                            className="flex h-7 px-2.5 items-center justify-center gap-1 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold shadow-sm shadow-blue-500/30 transition-transform active:scale-95"
+                            className={`flex h-7 px-2.5 items-center justify-center gap-1 rounded-full ${activeTheme.primaryBg} ${activeTheme.primaryHoverBg} text-white text-[11px] font-bold shadow-sm ${activeTheme.shadowGlow} transition-transform active:scale-95`}
                           >
                             <span>Booking</span>
                             <span>→</span>
@@ -385,15 +517,15 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
 
         {/* SCREEN 2: "Hero Landing / Onboarding" (Branding & Trust) */}
         {activeScreen === 'hero' && (
-          <div className="flex-1 flex flex-col overflow-y-auto px-5 pt-6 pb-24 bg-gradient-to-b from-blue-50/50 via-white to-slate-50">
+          <div className="flex-1 flex flex-col overflow-y-auto px-5 pt-6 pb-24 bg-gradient-to-b from-slate-50 via-white to-slate-50">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-sm shadow-md shadow-blue-500/30">
+                <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${activeTheme.primaryBg} text-white font-bold text-sm shadow-md ${activeTheme.shadowGlow}`}>
                   {client.iconEmoji || '🦷'}
                 </span>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600">
+                  <p className={`text-[10px] font-bold uppercase tracking-widest ${activeTheme.textAccent}`}>
                     {client.category}
                   </p>
                   <h1 className="text-base font-black text-slate-900">{client.name}</h1>
@@ -412,7 +544,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 alt="Clinic Showcase"
                 className="h-52 w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent p-4 flex flex-col justify-end">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20 p-4 flex flex-col justify-between">
                 <div className="flex items-center gap-2 text-xs font-bold text-amber-400 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full w-max border border-amber-400/20">
                   <span>⭐ {client.rating.toFixed(1)}</span>
                   <span>•</span>
@@ -425,7 +557,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             <div className="mb-6 space-y-2">
               <h2 className="text-3xl font-black leading-tight text-slate-900">
                 Beautiful Smile,<br />
-                <span className="text-blue-600">Confident You</span>
+                <span className={activeTheme.textAccent}>Confident You</span>
               </h2>
               <p className="text-xs text-slate-600 leading-relaxed">
                 {client.tagline}
@@ -438,25 +570,25 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 href={client.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-start gap-2.5 p-2 -mx-2 rounded-xl hover:bg-blue-50/70 transition-colors cursor-pointer"
+                className={`group flex items-start gap-2.5 p-2 -mx-2 rounded-xl hover:${activeTheme.lightBg} transition-colors cursor-pointer`}
               >
-                <span className="text-lg text-blue-600 group-hover:scale-110 transition-transform">📍</span>
+                <span className={`text-lg ${activeTheme.textAccent} group-hover:scale-110 transition-transform`}>📍</span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Lokasi Klinik
                     </p>
-                    <span className="text-[10px] font-extrabold text-blue-600 group-hover:underline flex items-center gap-0.5">
+                    <span className={`text-[10px] font-extrabold ${activeTheme.textAccent} group-hover:underline flex items-center gap-0.5`}>
                       Buka Peta ↗
                     </span>
                   </div>
-                  <p className="text-xs font-semibold text-slate-800 leading-snug mt-0.5 group-hover:text-blue-700">
+                  <p className="text-xs font-semibold text-slate-800 leading-snug mt-0.5">
                     {client.address}
                   </p>
                 </div>
               </a>
               <div className="flex items-center gap-2.5 pt-2 border-t border-slate-100">
-                <span className="text-lg text-blue-600">🕒</span>
+                <span className={`text-lg ${activeTheme.textAccent}`}>🕒</span>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     Jam Operasional
@@ -470,7 +602,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             <div className="mt-auto pt-2">
               <button
                 onClick={() => openBookingModal()}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-blue-600 hover:bg-blue-700 active:scale-98 text-white text-sm font-bold rounded-full shadow-lg shadow-blue-600/30 transition-all"
+                className={`w-full flex items-center justify-center gap-2 py-4 ${activeTheme.primaryBg} ${activeTheme.primaryHoverBg} active:scale-98 text-white text-sm font-bold rounded-full shadow-lg ${activeTheme.shadowGlow} transition-all`}
               >
                 <span>Pilih Jadwal & Konsultasi</span>
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs">
@@ -487,7 +619,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
             {/* Doctor Profile Header */}
             <div className="mb-4 rounded-3xl bg-white p-4 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3.5 mb-3">
-                <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-2xl text-white shadow-md shadow-blue-500/25 overflow-hidden">
+                <div className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${activeTheme.gradientHeader} text-2xl text-white shadow-md ${activeTheme.shadowGlow} overflow-hidden`}>
                   {client.doctor.avatarUrl ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
@@ -507,7 +639,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                       Online
                     </span>
                   </div>
-                  <p className="text-xs text-blue-600 font-semibold">{client.doctor.role}</p>
+                  <p className={`text-xs ${activeTheme.textAccent} font-semibold`}>{client.doctor.role}</p>
                   <p className="text-[11px] text-slate-400 mt-0.5">{client.name}</p>
                 </div>
               </div>
@@ -524,14 +656,14 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 </div>
                 <div className="rounded-xl bg-slate-50 p-2">
                   <span className="block text-[10px] font-bold text-slate-400 uppercase">Respon WA</span>
-                  <span className="text-xs font-extrabold text-blue-600">&lt; 5 Menit</span>
+                  <span className={`text-xs font-extrabold ${activeTheme.textAccent}`}>&lt; 5 Menit</span>
                 </div>
               </div>
             </div>
 
             {/* Service Selection Picker before Chat */}
             <div className="mb-4 rounded-2xl bg-white p-3 shadow-xs border border-slate-100">
-              <label className="block text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-1.5">
+              <label className={`block text-[10px] font-bold uppercase tracking-wider ${activeTheme.textAccent} mb-1.5`}>
                 🩺 Pilih Layanan / Treatment Konsultasi:
               </label>
               <div className="relative">
@@ -541,7 +673,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                     const found = client.menu.find((m) => m.id === Number(e.target.value));
                     if (found) setSelectedService(found);
                   }}
-                  className="w-full appearance-none rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs font-bold text-slate-800 focus:border-blue-500 focus:bg-white focus:outline-none shadow-xs pr-8 cursor-pointer"
+                  className="w-full appearance-none rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none shadow-xs pr-8 cursor-pointer"
                 >
                   {client.menu.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -566,18 +698,20 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 return (
                   <div
                     key={msg.id}
-                    className={`max-w-[85%] rounded-2xl p-3 text-xs shadow-xs transition-all ${isUser
-                        ? 'ml-auto rounded-tr-none bg-blue-600 text-white shadow-blue-600/15'
+                    className={`max-w-[85%] rounded-2xl p-3 text-xs shadow-xs transition-all ${
+                      isUser
+                        ? `ml-auto rounded-tr-none ${activeTheme.primaryBg} text-white ${activeTheme.shadowGlow}`
                         : 'mr-auto rounded-tl-none bg-white text-slate-700 border border-slate-100 shadow-sm'
-                      }`}
+                    }`}
                   >
                     {!isUser && (
-                      <p className="font-bold text-blue-600 mb-1 text-[11px]">{client.doctor.name}</p>
+                      <p className={`font-bold ${activeTheme.textAccent} mb-1 text-[11px]`}>{client.doctor.name}</p>
                     )}
                     <p className="leading-relaxed whitespace-pre-line">{msg.text}</p>
                     <span
-                      className={`block text-[9px] text-right mt-1 font-medium ${isUser ? 'text-blue-200' : 'text-slate-400'
-                        }`}
+                      className={`block text-[9px] text-right mt-1 font-medium ${
+                        isUser ? 'text-white/80' : 'text-slate-400'
+                      }`}
                     >
                       {msg.time} {isUser && '✓✓'}
                     </span>
@@ -588,11 +722,11 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
               {/* Typing Indicator Animation */}
               {isDoctorTyping && (
                 <div className="mr-auto max-w-[80%] rounded-2xl rounded-tl-none bg-white p-3 text-xs text-slate-500 border border-slate-100 shadow-xs flex items-center gap-2">
-                  <span className="font-bold text-blue-600 text-[11px]">{client.doctor.name}</span>
+                  <span className={`font-bold ${activeTheme.textAccent} text-[11px]`}>{client.doctor.name}</span>
                   <div className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-bounce" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:0.2s]" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:0.4s]" />
+                    <span className={`h-1.5 w-1.5 rounded-full ${activeTheme.primaryBg} animate-bounce`} />
+                    <span className={`h-1.5 w-1.5 rounded-full ${activeTheme.primaryBg} animate-bounce [animation-delay:0.2s]`} />
+                    <span className={`h-1.5 w-1.5 rounded-full ${activeTheme.primaryBg} animate-bounce [animation-delay:0.4s]`} />
                   </div>
                 </div>
               )}
@@ -600,7 +734,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
 
             {/* Bottom Input Field & Booking Action */}
             <div className="mt-auto space-y-2">
-              <form onSubmit={handleSendMessage} className="flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm border border-slate-200 focus-within:border-blue-500 transition-all">
+              <form onSubmit={handleSendMessage} className="flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm border border-slate-200 focus-within:border-slate-400 transition-all">
                 <span className="text-slate-400 text-sm">💬</span>
                 <input
                   type="text"
@@ -612,7 +746,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 <button
                   type="submit"
                   disabled={!chatMessage.trim()}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold shadow-md shadow-blue-500/30 disabled:opacity-40 transition-all"
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${activeTheme.primaryBg} ${activeTheme.primaryHoverBg} active:scale-95 text-white text-xs font-bold shadow-md ${activeTheme.shadowGlow} disabled:opacity-40 transition-all`}
                 >
                   ➔
                 </button>
@@ -663,14 +797,14 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
               {/* Business Title & Category */}
               <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white text-2xl shadow-md shadow-blue-500/25">
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${activeTheme.primaryBg} text-white text-2xl shadow-md ${activeTheme.shadowGlow}`}>
                     {client.iconEmoji || '🏥'}
                   </div>
                   <div>
                     <h2 className="text-base font-black text-slate-900 leading-snug">
                       {client.name}
                     </h2>
-                    <p className="text-xs font-semibold text-blue-600 mt-0.5">{client.category}</p>
+                    <p className={`text-xs font-semibold ${activeTheme.textAccent} mt-0.5`}>{client.category}</p>
                     <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
                       {client.tagline}
                     </p>
@@ -683,7 +817,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                     href={client.googleMapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col items-center gap-1 p-2 rounded-2xl bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors"
+                    className={`flex flex-col items-center gap-1 p-2 rounded-2xl ${activeTheme.lightBg} ${activeTheme.textAccent} transition-colors`}
                   >
                     <span className="text-base">🗺️</span>
                     <span className="text-[10px] font-extrabold">Rute</span>
@@ -717,7 +851,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
               {/* Information Cards List */}
               <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 space-y-3.5 text-xs text-slate-700">
                 <div className="flex items-start gap-3">
-                  <span className="text-base text-blue-600 mt-0.5">📍</span>
+                  <span className={`text-base ${activeTheme.textAccent} mt-0.5`}>📍</span>
                   <div className="flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Alamat Lengkap
@@ -729,7 +863,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 </div>
 
                 <div className="flex items-start gap-3 pt-2 border-t border-slate-100">
-                  <span className="text-base text-blue-600 mt-0.5">🕒</span>
+                  <span className={`text-base ${activeTheme.textAccent} mt-0.5`}>🕒</span>
                   <div className="flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Jam Operasional
@@ -739,7 +873,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 </div>
 
                 <div className="flex items-start gap-3 pt-2 border-t border-slate-100">
-                  <span className="text-base text-blue-600 mt-0.5">📞</span>
+                  <span className={`text-base ${activeTheme.textAccent} mt-0.5`}>📞</span>
                   <div className="flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Telepon / Kontak
@@ -749,7 +883,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 </div>
 
                 <div className="flex items-start gap-3 pt-2 border-t border-slate-100">
-                  <span className="text-base text-blue-600 mt-0.5">🏢</span>
+                  <span className={`text-base ${activeTheme.textAccent} mt-0.5`}>🏢</span>
                   <div className="flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Kota & Wilayah Layanan
@@ -815,7 +949,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 <div className="flex w-full items-center justify-between">
                   <div>
                     <h3 className="text-lg font-black text-slate-900 leading-tight">Pilih Jadwal Kunjungan</h3>
-                    <p className="text-xs text-blue-600 font-semibold mt-0.5">
+                    <p className={`text-xs ${activeTheme.textAccent} font-semibold mt-0.5`}>
                       Silakan tentukan layanan & waktu kunjungan
                     </p>
                   </div>
@@ -840,7 +974,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                       const found = client.menu.find((m) => m.id === Number(e.target.value));
                       if (found) setSelectedService(found);
                     }}
-                    className="w-full appearance-none rounded-2xl bg-slate-50 border border-slate-200 px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:border-blue-500 focus:bg-white focus:outline-none shadow-xs pr-9 cursor-pointer"
+                    className="w-full appearance-none rounded-2xl bg-slate-50 border border-slate-200 px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:bg-white focus:outline-none shadow-xs pr-9 cursor-pointer"
                   >
                     {client.menu.map((item) => (
                       <option key={item.id} value={item.id}>
@@ -866,10 +1000,11 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                       <button
                         key={day}
                         onClick={() => setSelectedDay(day)}
-                        className={`py-2 px-3 rounded-2xl text-xs font-bold transition-all border ${isSelected
-                            ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 scale-[1.02]'
+                        className={`py-2 px-3 rounded-2xl text-xs font-bold transition-all border ${
+                          isSelected
+                            ? `${activeTheme.primaryBg} text-white border-transparent shadow-md ${activeTheme.shadowGlow} scale-[1.02]`
                             : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                          }`}
+                        }`}
                       >
                         {day}
                       </button>
@@ -891,10 +1026,11 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                         setSelectedTimePeriod('pagi');
                         if (!morningTimes.includes(selectedTime)) setSelectedTime('09:00');
                       }}
-                      className={`px-3 py-1 rounded-full transition-all ${selectedTimePeriod === 'pagi'
-                          ? 'bg-white text-blue-600 shadow-sm'
+                      className={`px-3 py-1 rounded-full transition-all ${
+                        selectedTimePeriod === 'pagi'
+                          ? `bg-white ${activeTheme.textAccent} shadow-sm`
                           : 'text-slate-500 hover:text-slate-800'
-                        }`}
+                      }`}
                     >
                       🌅 Pagi
                     </button>
@@ -903,10 +1039,11 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                         setSelectedTimePeriod('sore');
                         if (!afternoonTimes.includes(selectedTime)) setSelectedTime('15:00');
                       }}
-                      className={`px-3 py-1 rounded-full transition-all ${selectedTimePeriod === 'sore'
-                          ? 'bg-white text-blue-600 shadow-sm'
+                      className={`px-3 py-1 rounded-full transition-all ${
+                        selectedTimePeriod === 'sore'
+                          ? `bg-white ${activeTheme.textAccent} shadow-sm`
                           : 'text-slate-500 hover:text-slate-800'
-                        }`}
+                      }`}
                     >
                       🌇 Sore
                     </button>
@@ -921,10 +1058,11 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                       <button
                         key={time}
                         onClick={() => setSelectedTime(time)}
-                        className={`py-2 px-3.5 rounded-2xl text-xs font-bold transition-all border ${isSelected
-                            ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 scale-[1.02]'
+                        className={`py-2 px-3.5 rounded-2xl text-xs font-bold transition-all border ${
+                          isSelected
+                            ? `${activeTheme.primaryBg} text-white border-transparent shadow-md ${activeTheme.shadowGlow} scale-[1.02]`
                             : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                          }`}
+                        }`}
                       >
                         {time}
                       </button>
@@ -939,7 +1077,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                   💬 Format Pesan WhatsApp:
                 </p>
                 <p className="text-xs font-medium text-slate-800 leading-relaxed italic bg-white p-2.5 rounded-xl border border-emerald-100 shadow-xs">
-                  &quot;Halo, saya ingin booking <span className="font-bold text-emerald-700">[{selectedService?.name || 'Treatment Medis'}]</span> untuk hari <span className="font-bold text-emerald-700">[{selectedDay}, {selectedTime}]</span>.&quot;
+                  &quot;Halo Growfin Digital, saya tertarik memesan website untuk <span className="font-bold text-emerald-700">{client.name}</span> dengan <span className="font-bold text-emerald-700">Template Desain: {activeTheme.name}</span>.&quot;
                 </p>
               </div>
 
@@ -951,7 +1089,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 onClick={() => setIsScheduleModalOpen(false)}
                 className="w-full flex items-center justify-center gap-2 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white text-sm font-extrabold rounded-2xl shadow-lg shadow-emerald-600/30 transition-all"
               >
-                <span>Lanjutkan ke WhatsApp 💬</span>
+                <span>Pesan Template Desain Ini via WA 💬</span>
                 <span>→</span>
               </a>
             </div>
@@ -971,18 +1109,20 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
               <button
                 key={tab.id}
                 onClick={() => setActiveScreen(tab.id as typeof activeScreen)}
-                className={`flex-1 flex flex-col items-center gap-0.5 transition-all ${isActive ? 'text-blue-600 scale-105' : 'text-slate-400 hover:text-slate-600'
-                  }`}
+                className={`flex-1 flex flex-col items-center gap-0.5 transition-all ${
+                  isActive ? `${activeTheme.textAccent} scale-105` : 'text-slate-400 hover:text-slate-600'
+                }`}
               >
                 <span className="text-lg leading-none">{tab.icon}</span>
                 <span
-                  className={`text-[10px] ${isActive ? 'font-black text-blue-600' : 'font-semibold text-slate-500'
-                    }`}
+                  className={`text-[10px] ${
+                    isActive ? `font-black ${activeTheme.textAccent}` : 'font-semibold text-slate-500'
+                  }`}
                 >
                   {tab.label}
                 </span>
                 {isActive && (
-                  <span className="h-1 w-4 rounded-full bg-blue-600 mt-0.5" />
+                  <span className={`h-1 w-4 rounded-full ${activeTheme.primaryBg} mt-0.5`} />
                 )}
               </button>
             );

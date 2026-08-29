@@ -1,132 +1,151 @@
-import { Button } from '@/components/ui/button'
-import { Check } from 'lucide-react'
-
-const plans = [
-  {
-    name: 'Starter',
-    description: 'Perfect for new online businesses',
-    price: 9999,
-    period: 'one-time',
-    features: [
-      'Professional website (up to 5 pages)',
-      'Mobile-responsive design',
-      'Domain name (1 year)',
-      'Professional email',
-      'Basic contact form',
-      'Google indexing',
-    ],
-  },
-  {
-    name: 'Professional',
-    description: 'For growing businesses needing more',
-    price: 19999,
-    period: 'one-time',
-    featured: true,
-    features: [
-      'Everything in Starter',
-      'Up to 15 pages',
-      'E-commerce ready (product catalog)',
-      'Advanced contact forms',
-      'Appointment booking system',
-      'Blog/news section',
-      '3 months free support',
-    ],
-  },
-  {
-    name: 'Enterprise',
-    description: 'Complete solution with ongoing support',
-    price: 29999,
-    period: 'one-time',
-    features: [
-      'Everything in Professional',
-      'Unlimited pages',
-      'Full e-commerce integration',
-      'Payment gateway setup',
-      'Email marketing integration',
-      'CRM integration',
-      '12 months premium support',
-      'Monthly analytics reports',
-    ],
-  },
-]
-
 export function Pricing() {
+  const waStarter = "https://wa.me/6289668078854?text=Halo%20Growfin,%20saya%20tertarik%20pesan%20Paket%20Starter%20(Rp1.25jt)";
+  const waGrowth = "https://wa.me/6289668078854?text=Halo%20Growfin,%20saya%20tertarik%20pesan%20Paket%20Growth%20(Rp2.5jt)";
+
   return (
-    <section id="pricing" className="border-t border-slate-200 bg-white py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
-            Transparent Pricing
-          </p>
-          <h2 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">
-            <span className="text-balance">Plans for every size of business</span>
+    <section id="harga" className="py-20 bg-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
+          <span className="text-xs font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Investasi Pertumbuhan Klinik
+          </span>
+          <h2 className="text-3xl font-black text-slate-900 sm:text-4xl tracking-tight">
+            Pilihan Paket Transparan Tanpa <span className="text-blue-600">Biaya Tersembunyi</span>
           </h2>
-          <p className="mt-4 text-lg text-slate-600">
-            One-time setup fee. No hidden charges. No monthly surprises.
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+            Investasi sekali bayar untuk sistem showcase & booking klinik modern yang siap melipatgandakan reservasi pasien Anda.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3 lg:gap-6">
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              className={`relative rounded-2xl transition-all ${
-                plan.featured
-                  ? 'border-2 border-emerald-600 bg-gradient-to-b from-emerald-50 to-white shadow-lg md:scale-105'
-                  : 'border border-slate-200 bg-white'
-              }`}
-            >
-              {plan.featured && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="rounded-full bg-emerald-600 px-4 py-1 text-xs font-semibold text-white">
-                    Most Popular
-                  </span>
-                </div>
-              )}
-
-              <div className="p-8">
-                <h3 className="text-xl font-bold text-slate-900">{plan.name}</h3>
-                <p className="mt-2 text-sm text-slate-600">{plan.description}</p>
-
-                <div className="mt-6 flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-slate-900">
-                    ₹{(plan.price / 1000).toFixed(0)}K
-                  </span>
-                  <span className="text-sm text-slate-600">one-time</span>
-                </div>
-
-                <Button
-                  className={`mt-8 w-full ${
-                    plan.featured
-                      ? 'bg-emerald-600 hover:bg-emerald-700'
-                      : 'border-slate-300 text-slate-900 hover:bg-slate-50'
-                  }`}
-                  variant={plan.featured ? 'default' : 'outline'}
-                  size="lg"
-                >
-                  Get Started
-                </Button>
-
-                <div className="mt-8 space-y-4">
-                  {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-slate-700">{feature}</span>
-                    </div>
-                  ))}
-                </div>
+        {/* 2 Pricing Cards Grid */}
+        <div className="grid gap-8 lg:grid-cols-2 max-w-4xl mx-auto items-stretch">
+          
+          {/* Card 1: Paket Starter */}
+          <div className="flex flex-col justify-between rounded-3xl bg-slate-50/80 p-8 border border-slate-200/90 shadow-sm hover:shadow-lg transition-all">
+            <div className="space-y-6">
+              <div>
+                <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 bg-slate-200/70 px-3 py-1 rounded-full mb-2">
+                  Untuk Klinik Baru / Pratama
+                </span>
+                <h3 className="text-2xl font-black text-slate-900">Paket Starter</h3>
+                <p className="text-xs text-slate-500 mt-1 font-medium">
+                  Solusi cepat untuk klinik yang ingin langsung siap menerima booking WhatsApp.
+                </p>
               </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl sm:text-4xl font-black text-slate-900">Rp 1.250.000</span>
+                <span className="text-xs font-bold text-slate-500">/ sekali bayar</span>
+              </div>
+
+              <ul className="space-y-3 text-xs font-semibold text-slate-700 border-t border-slate-200/60 pt-5">
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">✓</span>
+                  <span>Katalog Layanan & Price List Interactive</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">✓</span>
+                  <span>Fast Booking Direct WhatsApp</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">✓</span>
+                  <span>Integrasi Lokasi Google Maps</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">✓</span>
+                  <span>100% Mobile-First Ultra Speed</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">✓</span>
+                  <span>Pengerjaan Cepat (3-5 Hari Kerja)</span>
+                </li>
+              </ul>
             </div>
-          ))}
+
+            <div className="pt-8 mt-6">
+              <a
+                href={waStarter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 hover:bg-slate-800 active:scale-98 text-white text-xs font-black rounded-2xl shadow-md transition-all"
+              >
+                <span>Pilih Paket Starter 💬</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Card 2: Paket Growth (FEATURED / MOST POPULAR) */}
+          <div className="relative flex flex-col justify-between rounded-3xl bg-gradient-to-b from-blue-900 to-slate-900 p-8 text-white shadow-2xl shadow-blue-500/20 border-2 border-blue-500/80">
+            
+            {/* Featured Badge */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md border border-blue-400">
+              🔥 Most Popular Growth Choice
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-blue-300 bg-blue-800/60 px-3 py-1 rounded-full mb-2 border border-blue-700">
+                  Rekomendasi Terbaik Klinik Utama
+                </span>
+                <h3 className="text-2xl font-black text-white">Paket Growth</h3>
+                <p className="text-xs text-blue-200 mt-1 font-medium">
+                  Paket lengkap dengan fitur jadwal kunjungan interaktif & profil dokter terpercaya.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl sm:text-4xl font-black text-white">Rp 2.500.000</span>
+                <span className="text-xs font-bold text-blue-300">/ sekali bayar</span>
+              </div>
+
+              <ul className="space-y-3 text-xs font-semibold text-blue-100 border-t border-blue-800/80 pt-5">
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">✓</span>
+                  <span className="font-extrabold text-white">Semua Fitur Paket Starter</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">✓</span>
+                  <span>Domain Custom Official (.com / .my.id) Free 1 Thn</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">✓</span>
+                  <span>Modal Sheet &quot;Pilih Jadwal Kunjungan&quot; (Hari & Jam)</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">✓</span>
+                  <span>Profil Dokter Spesialis & Simulasi Chat Dokter</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">✓</span>
+                  <span>Halaman Profil Google Maps Business Card</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">✓</span>
+                  <span>Support Prioritas Pendampingan WA 24/7</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-8 mt-6">
+              <a
+                href={waGrowth}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white text-xs font-black rounded-2xl shadow-lg shadow-emerald-600/30 transition-all"
+              >
+                <span>Pilih Paket Growth 🚀</span>
+                <span>→</span>
+              </a>
+            </div>
+
+          </div>
+
         </div>
 
-        <div className="mt-12 rounded-lg bg-slate-50 p-6 text-center">
-          <p className="text-sm text-slate-600">
-            Not sure which plan? <span className="font-semibold text-slate-900">Talk to our team.</span> We&apos;ll
-            recommend the perfect fit for your business.
-          </p>
-        </div>
       </div>
     </section>
-  )
+  );
 }

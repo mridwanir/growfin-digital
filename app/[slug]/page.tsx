@@ -1,14 +1,14 @@
 import { notFound } from 'next/navigation';
-import { getClinicBySlug } from '@/lib/supabase/queries';
+import { DEMO_DATA } from '@/lib/demos';
 import { ClinicDemoClient } from '@/components/clinic-demo-client';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function DirectSlugPage({ params }: PageProps) {
+export default async function DemoPage({ params }: PageProps) {
   const { slug } = await params;
-  const clinic = await getClinicBySlug(slug);
+  const clinic = DEMO_DATA[slug.toLowerCase()];
 
   if (!clinic) {
     return notFound();

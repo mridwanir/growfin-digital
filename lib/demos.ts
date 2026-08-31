@@ -40,6 +40,344 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "vorta-beauty-clinic-bandung-(vorta-beauty-clinic-bandung)-klinik-kecantikan-di-bandung": {
+    "name": "Vorta Beauty Clinic - Bandung (Vorta Beauty Clinic - Bandung) | Klinik Kecantikan di Bandung",
+    "category": "Klinik Kecantikan",
+    "city": "Bandung",
+    "rating": 5,
+    "reviewCount": 4028,
+    "phone": "+62 811-8883-318",
+    "address": "Jl. Sunda No.51, Kb. Pisang, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40112, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=4922439691917039727&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628118883318",
+    "tagline": "Raih Kilau Kulit Impianmu, Pancarkan Pesona Alami dari Vorta Beauty Clinic.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "dr. Amelia Putri, Sp.KK",
+      "role": "Dokter Spesialis Kulit & Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, wajah saya akhir-akhir ini sering berjerawat dan kusam, padahal sudah pakai berbagai skincare. Apa solusinya ya?",
+        "doctor": "Halo! Jerawat dan kulit kusam memang sering jadi keluhan. Untuk penanganan yang tepat, perlu pemeriksaan langsung kondisi kulit Anda. Kami punya beberapa treatment yang efektif seperti Chemical Peeling atau Laser Acne. Saya sarankan Anda untuk reservasi konsultasi terlebih dahulu agar bisa kami berikan rekomendasi terbaik. Bagaimana, apakah Anda berkenan?",
+        "recommendationTitle": "Paket Glowing & Acne Clear",
+        "recommendationDesc": "Kombinasi perawatan facial, chemical peeling, dan serum khusus untuk mengatasi jerawat dan mencerahkan kulit."
+      }
+    },
+    "categories": [
+      "Semua",
+      "Facial & Peeling",
+      "Laser & Rejuvenation",
+      "Injectable Treatment",
+      "Body Contouring"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Glow & Hydra",
+        "desc": "Perawatan wajah dasar untuk membersihkan pori-pori, melembapkan, dan mencerahkan kulit.",
+        "price": "Rp 275.000",
+        "tag": "Populer",
+        "category": "Facial & Peeling"
+      },
+      {
+        "id": 2,
+        "name": "Chemical Peeling Acne Solution",
+        "desc": "Pengelupasan kulit kimiawi untuk mengurangi jerawat, menyamarkan bekas luka, dan memperbaiki tekstur kulit.",
+        "price": "Mulai Rp 550.000",
+        "tag": "Best Seller",
+        "category": "Facial & Peeling"
+      },
+      {
+        "id": 3,
+        "name": "Laser Rejuvenation Vorta Signature",
+        "desc": "Teknologi laser untuk merangsang kolagen, mengurangi kerutan halus, dan mencerahkan warna kulit.",
+        "price": "Mulai Rp 1.200.000",
+        "tag": "Rekomendasi",
+        "category": "Laser & Rejuvenation"
+      },
+      {
+        "id": 4,
+        "name": "Meso Glow Infusion",
+        "desc": "Injeksi serum khusus yang mengandung vitamin dan antioksidan untuk menutrisi kulit dari dalam, memberikan efek glowing dan sehat.",
+        "price": "Mulai Rp 800.000",
+        "tag": "Terlaris",
+        "category": "Injectable Treatment"
+      }
+    ]
+  },
+
+
+  "ratu-sehat": {
+    "name": "Ratu Sehat",
+    "category": "Klinik Estetika & Kecantikan",
+    "city": "Bandung",
+    "rating": 4.5,
+    "reviewCount": 95,
+    "phone": "+62 851-9879-6515",
+    "address": "Jl. Moch. Ramdan No.23, Ciateul, Kec. Regol, Kota Bandung, Jawa Barat 40252, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=8016910836523586722&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285198796515",
+    "tagline": "Pancarkan Pesonamu, Raih Kesehatan Optimal.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "dr. Karina Dewi, Sp.KK",
+      "role": "Dokter Spesialis Kulit & Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, wajah saya sering kusam dan pori-pori besar, kira-kira perawatan apa yang cocok ya?",
+        "doctor": "Selamat siang. Untuk kulit kusam dan pori-pori besar, ada beberapa pilihan perawatan yang efektif. Kami sarankan Anda datang untuk konsultasi langsung agar bisa kami periksa kondisi kulitnya secara detail dan merekomendasikan treatment terbaik. Apakah Anda ingin membuat janji temu?",
+        "recommendationTitle": "Paket Brightening Glow",
+        "recommendationDesc": "Perawatan untuk mencerahkan kulit kusam dan menyamarkan pori-pori."
+      }
+    },
+    "categories": [
+      "Semua",
+      "Perawatan Wajah",
+      "Perawatan Laser",
+      "Injeksi Estetika"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Detoks & Brightening",
+        "desc": "Perawatan wajah lengkap untuk membersihkan, detoksifikasi, dan mencerahkan kulit.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 2,
+        "name": "Laser Rejuvenation",
+        "desc": "Teknologi laser untuk mengurangi flek hitam, merangsang kolagen, dan meremajakan kulit.",
+        "price": "Mulai Rp 850.000",
+        "tag": "Best Seller",
+        "category": "Perawatan Laser"
+      },
+      {
+        "id": 3,
+        "name": "Filler & Botox Treatment",
+        "desc": "Injeksi filler untuk mengisi volume dan botox untuk mengurangi kerutan halus.",
+        "price": "Mulai Rp 2.500.000",
+        "category": "Injeksi Estetika"
+      },
+      {
+        "id": 4,
+        "name": "Chemical Peeling",
+        "desc": "Prosedur eksfoliasi untuk mengangkat sel kulit mati dan memperbaiki tekstur kulit.",
+        "price": "Rp 500.000",
+        "category": "Perawatan Wajah"
+      }
+    ]
+  },
+
+
+  "casadienta-dental-clinic-wastukencana": {
+    "name": "Casadienta Dental Clinic Wastukencana",
+    "category": "Gigi (Dental)",
+    "city": "Bandung",
+    "rating": 4.9,
+    "reviewCount": 1750,
+    "phone": "+62 896-5226-1415",
+    "address": "Jl. Wastukencana No.5, Babakan Ciamis, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40117, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=17220566870835770883&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6289652261415",
+    "tagline": "Senyum Sehat Anda, Prioritas Kami. Rasakan Pengalaman Perawatan Gigi Terbaik.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "drg. Amelia Putri, Sp.Ort",
+      "role": "Dokter Gigi Spesialis Ortodonsia",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, gigi depan saya agak maju dan berantakan, kira-kira bisa diperbaiki pakai apa ya?",
+        "doctor": "Halo, tentu bisa Bu/Pak. Untuk kasus gigi yang maju dan berantakan, kami memiliki beberapa pilihan perawatan seperti kawat gigi atau aligner transparan. Agar hasilnya optimal dan sesuai dengan kondisi Anda, sangat disarankan untuk melakukan konsultasi dan pemeriksaan langsung dengan dokter spesialis ortodonsia kami. Bagaimana, apakah Anda berkenan untuk reservasi jadwal konsultasi?",
+        "recommendationTitle": "Konsultasi & Pemeriksaan Ortodonsia",
+        "recommendationDesc": "Evaluasi menyeluruh kondisi gigi dan rahang untuk menentukan perawatan kawat gigi atau aligner yang tepat."
+      }
+    },
+    "categories": [
+      "Semua",
+      "Perawatan Umum",
+      "Estetika Gigi",
+      "Kawat Gigi",
+      "Bedah Mulut"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pembersihan Karang Gigi (Scaling)",
+        "desc": "Perawatan rutin untuk membersihkan plak dan karang gigi yang menumpuk, menjaga kesehatan gusi dan mencegah bau mulut.",
+        "price": "Mulai Rp 250.000",
+        "tag": "Populer",
+        "category": "Perawatan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Tambal Gigi Estetis (Composite)",
+        "desc": "Perbaikan gigi berlubang atau rusak dengan bahan komposit sewarna gigi, mengembalikan fungsi dan estetika gigi secara alami.",
+        "price": "Mulai Rp 450.000",
+        "tag": "Best Seller",
+        "category": "Perawatan Umum"
+      },
+      {
+        "id": 3,
+        "name": "Bleaching Gigi (Dental Whitening)",
+        "desc": "Prosedur pencerahan warna gigi untuk mendapatkan senyum yang lebih cerah dan mempesona dalam satu kunjungan.",
+        "price": "Mulai Rp 2.500.000",
+        "tag": "Estetika",
+        "category": "Estetika Gigi"
+      },
+      {
+        "id": 4,
+        "name": "Pemasangan Kawat Gigi Konvensional",
+        "desc": "Perawatan untuk merapikan susunan gigi dan memperbaiki gigitan menggunakan kawat gigi metal atau keramik.",
+        "price": "Mulai Rp 7.000.000",
+        "category": "Kawat Gigi"
+      }
+    ]
+  },
+
+
+  "oriskin": {
+    "name": "Oriskin",
+    "category": "Klinik Estetika & Kulit",
+    "city": "Bandung",
+    "rating": 4.9,
+    "reviewCount": 2801,
+    "phone": "+62 851-7980-4242",
+    "address": "Jl. Cihampelas No.42, Tamansari, Kec. Bandung Wetan, Kota Bandung, Jawa Barat 40116, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=801017474755135157&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285179804242",
+    "tagline": "Oriskin: Merawat Kecantikan Alami, Membangkitkan Percaya Diri Sejati.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Sarah Wijaya, Sp.KK",
+      "role": "Dokter Spesialis Kulit & Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, wajah saya sering berjerawat dan banyak bekas flek hitam. Kira-kira perawatan apa yang cocok ya?",
+        "doctor": "Halo, senang Anda menghubungi Oriskin. Keluhan jerawat dan flek hitam memang sering terjadi. Untuk menentukan perawatan yang paling efektif, saya sarankan untuk melakukan konsultasi langsung agar bisa diperiksa kondisi kulit Anda secara mendalam. Setelah itu, kami bisa merekomendasikan solusi terbaik, mungkin dengan kombinasi chemical peeling atau laser untuk flek. Apakah Anda ingin menjadwalkan konsultasi?",
+        "recommendationTitle": "Paket Glowing & Anti-Acne",
+        "recommendationDesc": "Perawatan komprehensif untuk mengatasi jerawat aktif, flek hitam, dan mencerahkan kulit."
+      }
+    },
+    "categories": [
+      "Semua",
+      "Perawatan Wajah",
+      "Perawatan Tubuh",
+      "Injeksi & Filler",
+      "Laser Treatment"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Detox & Brightening",
+        "desc": "Pembersihan mendalam untuk mengangkat komedo, sel kulit mati, dan mencerahkan wajah kusam.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 2,
+        "name": "Laser Rejuvenation (Flek & Scar)",
+        "desc": "Terapi laser canggih untuk mengurangi flek hitam, noda bekas jerawat, dan meremajakan kulit.",
+        "price": "Mulai Rp 850.000",
+        "tag": "Best Seller",
+        "category": "Laser Treatment"
+      },
+      {
+        "id": 3,
+        "name": "Botox Anti-Kerut",
+        "desc": "Injeksi Botox profesional untuk menyamarkan garis halus dan kerutan pada area wajah tertentu.",
+        "price": "Mulai Rp 2.500.000",
+        "category": "Injeksi & Filler"
+      },
+      {
+        "id": 4,
+        "name": "Microdermabrasi Diamond",
+        "desc": "Eksfoliasi kulit menggunakan ujung berlian untuk mengangkat sel kulit mati, menghasilkan kulit lebih halus dan cerah.",
+        "price": "Rp 600.000",
+        "tag": "Rekomendasi",
+        "category": "Perawatan Wajah"
+      }
+    ]
+  },
+
+
+  "pusat-akademik-inovasi-teknologi-dan-riset-kesehatan-universitas-padjadjaran-(pamitran-up)-medical-education-development-and-innovation-center-universitas-padjadjaran-(medic-up)": {
+    "name": "Pusat Akademik, Inovasi, Teknologi, dan Riset Kesehatan Universitas Padjadjaran (PAMITRAN UP) Medical Education, Development, and Innovation Center Universitas Padjadjaran (MEDIC UP)",
+    "category": "Medis Umum",
+    "city": "Bandung",
+    "rating": 4.6,
+    "reviewCount": 95,
+    "phone": "+62 821-1661-1339",
+    "address": "Jl. Prof. Eyckman No.38, Pasteur, Kec. Sukajadi, Kota Bandung, Jawa Barat 40161, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=1039060403064657552&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6282116611339",
+    "tagline": "Pusat Unggulan Inovasi dan Pelayanan Kesehatan Terintegrasi untuk Kesejahteraan Anda.",
+    "iconEmoji": "🩺",
+    "doctor": {
+      "name": "Dr. Budi Santoso, Sp.PD-KEMD, FINASIM",
+      "role": "Kepala Layanan Medis & Riset",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, saya sering merasa lemas, pusing, dan kadang mual. Kira-kira kenapa ya?",
+        "doctor": "Selamat siang, Bapak/Ibu. Gejala yang Anda rasakan bisa disebabkan oleh beberapa faktor. Untuk penegakan diagnosis yang tepat, saya sarankan untuk datang langsung ke klinik agar bisa dilakukan pemeriksaan fisik dan mungkin beberapa tes penunjang. Silakan reservasi waktu kunjungan Anda.",
+        "recommendationTitle": "Paket Pemeriksaan Kesehatan Komprehensif",
+        "recommendationDesc": "Pemeriksaan menyeluruh untuk deteksi dini berbagai kondisi kesehatan dan konsultasi dengan dokter spesialis."
+      }
+    },
+    "categories": [
+      "Semua",
+      "Pemeriksaan Umum",
+      "Konsultasi Spesialis",
+      "Vaksinasi",
+      "Tes Laboratorium"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pemeriksaan Kesehatan Rutin (General Check-up)",
+        "desc": "Pemeriksaan fisik dasar, tekanan darah, gula darah, dan kolesterol untuk memantau kesehatan Anda.",
+        "price": "Rp 250.000",
+        "tag": "Populer",
+        "category": "Pemeriksaan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Konsultasi Dokter Spesialis",
+        "desc": "Konsultasi mendalam dengan Dokter Spesialis Penyakit Dalam untuk berbagai keluhan medis dan penanganan lanjut.",
+        "price": "Mulai Rp 350.000",
+        "tag": "Rekomendasi",
+        "category": "Konsultasi Spesialis"
+      },
+      {
+        "id": 3,
+        "name": "Vaksinasi Influenza Tahunan",
+        "desc": "Layanan vaksinasi untuk perlindungan optimal dari virus influenza musiman.",
+        "price": "Rp 400.000",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 4,
+        "name": "Paket Skrining Diabetes",
+        "desc": "Pemeriksaan gula darah puasa, gula darah 2 jam post prandial, dan HbA1c untuk deteksi dini diabetes dan pemantauan.",
+        "price": "Mulai Rp 750.000",
+        "category": "Tes Laboratorium"
+      }
+    ]
+  },
+
+
   // 1. KLINIK UTAMA DOKTER KITA (Rating 4.8 | 861 Ulasan)
   "klinik-utama-dokter-kita": {
     name: "Klinik Utama Dokter Kita",

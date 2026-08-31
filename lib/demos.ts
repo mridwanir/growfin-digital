@@ -40,6 +40,78 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "klinik-seruni-dokter-umum-dokter-gigi": {
+    "name": "Klinik Seruni - Dokter Umum & Dokter Gigi",
+    "category": "Klinik Kesehatan",
+    "city": "Bandung LWPJ",
+    "rating": 4.8,
+    "reviewCount": 1293,
+    "phone": "+62 22 20560808",
+    "address": "Jl. Muara Takus Raya No.S-1, Melong, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat 40534, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=7017509166515816427&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "622220560808",
+    "tagline": "Solusi Lengkap Kesehatan Anda dan Keluarga",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "dr. Budi Santoso",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya merasa demam dan batuk sejak kemarin.",
+        "doctor": "Baik, mari kita periksa gejala Anda. Apakah ada nyeri tenggorokan atau sesak napas?",
+        "recommendationTitle": "Diagnosis Awal: Infeksi Saluran Pernapasan Atas",
+        "recommendationDesc": "Berdasarkan gejala Anda, kemungkinan Anda mengalami infeksi saluran pernapasan atas. Disarankan untuk istirahat cukup, minum air putih yang banyak, dan mengonsumsi obat penurun panas jika demam. Jika gejala memburuk, segera kunjungi klinik."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Dokter Gigi",
+      "Kesehatan Keluarga",
+      "Vaksinasi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan dan konsultasi untuk berbagai keluhan kesehatan umum.",
+        "price": "Rp 75.000",
+        "category": "Layanan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Cabut Gigi",
+        "desc": "Prosedur pencabutan gigi yang bermasalah dengan anestesi lokal.",
+        "price": "Mulai Rp 150.000",
+        "category": "Layanan Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Pembersihan Karang Gigi (Scaling)",
+        "desc": "Menghilangkan plak dan karang gigi untuk kesehatan mulut optimal.",
+        "price": "Mulai Rp 200.000",
+        "category": "Layanan Gigi"
+      },
+      {
+        "id": 4,
+        "name": "Vaksin Flu",
+        "desc": "Imunisasi untuk mencegah infeksi virus influenza musiman.",
+        "price": "Rp 180.000",
+        "tag": "Populer",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 5,
+        "name": "Injeksi Vitamin",
+        "desc": "Pemberian vitamin melalui injeksi untuk meningkatkan daya tahan tubuh.",
+        "price": "Rp 120.000",
+        "category": "Layanan Umum"
+      }
+    ]
+  },
+
+
   "vorta-beauty-clinic-bandung-(vorta-beauty-clinic-bandung)-klinik-kecantikan-di-bandung": {
     "name": "Vorta Beauty Clinic - Bandung (Vorta Beauty Clinic - Bandung) | Klinik Kecantikan di Bandung",
     "category": "Klinik Kecantikan",

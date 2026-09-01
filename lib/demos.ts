@@ -40,6 +40,588 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "arde-dental-clinic-rata-partner": {
+    "name": "ARDE Dental Clinic - RATA Partner",
+    "category": "Klinik Gigi",
+    "city": "Ciomas Bogor",
+    "rating": 4.9,
+    "reviewCount": 122,
+    "phone": "+62 811-1109-944",
+    "address": "Jl. Salak No.6, RT.05/RW.04, Babakan, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16128, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=6227114840070281124&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628111109944",
+    "tagline": "Senyum sehat dan percaya diri dengan perawatan gigi terbaik.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Drg. Sarah Wijaya",
+      "role": "Dokter Gigi Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Gigi saya terasa ngilu akhir-akhir ini, terutama saat minum dingin. Apa yang harus saya lakukan?",
+        "doctor": "Berdasarkan gejala yang Anda alami, kemungkinan besar ada sensitivitas gigi atau karies awal. Saya sarankan Anda untuk segera melakukan pemeriksaan agar kami bisa mengetahui penyebab pastinya dan memberikan penanganan yang tepat.",
+        "recommendationTitle": "Pemeriksaan Gigi dan Konsultasi",
+        "recommendationDesc": "Pemeriksaan menyeluruh untuk mendiagnosis penyebab ngilu dan sensitivitas, dilanjutkan dengan rencana perawatan yang dipersonalisasi."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "Dokter Gigi",
+      "Perawatan Gigi",
+      "Tambal Gigi",
+      "Pembersihan Karang Gigi",
+      "Orthodontics"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pembersihan Karang Gigi",
+        "desc": "Prosedur membersihkan karang dan plak dari permukaan gigi untuk menjaga kesehatan gusi.",
+        "price": "Rp 250.000",
+        "tag": "Populer",
+        "category": "Perawatan Preventif"
+      },
+      {
+        "id": 2,
+        "name": "Tambal Gigi Komposit",
+        "desc": "Penambalan gigi berlubang menggunakan bahan komposit sewarna gigi untuk estetika optimal.",
+        "price": "Mulai dari Rp 350.000",
+        "category": "Restorasi Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Cabut Gigi",
+        "desc": "Prosedur pencabutan gigi yang sudah rusak parah atau tidak dapat diselamatkan.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Bedah Minor"
+      },
+      {
+        "id": 4,
+        "name": "Whitening Gigi (Bleaching)",
+        "desc": "Perawatan untuk mencerahkan warna gigi secara signifikan dan aman.",
+        "price": "Mulai dari Rp 2.000.000",
+        "tag": "Estetika",
+        "category": "Estetika Gigi"
+      }
+    ]
+  },
+
+
+  "dr-erlin-spa-dokter-anak-rskia-sawojajar": {
+    "name": "dr. Erlin, SpA (Dokter anak RSKIA Sawojajar)",
+    "category": "Klinik Anak",
+    "city": "Ciomas Bogor",
+    "rating": 5.0,
+    "reviewCount": 127,
+    "phone": "+62 877-7832-4371",
+    "address": "Jl. Sawojajar No.9, RT.01/RW.04, Pabaton, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16121, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=6458399768149915422&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287778324371",
+    "tagline": "Klinik Spesialis Anak Terbaik untuk Kesehatan Buah Hati Anda",
+    "iconEmoji": "👶",
+    "doctor": {
+      "name": "dr. Erlin, Sp.A",
+      "role": "Dokter Spesialis Anak",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo dokter, anak saya demam tinggi dan batuk sudah 3 hari, apakah perlu segera diperiksa?",
+        "doctor": "Selamat pagi. Untuk demam tinggi dan batuk 3 hari pada anak, sebaiknya segera diperiksakan untuk mengetahui penyebabnya dan mendapatkan penanganan yang tepat. Mohon datang ke klinik untuk pemeriksaan lebih lanjut.",
+        "recommendationTitle": "Pemeriksaan dan Penanganan Cepat",
+        "recommendationDesc": "Segera periksakan anak Anda ke dokter untuk diagnosis dan penanganan demam serta batuk yang tepat, terutama jika demam tinggi sudah berlangsung beberapa hari."
+      }
+    },
+    "categories": [
+      "Klinik Anak",
+      "Dokter Spesialis",
+      "Kesehatan Anak"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Anak",
+        "desc": "Pemeriksaan umum dan konsultasi kesehatan anak dengan dokter spesialis anak.",
+        "price": "Rp 150.000",
+        "category": "Pelayanan Utama"
+      },
+      {
+        "id": 2,
+        "name": "Vaksinasi Anak Lengkap",
+        "desc": "Layanan vaksinasi dasar dan lanjutan sesuai jadwal imunisasi anak.",
+        "price": "Mulai Rp 200.000",
+        "tag": "Terlaris",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 3,
+        "name": "Nebulizer untuk Anak",
+        "desc": "Terapi uap untuk mengatasi gangguan pernapasan seperti asma dan batuk berdahak.",
+        "price": "Rp 75.000",
+        "category": "Terapi"
+      },
+      {
+        "id": 4,
+        "name": "Cek Tumbuh Kembang Anak",
+        "desc": "Evaluasi rutin tumbuh kembang anak dari usia bayi hingga remaja.",
+        "price": "Rp 120.000",
+        "category": "Pelayanan Utama"
+      }
+    ]
+  },
+
+
+  "pratama-prima-clinic-24-hours": {
+    "name": "Pratama Prima Clinic (24 hours)",
+    "category": "Klinik Umum",
+    "city": "Ciomas Bogor",
+    "rating": 4.6,
+    "reviewCount": 49,
+    "phone": "+62 812-1401-5849",
+    "address": "Jl. Pahlawan No.112, RT.01/RW.18, Bondongan, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16132, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=2144623239690196615&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Buka 24 jam",
+    "waNumber": "6281214015849",
+    "tagline": "Kesehatan Anda Prioritas Kami, Siap Melayani 24 Jam Non-stop",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "Dr. Amelia Wijaya",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://example.com/amelia-wijaya-avatar.png",
+      "sampleChat": {
+        "user": "Saya merasa demam dan batuk sejak kemarin malam, apakah saya perlu datang ke klinik?",
+        "doctor": "Tentu, dengan gejala demam dan batuk, sebaiknya Anda segera diperiksa. Kami buka 24 jam, jadi Anda bisa datang kapan saja.",
+        "recommendationTitle": "Segera Kunjungi Klinik untuk Pemeriksaan",
+        "recommendationDesc": "Gejala demam dan batuk memerlukan evaluasi medis untuk memastikan diagnosis dan penanganan yang tepat. Klinik Pratama Prima siap melayani Anda kapan saja untuk penanganan cepat."
+      }
+    },
+    "categories": [
+      "Klinik 24 Jam",
+      "Klinik Umum",
+      "Pelayanan Kesehatan",
+      "Dokter Umum"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan dan saran medis umum untuk berbagai keluhan kesehatan.",
+        "price": "Mulai dari Rp 75.000",
+        "category": "Pelayanan Dasar"
+      },
+      {
+        "id": 2,
+        "name": "Penanganan Gawat Darurat Ringan",
+        "desc": "Penanganan awal untuk kasus darurat non-kritis seperti luka kecil, demam tinggi, atau reaksi alergi ringan.",
+        "price": "Sesuai Tindakan",
+        "tag": "24 Jam",
+        "category": "Gawat Darurat"
+      },
+      {
+        "id": 3,
+        "name": "Pemberian Injeksi/Obat",
+        "desc": "Layanan pemberian injeksi atau obat-obatan sesuai dengan resep dan anjuran dokter.",
+        "price": "Mulai dari Rp 50.000",
+        "category": "Tindakan Medis"
+      },
+      {
+        "id": 4,
+        "name": "Pemeriksaan Gula Darah & Tekanan Darah",
+        "desc": "Pemeriksaan cepat untuk mengukur kadar gula darah dan tekanan darah.",
+        "price": "Mulai dari Rp 30.000",
+        "category": "Pemeriksaan Penunjang"
+      },
+      {
+        "id": 5,
+        "name": "Perawatan Luka",
+        "desc": "Pembersihan dan perawatan luka ringan hingga sedang.",
+        "price": "Mulai dari Rp 60.000",
+        "category": "Tindakan Medis"
+      }
+    ]
+  },
+
+
+  "griya-assunnah-bogormetode-biomekanik-terapi-anak-berkebutuhankhusus-syarafkejepitlambung-gerd-bekam-ikhwan-akhwat": {
+    "name": "Griya ASSUNNAH BOGOR(metode Biomekanik, terapi anak Berkebutuhankhusus,, syarafkejepit.lambung gerd ).bekam ikhwan akhwat",
+    "category": "Klinik Terapi & Bekam",
+    "city": "Ciomas Bogor",
+    "rating": 5.0,
+    "reviewCount": 28,
+    "phone": "",
+    "address": "Jl. Danau Matana Gg. Tegal Mangga No.33, RT.02/RW.03, Tegallega, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16129, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=3227171454528650565&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281234567890",
+    "tagline": "Pusat Terapi Biomekanik, Anak Berkebutuhan Khusus, Syaraf Kejepit, Lambung Gerd, dan Bekam Profesional",
+    "iconEmoji": "🩺",
+    "doctor": {
+      "name": "Dr. Adam",
+      "role": "Terapis Biomekanik & Akupunturis",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya mengalami sakit pinggang dan syaraf kejepit, apakah bisa dibantu di sini?",
+        "doctor": "Tentu, kami memiliki metode Biomekanik dan terapi khusus untuk syaraf kejepit. Kami akan melakukan evaluasi menyeluruh untuk menentukan penanganan terbaik.",
+        "recommendationTitle": "Terapi Syaraf Kejepit",
+        "recommendationDesc": "Penanganan komprehensif untuk meredakan nyeri dan memulihkan fungsi syaraf kejepit dengan metode biomekanik dan terapi fisik."
+      }
+    },
+    "categories": [
+      "Terapi Biomekanik",
+      "Terapi Anak Berkebutuhan Khusus",
+      "Terapi Syaraf Kejepit",
+      "Bekam",
+      "Terapi Lambung Gerd"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Terapi Biomekanik",
+        "desc": "Terapi khusus untuk mengatasi masalah gerak dan postur tubuh.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Terapi"
+      },
+      {
+        "id": 2,
+        "name": "Terapi Anak Berkebutuhan Khusus",
+        "desc": "Program terapi individual untuk anak-anak dengan kebutuhan khusus.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Terapi Anak"
+      },
+      {
+        "id": 3,
+        "name": "Terapi Syaraf Kejepit",
+        "desc": "Penanganan efektif untuk meredakan nyeri dan memulihkan syaraf kejepit.",
+        "price": "Mulai dari Rp 180.000",
+        "category": "Terapi"
+      },
+      {
+        "id": 4,
+        "name": "Terapi Lambung Gerd",
+        "desc": "Terapi alami untuk membantu mengatasi masalah lambung dan GERD.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Terapi"
+      },
+      {
+        "id": 5,
+        "name": "Bekam Ikhwan",
+        "desc": "Layanan bekam higienis khusus untuk pria.",
+        "price": "Mulai dari Rp 100.000",
+        "category": "Bekam"
+      },
+      {
+        "id": 6,
+        "name": "Bekam Akhwat",
+        "desc": "Layanan bekam higienis khusus untuk wanita.",
+        "price": "Mulai dari Rp 100.000",
+        "category": "Bekam"
+      }
+    ]
+  },
+
+
+  "rumah-keisya": {
+    "name": "RUMAH KEISYA",
+    "category": "Klinik Umum",
+    "city": "Bogor",
+    "rating": 4.5,
+    "reviewCount": 561,
+    "phone": "",
+    "address": "9QXJ+GP5, RT.04/RW.04, Pasirkuda, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16119, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=8425839679768306770&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281234567890",
+    "tagline": "Klinik kesehatan terpercaya di Bogor untuk keluarga Anda.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "Dr. Dian Paramitha",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dokter, saya merasa demam dan batuk sudah 3 hari, apakah ini flu biasa?",
+        "doctor": "Berdasarkan gejala yang Anda sebutkan, kemungkinan besar ini adalah flu biasa. Namun, saya sarankan untuk datang langsung agar bisa dilakukan pemeriksaan lebih lanjut untuk memastikan kondisi Anda.",
+        "recommendationTitle": "Saran dari Dokter",
+        "recommendationDesc": "Untuk meredakan demam dan batuk, Anda bisa mengonsumsi paracetamol dan banyak istirahat. Hindari kontak dekat dengan orang lain dan gunakan masker. Jika gejala tidak membaik dalam 5 hari atau memburuk, segera periksa ke klinik."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Pelayanan Kesehatan",
+      "Pemeriksaan Medis",
+      "Imunisasi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pemeriksaan Umum",
+        "desc": "Konsultasi dan pemeriksaan fisik oleh dokter umum.",
+        "price": "Rp 50.000",
+        "category": "Layanan Medis"
+      },
+      {
+        "id": 2,
+        "name": "Konsultasi Dokter",
+        "desc": "Sesi konsultasi mendalam mengenai keluhan kesehatan.",
+        "price": "Rp 75.000",
+        "category": "Layanan Medis"
+      },
+      {
+        "id": 3,
+        "name": "Vaksinasi Dewasa",
+        "desc": "Layanan vaksinasi untuk orang dewasa.",
+        "price": "Mulai Rp 150.000",
+        "tag": "Tersedia",
+        "category": "Layanan Medis"
+      },
+      {
+        "id": 4,
+        "name": "Perawatan Luka",
+        "desc": "Perawatan dan pembersihan luka ringan hingga sedang.",
+        "price": "Mulai Rp 60.000",
+        "category": "Layanan Medis"
+      }
+    ]
+  },
+
+
+  "okky-orthodontics-dokter-gigi-spesialis-ortodontikawat-gigi": {
+    "name": "Okky Orthodontics",
+    "category": "Klinik Gigi Spesialis Ortodonti",
+    "city": "Kota Bogor",
+    "rating": 5.0,
+    "reviewCount": 143,
+    "phone": "+62 813-2726-6161",
+    "address": "Jl. Cimanggu Barata No.72, RT.07/RW.09, Kedungbadak, Tanah Sareal, Kota Bogor, Jawa Barat 16164, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=6795704172132673996&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281327266161",
+    "tagline": "Klinik gigi spesialis ortodonti terkemuka untuk senyum sempurna Anda.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Dr. Okky",
+      "role": "Spesialis Ortodonti",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, gigi saya berantakan dan ingin pakai kawat gigi, apakah bisa?",
+        "doctor": "Tentu, kami dapat membantu. Untuk kasus gigi berantakan, pemasangan kawat gigi adalah solusi yang efektif. Saya sarankan Anda datang untuk konsultasi awal agar bisa dilakukan pemeriksaan menyeluruh dan menentukan rencana perawatan terbaik.",
+        "recommendationTitle": "Rekomendasi Perawatan Ortodonti",
+        "recommendationDesc": "Berdasarkan keluhan Anda tentang gigi berantakan, Dr. Okky Orthodontics merekomendasikan konsultasi awal untuk pemeriksaan dan penentuan jenis kawat gigi yang paling sesuai dengan kondisi Anda. Berbagai pilihan tersedia, mulai dari kawat gigi metal konvensional hingga aligner transparan."
+      }
+    },
+    "categories": [
+      "Ortodonti",
+      "Kawat Gigi",
+      "Klinik Gigi",
+      "Dokter Gigi Spesialis"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Ortodonti",
+        "desc": "Pemeriksaan awal dan diagnosa untuk menentukan rencana perawatan ortodonti yang tepat.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Layanan Utama"
+      },
+      {
+        "id": 2,
+        "name": "Pemasangan Kawat Gigi Metal",
+        "desc": "Pemasangan behel metal konvensional untuk merapikan gigi.",
+        "price": "Mulai dari Rp 6.000.000",
+        "tag": "Populer",
+        "category": "Perawatan Kawat Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Pemasangan Kawat Gigi Keramik",
+        "desc": "Pemasangan behel keramik estetis, warna menyerupai gigi.",
+        "price": "Mulai dari Rp 8.000.000",
+        "tag": "Estetis",
+        "category": "Perawatan Kawat Gigi"
+      },
+      {
+        "id": 4,
+        "name": "Pemasangan Kawat Gigi Self-Ligating",
+        "desc": "Behel dengan mekanisme 'self-ligating' untuk perawatan lebih cepat dan nyaman.",
+        "price": "Mulai dari Rp 10.000.000",
+        "category": "Perawatan Kawat Gigi"
+      },
+      {
+        "id": 5,
+        "name": "Perawatan Aligner Transparan (Invisalign)",
+        "desc": "Perawatan merapikan gigi menggunakan aligner bening yang nyaman dan tidak terlihat.",
+        "price": "Mulai dari Rp 25.000.000",
+        "tag": "Premium",
+        "category": "Perawatan Kawat Gigi"
+      },
+      {
+        "id": 6,
+        "name": "Retainer",
+        "desc": "Alat penahan gigi pasca perawatan ortodonti agar gigi tetap rapi.",
+        "price": "Mulai dari Rp 1.500.000",
+        "category": "Layanan Tambahan"
+      },
+      {
+        "id": 7,
+        "name": "Kontrol Ortodonti",
+        "desc": "Pemeriksaan rutin dan penyesuaian kawat gigi selama masa perawatan.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Layanan Utama"
+      }
+    ]
+  },
+
+
+  "praktek-dokter-spesialis-kulit-dan-kelamin-dr-melly-maya-sari-spkk": {
+    "name": "Praktek Dokter Spesialis Kulit dan Kelamin Dr. Melly Maya Sari Sp.KK",
+    "category": "Klinik Spesialis Kulit dan Kelamin",
+    "city": "Ciomas Bogor",
+    "rating": 4.8,
+    "reviewCount": 132,
+    "phone": "+62 878-8032-0040",
+    "address": "Jl. Raya Semplak No.142, RT.01/RW.09, Cilendek Bar., Kec. Bogor Bar., Kota Bogor, Jawa Barat 16112, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=13230559544715480734&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287880320040",
+    "tagline": "Pakar Kulit dan Kelamin Terpercaya untuk Anda",
+    "iconEmoji": "🌸",
+    "doctor": {
+      "name": "Dr. Melly Maya Sari Sp.KK",
+      "role": "Dokter Spesialis Kulit dan Kelamin",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, kulit saya kusam dan sering berjerawat. Apa yang harus saya lakukan?",
+        "doctor": "Halo! Berdasarkan keluhan Anda, kemungkinan ini disebabkan oleh beberapa faktor. Saya sarankan Anda datang untuk konsultasi langsung agar saya bisa melakukan pemeriksaan lebih lanjut dan memberikan penanganan yang tepat, seperti rekomendasi skincare atau tindakan medis.",
+        "recommendationTitle": "Perawatan Kulit Kusam dan Berjerawat",
+        "recommendationDesc": "Kami merekomendasikan pemeriksaan kulit secara menyeluruh untuk menentukan penyebab pasti kulit kusam dan jerawat. Berdasarkan hasil pemeriksaan, kami dapat meresepkan produk perawatan kulit yang sesuai, terapi topikal, atau prosedur lain seperti peeling atau laser untuk hasil optimal. Penting juga untuk menjaga kebersihan kulit dan pola makan sehat."
+      }
+    },
+    "categories": [
+      "Klinik Kulit",
+      "Spesialis Kulit dan Kelamin",
+      "Dermatologi",
+      "Kesehatan Kulit",
+      "Kecantikan Kulit"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Spesialis Kulit",
+        "desc": "Pemeriksaan dan saran medis oleh Dr. Melly Maya Sari Sp.KK untuk berbagai masalah kulit dan kelamin.",
+        "price": "Rp 250.000",
+        "category": "Konsultasi"
+      },
+      {
+        "id": 2,
+        "name": "Facial Acne Treatment",
+        "desc": "Perawatan wajah khusus untuk mengurangi jerawat aktif, komedo, dan membantu mencegah timbulnya jerawat baru.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "Chemical Peeling",
+        "desc": "Prosedur pengelupasan kulit menggunakan larutan kimia untuk mengangkat sel kulit mati, mencerahkan, dan meremajakan kulit.",
+        "price": "Mulai dari Rp 500.000",
+        "category": "Tindakan Medis"
+      },
+      {
+        "id": 4,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan menggunakan teknologi laser untuk mengatasi masalah pigmentasi, kerutan halus, bekas jerawat, dan memperbaiki tekstur kulit.",
+        "price": "Sesuai Tindakan",
+        "category": "Tindakan Medis"
+      },
+      {
+        "id": 5,
+        "name": "Mikrodermabrasi",
+        "desc": "Prosedur eksfoliasi non-invasif untuk mengangkat sel kulit mati, merangsang produksi kolagen, dan menjadikan kulit lebih halus.",
+        "price": "Rp 400.000",
+        "category": "Perawatan Wajah"
+      }
+    ]
+  },
+
+
+  "dr-adisetya-w-spthtbkl-dokter-spesialis-telinga-hidung-tenggorok": {
+    "name": "Dr. Adisetya W Sp.THT-BKL (Dokter Spesialis Telinga Hidung & Tenggorok)",
+    "category": "Dokter Spesialis THT",
+    "city": "Ciomas Bogor",
+    "rating": 4.9,
+    "reviewCount": 171,
+    "phone": "+62 852-8250-1970",
+    "address": "Jl. DR. Sumeru No.84, RT.01/RW.03, Menteng, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16111, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=10054019494049353279&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285282501970",
+    "tagline": "Pakar THT terkemuka di Bogor untuk kesehatan telinga, hidung, dan tenggorok Anda.",
+    "iconEmoji": "👂👃🗣️",
+    "doctor": {
+      "name": "Dr. Adisetya W",
+      "role": "Dokter Spesialis THT-BKL",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, saya sering merasa telinga berdenging dan kadang pusing. Kira-kira kenapa ya?",
+        "doctor": "Berdasarkan gejala yang Anda alami, telinga berdenging atau tinnitus bisa disebabkan oleh beberapa faktor seperti paparan suara keras, infeksi, atau masalah pada sistem pendengaran. Saya sarankan untuk melakukan pemeriksaan otoskopi dan audiometri agar bisa menegakkan diagnosis yang tepat.",
+        "recommendationTitle": "Pemeriksaan Telinga & Pendengaran",
+        "recommendationDesc": "Jadwalkan pemeriksaan otoskopi dan audiometri untuk mendiagnosis penyebab telinga berdenging dan pusing Anda."
+      }
+    },
+    "categories": [
+      "THT",
+      "Otorhinolaryngology",
+      "Klinik",
+      "Dokter Spesialis",
+      "Bogor"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Spesialis THT",
+        "desc": "Pemeriksaan dan konsultasi menyeluruh mengenai masalah telinga, hidung, dan tenggorok.",
+        "price": "Rp 250.000",
+        "category": "Pemeriksaan & Konsultasi"
+      },
+      {
+        "id": 2,
+        "name": "Audiometri (Tes Pendengaran)",
+        "desc": "Evaluasi fungsi pendengaran untuk mendeteksi gangguan atau penurunan pendengaran.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Tes Diagnostik"
+      },
+      {
+        "id": 3,
+        "name": "Ekstraksi Serumen (Pembersihan Kotoran Telinga)",
+        "desc": "Prosedur aman untuk membersihkan kotoran telinga yang menumpuk.",
+        "price": "Rp 200.000",
+        "category": "Tindakan Medis"
+      },
+      {
+        "id": 4,
+        "name": "Endoskopi THT",
+        "desc": "Pemeriksaan visual dengan endoskop untuk melihat kondisi rongga hidung, sinus, dan tenggorokan secara detail.",
+        "price": "Rp 400.000",
+        "category": "Tes Diagnostik"
+      },
+      {
+        "id": 5,
+        "name": "Vakum Sinusitis",
+        "desc": "Prosedur untuk membersihkan lendir dan peradangan pada sinus.",
+        "price": "Rp 300.000",
+        "category": "Tindakan Medis"
+      }
+    ]
+  },
+
+
   "klinik-seruni-dokter-umum-dokter-gigi": {
     "name": "Klinik Seruni - Dokter Umum & Dokter Gigi",
     "category": "Klinik Kesehatan",

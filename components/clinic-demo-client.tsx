@@ -237,10 +237,10 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
     return matchesSearch && matchesCategory;
   });
 
-  // Construct dynamic WhatsApp action URL with Theme & Schedule format
-  const getWaBookingUrl = () => {
-    const treatmentText = selectedService ? selectedService.name : 'Treatment Medis';
-    const message = `Halo Growfin Digital, saya tertarik memesan website untuk ${client.name} dengan *Template Desain: ${activeTheme.name}*.\n\nContoh Booking: ${treatmentText} (${selectedDay}, ${selectedTime}).`;
+  // Construct dynamic WhatsApp action URL simulating real patient booking to clinic
+  const getWaBookingUrl = (customTreatment?: string) => {
+    const treatmentText = customTreatment || (selectedService ? selectedService.name : 'Treatment Medis');
+    const message = `Halo ${client.name}, saya ingin reservasi jadwal treatment *${treatmentText}* untuk hari *${selectedDay}, ${selectedTime} WIB*. Apakah jadwal masih tersedia?`;
     return `https://wa.me/${client.waNumber}?text=${encodeURIComponent(message)}`;
   };
 
@@ -1074,10 +1074,10 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
               {/* Preview Box */}
               <div className="mb-5 rounded-2xl bg-emerald-50/80 p-3.5 border border-emerald-200/80">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 mb-1">
-                  💬 Format Pesan WhatsApp:
+                  💬 Preview Format Pesan Pasien ke WA Klinik:
                 </p>
                 <p className="text-xs font-medium text-slate-800 leading-relaxed italic bg-white p-2.5 rounded-xl border border-emerald-100 shadow-xs">
-                  &quot;Halo Growfin Digital, saya tertarik memesan website untuk <span className="font-bold text-emerald-700">{client.name}</span> dengan <span className="font-bold text-emerald-700">Template Desain: {activeTheme.name}</span>.&quot;
+                  &quot;Halo <span className="font-bold text-emerald-700">{client.name}</span>, saya ingin reservasi jadwal treatment <span className="font-bold text-emerald-700">[{selectedService?.name || 'Treatment Medis'}]</span> untuk hari <span className="font-bold text-emerald-700">[{selectedDay}, {selectedTime} WIB]</span>. Apakah jadwal masih tersedia?&quot;
                 </p>
               </div>
 
@@ -1089,7 +1089,7 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 onClick={() => setIsScheduleModalOpen(false)}
                 className="w-full flex items-center justify-center gap-2 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white text-sm font-extrabold rounded-2xl shadow-lg shadow-emerald-600/30 transition-all"
               >
-                <span>Pesan Template Desain Ini via WA 💬</span>
+                <span>Lanjutkan Reservasi ke WA Klinik 💬</span>
                 <span>→</span>
               </a>
             </div>

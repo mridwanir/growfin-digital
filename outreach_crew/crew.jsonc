@@ -1,0 +1,24 @@
+{
+  "name": "outreach_crew",
+  "agents": ["local_business_digital_presenc", "whatsapp_outreach_copywriter"],
+  "tasks": [
+    {
+      "name": "lakukan_audit_singkat_untuk_task",
+      "description": "Lakukan audit singkat untuk bisnis {business_name} ({category}) di kota {city}. Rating: {rating} ({review_count} ulasan). Masalah saat ini: {current_issues}. Berikan 2 masalah utama dan 2 solusi digital konkret.",
+      "expected_output": "Poin-poin masalah konversi dan rekomendasi perbaikan digital.",
+      "agent": "local_business_digital_presenc"
+    },
+    {
+      "name": "gunakan_hasil_audit_untuk_task",
+      "description": "Gunakan hasil audit untuk menyusun 1 pesan WhatsApp outreach ke owner {business_name}. Sertakan pujian atas rating {rating} mereka, sebutkan celah masalah secara halus, cantumkan link demo ({demo_url}), dan buat CTA santai/no-pressure. Maksimal 4 paragraf pendek.",
+      "expected_output": "Draf teks pesan WhatsApp siap kirim dalam format markdown.",
+      "agent": "whatsapp_outreach_copywriter",
+      "context": ["lakukan_audit_singkat_untuk_task"],
+      "output_file": "output/whatsapp_pitch.md"
+    }
+  ],
+  "process": "sequential",
+  "verbose": true,
+  "memory": false,
+  "inputs": {}
+}

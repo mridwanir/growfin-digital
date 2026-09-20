@@ -59,61 +59,72 @@ export const DEMO_DATA: Record<string, BusinessDemo> = {
     "googleMapsUrl": "https://maps.google.com/?cid=260363542067160756&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
     "hours": "Senin - Sabtu: 09:00 - 20:00",
     "waNumber": "628174121554",
-    "tagline": "Kesehatan hewan peliharaan Anda adalah prioritas kami.",
+    "tagline": "Kesehatan Hewan Kesayangan Anda Prioritas Kami",
     "iconEmoji": "🐾",
     "doctor": {
       "name": "Drh. Galuh Indro D.",
-      "role": "Dokter Hewan",
+      "role": "Dokter Hewan Senior",
       "avatarEmoji": "👩‍⚕️",
       "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
       "sampleChat": {
-        "user": "Dok, kucing saya lesu dan tidak mau makan. Apakah ada yang salah dengannya?",
-        "doctor": "Halo! Gejala lesu dan nafsu makan menurun pada kucing bisa menjadi indikasi berbagai masalah kesehatan. Sebaiknya segera bawa kucing Anda untuk diperiksa langsung di klinik agar kami bisa memberikan diagnosis dan penanganan yang tepat.",
-        "recommendationTitle": "Pemeriksaan Kesehatan Menyeluruh",
-        "recommendationDesc": "Kami sangat merekomendasikan pemeriksaan fisik lengkap dan mungkin tes penunjang (seperti tes darah) untuk mendiagnosis penyebab kondisi kucing Anda dan merencanakan perawatan terbaik."
+        "user": "Dok, kucing saya lemas dan tidak mau makan. Kira-kira kenapa ya?",
+        "doctor": "Halo, baiknya segera dibawa ke klinik untuk pemeriksaan lebih lanjut. Gejala tersebut bisa disebabkan oleh beberapa faktor. Kami akan bantu periksa untuk diagnosa dan penanganan yang tepat.",
+        "recommendationTitle": "Pemeriksaan Kesehatan Hewan",
+        "recommendationDesc": "Untuk diagnosis akurat dan penanganan cepat pada hewan kesayangan yang menunjukkan gejala sakit atau perubahan perilaku."
       }
     },
     "categories": [
+      "Veteriner",
       "Klinik Hewan",
-      "Dokter Hewan",
-      "Pet Shop",
-      "Grooming Hewan"
+      "Perawatan Hewan",
+      "Kesehatan Hewan"
     ],
     "menu": [
       {
         "id": 1,
-        "name": "Pemeriksaan Umum Hewan",
-        "desc": "Konsultasi dan pemeriksaan kesehatan rutin untuk anjing, kucing, dan hewan peliharaan lainnya.",
-        "price": "Mulai Rp 50.000",
-        "category": "Layanan Medis Umum"
+        "name": "Konsultasi Dokter Hewan",
+        "desc": "Pemeriksaan umum dan saran kesehatan hewan oleh dokter hewan berpengalaman.",
+        "price": "Rp 75.000",
+        "tag": "Layanan Utama",
+        "category": "Konsultasi"
       },
       {
         "id": 2,
-        "name": "Vaksinasi Lengkap Kucing",
-        "desc": "Paket vaksinasi komprehensif untuk kucing sesuai standar kesehatan hewan.",
-        "price": "Mulai Rp 150.000",
+        "name": "Vaksinasi Kucing",
+        "desc": "Program vaksinasi lengkap untuk kucing (F3/F4) untuk melindungi dari berbagai penyakit.",
+        "price": "Rp 150.000",
+        "tag": "Perlindungan",
         "category": "Vaksinasi"
       },
       {
         "id": 3,
-        "name": "Sterilisasi Anjing/Kucing",
-        "desc": "Prosedur sterilisasi atau kebiri yang aman dan profesional untuk hewan kesayangan Anda.",
-        "price": "Mulai Rp 600.000",
-        "category": "Bedah & Prosedur"
+        "name": "Vaksinasi Anjing",
+        "desc": "Program vaksinasi lengkap untuk anjing (DHPPi, Rabies) untuk menjaga kekebalan tubuh.",
+        "price": "Rp 200.000",
+        "tag": "Perlindungan",
+        "category": "Vaksinasi"
       },
       {
         "id": 4,
-        "name": "Grooming & Mandi Sehat",
-        "desc": "Perawatan lengkap meliputi mandi, potong kuku, pembersihan telinga, dan tata rambut.",
-        "price": "Mulai Rp 75.000",
-        "category": "Perawatan & Estetika"
+        "name": "Sterilisasi Kucing",
+        "desc": "Prosedur bedah aman untuk sterilisasi kucing jantan atau betina, termasuk pasca-operasi.",
+        "price": "Rp 600.000",
+        "tag": "Kesehatan Reproduksi",
+        "category": "Bedah"
       },
       {
         "id": 5,
-        "name": "Tes Darah Lengkap",
-        "desc": "Analisis laboratorium untuk mendeteksi berbagai kondisi kesehatan hewan.",
-        "price": "Mulai Rp 120.000",
-        "category": "Diagnostik"
+        "name": "Grooming Hewan",
+        "desc": "Perawatan lengkap meliputi mandi, potong kuku, bersihkan telinga, dan perawatan bulu.",
+        "price": "Rp 120.000",
+        "category": "Perawatan"
+      },
+      {
+        "id": 6,
+        "name": "Rawat Inap",
+        "desc": "Fasilitas rawat inap yang nyaman dengan pengawasan medis 24 jam untuk hewan sakit atau pasca-operasi.",
+        "price": "Mulai Rp 100.000/hari",
+        "category": "Layanan Tambahan"
       }
     ]
   },
@@ -128,64 +139,129 @@ export const DEMO_DATA: Record<string, BusinessDemo> = {
     "phone": "+62 895-4183-07958",
     "address": "Jl. Nurkim, RT.01/RW.13, Kota Batu, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610, Indonesia",
     "googleMapsUrl": "https://maps.google.com/?cid=9905917719201751516&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
-    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "hours": "Senin - Sabtu, 08:00 - 21:00",
     "waNumber": "62895418307958",
-    "tagline": "Pelayanan kesehatan umum dan terpercaya untuk keluarga Anda.",
+    "tagline": "Pelayanan Kesehatan Profesional dan Terpercaya",
     "iconEmoji": "🏥",
     "doctor": {
-      "name": "dr. Riyadhi",
+      "name": "Dokter Riyadhi",
       "role": "Dokter Umum",
       "avatarEmoji": "👨‍⚕️",
       "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
       "sampleChat": {
-        "user": "Halo dok, saya merasa demam dan batuk sejak kemarin. Apakah ini gejala flu?",
-        "doctor": "Halo, bisa jadi. Untuk memastikan, sebaiknya Anda datang ke klinik agar bisa diperiksa lebih lanjut. Sementara itu, istirahat cukup dan banyak minum air putih.",
-        "recommendationTitle": "Kunjungan Konsultasi Umum",
-        "recommendationDesc": "Pemeriksaan dan konsultasi dengan dr. Riyadhi untuk diagnosis awal dan penanganan demam serta batuk."
+        "user": "Dok, saya merasa demam dan batuk sudah 3 hari, apakah ini gejala flu biasa?",
+        "doctor": "Halo, berdasarkan gejala yang Anda alami, kemungkinan besar Anda terserang flu biasa. Namun, untuk diagnosis yang lebih akurat, disarankan untuk datang ke klinik agar dapat diperiksa lebih lanjut.",
+        "recommendationTitle": "Pemeriksaan dan Konsultasi Langsung",
+        "recommendationDesc": "Untuk mendapatkan diagnosis pasti dan penanganan yang tepat, segera kunjungi klinik kami. Dokter akan melakukan pemeriksaan fisik dan mungkin beberapa tes jika diperlukan untuk memastikan kondisi kesehatan Anda."
       }
     },
     "categories": [
       "Klinik Umum",
-      "Pelayanan Medis",
       "Dokter Keluarga",
-      "Vaksinasi"
+      "Pelayanan Kesehatan Primer"
     ],
     "menu": [
       {
         "id": 1,
         "name": "Konsultasi Dokter Umum",
-        "desc": "Pemeriksaan kesehatan dan konsultasi dengan dokter umum.",
-        "price": "Rp 50.000",
-        "category": "Layanan Utama"
+        "desc": "Pemeriksaan dan konsultasi dengan dokter umum",
+        "price": "Rp 75.000",
+        "category": "Pelayanan Medis"
       },
       {
         "id": 2,
-        "name": "Pemeriksaan Tekanan Darah",
-        "desc": "Pengukuran dan monitoring tekanan darah.",
-        "price": "Rp 25.000",
+        "name": "Pemeriksaan Gula Darah",
+        "desc": "Cek kadar gula darah sewaktu",
+        "price": "Rp 30.000",
+        "tag": "Populer",
         "category": "Pemeriksaan"
       },
       {
         "id": 3,
-        "name": "Suntik Vitamin C",
-        "desc": "Injeksi vitamin C untuk meningkatkan daya tahan tubuh.",
-        "price": "Rp 75.000",
-        "tag": "Populer",
+        "name": "Injeksi Vitamin C",
+        "desc": "Suntik vitamin C untuk menjaga daya tahan tubuh",
+        "price": "Rp 100.000",
         "category": "Terapi"
       },
       {
         "id": 4,
-        "name": "Vaksinasi Influenza",
-        "desc": "Pemberian vaksin influenza musiman.",
-        "price": "Rp 150.000",
-        "category": "Vaksinasi"
+        "name": "Tindakan Luka Minor",
+        "desc": "Pembersihan dan penanganan luka kecil",
+        "price": "Mulai Rp 50.000",
+        "category": "Tindakan Medis"
+      }
+    ]
+  },
+
+
+  "qdental-care-praktek-drg-iik-yani-hidayati-mm": {
+    "name": "Q-Dental Care. Praktek Drg IIK YANI HIDAYATI, MM",
+    "category": "Dental Clinic",
+    "city": "ciomas bogor",
+    "rating": 4.5,
+    "reviewCount": 73,
+    "phone": "+62 812-9935-864",
+    "address": "Jalan Garuda Raya Jl. Komp. Villa Ciomas Indah No.5 Blok H1, RW.6, Ciomas Rahayu, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=15654726269016391184&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628129935864",
+    "tagline": "Senyum Sehat, Senyum Percaya Diri.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Drg IIK YANI HIDAYATI, MM",
+      "role": "Dentist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Gusi saya bengkak dan sakit, dok. Kira-kira kenapa ya?",
+        "doctor": "Halo, mohon maaf atas ketidaknyamanannya. Mari kita jadwalkan pemeriksaan agar saya bisa mengetahui penyebab pastinya dan memberikan penanganan yang tepat. Apakah ada demam atau gejala lain?",
+        "recommendationTitle": "Konsultasi Masalah Gusi",
+        "recommendationDesc": "Pemeriksaan menyeluruh untuk keluhan gusi bengkak dan sakit, serta rekomendasi perawatan."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "Dokter Gigi",
+      "Perawatan Gigi",
+      "Orthodontic"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pembersihan Karang Gigi (Scaling)",
+        "desc": "Prosedur untuk menghilangkan plak dan karang gigi yang menempel pada permukaan gigi.",
+        "price": "Mulai dari Rp 250.000",
+        "tag": "Populer",
+        "category": "Perawatan Dasar"
+      },
+      {
+        "id": 2,
+        "name": "Penambalan Gigi",
+        "desc": "Mengatasi gigi berlubang atau retak dengan bahan tambal sewarna gigi (komposit).",
+        "price": "Mulai dari Rp 300.000",
+        "category": "Restorasi"
+      },
+      {
+        "id": 3,
+        "name": "Pencabutan Gigi",
+        "desc": "Prosedur pencabutan gigi yang sudah tidak dapat dipertahankan lagi atau gigi bungsu.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Bedah Minor"
+      },
+      {
+        "id": 4,
+        "name": "Perawatan Saluran Akar",
+        "desc": "Penanganan untuk gigi dengan infeksi pada bagian pulpa agar gigi tidak perlu dicabut.",
+        "price": "Mulai dari Rp 800.000",
+        "category": "Perawatan Lanjutan"
       },
       {
         "id": 5,
-        "name": "Perawatan Luka",
-        "desc": "Pembersihan dan penanganan luka ringan hingga sedang.",
-        "price": "Mulai Rp 60.000",
-        "category": "Tindakan Medis"
+        "name": "Bleaching Gigi (Pemutihan)",
+        "desc": "Prosedur kosmetik untuk mencerahkan warna gigi secara signifikan.",
+        "price": "Mulai dari Rp 1.500.000",
+        "tag": "Estetika",
+        "category": "Perawatan Estetika"
       }
     ]
   },
@@ -200,257 +276,56 @@ export const DEMO_DATA: Record<string, BusinessDemo> = {
     "phone": "+62 877-7832-4371",
     "address": "Jl. Sawojajar No.9, Pabaton, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16121, Indonesia",
     "googleMapsUrl": "https://maps.google.com/?cid=6458399768149915422&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
-    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "hours": "Senin-Jumat: 08.00-17.00, Sabtu: 08.00-14.00, Minggu: Tutup",
     "waNumber": "6287778324371",
-    "tagline": "Klinik Dokter Anak Terpercaya untuk Kesehatan Si Kecil di Bogor",
-    "iconEmoji": "🩺👶",
+    "tagline": "Klinik anak terpercaya dengan pelayanan terbaik untuk kesehatan buah hati Anda.",
+    "iconEmoji": "🏥",
     "doctor": {
       "name": "dr. Erlin, SpA",
       "role": "Dokter Spesialis Anak",
       "avatarEmoji": "👩‍⚕️",
       "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
       "sampleChat": {
-        "user": "Anak saya demam tinggi dan batuk pilek, apakah perlu segera diperiksa?",
-        "doctor": "Halo Bunda, agar lebih jelas mengenai kondisi si kecil, sebaiknya segera datang untuk pemeriksaan fisik. Saya siap membantu.",
-        "recommendationTitle": "Pemeriksaan Kesehatan Anak",
-        "recommendationDesc": "Konsultasi dan pemeriksaan menyeluruh untuk demam, batuk, pilek, atau keluhan lainnya pada anak."
+        "user": "Anak saya demam tinggi dan batuk pilek, apakah perlu dibawa ke klinik?",
+        "doctor": "Halo, Ibu/Bapak. Untuk demam tinggi pada anak, sebaiknya segera dibawa ke klinik agar bisa diperiksa langsung. Sementara ini, berikan paracetamol sesuai dosis dan pastikan anak cukup minum. Kami siap membantu di klinik.",
+        "recommendationTitle": "Cek Kesehatan Anak Segera",
+        "recommendationDesc": "Jika anak mengalami demam tinggi disertai batuk pilek, sangat disarankan untuk segera melakukan pemeriksaan medis. Dokter akan memberikan diagnosa dan penanganan yang tepat."
       }
     },
     "categories": [
-      "Dokter Anak",
-      "Klinik Kesehatan Anak",
-      "Pediatri"
+      "Klinik Anak",
+      "Dokter Spesialis Anak",
+      "Kesehatan Anak",
+      "Imunisasi"
     ],
     "menu": [
       {
         "id": 1,
-        "name": "Konsultasi Dokter Anak",
-        "desc": "Pemeriksaan dan konsultasi komprehensif dengan dokter spesialis anak",
-        "price": "Mulai dari Rp 150.000",
-        "category": "Layanan Umum"
+        "name": "Konsultasi Dokter Spesialis Anak",
+        "desc": "Pemeriksaan dan konsultasi menyeluruh dengan Dokter Spesialis Anak.",
+        "price": "Rp 150.000",
+        "category": "Layanan Utama"
       },
       {
         "id": 2,
-        "name": "Imunisasi Dasar & Lanjutan",
-        "desc": "Berbagai jenis imunisasi untuk perlindungan anak sesuai jadwal",
-        "price": "Tergantung jenis vaksin",
-        "category": "Vaksinasi"
+        "name": "Imunisasi Rutin Anak",
+        "desc": "Program imunisasi lengkap sesuai jadwal rekomendasi IDAI.",
+        "price": "Mulai Rp 200.000",
+        "category": "Layanan Utama"
       },
       {
         "id": 3,
         "name": "Pemeriksaan Tumbuh Kembang",
-        "desc": "Evaluasi dan stimulasi tumbuh kembang anak secara berkala",
-        "price": "Mulai dari Rp 200.000",
-        "category": "Layanan Spesialis"
+        "desc": "Evaluasi dan pemantauan tumbuh kembang anak.",
+        "price": "Rp 120.000",
+        "category": "Layanan Tambahan"
       },
       {
         "id": 4,
-        "name": "Nebulizer",
-        "desc": "Terapi uap untuk mengatasi gangguan pernapasan pada anak",
-        "price": "Mulai dari Rp 75.000",
+        "name": "Nebulizer untuk Anak",
+        "desc": "Tindakan nebulizer untuk mengatasi masalah pernapasan pada anak.",
+        "price": "Rp 80.000",
         "category": "Tindakan Medis"
-      }
-    ]
-  },
-
-
-  "bidan-mariyah-q-agustina-strkebbdn": {
-    "name": "Bidan Mariyah Q. Agustina, S.Tr.Keb,Bdn",
-    "category": "Klinik Kebidanan",
-    "city": "Ciomas Bogor",
-    "rating": 4.9,
-    "reviewCount": 15,
-    "phone": "",
-    "address": "zam zam tirta, Jl. Sukamaju Ciapus Kreteg, Pagelaran, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610, Indonesia",
-    "googleMapsUrl": "https://maps.google.com/?cid=8320420347943182149&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
-    "hours": "Senin-Sabtu: 08.00 - 20.00, Minggu: Tutup",
-    "waNumber": "6281234567890",
-    "tagline": "Melayani dengan hati, bunda dan buah hati sehat.",
-    "iconEmoji": "🤰",
-    "doctor": {
-      "name": "Bidan Mariyah Q. Agustina",
-      "role": "Bidan",
-      "avatarEmoji": "👩‍⚕️",
-      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
-      "sampleChat": {
-        "user": "Saya ingin konsultasi mengenai kehamilan saya yang sudah masuk trimester ketiga, Bidan.",
-        "doctor": "Tentu, mari kita diskusikan. Apakah ada keluhan khusus atau pertanyaan yang ingin Anda sampaikan?",
-        "recommendationTitle": "Jadwal Kontrol Kehamilan Rutin",
-        "recommendationDesc": "Penting untuk melakukan kontrol rutin setiap 2 minggu pada trimester ketiga untuk memantau kesehatan ibu dan janin."
-      }
-    },
-    "categories": [
-      "Kebidanan",
-      "Kesehatan Ibu dan Anak",
-      "Persalinan"
-    ],
-    "menu": [
-      {
-        "id": 1,
-        "name": "Konsultasi Kehamilan",
-        "desc": "Pemeriksaan dan saran komprehensif selama masa kehamilan.",
-        "price": "Rp 50.000",
-        "category": "Layanan Kebidanan"
-      },
-      {
-        "id": 2,
-        "name": "Pemeriksaan Pasca Melahirkan",
-        "desc": "Evaluasi kesehatan ibu dan bayi setelah proses persalinan.",
-        "price": "Rp 75.000",
-        "category": "Layanan Kebidanan"
-      },
-      {
-        "id": 3,
-        "name": "Imunisasi Bayi",
-        "desc": "Pemberian vaksinasi dasar untuk perlindungan kesehatan bayi.",
-        "price": "Harga menyesuaikan",
-        "tag": "Tersedia",
-        "category": "Kesehatan Anak"
-      }
-    ]
-  },
-
-
-  "bidan-milna-corviana": {
-    "name": "Bidan Milna Corviana",
-    "category": "Klinik Kebidanan",
-    "city": "Ciomas Bogor",
-    "rating": 4.7,
-    "reviewCount": 125,
-    "phone": "",
-    "address": "Padasuka, Ciomas, Bogor Regency, West Java 16610, Indonesia",
-    "googleMapsUrl": "https://maps.google.com/?cid=4354824378859681372&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
-    "hours": "Senin - Sabtu: 09:00 - 20:00",
-    "waNumber": "6281234567890",
-    "tagline": "Pelayanan Kebidanan Profesional dan Terpercaya",
-    "iconEmoji": "🤰",
-    "doctor": {
-      "name": "Milna Corviana",
-      "role": "Bidan",
-      "avatarEmoji": "👩‍⚕️",
-      "avatarUrl": "",
-      "sampleChat": {
-        "user": "Halo Bidan, saya mau tanya jadwal konsultasi untuk kehamilan pertama saya.",
-        "doctor": "Tentu, selamat datang. Untuk konsultasi kehamilan pertama, kami sarankan pada hari Senin-Jumat pukul 09.00-16.00. Apakah Anda sudah memiliki riwayat kesehatan yang perlu kami ketahui?",
-        "recommendationTitle": "Jadwal Konsultasi Kehamilan",
-        "recommendationDesc": "Kami menyediakan layanan konsultasi kehamilan pertama dengan bidan berpengalaman. Dapatkan informasi lengkap tentang kesehatan ibu dan bayi serta persiapan persalinan."
-      }
-    },
-    "categories": [
-      "Kebidanan",
-      "Kesehatan Ibu dan Anak",
-      "Persalinan"
-    ],
-    "menu": [
-      {
-        "id": 1,
-        "name": "Konsultasi Kehamilan",
-        "desc": "Pemeriksaan rutin dan saran kesehatan selama masa kehamilan.",
-        "price": "Rp 75.000",
-        "tag": "Populer",
-        "category": "Layanan Kebidanan"
-      },
-      {
-        "id": 2,
-        "name": "Pemeriksaan USG",
-        "desc": "Pemeriksaan ultrasonografi untuk memantau perkembangan janin.",
-        "price": "Rp 150.000",
-        "category": "Layanan Kebidanan"
-      },
-      {
-        "id": 3,
-        "name": "Kelas Prenatal",
-        "desc": "Sesi edukasi untuk persiapan persalinan dan perawatan bayi baru lahir.",
-        "price": "Rp 200.000",
-        "tag": "Paket",
-        "category": "Edukasi"
-      },
-      {
-        "id": 4,
-        "name": "Imunisasi Anak",
-        "desc": "Layanan imunisasi dasar dan lanjutan untuk bayi dan balita.",
-        "price": "Mulai Rp 80.000",
-        "category": "Layanan Kesehatan Anak"
-      },
-      {
-        "id": 5,
-        "name": "Persalinan Normal",
-        "desc": "Pendampingan dan fasilitas persalinan normal dengan bidan berpengalaman.",
-        "price": "Mulai Rp 1.500.000",
-        "tag": "Unggulan",
-        "category": "Layanan Kebidanan"
-      }
-    ]
-  },
-
-
-  "qdental-care-praktek-drg-iik-yani-hidayati-mm": {
-    "name": "Q-Dental Care. Praktek Drg IIK YANI HIDAYATI, MM",
-    "category": "Klinik Gigi",
-    "city": "Ciomas Bogor",
-    "rating": 4.5,
-    "reviewCount": 73,
-    "phone": "+62 812-9935-864",
-    "address": "Jalan Garuda Raya Jl. Komp. Villa Ciomas Indah No.5 Blok H1, RW.6, Ciomas Rahayu, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610, Indonesia",
-    "googleMapsUrl": "https://maps.google.com/?cid=15654726269016391184&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
-    "hours": "Senin - Sabtu: 09:00 - 20:00",
-    "waNumber": "628129935864",
-    "tagline": "Senyum sehat dan cerah Anda adalah prioritas kami.",
-    "iconEmoji": "🦷",
-    "doctor": {
-      "name": "Drg. IIK YANI HIDAYATI, MM",
-      "role": "Dokter Gigi Umum",
-      "avatarEmoji": "👩‍⚕️",
-      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
-      "sampleChat": {
-        "user": "Halo dok, gigi saya terasa ngilu saat minum dingin.",
-        "doctor": "Selamat siang. Ngilu pada gigi saat minum dingin bisa jadi indikasi sensitivitas gigi atau masalah lain. Sebaiknya segera periksakan gigi Anda agar bisa dilakukan penanganan yang tepat.",
-        "recommendationTitle": "Pemeriksaan Gigi dan Penanganan Sensitivitas",
-        "recommendationDesc": "Kunjungi klinik kami untuk pemeriksaan menyeluruh. Dokter akan mendiagnosis penyebab ngilu dan memberikan perawatan yang sesuai, seperti aplikasi fluoride atau penambalan jika diperlukan."
-      }
-    },
-    "categories": [
-      "Klinik Gigi",
-      "Dokter Gigi",
-      "Perawatan Gigi",
-      "Tambal Gigi",
-      "Pembersihan Karang Gigi"
-    ],
-    "menu": [
-      {
-        "id": 1,
-        "name": "Pemeriksaan dan Konsultasi Gigi",
-        "desc": "Pemeriksaan kondisi gigi dan mulut secara menyeluruh serta konsultasi dengan dokter gigi.",
-        "price": "Rp 50.000",
-        "category": "Layanan Umum"
-      },
-      {
-        "id": 2,
-        "name": "Scaling (Pembersihan Karang Gigi)",
-        "desc": "Prosedur pembersihan karang gigi dan plak untuk menjaga kesehatan gusi dan gigi.",
-        "price": "Rp 250.000 - Rp 400.000",
-        "category": "Layanan Umum"
-      },
-      {
-        "id": 3,
-        "name": "Penambalan Gigi Komposit",
-        "desc": "Penambalan gigi berlubang menggunakan bahan komposit sewarna gigi.",
-        "price": "Rp 300.000 - Rp 600.000",
-        "category": "Restorasi Gigi"
-      },
-      {
-        "id": 4,
-        "name": "Pencabutan Gigi (Sederhana)",
-        "desc": "Pencabutan gigi yang rusak atau bermasalah tanpa komplikasi.",
-        "price": "Rp 200.000 - Rp 450.000",
-        "category": "Bedah Minor"
-      },
-      {
-        "id": 5,
-        "name": "Bleaching (Pemutihan Gigi)",
-        "desc": "Prosedur estetika untuk mencerahkan warna gigi Anda.",
-        "price": "Rp 1.500.000 - Rp 3.000.000",
-        "category": "Estetika Gigi"
       }
     ]
   },
@@ -459,56 +334,63 @@ export const DEMO_DATA: Record<string, BusinessDemo> = {
   "rumah-keisya": {
     "name": "RUMAH KEISYA",
     "category": "Klinik Kecantikan",
-    "city": "Ciomas Bogor",
+    "city": "ciomas bogor",
     "rating": 4.5,
     "reviewCount": 553,
-    "phone": "Tidak tersedia",
+    "phone": "",
     "address": "9QXJ+GP5, RT.04/RW.04, Pasirkuda, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16119, Indonesia",
     "googleMapsUrl": "https://maps.google.com/?cid=8425839679768306770&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
     "hours": "Senin - Sabtu: 09:00 - 20:00",
     "waNumber": "6281234567890",
-    "tagline": "Pusat kecantikan terpercaya untuk kulit sehat dan cerah Anda.",
-    "iconEmoji": "\"\b",
+    "tagline": "Pusat Perawatan Estetika dan Kesehatan",
+    "iconEmoji": "💅",
     "doctor": {
-      "name": "dr. Anya Wijaya",
-      "role": "Dokter Kecantikan",
-      "avatarEmoji": "👩\t\n",
-      "avatarUrl": "https://example.com/anya.png",
+      "name": "Dr. Aisyah",
+      "role": "Dokter Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
       "sampleChat": {
-        "user": "Dokter, kulit saya sering kusam dan muncul jerawat kecil. Apa rekomendasi perawatan yang cocok untuk saya?",
-        "doctor": "Tentu, untuk masalah kulit kusam dan jerawat kecil, kami memiliki beberapa pilihan perawatan. Untuk langkah awal, saya sarankan konsultasi mendalam untuk mengetahui jenis kulit dan penyebabnya.",
-        "recommendationTitle": "Rekomendasi Perawatan Kulit Kusam dan Jerawat",
-        "recommendationDesc": "Kami merekomendasikan facial detox dan serum pencerah yang diformulasikan khusus untuk kulit Anda. Lanjutkan dengan penggunaan skincare rutin yang tepat."
+        "user": "Saya ingin konsultasi mengenai perawatan wajah untuk kulit sensitif.",
+        "doctor": "Tentu, dengan senang hati. Kami memiliki beberapa opsi perawatan yang dirancang khusus untuk kulit sensitif. Bisa ceritakan lebih lanjut tentang kondisi kulit Anda?",
+        "recommendationTitle": "Rekomendasi Perawatan Kulit Sensitif",
+        "recommendationDesc": "Kami merekomendasikan facial hydrating khusus, serum probiotik, dan krim pelembap tanpa pewangi untuk menenangkan dan memperkuat barrier kulit Anda."
       }
     },
     "categories": [
-      "Klinik Kecantikan",
       "Perawatan Kulit",
-      "Spa",
-      "Facial"
+      "Kecantikan Wajah",
+      "Perawatan Rambut",
+      "Klinik Umum"
     ],
     "menu": [
       {
         "id": 1,
-        "name": "Facial Basic",
-        "desc": "Pembersihan mendalam untuk mengangkat kotoran dan sel kulit mati.",
-        "price": "Rp 99.000",
+        "name": "Basic Facial",
+        "desc": "Pembersihan wajah mendalam untuk kulit sehat",
+        "price": "Rp 150.000",
         "category": "Perawatan Wajah"
       },
       {
         "id": 2,
         "name": "Acne Treatment",
-        "desc": "Perawatan khusus untuk mengatasi jerawat dan mengurangi bekasnya.",
-        "price": "Rp 150.000",
+        "desc": "Perawatan khusus untuk kulit berjerawat dan sensitif",
+        "price": "Rp 250.000",
         "tag": "Populer",
         "category": "Perawatan Wajah"
       },
       {
         "id": 3,
-        "name": "Brightening Infusion",
-        "desc": "Infus vitamin untuk mencerahkan kulit dari dalam.",
-        "price": "Rp 250.000",
-        "category": "Perawatan Tubuh"
+        "name": "Consultation & Skincare",
+        "desc": "Konsultasi dengan dokter dan rekomendasi produk",
+        "price": "Rp 100.000",
+        "category": "Konsultasi"
+      },
+      {
+        "id": 4,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk peremajaan kulit",
+        "price": "Rp 750.000",
+        "category": "Perawatan Khusus"
       }
     ]
   },
@@ -517,62 +399,69 @@ export const DEMO_DATA: Record<string, BusinessDemo> = {
   "dr-adisetya-w-spthtbkl-dokter-spesialis-telinga-hidung-tenggorok": {
     "name": "Dr. Adisetya W Sp.THT-BKL (Dokter Spesialis Telinga Hidung & Tenggorok)",
     "category": "Klinik THT",
-    "city": "Ciomas Bogor",
+    "city": "Bogor",
     "rating": 4.9,
     "reviewCount": 171,
     "phone": "+62 852-8250-1970",
     "address": "Jl. DR. Sumeru No.84, RT.01/RW.03, Menteng, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16111, Indonesia",
-    "googleMapsUrl": "https://maps.google.com/?cid=10054019494049353279&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMuYjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "googleMapsUrl": "https://maps.google.com/?cid=10054019494049353279&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
     "hours": "Senin - Sabtu: 09:00 - 20:00",
     "waNumber": "6285282501970",
-    "tagline": "Spesialis Telinga, Hidung, dan Tenggorok terbaik di Bogor.",
-    "iconEmoji": "👂",
+    "tagline": "Pakar THT terkemuka di Bogor, siap melayani kesehatan telinga, hidung, dan tenggorok Anda dengan profesionalisme dan empati.",
+    "iconEmoji": "👂👃",
     "doctor": {
-      "name": "Dr. Adisetya W",
-      "role": "Spesialis THT-BKL",
+      "name": "Dr. Adisetya W Sp.THT-BKL",
+      "role": "Dokter Spesialis Telinga Hidung & Tenggorok",
       "avatarEmoji": "👨‍⚕️",
       "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
       "sampleChat": {
-        "user": "Halo dokter, saya sering merasa telinga berdengung akhir-akhir ini. Apakah ini normal?",
-        "doctor": "Halo, tentu. Telinga berdengung atau tinnitus bisa disebabkan oleh beberapa faktor. Saya akan bantu periksa lebih lanjut. Kapan waktu yang tepat untuk Anda berkonsultasi?",
-        "recommendationTitle": "Jadwalkan Konsultasi THT",
-        "recommendationDesc": "Dapatkan penanganan terbaik untuk masalah telinga, hidung, dan tenggorokan Anda dengan Dr. Adisetya W."
+        "user": "Dok, saya sering merasa telinga berdengung dan sedikit nyeri. Apa yang harus saya lakukan?",
+        "doctor": "Halo, baik. Berdasarkan keluhan Anda, ada beberapa kemungkinan penyebab. Untuk diagnosis yang lebih akurat, saya sarankan Anda datang untuk pemeriksaan langsung agar bisa dilihat kondisi telinga Anda. Apakah Anda bisa datang besok?",
+        "recommendationTitle": "Pemeriksaan Telinga Komprehensif",
+        "recommendationDesc": "Pemeriksaan fisik telinga menggunakan otoskop dan mungkin tes audiometri untuk mengevaluasi pendengaran dan mencari penyebab dengungan atau nyeri."
       }
     },
     "categories": [
+      "THT",
+      "Spesialis THT",
       "Klinik THT",
-      "Dokter Spesialis THT",
-      "Praktek Dokter"
+      "Dokter THT"
     ],
     "menu": [
       {
         "id": 1,
-        "name": "Konsultasi Dokter Spesialis THT",
-        "desc": "Pemeriksaan dan konsultasi menyeluruh dengan dokter spesialis THT.",
-        "price": "Rp 250.000",
+        "name": "Konsultasi Spesialis THT",
+        "desc": "Diskusi mendalam mengenai keluhan telinga, hidung, atau tenggorok dengan dokter spesialis.",
+        "price": "Rp 150.000",
         "category": "Layanan Utama"
       },
       {
         "id": 2,
-        "name": "Pemeriksaan Audiometri",
-        "desc": "Tes pendengaran untuk mendeteksi gangguan atau penurunan fungsi pendengaran.",
-        "price": "Rp 300.000",
-        "tag": "Populer",
-        "category": "Pemeriksaan Diagnostik"
+        "name": "Pembersihan Serumen (Kotoran Telinga)",
+        "desc": "Prosedur aman dan nyaman untuk membersihkan kotoran telinga yang menumpuk.",
+        "price": "Rp 100.000",
+        "category": "Perawatan Umum"
       },
       {
         "id": 3,
-        "name": "Endoskopi THT",
-        "desc": "Pemeriksaan detail saluran telinga, hidung, dan tenggorokan menggunakan endoskop.",
-        "price": "Rp 450.000",
+        "name": "Pemeriksaan Audiometri",
+        "desc": "Tes untuk mengukur kemampuan pendengaran dan mendeteksi gangguan pendengaran.",
+        "price": "Rp 200.000",
         "category": "Pemeriksaan Diagnostik"
       },
       {
         "id": 4,
-        "name": "Irigasi Telinga",
-        "desc": "Prosedur pembersihan kotoran telinga yang menumpuk secara aman dan efektif.",
-        "price": "Rp 150.000",
-        "category": "Prosedur Minor"
+        "name": "Endoskopi Hidung/Tenggorok",
+        "desc": "Pemeriksaan visual saluran hidung atau tenggorok menggunakan endoskop untuk diagnosis lebih akurat.",
+        "price": "Rp 250.000",
+        "category": "Pemeriksaan Diagnostik"
+      },
+      {
+        "id": 5,
+        "name": "Terapi Vertigo",
+        "desc": "Penanganan khusus untuk keluhan pusing berputar atau vertigo.",
+        "price": "Rp 180.000",
+        "category": "Layanan Spesialis"
       }
     ]
   },

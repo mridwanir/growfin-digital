@@ -21,6 +21,13 @@ export interface DoctorInfo {
   };
 }
 
+export interface ReviewInfo {
+  authorName: string;
+  rating: number;
+  text: string;
+  time?: string;
+}
+
 export interface BusinessDemo {
   name: string;
   category: string;
@@ -37,6 +44,7 @@ export interface BusinessDemo {
   doctor: DoctorInfo;
   categories: string[];
   menu: MenuItem[];
+  reviews?: ReviewInfo[];
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {

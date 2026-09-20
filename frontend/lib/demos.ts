@@ -40,6 +40,212 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "pdhb-drh-galuh-indro-d-dkk": {
+    "name": "PDHB DRH. GALUH INDRO D., DKK",
+    "category": "Klinik Hewan",
+    "city": "ciomas bogor",
+    "rating": 4.6,
+    "reviewCount": 203,
+    "phone": "+62 817-4121-554",
+    "address": "Jl. Re. Abdullah No.3, RT.02/RW.01, Pasirmulya, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16118, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=260363542067160756&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628174121554",
+    "tagline": "Kesehatan hewan peliharaan Anda adalah prioritas kami.",
+    "iconEmoji": "🐾",
+    "doctor": {
+      "name": "Drh. Galuh Indro D.",
+      "role": "Dokter Hewan",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, kucing saya lesu dan tidak mau makan. Apakah ada yang salah dengannya?",
+        "doctor": "Halo! Gejala lesu dan nafsu makan menurun pada kucing bisa menjadi indikasi berbagai masalah kesehatan. Sebaiknya segera bawa kucing Anda untuk diperiksa langsung di klinik agar kami bisa memberikan diagnosis dan penanganan yang tepat.",
+        "recommendationTitle": "Pemeriksaan Kesehatan Menyeluruh",
+        "recommendationDesc": "Kami sangat merekomendasikan pemeriksaan fisik lengkap dan mungkin tes penunjang (seperti tes darah) untuk mendiagnosis penyebab kondisi kucing Anda dan merencanakan perawatan terbaik."
+      }
+    },
+    "categories": [
+      "Klinik Hewan",
+      "Dokter Hewan",
+      "Pet Shop",
+      "Grooming Hewan"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pemeriksaan Umum Hewan",
+        "desc": "Konsultasi dan pemeriksaan kesehatan rutin untuk anjing, kucing, dan hewan peliharaan lainnya.",
+        "price": "Mulai Rp 50.000",
+        "category": "Layanan Medis Umum"
+      },
+      {
+        "id": 2,
+        "name": "Vaksinasi Lengkap Kucing",
+        "desc": "Paket vaksinasi komprehensif untuk kucing sesuai standar kesehatan hewan.",
+        "price": "Mulai Rp 150.000",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 3,
+        "name": "Sterilisasi Anjing/Kucing",
+        "desc": "Prosedur sterilisasi atau kebiri yang aman dan profesional untuk hewan kesayangan Anda.",
+        "price": "Mulai Rp 600.000",
+        "category": "Bedah & Prosedur"
+      },
+      {
+        "id": 4,
+        "name": "Grooming & Mandi Sehat",
+        "desc": "Perawatan lengkap meliputi mandi, potong kuku, pembersihan telinga, dan tata rambut.",
+        "price": "Mulai Rp 75.000",
+        "category": "Perawatan & Estetika"
+      },
+      {
+        "id": 5,
+        "name": "Tes Darah Lengkap",
+        "desc": "Analisis laboratorium untuk mendeteksi berbagai kondisi kesehatan hewan.",
+        "price": "Mulai Rp 120.000",
+        "category": "Diagnostik"
+      }
+    ]
+  },
+
+
+  "klinik-dokter-riyadhi": {
+    "name": "Klinik Dokter Riyadhi",
+    "category": "Klinik Umum",
+    "city": "ciomas bogor",
+    "rating": 4.9,
+    "reviewCount": 107,
+    "phone": "+62 895-4183-07958",
+    "address": "Jl. Nurkim, RT.01/RW.13, Kota Batu, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=9905917719201751516&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "62895418307958",
+    "tagline": "Pelayanan kesehatan umum dan terpercaya untuk keluarga Anda.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "dr. Riyadhi",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo dok, saya merasa demam dan batuk sejak kemarin. Apakah ini gejala flu?",
+        "doctor": "Halo, bisa jadi. Untuk memastikan, sebaiknya Anda datang ke klinik agar bisa diperiksa lebih lanjut. Sementara itu, istirahat cukup dan banyak minum air putih.",
+        "recommendationTitle": "Kunjungan Konsultasi Umum",
+        "recommendationDesc": "Pemeriksaan dan konsultasi dengan dr. Riyadhi untuk diagnosis awal dan penanganan demam serta batuk."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Pelayanan Medis",
+      "Dokter Keluarga",
+      "Vaksinasi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan kesehatan dan konsultasi dengan dokter umum.",
+        "price": "Rp 50.000",
+        "category": "Layanan Utama"
+      },
+      {
+        "id": 2,
+        "name": "Pemeriksaan Tekanan Darah",
+        "desc": "Pengukuran dan monitoring tekanan darah.",
+        "price": "Rp 25.000",
+        "category": "Pemeriksaan"
+      },
+      {
+        "id": 3,
+        "name": "Suntik Vitamin C",
+        "desc": "Injeksi vitamin C untuk meningkatkan daya tahan tubuh.",
+        "price": "Rp 75.000",
+        "tag": "Populer",
+        "category": "Terapi"
+      },
+      {
+        "id": 4,
+        "name": "Vaksinasi Influenza",
+        "desc": "Pemberian vaksin influenza musiman.",
+        "price": "Rp 150.000",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 5,
+        "name": "Perawatan Luka",
+        "desc": "Pembersihan dan penanganan luka ringan hingga sedang.",
+        "price": "Mulai Rp 60.000",
+        "category": "Tindakan Medis"
+      }
+    ]
+  },
+
+
+  "dr-erlin-spa-dokter-anak-rskia-sawojajar": {
+    "name": "dr. Erlin, SpA (Dokter anak RSKIA Sawojajar)",
+    "category": "Klinik Anak",
+    "city": "ciomas bogor",
+    "rating": 5.0,
+    "reviewCount": 127,
+    "phone": "+62 877-7832-4371",
+    "address": "Jl. Sawojajar No.9, Pabaton, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16121, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=6458399768149915422&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287778324371",
+    "tagline": "Klinik Dokter Anak Terpercaya untuk Kesehatan Si Kecil di Bogor",
+    "iconEmoji": "🩺👶",
+    "doctor": {
+      "name": "dr. Erlin, SpA",
+      "role": "Dokter Spesialis Anak",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Anak saya demam tinggi dan batuk pilek, apakah perlu segera diperiksa?",
+        "doctor": "Halo Bunda, agar lebih jelas mengenai kondisi si kecil, sebaiknya segera datang untuk pemeriksaan fisik. Saya siap membantu.",
+        "recommendationTitle": "Pemeriksaan Kesehatan Anak",
+        "recommendationDesc": "Konsultasi dan pemeriksaan menyeluruh untuk demam, batuk, pilek, atau keluhan lainnya pada anak."
+      }
+    },
+    "categories": [
+      "Dokter Anak",
+      "Klinik Kesehatan Anak",
+      "Pediatri"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Anak",
+        "desc": "Pemeriksaan dan konsultasi komprehensif dengan dokter spesialis anak",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Layanan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Imunisasi Dasar & Lanjutan",
+        "desc": "Berbagai jenis imunisasi untuk perlindungan anak sesuai jadwal",
+        "price": "Tergantung jenis vaksin",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 3,
+        "name": "Pemeriksaan Tumbuh Kembang",
+        "desc": "Evaluasi dan stimulasi tumbuh kembang anak secara berkala",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Layanan Spesialis"
+      },
+      {
+        "id": 4,
+        "name": "Nebulizer",
+        "desc": "Terapi uap untuk mengatasi gangguan pernapasan pada anak",
+        "price": "Mulai dari Rp 75.000",
+        "category": "Tindakan Medis"
+      }
+    ]
+  },
+
+
   "bidan-mariyah-q-agustina-strkebbdn": {
     "name": "Bidan Mariyah Q. Agustina, S.Tr.Keb,Bdn",
     "category": "Klinik Kebidanan",

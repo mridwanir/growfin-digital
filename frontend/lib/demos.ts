@@ -48,6 +48,281 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "praktek-dokter-hankam-dr-urip-sadeli": {
+    "name": "Praktek Dokter Hankam dr. Urip Sadeli",
+    "category": "Klinik Umum",
+    "city": "cisarua",
+    "rating": 4.7,
+    "reviewCount": 13,
+    "phone": "+62 812-8805-7278",
+    "address": "Jl. Hankam No.KM. 80, Leuwimalang, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=16533342061455380162&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJbyRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281288057278",
+    "tagline": "Layanan kesehatan prima untuk Anda dan keluarga di Cisarua.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "dr. Urip Sadeli",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Anak saya demam tinggi dan batuk sudah 3 hari, apakah perlu segera diperiksa?",
+        "doctor": "Tentu, Bu/Pak. Silakan datang ke klinik untuk pemeriksaan lebih lanjut agar dapat diberikan penanganan yang tepat. Jangan tunda jika demamnya tinggi.",
+        "recommendationTitle": "Konsultasi Demam & Batuk Anak",
+        "recommendationDesc": "Untuk demam tinggi dan batuk pada anak, segera konsultasikan dengan dokter untuk diagnosis dan penanganan yang akurat."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Praktek Dokter",
+      "Kesehatan Keluarga"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan dan konsultasi dengan dokter umum untuk berbagai keluhan kesehatan.",
+        "price": "Mulai dari Rp 50.000",
+        "category": "Layanan Dasar"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Mhmdandri Yansyah",
+        "rating": 4,
+        "text": "I have been receiving treatment here for 2 years and in a few months, the doctor always has the best medicine. Thank you, doctor.",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Rana",
+        "rating": 5,
+        "text": "I've taken my children for treatment twice, and thank God, they've been successful. The medicine is good, the service is excellent, and the doctor is friendly.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "sitiiraida rahmat",
+        "rating": 5,
+        "text": "Thank God, my child and my mother-in-law are very well treated here. 🥰🤲",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "triyanti ranna",
+        "rating": 5,
+        "text": "Doctor, I have a problem with acne that flares up on and off. Can I consult here?",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Arul Gunadi",
+        "rating": 5,
+        "text": "Doctor, can I get treatment for toothache here?",
+        "time": "a year ago"
+      }
+    ]
+  },
+
+
+  "rafsa-therapy-puncak-bogor-khusus-pelayanan-homecare": {
+    "name": "Rafsa Therapy Puncak Bogor ( Khusus Pelayanan Homecare )",
+    "category": "Klinik Terapi",
+    "city": "cisarua",
+    "rating": 5.0,
+    "reviewCount": 243,
+    "phone": "+62 857-1123-5265",
+    "address": "Cisarua (Burujul kavling, Cisarua, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=16308603640028916526&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285711235265",
+    "tagline": "Layanan Homecare Terapi Profesional di Puncak Bogor",
+    "iconEmoji": "💆‍♀️",
+    "doctor": {
+      "name": "Dr. Sarah Fitri",
+      "role": "Fisioterapis Senior",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya mengalami nyeri punggung bawah setelah beraktivitas berat, apakah ada saran?",
+        "doctor": "Tentu, nyeri punggung bawah bisa disebabkan oleh beberapa faktor. Untuk penanganan awal, Anda bisa mencoba kompres hangat, istirahat cukup, dan menghindari posisi yang memperparah nyeri. Jika nyeri berlanjut, kami sarankan untuk melakukan konsultasi lebih lanjut agar bisa diberikan penanganan yang tepat, seperti terapi fisik.",
+        "recommendationTitle": "Penanganan Nyeri Punggung Bawah",
+        "recommendationDesc": "Nyeri punggung bawah seringkali mereda dengan istirahat dan penanganan mandiri. Namun, jika nyeri persisten atau memburuk, terapi fisik dapat membantu memperkuat otot inti dan meningkatkan fleksibilitas untuk mengurangi ketidaknyamanan."
+      }
+    },
+    "categories": [
+      "Terapi Fisik",
+      "Homecare",
+      "Fisioterapi",
+      "Kesehatan"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Homecare Fisioterapi Umum",
+        "desc": "Layanan fisioterapi komprehensif di rumah untuk pemulihan pasca cedera, stroke, atau kondisi muskuloskeletal.",
+        "price": "Mulai Rp 350.000",
+        "category": "Fisioterapi"
+      },
+      {
+        "id": 2,
+        "name": "Terapi Nyeri Kronis",
+        "desc": "Penanganan khusus untuk nyeri punggung, leher, sendi, dan kondisi nyeri kronis lainnya.",
+        "price": "Mulai Rp 400.000",
+        "category": "Fisioterapi"
+      },
+      {
+        "id": 3,
+        "name": "Rehabilitasi Pasca-Operasi",
+        "desc": "Program rehabilitasi yang disesuaikan untuk mempercepat pemulihan setelah operasi.",
+        "price": "Mulai Rp 450.000",
+        "category": "Rehabilitasi"
+      },
+      {
+        "id": 4,
+        "name": "Terapi Geriatri",
+        "desc": "Fisioterapi yang berfokus pada peningkatan mobilitas dan kualitas hidup lansia.",
+        "price": "Mulai Rp 350.000",
+        "category": "Fisioterapi"
+      },
+      {
+        "id": 5,
+        "name": "Pijat Terapi Relaksasi",
+        "desc": "Pijat khusus untuk relaksasi otot, mengurangi ketegangan, dan meningkatkan sirkulasi.",
+        "price": "Mulai Rp 300.000",
+        "category": "Terapi"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Majd Hasan",
+        "rating": 5,
+        "text": "Its the best ...really it make me so comfortable",
+        "time": "3 months ago"
+      },
+      {
+        "authorName": "Popi Leni Kurniawati",
+        "rating": 5,
+        "text": "Ontime, profesional, fleksibel, good service. Recommended",
+        "time": "9 months ago"
+      },
+      {
+        "authorName": "Ali Mohammed",
+        "rating": 5,
+        "text": "Very skillful, friendly and has helped my shoulder pain alot, very reasonable price",
+        "time": "10 months ago"
+      },
+      {
+        "authorName": "Espe",
+        "rating": 5,
+        "text": "It was a good treatment , looking forward to another treatment later",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Keluarga Matius Ginting",
+        "rating": 5,
+        "text": "good",
+        "time": "6 months ago"
+      }
+    ]
+  },
+
+
+  "ahli-gigi-cisarua": {
+    "name": "Ahli gigi cisarua",
+    "category": "Klinik Gigi",
+    "city": "cisarua",
+    "rating": 4.6,
+    "reviewCount": 22,
+    "phone": "+62 877-0196-0114",
+    "address": "Jl. Raya Puncak - Gadog No.81, Cibeureum, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16750, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=10459684384412478420&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287701960114",
+    "tagline": "Pakar gigi terpercaya untuk senyum sehat Anda di Cisarua.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Drg. Viki",
+      "role": "Dokter Gigi Umum",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, gigi saya sakit sekali, seperti ada lubang.",
+        "doctor": "Baik, mari kita periksa untuk mengetahui penyebabnya dan rencana perawatan terbaik.",
+        "recommendationTitle": "Cek Kesehatan Gigi & Konsultasi",
+        "recommendationDesc": "Kami akan melakukan pemeriksaan menyeluruh untuk mendiagnosis masalah gigi Anda dan memberikan solusi terbaik."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "Dokter Gigi",
+      "Perawatan Gigi",
+      "Pembersihan Karang Gigi",
+      "Cabut Gigi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pembersihan Karang Gigi",
+        "desc": "Membersihkan plak dan karang gigi untuk mencegah masalah gusi dan gigi berlubang.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Perawatan Preventif"
+      },
+      {
+        "id": 2,
+        "name": "Penambalan Gigi",
+        "desc": "Mengisi gigi berlubang untuk mengembalikan fungsi dan estetik gigi.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Perawatan Restoratif"
+      },
+      {
+        "id": 3,
+        "name": "Pencabutan Gigi",
+        "desc": "Prosedur pencabutan gigi yang sudah tidak dapat dipertahankan.",
+        "price": "Mulai dari Rp 100.000",
+        "category": "Perawatan Bedah Minor"
+      },
+      {
+        "id": 4,
+        "name": "Konsultasi Dokter Gigi",
+        "desc": "Pemeriksaan umum dan saran ahli untuk kesehatan gigi dan mulut Anda.",
+        "price": "Gratis (dengan perawatan)",
+        "tag": "Populer",
+        "category": "Layanan Konsultasi"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Tita Andana",
+        "rating": 1,
+        "text": "Is this still open? Can I make rabbit teeth?",
+        "time": "4 months ago"
+      },
+      {
+        "authorName": "Siti hodijah",
+        "rating": 4,
+        "text": "I want to ask, how much does it cost to clean tartar before going, doc? I'm afraid I won't have enough money when I go there.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Setia ningsih",
+        "rating": 4,
+        "text": "Can you clean tartar and pull out teeth that are almost gone?",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Ali Adnan",
+        "rating": 5,
+        "text": "Thank you, sis, friendly prices, fast installation, and the results are as expected, Viki Dental is a top dental expert.",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Kosasih K",
+        "rating": 5,
+        "text": "The place is clean....very good service...thank you",
+        "time": "4 years ago"
+      }
+    ]
+  },
+
+
   "klinik-seulanga": {
     "name": "Klinik Seulanga",
     "category": "Klinik Gigi",

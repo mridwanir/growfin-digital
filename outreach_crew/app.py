@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import codecs
+import requests
 from pathlib import Path
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
@@ -35,6 +36,71 @@ def get_history():
         content = HISTORY_FILE.read_text(encoding="utf-8")
         history = json.loads(content)
         return jsonify(history)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/preview', methods=['GET'])
+def preview_osm():
+    lat = request.args.get('lat')
+    lng = request.args.get('lng')
+    radius = request.args.get('radius')
+    
+    if not all([lat, lng, radius]):
+        return jsonify({"error": "Missing parameters"}), 400
+        
+    query = f"""
+    [out:json][timeout:15];
+    (
+      node["amenity"~"clinic|dentist|doctors"](around:{radius},{lat},{lng});
+      way["amenity"~"clinic|dentist|doctors"](around:{radius},{lat},{lng});
+      node["healthcare"](around:{radius},{lat},{lng});
+      way["healthcare"](around:{radius},{lat},{lng});
+    );
+    out center;
+    """
+    
+    headers = {'User-Agent': 'GrowfinDigitalScanner/1.0'}
+    try:
+        resp = requests.get("https://overpass-api.de/api/interpreter", params={'data': query}, headers=headers, timeout=20)
+        if resp.status_code == 200:
+            data = resp.json()
+            elements = data.get('elements', [])
+            
+            # Categorize the results
+            results = []
+            for e in elements:
+                tags = e.get('tags', {})
+                amenity = tags.get('amenity', '')
+                healthcare = tags.get('healthcare', '')
+                
+                category = "Umum/Lainnya"
+                if amenity == "dentist" or healthcare == "dentist":
+                    category = "Klinik Gigi"
+                elif amenity == "doctors" or healthcare == "doctor":
+                    category = "Dokter"
+                elif amenity == "clinic" or healthcare == "clinic":
+                    category = "Klinik"
+                
+                # Check name for skincare heuristics since OSM doesn't have a strict skincare tag usually
+                name = tags.get('name', '').lower()
+                if 'skin' in name or 'kecantikan' in name or 'beauty' in name or 'aesthetic' in name:
+                    category = "Skincare/Aesthetic"
+                    
+                lat_coord = e.get('lat') or e.get('center', {}).get('lat')
+                lng_coord = e.get('lon') or e.get('center', {}).get('lon')
+                
+                if lat_coord and lng_coord:
+                    results.append({
+                        "id": e.get('id'),
+                        "name": tags.get('name', 'Tanpa Nama'),
+                        "category": category,
+                        "lat": lat_coord,
+                        "lng": lng_coord
+                    })
+                    
+            return jsonify({"status": "success", "data": results})
+        else:
+            return jsonify({"error": f"OSM API Error {resp.status_code}", "details": resp.text}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

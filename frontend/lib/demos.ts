@@ -48,6 +48,575 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "qdental-clinic-bogor": {
+    "name": "Q-DENTAL CLINIC BOGOR",
+    "category": "Klinik Gigi",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 71,
+    "phone": "+62 877-7565-8258",
+    "address": "Jl. H. Achmad Adnawijaya 4B-2 Blk No.D1, RT.004/RW.11, Tegal Gundil, Bogor Utara, Bogor City, West Java 16152, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=9657563301755298642&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287775658258",
+    "tagline": "Senyum Sehat, Hati Senang di Q-DENTAL CLINIC BOGOR",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "drg. Amelia Putri",
+      "role": "Dokter Gigi Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, gigi saya terasa ngilu saat minum dingin, kenapa ya?",
+        "doctor": "Halo! Itu bisa jadi tanda gigi sensitif atau ada lubang kecil. Saya sarankan Anda datang untuk pemeriksaan agar bisa kami pastikan penyebabnya dan memberikan penanganan yang tepat.",
+        "recommendationTitle": "Jadwalkan Konsultasi Gratis!",
+        "recommendationDesc": "Dapatkan pemeriksaan awal gratis untuk mengetahui kondisi gigi Anda dan rekomendasi perawatan terbaik dari dokter gigi kami."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "Dokter Gigi",
+      "Perawatan Gigi",
+      "Scaling",
+      "Cabut Gigi",
+      "Tambal Gigi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Scaling (Pembersihan Karang Gigi)",
+        "desc": "Pembersihan karang gigi untuk menjaga kesehatan gusi dan mencegah peradangan.",
+        "price": "Mulai dari Rp 250.000",
+        "category": "Perawatan Preventif"
+      },
+      {
+        "id": 2,
+        "name": "Tambal Gigi",
+        "desc": "Penambalan gigi berlubang dengan bahan komposit sewarna gigi untuk mengembalikan fungsi dan estetikanya.",
+        "price": "Mulai dari Rp 300.000",
+        "category": "Perawatan Restoratif"
+      },
+      {
+        "id": 3,
+        "name": "Cabut Gigi",
+        "desc": "Prosedur pencabutan gigi yang sudah tidak dapat dipertahankan atau mengganggu kesehatan.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Perawatan Bedah Minor"
+      },
+      {
+        "id": 4,
+        "name": "Pemutihan Gigi (Whitening)",
+        "desc": "Prosedur untuk mencerahkan warna gigi secara aman dan efektif di klinik.",
+        "price": "Mulai dari Rp 1.500.000",
+        "tag": "Populer",
+        "category": "Perawatan Estetik"
+      },
+      {
+        "id": 5,
+        "name": "Perawatan Saluran Akar",
+        "desc": "Perawatan untuk mengatasi infeksi pada pulpa gigi agar gigi dapat dipertahankan.",
+        "price": "Mulai dari Rp 800.000",
+        "category": "Perawatan Endodontik"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Bella Vidya",
+        "rating": 5,
+        "text": "Comfortable place, informative receptionist, and very communicative also helpful doctors. Had very nice treatments there! Thank u Q-Dental Clinic😍",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Audinna kha",
+        "rating": 5,
+        "text": "Good experience for first time go to dentist. Thanks Q Dental clinic",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "M Wahyu Sanjaya",
+        "rating": 5,
+        "text": "trims trimss W Q-dental clinic",
+        "time": "6 months ago"
+      },
+      {
+        "authorName": "Aura amalia Basmalah",
+        "rating": 5,
+        "text": "W q-dental clinic bogorr🔥",
+        "time": "6 months ago"
+      },
+      {
+        "authorName": "Muhammad Syarif Hidayatullah",
+        "rating": 5,
+        "text": "q-dental clinic bogor W",
+        "time": "6 months ago"
+      }
+    ]
+  },
+
+
+  "okky-orthodontics-dokter-gigi-spesialis-ortodontikawat-gigi": {
+    "name": "Okky Orthodontics",
+    "category": "Klinik Gigi",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 144,
+    "phone": "+62 813-2726-6161",
+    "address": "Jl. Cimanggu Barata No.72, RT.07/RW.09, Kedungbadak, Tanah Sareal, Kota Bogor, Jawa Barat 16164, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=6795704172132673996&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJbyRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281327266161",
+    "tagline": "Dokter gigi spesialis ortodonti/kawat gigi",
+    "iconEmoji": "🩺",
+    "doctor": {
+      "name": "Dr. Okky",
+      "role": "Dokter Gigi Spesialis Ortodonti",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, gigi saya berantakan, kira-kira bisa diperbaiki pakai behel nggak ya?",
+        "doctor": "Tentu, untuk memastikan opsi terbaik, saya perlu melakukan pemeriksaan lebih lanjut. Namun, behel self-ligating seringkali menjadi pilihan yang efektif untuk kasus gigi berantakan. Mari kita jadwalkan konsultasi untuk diskusi lebih detail.",
+        "recommendationTitle": "Kawat Gigi Self-Ligating",
+        "recommendationDesc": "Teknologi kawat gigi modern yang memberikan kenyamanan lebih dan waktu perawatan yang lebih singkat dibandingkan behel konvensional. Cocok untuk berbagai kasus maloklusi."
+      }
+    },
+    "categories": [
+      "Ortodonti",
+      "Kawat Gigi",
+      "Klinik Gigi",
+      "Dokter Gigi Spesialis"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Ortodonti",
+        "desc": "Pemeriksaan awal dan rencana perawatan kawat gigi.",
+        "price": "Rp 150.000",
+        "category": "Konsultasi"
+      },
+      {
+        "id": 2,
+        "name": "Pemasangan Kawat Gigi Self-Ligating",
+        "desc": "Pemasangan behel modern untuk hasil optimal dan kenyamanan.",
+        "price": "Mulai dari Rp 10.000.000",
+        "category": "Perawatan Utama"
+      },
+      {
+        "id": 3,
+        "name": "Retainer (Lepasan/Permanen)",
+        "desc": "Alat penahan gigi pasca perawatan ortodonti.",
+        "price": "Mulai dari Rp 1.500.000",
+        "category": "Pascaperawatan"
+      },
+      {
+        "id": 4,
+        "name": "Pencetakan Gigi (Diagnostik)",
+        "desc": "Untuk analisis mendalam kondisi gigi sebelum perawatan.",
+        "price": "Rp 300.000",
+        "category": "Diagnostik"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Mehdi",
+        "rating": 5,
+        "text": "Best dentist. Quality dental work. Nothing is rushed and is well explained. Definitely recommend to everyone",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Eugene Lontoh",
+        "rating": 5,
+        "text": "My smile went from rough to fairway-perfect. Dr. Okky is the Tiger Woods of teeth!🏌️‍♂️",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Andi Yasser",
+        "rating": 5,
+        "text": "The treatment is so nice. Worth to be a patient here !!!",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Mutia Hafilizara",
+        "rating": 5,
+        "text": "I was initially nervous about getting my first braces, but my experience at Dr. Okky Orthodonti Bogor put me at ease. During the consultation, Dr. Okky explained my dental condition clearly and suggested self-ligating braces as the most suitable option for my case. His explanation made sense, so I was confident. The installation process was comfortable and quick, the clinic was clean and aesthetically pleasing, and afterward, I was given complete treatment instructions. For a first-time braces patient, this was a very positive experience and made me feel secure. 🦷✨",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "paridah nasution",
+        "rating": 5,
+        "text": "This was my first time going to the dentist without any recommendations or from ads I often see on Instagram. At first, I just asked Google Maps for orthodontists around Bogor, and Dr. Okky's clinic came up. The first time I saw the aesthetic photos of the room, I immediately fell in love with the concept. I continued reading the reviews, and oh my God, Dr. Okky is that Dr. I continued with a chat consultation. Dr. Okky was really friendly, and he wasn't stingy with his knowledge, even though I consulted via chat, and he responded as quickly and as quickly as possible with very detailed responses. Without further thought, after checking out several orthodontics, I immediately decided to install braces here. Besides the affordable price and being treated directly by an orthodontic specialist, I also became even more confident and trusting of Dr. Okky. I proceeded to book an appointment, negotiating whether I wanted a night shift, and the doctor made it easy for me to arrange a daytime appointment. Thank you, doc. Stay healthy, Dr. Okky 🤗🤗",
+        "time": "3 years ago"
+      }
+    ]
+  },
+
+
+  "oriskin-bogor-yasmin": {
+    "name": "Oriskin Bogor Yasmin",
+    "category": "Klinik Kecantikan",
+    "city": "jambu 2 bogor",
+    "rating": 4.9,
+    "reviewCount": 1968,
+    "phone": "+62 251 8367571",
+    "address": "Jl. Sholeh Iskandar No.6G, RT.01/RW.05, Kedungbadak, Tanah Sareal, Kota Bogor, Jawa Barat 16164, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=1599478668778167102&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "622518367571",
+    "tagline": "Pusat perawatan kulit dan kecantikan untuk hasil optimal.",
+    "iconEmoji": "🌸",
+    "doctor": {
+      "name": "Dr. Kulit Oriskin",
+      "role": "Dermatologis",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Kulitku kusam dan sering berjerawat, Dok. Ada rekomendasi?",
+        "doctor": "Tentu, untuk kulit kusam dan berjerawat, kami sarankan perawatan facial detoksifikasi dan serum khusus untuk mencerahkan dan mengurangi jerawat.",
+        "recommendationTitle": "Perawatan Detoksifikasi Wajah & Serum Pencerah",
+        "recommendationDesc": "Perawatan ini membantu membersihkan pori-pori secara mendalam, mengangkat sel kulit mati, dan menutrisi kulit agar lebih cerah dan bebas jerawat."
+      }
+    },
+    "categories": [
+      "Facial",
+      "Perawatan Kulit",
+      "Kecantikan"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Oxy",
+        "desc": "Perawatan wajah menggunakan oksigen murni untuk revitalisasi kulit.",
+        "price": "Rp 350.000",
+        "category": "Facial"
+      },
+      {
+        "id": 2,
+        "name": "Facial Detox",
+        "desc": "Membersihkan pori-pori secara mendalam dan mengangkat racun dari kulit.",
+        "price": "Rp 400.000",
+        "category": "Facial"
+      },
+      {
+        "id": 3,
+        "name": "Chemical Peeling",
+        "desc": "Mengangkat lapisan kulit mati untuk regenerasi sel kulit baru.",
+        "price": "Rp 750.000",
+        "category": "Perawatan Khusus"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Eulis Utami",
+        "rating": 5,
+        "text": "Had a one-time facial and it felt refreshing and relaxing. My skin looked cleaner, smoother, and more hydrated afterward, with a healthy glow. Thank you, Oriskin!",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "Diana Mandasari",
+        "rating": 5,
+        "text": "Good service, good treatment 👍🏻👍🏻👍🏻 wajah makin glowing",
+        "time": "9 months ago"
+      },
+      {
+        "authorName": "Yulia Kasih",
+        "rating": 5,
+        "text": "Excellent service, all staff so kind and humble Recommend to try oxy service, over all nice",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "Allysa Zheria Azzahra",
+        "rating": 5,
+        "text": "Good staff, nice service, very recommended",
+        "time": "a month ago"
+      },
+      {
+        "authorName": "Shafana Zanubia",
+        "rating": 5,
+        "text": "Saya facial oxy. It was very good facial! And friendly staff",
+        "time": "9 months ago"
+      }
+    ]
+  },
+
+
+  "derma-express-bogor": {
+    "name": "Derma Express Bogor",
+    "category": "Beauty Clinic",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 701,
+    "phone": "+62 811-1054-2355",
+    "address": "Jl. Bangbarung Raya No.31b, RT.03/RW.07, Bantarjati, Kec. Bogor Utara, Kota Bogor, Jawa Barat 16153, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=9041098960522029177&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281110542355",
+    "tagline": "Your trusted partner for radiant skin",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Finda",
+      "role": "Dermatologist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, kulit saya terlihat kusam dan banyak noda hitam. Kira-kira perawatan apa yang cocok ya?",
+        "doctor": "Berdasarkan kondisi kulit Anda, saya merekomendasikan treatment Derma Glow untuk mencerahkan dan mengurangi noda hitam, serta rutin menggunakan sunscreen setiap hari. Mari kita jadwalkan konsultasi lebih lanjut untuk diagnosis dan penanganan yang lebih tepat.",
+        "recommendationTitle": "Derma Glow Treatment",
+        "recommendationDesc": "Treatment Derma Glow membantu mencerahkan kulit kusam, menyamarkan noda hitam, dan meratakan warna kulit."
+      }
+    },
+    "categories": [
+      "Skincare",
+      "Dermatology",
+      "Aesthetic Clinic"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter",
+        "desc": "Konsultasi awal dengan dokter spesialis kulit.",
+        "price": "Rp 100.000",
+        "category": "Services"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Nabila",
+        "rating": 5,
+        "text": "I’ve always been a regular with dr. Finda. there was even a time when I noticed some changes and randomly DM’d her on Instagram, and surprisingly she replied right away, no matter the time, even in the middle of the night. her treatment recommendations are always honest and really match what I actually need. for example, when I felt like I needed a facial, she said I didn’t yet. or when I asked whether I should come every two weeks or once a month, she said once a month is enough. that really shows there’s no upselling at all. but the facial here is definitely more painful compared to other clinics. not sure if it’s because they don’t use a comedone softener first or something else. even so, I’ll still keep coming back here every month!",
+        "time": "4 months ago"
+      },
+      {
+        "authorName": "Ameera Farhah Fildzah Azzani",
+        "rating": 5,
+        "text": "The place is very clean, smells nice, and has good amenities given to the customer. The doctor and staff are nice and helpful.",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Dicephalous 90",
+        "rating": 5,
+        "text": "I recently visited Derma Express Bogor and had an amazing experience. The staff was knowledgeable, and the service was impeccable. The personalized skincare regimen they recommended has truly transformed my skin. I highly recommend their expertise and quality treatments for anyone seeking effective skincare solutions",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "rachma yulia",
+        "rating": 5,
+        "text": "Nice facility, very professional and the doctor knows what they are doing. Happy with the service so far :)",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Najwa Nada Utami",
+        "rating": 4,
+        "text": "nice place, excelent staff. thank you Dr. Anna , Mrs. Kiki Mareta as cashier for helping🙌🏻",
+        "time": "2 years ago"
+      }
+    ]
+  },
+
+
+  "zap-clinic-bogor": {
+    "name": "ZAP Clinic- Bogor",
+    "category": "Klinik Kecantikan",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 1868,
+    "phone": "+62 251 8368420",
+    "address": "Jalan Ahmad Sobana No 48, Jl. Bangbarung Raya No.RT 005/10, RT.02/RW.10, Tegal Gundil, Bogor Utara, Bogor City, West Java 16151, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=3245300283285022055&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin-Jumat: 09.00-19.00, Sabtu-Minggu: 09.00-17.00",
+    "waNumber": "622518368420",
+    "tagline": "Pusat perawatan kulit dan kecantikan terkemuka di Bogor untuk kulit sehat dan cerahmu.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Stephany",
+      "role": "Dokter Kecantikan",
+      "avatarEmoji": "👩🏻‍⚕️",
+      "avatarUrl": "https://example.com/dr_stephany_avatar.jpg",
+      "sampleChat": {
+        "user": "Hai dokter, kulit saya kusam dan kering, apakah ada rekomendasi perawatan?",
+        "doctor": "Tentu, untuk kulit kusam dan kering, kami memiliki beberapa perawatan yang dapat membantu mengembalikan kelembaban dan mencerahkan kulit Anda. Saya merekomendasikan perawatan 'Photo Facial Glow' untuk hasil yang optimal.",
+        "recommendationTitle": "Rekomendasi Perawatan Photo Facial Glow",
+        "recommendationDesc": "Perawatan ini membantu mencerahkan kulit kusam, mengurangi flek hitam, dan meningkatkan tekstur kulit dengan teknologi laser yang aman dan efektif."
+      }
+    },
+    "categories": [
+      "Perawatan Kulit",
+      "Hair Removal",
+      "Klinik Kecantikan",
+      "Laser Wajah",
+      "Facial Treatment"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Photo Facial Glow",
+        "desc": "Perawatan wajah dengan teknologi laser untuk mencerahkan dan meratakan warna kulit, menghilangkan flek hitam, dan meningkatkan tekstur kulit.",
+        "price": "Rp 299.000",
+        "tag": "Best Seller",
+        "category": "Facial & Laser"
+      },
+      {
+        "id": 2,
+        "name": "Underarm Hair Removal",
+        "desc": "Perawatan penghilang bulu ketiak secara permanen menggunakan teknologi IPL yang aman dan efektif.",
+        "price": "Rp 199.000",
+        "category": "Hair Removal"
+      },
+      {
+        "id": 3,
+        "name": "Glass Skin Treatment",
+        "desc": "Perawatan komprehensif untuk mendapatkan kulit wajah glowing, halus, dan tampak bening seperti kaca.",
+        "price": "Rp 399.000",
+        "tag": "New",
+        "category": "Facial & Laser"
+      },
+      {
+        "id": 4,
+        "name": "Body Rejuvenation",
+        "desc": "Perawatan untuk meremajakan kulit tubuh, meningkatkan elastisitas dan mencerahkan area tertentu.",
+        "price": "Mulai dari Rp 450.000",
+        "category": "Body Treatment"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Anisa Andiani",
+        "rating": 5,
+        "text": "I had a very good experience with the treatment. The nurse mbak Aulia was professional, gentle, and attentive throughout the session. Dr. Stephany was also very kind, knowledgeable, and explained everything clearly. The receptionist mbak Siti was friendly, helpful, and welcoming. Overall, the service was excellent, and I’m very satisfied with my experience. Highly recommended!",
+        "time": "a month ago"
+      },
+      {
+        "authorName": "Zainab",
+        "rating": 5,
+        "text": "Incredibly satisfied with my hair removal journey! The results exceeded my expectations—smooth skin, zero hassle, and a massive boost in confidence. It's been worth every single session. Big thanks to Doc Ghaida, Aju and all Zap team.",
+        "time": "3 months ago"
+      },
+      {
+        "authorName": "Irmanda Amrihi",
+        "rating": 5,
+        "text": "Very satisfied with the service! As a new customer who never experienced any treatments, Zap provides comfort and informative service 💕 Thanks Ka Aju dan team ✨ Definitely will come back for another treatment",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Baby G",
+        "rating": 5,
+        "text": "Great experience. The service was professional and the place was clean and comfortable. Special thanks to Mba Siti for being so friendly, helpful, and attentive. Highly recommended!",
+        "time": "3 months ago"
+      },
+      {
+        "authorName": "Susanna Gabriella",
+        "rating": 5,
+        "text": "Great service at ZAP, everything was smooth and comfortable, and thank you to Kak Aju for being so kind and helpful throughout the process.",
+        "time": "3 months ago"
+      }
+    ]
+  },
+
+
+  "the-bucketlist-indonesia": {
+    "name": "The Bucketlist Indonesia",
+    "category": "Sports & Recreation Center",
+    "city": "jambu 2 bogor",
+    "rating": 4.9,
+    "reviewCount": 624,
+    "phone": "+62 851-5899-1668",
+    "address": "Jl. R. H. Moh. Tohir No.1, RT.07/RW.10, Tanah Baru, Kec. Bogor Utara, Kota Bogor, Jawa Barat 16154, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=7175524329799667925&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285158991668",
+    "tagline": "The ultimate destination for basketball, sports culture, and a great hangout spot.",
+    "iconEmoji": "🏀",
+    "doctor": {
+      "name": "Dr. Slam Dunk",
+      "role": "Sports Physiotherapist",
+      "avatarEmoji": "⛹️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya mengalami nyeri lutut setelah bermain basket. Bisakah Anda membantu?",
+        "doctor": "Tentu, nyeri lutut setelah berolahraga adalah keluhan umum. Penting untuk mengevaluasi penyebabnya, apakah itu cedera ligamen, meniskus, atau masalah otot. Kami bisa melakukan pemeriksaan menyeluruh dan merancang program rehabilitasi yang tepat agar Anda bisa kembali bermain dengan aman.",
+        "recommendationTitle": "Konsultasi & Fisioterapi Cedera Olahraga",
+        "recommendationDesc": "Penanganan komprehensif untuk cedera lutut, pergelangan kaki, bahu, dan lainnya yang berkaitan dengan aktivitas olahraga. Fokus pada pemulihan fungsi dan pencegahan cedera berulang."
+      }
+    },
+    "categories": [
+      "Basketball Court",
+      "Sports Museum",
+      "Cafe",
+      "Restaurant",
+      "Sports Apparel Store",
+      "Recreation Center"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Espresso",
+        "desc": "Rich, strong coffee shot.",
+        "price": "IDR 25.000",
+        "category": "Beverage"
+      },
+      {
+        "id": 2,
+        "name": "Cappuccino",
+        "desc": "Espresso with steamed milk and a layer of foam.",
+        "price": "IDR 35.000",
+        "category": "Beverage"
+      },
+      {
+        "id": 3,
+        "name": "Chicken Sandwich",
+        "desc": "Grilled chicken breast with fresh vegetables on toasted bread.",
+        "price": "IDR 55.000",
+        "tag": "Best Seller",
+        "category": "Food"
+      },
+      {
+        "id": 4,
+        "name": "French Fries",
+        "desc": "Crispy golden potato fries, served with ketchup.",
+        "price": "IDR 30.000",
+        "category": "Food"
+      },
+      {
+        "id": 5,
+        "name": "Milkshake Chocolate",
+        "desc": "Creamy chocolate milkshake topped with whipped cream.",
+        "price": "IDR 40.000",
+        "category": "Beverage"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Gloria Stefanie Wiguna",
+        "rating": 5,
+        "text": "I’ve been here quite often to rent a court, but this was actually my first time checking out the museum area. Don’t expect a huge museum, but if you’re a basketball fan, you’ll enjoy seeing the collection—jerseys, shoes, trophies, and memorabilia from famous players around the world. About an hour is more than enough to walk around, take photos, and enjoy the displays. Ticket prices vary between weekdays and weekends, but if I’m not mistaken, it’s under IDR 100,000 per person. You can always check with their admin to be sure. At least it’s worth visiting once. They also have a store selling shoes and apparel in front of the museum on the 2nd floor, and another one on the ground floor. Don’t forget to check out the restaurant too. For those waiting while their partner or kids are practicing basketball, there are comfortable spots to hang out and wait. 👍",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "Restu Wibowo",
+        "rating": 5,
+        "text": "Training at The Bucketlist Indonesia is just on another level. The field is spacious and comfortable, the facilities are excellent—it makes every session feel effortless and enjoyable. #DuckRaceBasketball",
+        "time": "6 months ago"
+      },
+      {
+        "authorName": "Kong Wen Sheng",
+        "rating": 5,
+        "text": "This place is amazing!!! This has got to be the greatest NBA collection and SEA basketball pride gallery in the region. Jibran, who works there as guide, is very professional in his work as he shares all the information and background of almost every piece of artifact as we walk. From the local stars to NBA legends, Jibran knows his basketball stuff very well. I’ve totally enjoyed my stay here, from items to interaction, it’s perfect.",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Frans Xaverius",
+        "rating": 5,
+        "text": "The best basketball court in the world 🏀",
+        "time": "3 months ago"
+      },
+      {
+        "authorName": "Armand G",
+        "rating": 5,
+        "text": "Located in The Bucket List, an international standard basketball court, The Bucket List Kitchen is the best basketball theme cafe/restaurant in Indonesia, it's a perfect place to hangout with your family and friends. All the foods and drinks in the menu have great taste, the service is excellent too!",
+        "time": "5 years ago"
+      }
+    ]
+  },
+
+
   "pdhb-drh-galuh-indro-d-dkk": {
     "name": "PDHB DRH. GALUH INDRO D., DKK",
     "category": "Klinik Hewan",

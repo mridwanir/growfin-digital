@@ -10,7 +10,7 @@ def search_health_clinics(lat: float, lng: float, radius_meters: int = 3500) -> 
         "X-Goog-FieldMask": (
             "places.displayName,places.primaryType,places.rating,"
             "places.userRatingCount,places.formattedAddress,places.websiteUri,"
-            "places.internationalPhoneNumber,places.googleMapsUri"
+            "places.internationalPhoneNumber,places.googleMapsUri,places.reviews"
         )
     }
     payload = {

@@ -51,7 +51,7 @@ def search_health_clinics(lat: float, lng: float, radius_meters: int = 3000):
         "X-Goog-FieldMask": (
             "places.displayName,places.primaryType,places.rating,"
             "places.userRatingCount,places.formattedAddress,places.websiteUri,"
-            "places.internationalPhoneNumber,places.googleMapsUri"
+            "places.internationalPhoneNumber,places.googleMapsUri,places.reviews"
         )
     }
     payload = {
@@ -81,6 +81,24 @@ def search_health_clinics(lat: float, lng: float, radius_meters: int = 3000):
     except Exception as e:
         print(f"⚠️ Request Places API gagal: {e}")
         return []
+
+
+def check_website_status(website: str) -> str:
+    """Mengklasifikasikan status website: 'HOT_LEAD', 'POTENTIAL', atau 'BIASA'"""
+    if not website or "google.com" in website or "instagram.com" in website or "linktr.ee" in website or "tiktok.com" in website:
+        return "HOT_LEAD"
+    
+    url = website if website.startswith("http") else "http://" + website
+    try:
+        # Gunakan timeout singkat agar tidak memperlambat pipeline
+        res = requests.get(url, timeout=5)
+        # Jika status code 4xx atau 5xx, kita anggap website bermasalah (mati/down)
+        if res.status_code >= 400:
+            return "POTENTIAL"
+        return "BIASA"
+    except Exception:
+        # Jika koneksi gagal, timeout, atau error lainnya
+        return "POTENTIAL"
 
 
 def generate_clinic_pitch(name: str, rating: float, reviews: int, address: str, slug: str) -> str:
@@ -115,7 +133,7 @@ def generate_clinic_pitch(name: str, rating: float, reviews: int, address: str, 
         return f"Halo Tim {name}, izin sharing draf simulasi reservasi klinik: https://growfin.my.id/demo/{slug}"
 
 
-def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str) -> dict:
+def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str, reviews_data: list = None) -> dict:
     """
     Menyusun struktur data BusinessDemo lengkap dalam format JSON valid menggunakan Gemini
     """
@@ -124,6 +142,16 @@ def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, ad
         clean_phone = '62' + clean_phone[1:]
     elif not clean_phone:
         clean_phone = "6281234567890"
+
+    reviews_text = ""
+    if reviews_data:
+        reviews_text = "- Data Ulasan Asli dari Google Maps:\n"
+        for i, rev in enumerate(reviews_data[:5]):
+            author = rev.get("authorAttribution", {}).get("displayName", "Anonim")
+            rtg = rev.get("rating", 5)
+            text = rev.get("text", {}).get("text", "").replace("\n", " ")
+            time_str = rev.get("relativePublishTimeDescription", "")
+            reviews_text += f"  {i+1}. [{rtg}⭐] {author} ({time_str}): {text}\n"
 
     prompt = f"""
     Kamu adalah sistem pembuat konten profil klinik kesehatan, gigi, & estetika.
@@ -135,12 +163,14 @@ def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, ad
     - Alamat: {address}
     - Maps URL: {maps_url}
     - Slug: {slug}
+    {reviews_text}
 
     Panduan Konten:
     1. Tentukan apakah klinik ini fokus ke Gigi (Dental), Estetika/Kulit (Skin/Beauty), atau Medis Umum.
     2. Buatkan 1 profil dokter penanggung jawab realistis (nama dokter, gelar, foto unspash tenaga medis, dan simulasi chat pasien-dokter).
     3. Buatkan 3-4 menu tindakan/layanan populer beserta estimasi harga dalam format 'Rp xxx.xxx' atau 'Mulai Rp xxx.xxx'.
     4. Buatkan tagline yang elegan dan relevan.
+    5. Salin data ulasan asli (jika ada) ke dalam properti 'reviews'. Jika tidak ada, biarkan array kosong [].
 
     Wajib return RAW JSON valid yang sesuai dengan skema TypeScript berikut (tanpa blok markdown lainnya):
     {{
@@ -173,6 +203,9 @@ def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, ad
         {{ "id": 1, "name": "Nama Layanan 1", "desc": "Deskripsi tindakan", "price": "Rp 250.000", "tag": "Populer", "category": "Kategori Layanan 1" }},
         {{ "id": 2, "name": "Nama Layanan 2", "desc": "Deskripsi tindakan", "price": "Rp 750.000", "tag": "Best Seller", "category": "Kategori Layanan 2" }},
         {{ "id": 3, "name": "Nama Layanan 3", "desc": "Deskripsi tindakan", "price": "Mulai Rp 1.500.000", "category": "Kategori Layanan 3" }}
+      ],
+      "reviews": [
+        {{ "authorName": "Nama Reviewer Asli", "rating": 5, "text": "Isi review asli yang disalin", "time": "Waktu dari data asli" }}
       ]
     }}
     """
@@ -288,6 +321,7 @@ def run_pipeline(lat: float, lng: float, radius: int = 3000):
         website = p.get("websiteUri", "")
         phone = p.get("internationalPhoneNumber", "-")
         maps_link = p.get("googleMapsUri", "")
+        reviews_data = p.get("reviews", [])
         
         # Buat slug bersih untuk URL demo
         slug = (
@@ -302,24 +336,23 @@ def run_pipeline(lat: float, lng: float, radius: int = 3000):
             .replace("--", "-")
         )
 
-        # Kriteria Hot Lead Klinik:
-        # Rating >= 4.5, ulasan >= 10, dan belum punya web mandiri
-        is_no_proper_website = (
-            not website 
-            or "google.com" in website 
-            or "instagram.com" in website
-            or "linktr.ee" in website
-            or "tiktok.com" in website
-        )
+        # Kriteria Kategori Leads:
         is_high_reputation = rating >= 4.5 and reviews >= 10
+        web_status = check_website_status(website)
 
-        if is_no_proper_website and is_high_reputation:
-            lead_status = "🔥 HOT LEAD (Klinik Potensial Tanpa Web Reservasi)"
+        if web_status == "HOT_LEAD":
+            lead_status = "🔥 HOT LEAD (Belum Punya Website)"
+        elif web_status == "POTENTIAL":
+            lead_status = "⚠️ POTENTIAL (Website Down/Mati)"
+        else:
+            lead_status = "✅ BIASA (Website Normal)"
+
+        if web_status in ["HOT_LEAD", "POTENTIAL"] and is_high_reputation:
             hot_leads_count += 1
-            print(f"✨ Memproses Hot Lead: {name} ({rating}⭐ - {reviews} ulasan)...")
+            print(f"✨ Memproses Lead Potensial: {name} ({rating}⭐ - {reviews} ulasan)...")
 
             # 1. Generate data demo untuk web Next.js via AI
-            demo_json = generate_demo_data_ai(name, rating, reviews, phone, address, maps_link, slug)
+            demo_json = generate_demo_data_ai(name, rating, reviews, phone, address, maps_link, slug, reviews_data)
             
             # 2. Auto-inject langsung ke demos.ts
             if demo_json:
@@ -330,19 +363,18 @@ def run_pipeline(lat: float, lng: float, radius: int = 3000):
 
             # 4. Notifikasi Real-time ke Telegram
             tele_msg = (
-                f"🏥 *HOT LEAD KLINIK DITEMUKAN!*\n\n"
+                f"🏥 *LEAD KLINIK POTENSIAL DITEMUKAN!*\n\n"
                 f"🏷️ *{name}*\n"
                 f"⭐ Rating: {rating} ({reviews} ulasan)\n"
                 f"📍 Alamat: {address}\n"
                 f"📞 Kontak: `{phone}`\n"
-                f"🌐 Web Eksisting: {website if website else 'Tidak Ada'}\n"
+                f"🌐 Web Eksisting: {website if website else 'Tidak Ada'} ({web_status})\n"
                 f"🔗 Demo Reservasi: `https://growfin.my.id/demo/{slug}`\n"
                 f"🗺️ Maps: [Buka Google Maps]({maps_link})\n\n"
                 f"📝 *Draf WhatsApp Outreach:*\n```\n{pitch_text}\n```"
             )
             send_telegram_msg(tele_msg)
         else:
-            lead_status = "Biasa / Sudah Ada Web Mandiri"
             pitch_text = "-"
 
         leads_data.append({

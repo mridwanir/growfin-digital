@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Area - Outreach Crew</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #app { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
+        
+        /* Map Area */
+        #map { flex-grow: 1; height: 100%; }
+        
+        /* Sidebar */
+        #sidebar { 
+            width: 350px; background: white; padding: 20px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); 
+            z-index: 1000; display: flex; flex-direction: column; overflow-y: auto;
+        }
+        
+        h2 { margin-top: 0; color: #333; font-size: 1.5rem; }
+        p.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        input[type="range"] { width: 100%; }
+        
+        .radius-display { font-weight: bold; color: #007bff; text-align: right; font-size: 0.9rem; }
+        
+        button { 
+            width: 100%; padding: 12px; background: #007bff; color: white; border: none; 
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        
+        .status-box { margin-top: 20px; padding: 15px; border-radius: 6px; display: none; }
+        .status-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-loading { background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+        
+        /* History Section */
+        .history-section { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
+        .history-item { padding: 10px; background: #f9f9f9; border-radius: 4px; margin-bottom: 10px; font-size: 0.85rem; }
+        .history-item b { color: #333; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="map"></div>
+    <div id="sidebar">
+        <h2>Scanner Area</h2>
+        <p class="subtitle">Klik di peta untuk menentukan target pemindaian.</p>
+        
+        <div class="form-group">
+            <label for="city">Nama Area / Kota:</label>
+            <input type="text" id="city" placeholder="Misal: Cibaduyut Bandung" />
+        </div>
+        
+        <div class="form-group">
+            <label for="radius">Radius Pemindaian (meter):</label>
+            <input type="range" id="radius" min="500" max="10000" step="500" value="3500" />
+            <div class="radius-display"><span id="radius-val">3500</span> m</div>
+        </div>
+        
+        <div class="form-group" style="background: #f0f8ff; padding: 10px; border-radius: 6px; font-size: 0.9rem;">
+            <b>Titik Target:</b><br/>
+            Lat: <span id="lbl-lat">-</span><br/>
+            Lng: <span id="lbl-lng">-</span>
+        </div>
+        
+        <button id="btn-scan" disabled>Pilih Titik di Peta</button>
+        
+        <div id="status-msg" class="status-box"></div>
+        
+        <div class="history-section">
+            <h3 style="font-size: 1.1rem; margin-top:0;">Riwayat Scan</h2>
+            <div id="history-list">Memuat riwayat...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const apiKey = "{{ carto_api_key }}";
+    
+    // Inisialisasi Peta (Default ke Bandung/Tengah)
+    const map = L.map('map').setView([-6.932468, 107.644224], 12);
+    
+    // Pilih Tile Layer berdasarkan API Key
+    if (apiKey) {
+        L.tileLayer(`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${apiKey}`, {
+            attribution: '&copy; OpenStreetMap, &copy; CARTO',
+            maxZoom: 19
+        }).addTo(map);
+    } else {
+        // Fallback
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap, &copy; CARTO',
+            maxZoom: 19
+        }).addTo(map);
+    }
+    
+    // State Aplikasi
+    let currentMarker = null;
+    let currentCircle = null;
+    let currentLat = null;
+    let currentLng = null;
+    
+    // Element DOM
+    const cityInput = document.getElementById('city');
+    const radiusInput = document.getElementById('radius');
+    const radiusVal = document.getElementById('radius-val');
+    const lblLat = document.getElementById('lbl-lat');
+    const lblLng = document.getElementById('lbl-lng');
+    const btnScan = document.getElementById('btn-scan');
+    const statusMsg = document.getElementById('status-msg');
+    const historyList = document.getElementById('history-list');
+    
+    // Render Riwayat
+    async function fetchHistory() {
+        try {
+            const response = await fetch('/api/history');
+            const data = await response.json();
+            
+            historyList.innerHTML = '';
+            
+            if(data.length === 0) {
+                historyList.innerHTML = '<p style="color:#666;">Belum ada riwayat.</p>';
+                return;
+            }
+            
+            data.forEach(item => {
+                // Gambar lingkaran riwayat di peta (Merah)
+                L.circle([item.lat, item.lng], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.15,
+                    radius: item.radius
+                }).bindPopup(`<b>${item.city}</b><br>Radius: ${item.radius}m<br>Waktu: ${item.timestamp}`).addTo(map);
+                
+                // Tambahkan ke list UI
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `<b>${item.city}</b> (${item.radius}m)<br><span style="color:#888;">${item.timestamp}</span>`;
+                historyList.appendChild(div);
+            });
+            
+            // Pusatkan peta ke data terakhir jika ada
+            if(data.length > 0) {
+                const last = data[data.length - 1];
+                map.setView([last.lat, last.lng], 12);
+            }
+            
+        } catch (err) {
+            console.error("Gagal memuat riwayat", err);
+            historyList.innerHTML = '<p style="color:red;">Gagal memuat riwayat.</p>';
+        }
+    }
+    
+    // Fungsi Update Lingkaran Preview (Biru)
+    function updatePreview() {
+        if(!currentLat || !currentLng) return;
+        
+        const r = parseInt(radiusInput.value);
+        radiusVal.innerText = r;
+        
+        if(currentCircle) map.removeLayer(currentCircle);
+        
+        currentCircle = L.circle([currentLat, currentLng], {
+            color: '#007bff',
+            fillColor: '#007bff',
+            fillOpacity: 0.2,
+            radius: r
+        }).addTo(map);
+    }
+    
+    // Event Klik Peta
+    map.on('click', function(e) {
+        currentLat = e.latlng.lat;
+        currentLng = e.latlng.lng;
+        
+        lblLat.innerText = currentLat.toFixed(6);
+        lblLng.innerText = currentLng.toFixed(6);
+        
+        if(currentMarker) map.removeLayer(currentMarker);
+        
+        currentMarker = L.marker([currentLat, currentLng]).addTo(map);
+        
+        updatePreview();
+        checkFormValidity();
+    });
+    
+    // Event Radius Berubah
+    radiusInput.addEventListener('input', updatePreview);
+    
+    // Event Kota Berubah
+    cityInput.addEventListener('input', checkFormValidity);
+    
+    function checkFormValidity() {
+        if(currentLat && currentLng && cityInput.value.trim() !== "") {
+            btnScan.disabled = false;
+            btnScan.innerText = "Mulai Scan Area Ini";
+        } else {
+            btnScan.disabled = true;
+            if(!currentLat) btnScan.innerText = "Pilih Titik di Peta";
+            else btnScan.innerText = "Masukkan Nama Kota";
+        }
+    }
+    
+    // Tampilkan Pesan Status
+    function showStatus(msg, type) {
+        statusMsg.innerText = msg;
+        statusMsg.className = `status-box status-${type}`;
+        statusMsg.style.display = 'block';
+    }
+    
+    // Eksekusi Scan
+    btnScan.addEventListener('click', async function() {
+        const city = cityInput.value.trim();
+        const r = parseInt(radiusInput.value);
+        
+        btnScan.disabled = true;
+        btnScan.innerText = "Sedang Memindai... (Mohon Tunggu)";
+        showStatus("Proses pemindaian sedang berjalan. Jangan tutup halaman ini...", "loading");
+        
+        try {
+            const response = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    city: city,
+                    lat: currentLat,
+                    lng: currentLng,
+                    radius: r
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showStatus(data.message, "success");
+                // Refresh riwayat untuk melihat titik baru
+                fetchHistory();
+                
+                // Reset form
+                cityInput.value = "";
+                if(currentMarker) map.removeLayer(currentMarker);
+                if(currentCircle) map.removeLayer(currentCircle);
+                currentLat = null; currentLng = null;
+                lblLat.innerText = "-"; lblLng.innerText = "-";
+                checkFormValidity();
+                
+            } else {
+                showStatus(`Gagal: ${data.error}`, "error");
+                checkFormValidity();
+            }
+        } catch (err) {
+            showStatus(`Error jaringan: ${err.message}`, "error");
+            checkFormValidity();
+        }
+    });
+    
+    // Muat riwayat saat pertama kali dibuka
+    fetchHistory();
+    
+</script>
+</body>
+</html>

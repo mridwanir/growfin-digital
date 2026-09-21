@@ -3,8 +3,10 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Dict
 import pandas as pd
+import json
 
 LEADS_DIR = Path("Leads")
+HISTORY_FILE = Path("scan_history.json")
 
 def export_leads_to_excel(leads_data: List[Dict], city: str, lat: float, lng: float) -> str:
     # Buat folder Leads jika belum ada
@@ -24,3 +26,25 @@ def export_leads_to_excel(leads_data: List[Dict], city: str, lat: float, lng: fl
     
     print(f"📊 Rekapitulasi tersimpan di: {file_path}")
     return str(file_path)
+
+def save_scan_history(city: str, lat: float, lng: float, radius: int):
+    # Buat file jika belum ada
+    if not HISTORY_FILE.exists():
+        HISTORY_FILE.write_text("[]", encoding="utf-8")
+    
+    try:
+        content = HISTORY_FILE.read_text(encoding="utf-8")
+        history = json.loads(content)
+    except Exception:
+        history = []
+    
+    history.append({
+        "city": city,
+        "lat": lat,
+        "lng": lng,
+        "radius": radius,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+    
+    HISTORY_FILE.write_text(json.dumps(history, indent=2), encoding="utf-8")
+    print(f"🗺️  Titik scan ditambahkan ke riwayat ({len(history)} total).")

@@ -41,12 +41,22 @@ def generate_clinic_pitch(name: str, rating: float, reviews: int, address: str, 
         print(f"⚠️ Error Gemini Pitch: {e}")
         return f"Halo admin {name}, saya mau tanya jadwal dan harga perawatan ada? Soalnya saya cari di Google Maps gak ada website/katalognya. Apa ada katalog online kayak gini min biar gampang bacanya: https://growfin.my.id/demo/{slug}"
 
-def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str, city: str = "Bandung") -> Optional[BusinessDemo]:
+def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str, city: str = "Bandung", reviews_data: list = None) -> Optional[BusinessDemo]:
     clean_phone = re.sub(r'[^0-9]', '', phone)
     if clean_phone.startswith('0'):
         clean_phone = '62' + clean_phone[1:]
     elif not clean_phone:
         clean_phone = "6281234567890"
+
+    reviews_text = ""
+    if reviews_data:
+        reviews_text = "- Data Ulasan Asli dari Google Maps:\n"
+        for i, rev in enumerate(reviews_data[:5]):
+            author = rev.get("authorAttribution", {}).get("displayName", "Anonim")
+            rtg = rev.get("rating", 5)
+            text = rev.get("text", {}).get("text", "").replace("\n", " ")
+            time_str = rev.get("relativePublishTimeDescription", "")
+            reviews_text += f"  {i+1}. [{rtg}⭐] {author} ({time_str}): {text}\n"
 
     prompt = f"""
     Buatkan struktur data JSON valid untuk klinik berikut sesuai skema:
@@ -57,6 +67,9 @@ def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, ad
     - Alamat: {address}
     - Maps URL: {maps_url}
     - Kota: {city}
+    {reviews_text}
+    
+    PENTING: Masukkan juga isi Data Ulasan Asli di atas ke dalam properti 'reviews' secara persis!
     """
     try:
         response = client.models.generate_content(

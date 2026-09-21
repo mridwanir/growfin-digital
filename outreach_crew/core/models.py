@@ -23,6 +23,12 @@ class DoctorInfo(BaseModel):
     avatarUrl: str = "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80"
     sampleChat: SampleChat
 
+class ReviewInfo(BaseModel):
+    authorName: str
+    rating: int
+    text: str
+    time: Optional[str] = None
+
 class BusinessDemo(BaseModel):
     name: str
     category: str
@@ -39,3 +45,4 @@ class BusinessDemo(BaseModel):
     doctor: DoctorInfo
     categories: List[str]
     menu: List[MenuItem]
+    reviews: Optional[List[ReviewInfo]] = None

@@ -4,7 +4,7 @@ from services.maps_service import search_health_clinics
 from services.ai_service import generate_clinic_pitch, generate_demo_data_ai
 from services.injector_service import append_to_demos_ts
 from services.telegram_service import send_telegram_msg
-from services.storage_service import export_leads_to_excel
+from services.storage_service import export_leads_to_excel, save_scan_history
 from services.git_service import auto_git_push
 
 def format_slug(name: str) -> str:
@@ -27,6 +27,7 @@ def run_outreach_pipeline(lat: float, lng: float, radius: int, city: str):
         website = p.get("websiteUri", "")
         phone = p.get("internationalPhoneNumber", "-")
         maps_link = p.get("googleMapsUri", "")
+        reviews_data = p.get("reviews", [])
         slug = format_slug(name)
 
         is_no_proper_website = (
@@ -40,7 +41,7 @@ def run_outreach_pipeline(lat: float, lng: float, radius: int, city: str):
             hot_leads_count += 1
             print(f"✨ Memproses Hot Lead: {name} ({rating}⭐)...")
 
-            demo_model = generate_demo_data_ai(name, rating, reviews, phone, address, maps_link, slug, city)
+            demo_model = generate_demo_data_ai(name, rating, reviews, phone, address, maps_link, slug, city, reviews_data)
             if demo_model:
                 append_to_demos_ts(slug, demo_model)
 
@@ -76,6 +77,7 @@ def run_outreach_pipeline(lat: float, lng: float, radius: int, city: str):
         })
 
     excel_file = export_leads_to_excel(leads_data, city=city, lat=lat, lng=lng)
+    save_scan_history(city=city, lat=lat, lng=lng, radius=radius)
 
     if hot_leads_count > 0:
         print(f"\n📦 Melakukan auto-push untuk {hot_leads_count} lead baru...")

@@ -903,25 +903,46 @@ export function ClinicDemoClient({ client }: ClinicDemoClientProps) {
                 </div>
 
                 <div className="space-y-2.5">
-                  <div className="p-3 bg-slate-50 rounded-2xl text-xs space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-800">Rina S.</span>
-                      <span className="text-[10px] text-amber-500">⭐⭐⭐⭐⭐</span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
-                      &quot;Pelayanan ramah, dokternya penjelasannya sangat detail dan tempatnya sangat bersih dan nyaman.&quot;
-                    </p>
-                  </div>
+                  {client.reviews && client.reviews.length > 0 ? (
+                    client.reviews.map((rev, index) => (
+                      <div key={index} className="p-3 bg-slate-50 rounded-2xl text-xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-800">{rev.authorName}</span>
+                          <span className="text-[10px] text-amber-500">
+                            {'⭐'.repeat(rev.rating)}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-relaxed italic">
+                          &quot;{rev.text}&quot;
+                        </p>
+                        {rev.time && (
+                          <p className="text-[9px] text-slate-400 mt-1">{rev.time}</p>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="p-3 bg-slate-50 rounded-2xl text-xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-800">Rina S.</span>
+                          <span className="text-[10px] text-amber-500">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-relaxed italic">
+                          &quot;Pelayanan ramah, dokternya penjelasannya sangat detail dan tempatnya sangat bersih dan nyaman.&quot;
+                        </p>
+                      </div>
 
-                  <div className="p-3 bg-slate-50 rounded-2xl text-xs space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-800">Budi K.</span>
-                      <span className="text-[10px] text-amber-500">⭐⭐⭐⭐⭐</span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
-                      &quot;Booking via WhatsApp sangat gampang dan tidak perlu antre lama di lokasi.&quot;
-                    </p>
-                  </div>
+                      <div className="p-3 bg-slate-50 rounded-2xl text-xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-800">Budi K.</span>
+                          <span className="text-[10px] text-amber-500">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-relaxed italic">
+                          &quot;Booking via WhatsApp sangat gampang dan tidak perlu antre lama di lokasi.&quot;
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

@@ -48,6 +48,396 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "ratuna-cifos-by-ratunaruby-skincare": {
+    "name": "Ratuna Cifos by Ratunaruby Skincare",
+    "category": "Klinik Kecantikan",
+    "city": "ciawi gadog",
+    "rating": 5.0,
+    "reviewCount": 22,
+    "phone": "+62 811-1908-448",
+    "address": "Cifos, Jl. Raya Puncak No.477, Bendungan, Kec. Ciawi, Kabupaten Bogor, Jawa Barat 16720, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=10242511449623002696&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin-Sabtu: 10.00-19.00",
+    "waNumber": "628111908448",
+    "tagline": "Solusi perawatan kulit terbaik untuk kecantikan alami Anda.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Ratuna",
+      "role": "Pakar Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://example.com/dr_ratuna_avatar.jpg",
+      "sampleChat": {
+        "user": "Halo Dokter, saya punya kulit sensitif dan mencari perawatan wajah yang lembut. Apa yang bisa Dokter rekomendasikan?",
+        "doctor": "Halo! Untuk kulit sensitif, saya sangat merekomendasikan Calming Hydro Facial kami. Perawatan ini menggunakan bahan-bahan alami untuk melembapkan dan menenangkan kulit Anda tanpa iritasi. Kita juga bisa melakukan patch test terlebih dahulu untuk memastikan kecocokan.",
+        "recommendationTitle": "Calming Hydro Facial",
+        "recommendationDesc": "Perawatan wajah lembut yang dirancang untuk menghidrasi dan menenangkan kulit sensitif, mengurangi kemerahan dan iritasi. Menggunakan bahan-bahan alami dan hipoalergenik."
+      }
+    },
+    "categories": [
+      "Perawatan Wajah",
+      "Klinik Kulit",
+      "Spa Kecantikan",
+      "Skincare"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Calming Hydro Facial",
+        "desc": "Perawatan wajah yang menenangkan untuk kulit sensitif, melembapkan dan mengurangi kemerahan.",
+        "price": "Rp250.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah",
+        "imageUrl": "https://example.com/calming_hydro_facial.jpg"
+      },
+      {
+        "id": 2,
+        "name": "Brightening Laser Treatment",
+        "desc": "Perawatan laser untuk mencerahkan kulit dan mengurangi noda hitam.",
+        "price": "Rp750.000",
+        "category": "Perawatan Wajah",
+        "imageUrl": "https://example.com/brightening_laser.jpg"
+      },
+      {
+        "id": 3,
+        "name": "Acne Clear Peel",
+        "desc": "Peeling khusus untuk mengatasi masalah jerawat dan kulit berminyak.",
+        "price": "Rp400.000",
+        "category": "Perawatan Wajah",
+        "imageUrl": "https://example.com/acne_clear_peel.jpg"
+      },
+      {
+        "id": 4,
+        "name": "Konsultasi dengan Pakar Estetika",
+        "desc": "Konsultasi mendalam dengan pakar estetika untuk rencana perawatan personal.",
+        "price": "Rp100.000",
+        "category": "Layanan Umum"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Ardhita Zulhis Prihandini",
+        "rating": 5,
+        "text": "Friendly staffs, new building better 👍👍",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Shelly Satriani",
+        "rating": 5,
+        "text": "Comfortable. Good service. Meticulous and detailed work. First time trying a facial treatment. I was moved by my age, 51. I want to continue here. Hopefully, it's a good fit.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "keanu hasya tv",
+        "rating": 5,
+        "text": "A comfortable, friendly beauty clinic with affordable prices and lots of promotions. Ample parking.",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "Rizik Aswin",
+        "rating": 5,
+        "text": "The first time I came here, I was welcomed well by the staff. The service was very good, the place was clean and the prices weren't too expensive. I will definitely come here again.",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "Ai Harmilah",
+        "rating": 5,
+        "text": "During my treatment at Ratuna, thank God it was good and very satisfying, the results were also very good.",
+        "time": "7 months ago"
+      }
+    ]
+  },
+
+
+  "klinik-gadog-dokter-24-jam": {
+    "name": "KLINIK GADOG DOKTER 24 JAM",
+    "category": "Klinik Medis",
+    "city": "ciawi gadog",
+    "rating": 4.6,
+    "reviewCount": 13,
+    "phone": "+62 812-8828-2820",
+    "address": "Jl. Cikopo Sel., RT.05/RW.03, Gadog, Kec. Megamendung, Kabupaten Bogor, Jawa Barat 16770, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=13495378042167180260&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281288282820",
+    "tagline": "Pusat Kesehatan Terpercaya untuk Kebutuhan Medis Anda 24 Jam",
+    "iconEmoji": "🩺",
+    "doctor": {
+      "name": "Dr. Budi Santoso",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo dokter, saya merasa demam dan batuk sejak kemarin. Apakah saya perlu datang langsung ke klinik?",
+        "doctor": "Selamat pagi. Untuk mendapatkan diagnosis dan penanganan yang tepat, sebaiknya Anda segera datang ke klinik agar bisa diperiksa langsung. Kami buka 24 jam.",
+        "recommendationTitle": "Kunjungan Langsung untuk Diagnosis Akurat",
+        "recommendationDesc": "Direkomendasikan untuk segera mengunjungi klinik agar dokter dapat melakukan pemeriksaan fisik dan menentukan penanganan yang sesuai untuk demam dan batuk Anda."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Pelayanan 24 Jam",
+      "Dokter Keluarga",
+      "Kesehatan Primer"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pemeriksaan Dokter Umum",
+        "desc": "Konsultasi dan pemeriksaan oleh dokter umum",
+        "price": "Rp 80.000",
+        "category": "Pelayanan Dasar"
+      },
+      {
+        "id": 2,
+        "name": "Pemberian Vaksin",
+        "desc": "Berbagai jenis vaksinasi untuk anak dan dewasa",
+        "price": "Mulai Rp 150.000",
+        "category": "Vaksinasi"
+      },
+      {
+        "id": 3,
+        "name": "Perawatan Luka",
+        "desc": "Pembersihan dan penanganan luka ringan hingga sedang",
+        "price": "Mulai Rp 75.000",
+        "category": "Tindakan Medis"
+      },
+      {
+        "id": 4,
+        "name": "Infus Vitamin C",
+        "desc": "Pemberian infus vitamin C untuk daya tahan tubuh",
+        "price": "Rp 200.000",
+        "tag": "Populer",
+        "category": "Terapi Suportif"
+      },
+      {
+        "id": 5,
+        "name": "Pembersihan Telinga",
+        "desc": "Prosedur membersihkan kotoran telinga oleh tenaga medis profesional",
+        "price": "Rp 100.000",
+        "category": "Perawatan Khusus"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Muhammad Farid Zaki",
+        "rating": 5,
+        "text": "There's an internist, sorry, I forgot his name. He took me to the emergency room. Good luck, bro, and your clinic 🙏",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Fariz Risqiansyah",
+        "rating": 5,
+        "text": "Sorry, can you check/clean your ears here?",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "Mas Ciawi",
+        "rating": 1,
+        "text": "the service is lacking",
+        "time": "3 months ago"
+      },
+      {
+        "authorName": "Dindaa Oktaa",
+        "rating": 4,
+        "text": "Can it be used for vitamin infusion?",
+        "time": "11 months ago"
+      },
+      {
+        "authorName": "Steve Alkahfi",
+        "rating": 5,
+        "text": "The clinic is comfortable and clean.... the nurses are friendly",
+        "time": "7 years ago"
+      }
+    ]
+  },
+
+
+  "klinik-pratama-hayati-medika": {
+    "name": "Klinik Pratama Hayati Medika",
+    "category": "Clinic",
+    "city": "ciawi gadog",
+    "rating": 5.0,
+    "reviewCount": 45,
+    "phone": "+62 813-9200-0324",
+    "address": "Jl. Raya Sukabumi Jl. Mayjen H.R. Edi Sukma No.10, RT.02/RW.08, Harjasari, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16138, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=322226685061308897&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281392000324",
+    "tagline": "Layanan Medis Profesional dan Ramah untuk Keluarga Anda",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "dr. Budi Santoso",
+      "role": "General Practitioner",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://example.com/dr_budi.jpg",
+      "sampleChat": {
+        "user": "Dok, saya demam dan batuk sudah 3 hari, badan pegal-pegal.",
+        "doctor": "Baik, mari kita periksa lebih lanjut. Gejala yang Anda rasakan perlu evaluasi untuk menentukan penyebabnya. Apakah ada gejala lain seperti mual atau pusing?",
+        "recommendationTitle": "Konsultasi Demam dan Batuk",
+        "recommendationDesc": "Dokter akan melakukan pemeriksaan fisik dan mendiskusikan riwayat kesehatan Anda untuk diagnosis yang akurat."
+      }
+    },
+    "categories": [
+      "General Practice",
+      "Medical Clinic",
+      "Family Doctor",
+      "Healthcare"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pemeriksaan Umum",
+        "desc": "Konsultasi dan pemeriksaan kesehatan dasar oleh dokter umum.",
+        "price": "Rp 75.000",
+        "category": "Pelayanan Medis"
+      },
+      {
+        "id": 2,
+        "name": "Suntik Vitamin C",
+        "desc": "Injeksi vitamin C untuk meningkatkan daya tahan tubuh dan vitalitas.",
+        "price": "Rp 100.000",
+        "category": "Pelayanan Medis"
+      },
+      {
+        "id": 3,
+        "name": "Pembersihan Telinga",
+        "desc": "Prosedur irigasi telinga untuk membersihkan kotoran telinga yang menumpuk.",
+        "price": "Rp 85.000",
+        "category": "Pelayanan Medis"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Fadhel Muhammad",
+        "rating": 5,
+        "text": "Friendly service, according to procedures, neat and clean premises. Recommended for medical treatment around Ciawi. Excellent service.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Alfa I. Rabithah",
+        "rating": 5,
+        "text": "Good service, the doctor was very detailed and thorough in his examination. The clinic was clean and tidy.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Nabila Lestari",
+        "rating": 5,
+        "text": "Excellent service, the doctor is very humble, the nurses are also very friendly, the place is comfortable and clean, the service is fast, and the treatment costs are affordable. I highly recommend getting treatment here. Always be successful, Pratama Hayati Medika Clinic.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Muhamad Anggara Putra",
+        "rating": 5,
+        "text": "The service is really cool, like BCA Priority. Ear irrigation procedure, awesome!",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Aulia Oktaviani",
+        "rating": 5,
+        "text": "The service is good, the staff and doctors are friendly, the place is comfortable, the explanations are detailed, and it's close to home too.",
+        "time": "a year ago"
+      }
+    ]
+  },
+
+
+  "latika-beauty-care-ciawi": {
+    "name": "Latika Beauty Care Ciawi",
+    "category": "Beauty Clinic",
+    "city": "ciawi gadog",
+    "rating": 5.0,
+    "reviewCount": 230,
+    "phone": "+62 812-9511-0302",
+    "address": "Seuseupan Jl. Kaum, RT.04/RW.07, Bendungan, Kec. Ciawi, Kabupaten Bogor, Jawa Barat 16720, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=642762298030020848&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281295110302",
+    "tagline": "Your destination for radiant skin and personalized beauty care.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Ayu Lestari",
+      "role": "Head Dermatologist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Kulit saya kusam dan sering berjerawat, apa ada perawatan yang cocok?",
+        "doctor": "Tentu, kami bisa bantu. Berdasarkan deskripsi Anda, kami merekomendasikan facial detox dan serum pencerah untuk mengatasi kusam dan jerawat.",
+        "recommendationTitle": "Facial Detox & Brightening Serum",
+        "recommendationDesc": "Perawatan ini membersihkan pori-pori secara mendalam, mengurangi peradangan jerawat, dan mencerahkan kulit kusam."
+      }
+    },
+    "categories": [
+      "Skincare",
+      "Facial Treatment",
+      "Beauty",
+      "Dermatology"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Detox",
+        "desc": "Deep cleansing facial to remove impurities and toxins, leaving skin fresh.",
+        "price": "Rp 150.000",
+        "category": "Facial"
+      },
+      {
+        "id": 2,
+        "name": "Brightening Facial",
+        "desc": "Treatment to lighten dark spots and even out skin tone for a radiant glow.",
+        "price": "Rp 180.000",
+        "category": "Facial"
+      },
+      {
+        "id": 3,
+        "name": "Acne Treatment",
+        "desc": "Targeted therapy to reduce acne, inflammation, and prevent future breakouts.",
+        "price": "Rp 200.000",
+        "category": "Specialized Treatment"
+      },
+      {
+        "id": 4,
+        "name": "Microdermabrasion",
+        "desc": "Exfoliation technique to improve skin texture, reduce fine lines, and sun damage.",
+        "price": "Rp 250.000",
+        "tag": "New",
+        "category": "Advanced Treatment"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Desta Zain",
+        "rating": 5,
+        "text": "I’ve been visiting Latika Ciawi regularly for facial treatments, and I’m always impressed by the quality of service. Kak Alma is an excellent therapist, professional, gentle, and attentive. Each session leaves my skin feeling refreshed and well cared for. Truly one of the best places for facial care.",
+        "time": "11 months ago"
+      },
+      {
+        "authorName": "Suci Agustina",
+        "rating": 5,
+        "text": "first experience treatment disini, verry recommended🤩🫰🫰",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Ikke Nurjanah",
+        "rating": 5,
+        "text": "Ok bgttt recommended 🫰🏻",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Hafizh Rahmat",
+        "rating": 5,
+        "text": "matap",
+        "time": "6 months ago"
+      },
+      {
+        "authorName": "Sindy Arianty",
+        "rating": 5,
+        "text": "The service at Latika was very satisfying. The staff were friendly and helpful. The doctor's explanations were easy to understand. The waiting room, restrooms, treatment rooms, and other areas were comfortable. Thank you.",
+        "time": "a month ago"
+      }
+    ]
+  },
+
+
   "pratama-prima-clinic-24-hours": {
     "name": "Pratama Prima Clinic (24 hours)",
     "category": "Clinic",

@@ -48,6 +48,366 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "pratama-prima-clinic-24-hours": {
+    "name": "Pratama Prima Clinic (24 hours)",
+    "category": "Clinic",
+    "city": "Bogor",
+    "rating": 4.5,
+    "reviewCount": 51,
+    "phone": "+62 812-1401-5849",
+    "address": "Jl. Pahlawan No.112, RT.01/RW.18, Bondongan, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16132, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=2144623239690196615&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "24 hours",
+    "waNumber": "6281214015849",
+    "tagline": "Your trusted 24-hour healthcare partner for all your medical needs.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "Dr. Nadia Putri",
+      "role": "General Practitioner",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya merasa demam dan batuk sejak kemarin malam, apakah saya perlu datang ke klinik?",
+        "doctor": "Halo! Berdasarkan gejala yang Anda alami, sebaiknya Anda segera datang untuk pemeriksaan lebih lanjut. Kami buka 24 jam dan siap membantu Anda.",
+        "recommendationTitle": "Pentingnya Pemeriksaan Awal",
+        "recommendationDesc": "Demam dan batuk bisa menjadi indikasi awal berbagai kondisi. Pemeriksaan oleh dokter dapat membantu diagnosis yang akurat dan penanganan yang tepat, terutama jika gejala memburuk atau tidak membaik."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Layanan Darurat 24 Jam",
+      "Pemeriksaan Medis",
+      "Vaksinasi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "General Consultation",
+        "desc": "Pemeriksaan dan konsultasi menyeluruh dengan dokter umum.",
+        "price": "Rp 80.000",
+        "category": "Layanan Medis Umum"
+      },
+      {
+        "id": 2,
+        "name": "Emergency Care",
+        "desc": "Penanganan cepat untuk kondisi medis darurat.",
+        "price": "Bervariasi",
+        "category": "Layanan Medis Darurat"
+      },
+      {
+        "id": 3,
+        "name": "Vaccination Services",
+        "desc": "Pilihan vaksinasi untuk anak dan dewasa.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Layanan Kesehatan Preventif"
+      },
+      {
+        "id": 4,
+        "name": "Basic Laboratory Tests",
+        "desc": "Pemeriksaan laboratorium dasar (tes darah, urin, dll.).",
+        "price": "Mulai dari Rp 75.000",
+        "category": "Layanan Diagnostik"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Nata Kalana",
+        "rating": 5,
+        "text": "Very helpful when someone get sick very late night or during holiday when all doctors are closed",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "haiva muzdaliva",
+        "rating": 5,
+        "text": "fast respon",
+        "time": "11 months ago"
+      },
+      {
+        "authorName": "Kendi Ramadhan",
+        "rating": 5,
+        "text": "Good",
+        "time": "9 years ago"
+      },
+      {
+        "authorName": "Yuke Kkey Anggraeni",
+        "rating": 5,
+        "text": "I always get treatment here. Thank God, it's perfect. The doctors are friendly, the nurses and receptionists are also friendly, and the place is comfortable and clean. Always successful, Pratama Prima Clinic 🙌🏻",
+        "time": "11 months ago"
+      },
+      {
+        "authorName": "Meyta Rianoni (Mey)",
+        "rating": 5,
+        "text": "Friendly doctor The lady was quick to respond There's parking for motorbikes",
+        "time": "a year ago"
+      }
+    ]
+  },
+
+
+  "wijaya-skin-care-bogor": {
+    "name": "Wijaya Skin Care BOGOR",
+    "category": "Klinik Kecantikan",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 1706,
+    "phone": "+62 811-1920-5994",
+    "address": "Jalan Sukasari No. 11B Baranangsiang, RT.04/RW.02, Sukasari, Kec. Bogor Tim., Kota Bogor, Jawa Barat 16143, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=14103360788149138649&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281119205994",
+    "tagline": "Pancarkan Kecantikan Alami Anda dengan Perawatan Kulit Terbaik.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Cantik Wijaya",
+      "role": "Dokter Spesialis Kulit",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Kulit saya terlihat kusam dan sering muncul jerawat. Apa yang harus saya lakukan, Dok?",
+        "doctor": "Tentu, kami bisa bantu. Berdasarkan keluhan Anda, kami merekomendasikan pemeriksaan kulit untuk menentukan perawatan terbaik, mungkin kombinasi facial detoksifikasi dan serum pencerah. Jangan ragu untuk konsultasi langsung!",
+        "recommendationTitle": "Perawatan Kulit Kusam & Berjerawat",
+        "recommendationDesc": "Kami sarankan kombinasi Facial Detoksifikasi untuk membersihkan pori-pori dan Serum Pencerah untuk mengurangi kusam. Konsultasikan dengan dokter kami untuk penyesuaian."
+      }
+    },
+    "categories": [
+      "Klinik Kecantikan",
+      "Perawatan Kulit",
+      "Facial",
+      "Dermatologi",
+      "Laser Treatment"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Acne Treatment",
+        "desc": "Perawatan wajah khusus untuk kulit berjerawat, membersihkan pori-pori dan mengurangi inflamasi.",
+        "price": "Rp 250.000",
+        "category": "Facial"
+      },
+      {
+        "id": 2,
+        "name": "Brightening Infusion",
+        "desc": "Infus pencerah kulit untuk hasil glowing dan merata.",
+        "price": "Rp 400.000",
+        "tag": "Populer",
+        "category": "Infusion"
+      },
+      {
+        "id": 3,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk meremajakan kulit, mengurangi noda hitam dan garis halus.",
+        "price": "Mulai dari Rp 750.000",
+        "category": "Laser"
+      },
+      {
+        "id": 4,
+        "name": "Dermapen Treatment",
+        "desc": "Terapi microneedling untuk stimulasi kolagen, perbaikan tekstur kulit dan bekas jerawat.",
+        "price": "Rp 600.000",
+        "category": "Medical Treatment"
+      },
+      {
+        "id": 5,
+        "name": "Chemical Peeling",
+        "desc": "Eksfoliasi kimia untuk mengangkat sel kulit mati dan mencerahkan kulit.",
+        "price": "Rp 350.000",
+        "category": "Facial"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Delia Luthfiany Dineshcara",
+        "rating": 5,
+        "text": "The service was excellent! Can’t wait for any treatments here",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Widalia Pagun",
+        "rating": 5,
+        "text": "I used to come to Wijaya Platinum Clinic Bogor and another branch in Ciputat, near by my house hehe, and I Swear it, they always offered some good deals package better than others clinic. The place is so comfortable, clean and the music so calm. I took an A dermal infussion, will make me looks more glowing then before✨ Mba Mia is my therapist, she's very nice and polite, and the massage is amazing. I will definetly come back! And this place is very recommended if you concern about your face & skin because WPC has a lots of branch.",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Dara Ayu Aprilia",
+        "rating": 5,
+        "text": "I have been a client since 2012. From this type of face 😭😱 to this 🥰☺️ Never changed my interest in another beauty clinic ever since. The doctor as well as the staff (beautician) knows how to deal with my skin condition. Informative, helpful, and satisfying in terms of answering my problems. Langganan satu keluarga juga dari dulu anyway😉. The good thing is, pindah lokasi kemanapun has your data and helps you even more. The face and shoulder massage during the facial is 10++ 🤩 Place: 🌟 🌟 🌟 🌟 🌟 Beautician: 🌟 🌟 🌟 🌟 🌟 Doctor: 🌟 🌟 🌟 🌟 🌟 Service: 🌟 🌟 🌟 🌟 🌟",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Intan Vania Utami",
+        "rating": 5,
+        "text": "Recommended place for me time, great services and treatment. Get your skin glowing to boost your mental wellbeing 💕",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Charisma Bhenia",
+        "rating": 5,
+        "text": "Been going here since last year only for facial treatmebt, but overall I couldn't recommend this clinic enough for its great service and professional care✨",
+        "time": "2 years ago"
+      }
+    ]
+  },
+
+
+  "aha-beauty-clinic": {
+    "name": "Aha Beauty Clinic",
+    "category": "Klinik Kecantikan",
+    "city": "Bogor",
+    "rating": 4.8,
+    "reviewCount": 285,
+    "phone": "+62 812-8645-8686",
+    "address": "Jl. Raya Pajajaran No.70L, RT.06/RW.13, Baranangsiang, Kec. Bogor Tim., Kota Bogor, Jawa Barat 16143, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=12707945880189735559&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281286458686",
+    "tagline": "Rona Cantikmu, Kepercayaan Diri Baru!",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Ayu Larasati",
+      "role": "Dokter Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://example.com/dr-ayu-avatar.jpg",
+      "sampleChat": {
+        "user": "Dok, saya punya masalah kulit kusam dan banyak bekas jerawat. Apa ya yang paling cocok untuk saya?",
+        "doctor": "Halo! Untuk masalah kulit kusam dan bekas jerawat, kami bisa merekomendasikan beberapa perawatan seperti Chemical Peeling atau Laser Rejuvenation. Tapi, alangkah baiknya jika kita lakukan konsultasi langsung dulu ya, agar saya bisa menganalisa kondisi kulit Anda dan memberikan rekomendasi yang paling tepat.",
+        "recommendationTitle": "Konsultasi Kulit Personal",
+        "recommendationDesc": "Dapatkan analisa mendalam dan rekomendasi perawatan yang disesuaikan dengan kebutuhan kulit unik Anda dari dokter ahli kami."
+      }
+    },
+    "categories": [
+      "Skincare",
+      "Facial",
+      "Laser Treatment",
+      "Anti-Aging",
+      "Acne Treatment"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Basic Facial",
+        "desc": "Pembersihan mendalam untuk kulit sehat dan cerah.",
+        "price": "Rp 150.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 2,
+        "name": "Acne Peel Treatment",
+        "desc": "Perawatan khusus untuk mengurangi jerawat dan bekasnya.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "Laser Rejuvenation",
+        "desc": "Mencerahkan kulit, menyamarkan noda hitam, dan meremajakan kulit.",
+        "price": "Rp 750.000",
+        "category": "Perawatan Laser"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Taman Asghari",
+        "rating": 2,
+        "text": "It was my first time for Facial here the price was expensive but the one who do treatment she was friendly but looks like she doesn’t have experience.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Akmalia Zahra",
+        "rating": 5,
+        "text": "Warm hospitality ❤️ Dokternya ramah, baik banget dan bener2 merekomendasikn what we need not only thinking about their profit. Cant wait to try your newest technology cause i always amazed with all treatment here😍",
+        "time": "7 years ago"
+      },
+      {
+        "authorName": "Surya Putra",
+        "rating": 5,
+        "text": "The best👍",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "maulidya agustina",
+        "rating": 5,
+        "text": "Best clinic in bogor!!",
+        "time": "7 months ago"
+      },
+      {
+        "authorName": "Bovit Halim",
+        "rating": 5,
+        "text": "feel comfort excelent service",
+        "time": "7 years ago"
+      }
+    ]
+  },
+
+
+  "griya-assunnah-bogormetode-biomekanik-terapi-anak-berkebutuhankhusus-syarafkejepitlambung-gerd-bekam-ikhwan-akhwat": {
+    "name": "Griya ASSUNNAH BOGOR(metode Biomekanik, terapi anak Berkebutuhankhusus,, syarafkejepit.lambung gerd ).bekam ikhwan akhwat",
+    "category": "Klinik Terapi & Bekam",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 29,
+    "phone": "",
+    "address": "Jl. Danau Matana Gg. Tegal Mangga No.33, RT.02/RW.03, Tegallega, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16129, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=3227171454528650565&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281234567890",
+    "tagline": "Pusat Terapi Biomekanik, Bekam, dan Penanganan Syaraf Kejepit",
+    "iconEmoji": "🌿",
+    "doctor": {
+      "name": "Terapis Griya Assunnah",
+      "role": "Terapis Biomekanik & Bekam",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo, saya sering sakit kepala dan pusing karena darah tinggi. Apakah ada terapi yang bisa membantu tanpa obat?",
+        "doctor": "Tentu, kami memiliki terapi PAZ yang insya Allah dapat membantu mengatasi sakit kepala dan pusing akibat darah tinggi. Terapi ini non-medis dan non-invasif. Banyak pasien kami merasakan perbaikan signifikan. Apakah Anda ingin menjadwalkan konsultasi?",
+        "recommendationTitle": "Terapi PAZ untuk Sakit Kepala dan Tekanan Darah Tinggi",
+        "recommendationDesc": "Terapi PAZ berfokus pada perbaikan biomekanik tubuh untuk mengurangi keluhan seperti sakit kepala, pusing, dan membantu menstabilkan tekanan darah tanpa penggunaan obat. Metode ini aman dan efektif."
+      }
+    },
+    "categories": [
+      "Terapi Biomekanik",
+      "Bekam",
+      "Terapi Anak Berkebutuhan Khusus",
+      "Syaraf Kejepit",
+      "Gangguan Lambung/GERD"
+    ],
+    "menu": [],
+    "reviews": [
+      {
+        "authorName": "Elvira Fahrunisa Budiyanti",
+        "rating": 5,
+        "text": "Thank God, my headache is gone, Masya Allah, thank you very much, finally I don't have to take medicine anymore, I feel sorry for my kidneys, with PAZ therapy and cupping, thank God my headache is gone and I can do my activities comfortably and well, thank you,,,",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Arti Sholihat",
+        "rating": 5,
+        "text": "Thank God, my child couldn't walk. Therapy here made him able to. Masya Allah.",
+        "time": "6 months ago"
+      },
+      {
+        "authorName": "Yuyun Yuningsih",
+        "rating": 5,
+        "text": "With PAZ therapy, my dizziness caused by high blood pressure, thank God, was cured with PAZ therapy... the service is also very satisfying... basically Top Markotop.",
+        "time": "4 years ago"
+      },
+      {
+        "authorName": "malva alodia f",
+        "rating": 5,
+        "text": "My pinched nerve and asthma... were cured with Paz therapy. No medication, no equipment. Highly recommended... very friendly and sociable.",
+        "time": "5 years ago"
+      },
+      {
+        "authorName": "Devona Marincha",
+        "rating": 5,
+        "text": "One of the best cupping services I've ever had. GOOD service. Not stingy with knowledge. 👍🙏🤝🤝🤝 Thanks, uncle. May Allah SWT always make things easy for you.",
+        "time": "3 years ago"
+      }
+    ]
+  },
+
+
   "adivaa-skin-care-clinic": {
     "name": "Adivaa Skin Care Clinic",
     "category": "Klinik Kecantikan",

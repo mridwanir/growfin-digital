@@ -48,6 +48,1026 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "adivaa-skin-care-clinic": {
+    "name": "Adivaa Skin Care Clinic",
+    "category": "Klinik Kecantikan",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 150,
+    "phone": "+62 878-7081-7600",
+    "address": "Dekat Kampus IPB, Jl. Raya Dramaga No.26, Babakan, Kec. Dramaga, Kabupaten Bogor, Jawa Barat 16680, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=5362478352096519357&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJbyRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287870817600",
+    "tagline": "Klinik Kecantikan Terpercaya untuk Kulit Sehat Berkilau.",
+    "iconEmoji": "🌸",
+    "doctor": {
+      "name": "Dr. Indah Sari",
+      "role": "Dokter Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Kulit saya kusam dan banyak bekas jerawat, dok. Apa rekomendasi treatment yang cocok?",
+        "doctor": "Berdasarkan kondisi kulit Anda, saya merekomendasikan kombinasi facial pencerah dan laser Pico untuk mengatasi kusam dan bekas jerawat. Ini akan membantu meratakan warna kulit dan memperbaiki tekstur.",
+        "recommendationTitle": "Perawatan Komprehensif untuk Kulit Kusam dan Bekas Jerawat",
+        "recommendationDesc": "Kombinasi facial pencerah dan laser Pico adalah solusi efektif untuk revitalisasi kulit. Facial akan membersihkan dan mencerahkan, sementara laser Pico menargetkan pigmentasi dan merangsang kolagen, menghasilkan kulit yang lebih cerah dan halus."
+      }
+    },
+    "categories": [
+      "Perawatan Kulit",
+      "Klinik Kecantikan",
+      "Facial",
+      "Laser Treatment",
+      "Skin Booster"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Pencerah",
+        "desc": "Perawatan wajah untuk mencerahkan kulit kusam dan menyamarkan noda hitam.",
+        "price": "Rp 150.000",
+        "category": "Facial"
+      },
+      {
+        "id": 2,
+        "name": "Facial Jerawat",
+        "desc": "Perawatan khusus untuk mengatasi jerawat dan mengurangi peradangan.",
+        "price": "Rp 175.000",
+        "category": "Facial"
+      },
+      {
+        "id": 3,
+        "name": "Microdermabrasi",
+        "desc": "Eksfoliasi kulit untuk mengangkat sel kulit mati, membuat kulit lebih halus.",
+        "price": "Rp 250.000",
+        "category": "Treatment"
+      },
+      {
+        "id": 4,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk meremajakan kulit, mengurangi kerutan, dan meratakan warna kulit.",
+        "price": "Rp 500.000",
+        "category": "Treatment"
+      },
+      {
+        "id": 5,
+        "name": "Skin Booster",
+        "desc": "Injeksi nutrisi untuk menghidrasi kulit secara mendalam dan meningkatkan elastisitas.",
+        "price": "Rp 750.000",
+        "category": "Treatment"
+      },
+      {
+        "id": 6,
+        "name": "Salmon DNA Treatment",
+        "desc": "Perawatan regenerasi kulit dengan ekstrak DNA salmon untuk kulit lebih muda.",
+        "price": "Rp 1.200.000",
+        "category": "Treatment"
+      },
+      {
+        "id": 7,
+        "name": "Damage Facial",
+        "desc": "Facial khusus untuk kulit yang rusak dan sensitif, membantu perbaikan dan pemulihan.",
+        "price": "Rp 200.000",
+        "category": "Facial"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Nisa Nur Fitriani",
+        "rating": 5,
+        "text": "Good place..good experience 😍😍🤩",
+        "time": "8 years ago"
+      },
+      {
+        "authorName": "bilaa salsa",
+        "rating": 5,
+        "text": "really good, the service is super duper friendly, it was my first time having a facial and the ladies served me really well and gently, the aftermath was clean especially the blackheads, the ladies cleaned it with care 🥹💓",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "anisah anggraini",
+        "rating": 5,
+        "text": "The service is friendly, the place is comfortable, the doctor is also good, the treatment is also satisfying",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Siti ririh Supartiani",
+        "rating": 5,
+        "text": "The facial and facial consultation were really nice, comfortable, and friendly. Overall, I recommend it to you guys🩷",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Siti sarah",
+        "rating": 5,
+        "text": "I'm so happy after the treatment at Pratama Adivaa Clinic hihi auto glow up🥰🫶🏻 anyway I've tried the damage facial and skinbooster and salmon treatments hehehe auto glow up😍 you can check my video review on ig @itssitisarah 🫶🏻✨",
+        "time": "a year ago"
+      }
+    ]
+  },
+
+
+  "new-lna-skin-health-clinic": {
+    "name": "New LNA Skin Health Clinic",
+    "category": "Beauty Clinic",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 658,
+    "phone": "+62 812-8184-2036",
+    "address": "Ruko Taman Yasmin Sektor VI No.72, RT.04/RW.09, Curugmekar, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16113, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=6533737436876740920&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281281842036",
+    "tagline": "Your journey to healthy, radiant skin starts here.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Silvia",
+      "role": "Dermatologist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya ingin kulit wajah yang lebih cerah dan bebas jerawat.",
+        "doctor": "Tentu, kami dapat membantu Anda mencapai kulit impian. Setelah konsultasi, saya akan merekomendasikan perawatan yang paling sesuai dengan kondisi kulit Anda.",
+        "recommendationTitle": "Perawatan Kulit Wajah Cerah & Bebas Jerawat",
+        "recommendationDesc": "Kami menawarkan berbagai perawatan mulai dari facial, chemical peel, hingga laser untuk mengatasi masalah pigmentasi dan jerawat. Jadwalkan konsultasi untuk mendapatkan rencana perawatan personal."
+      }
+    },
+    "categories": [
+      "Skin Clinic",
+      "Beauty Salon",
+      "Dermatologist"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Basic",
+        "desc": "Pembersihan wajah dasar untuk menjaga kesehatan kulit.",
+        "price": "Rp 150.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 2,
+        "name": "Acne Therapy",
+        "desc": "Perawatan khusus untuk kulit berjerawat, mengurangi inflamasi dan mencegah breakout.",
+        "price": "Rp 250.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk meremajakan kulit, mengurangi kerutan halus dan meningkatkan elastisitas.",
+        "price": "Rp 700.000",
+        "category": "Perawatan Laser"
+      },
+      {
+        "id": 4,
+        "name": "Chemical Peel",
+        "desc": "Pengelupasan kimiawi untuk mengangkat sel kulit mati dan mencerahkan kulit.",
+        "price": "Rp 400.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 5,
+        "name": "Brightening Infusion",
+        "desc": "Infus vitamin untuk mencerahkan kulit dan meningkatkan imunitas.",
+        "price": "Rp 350.000",
+        "category": "Perawatan Tubuh"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Nida Mulyati",
+        "rating": 5,
+        "text": "Comfortable, clean, friendly place in its. special service for people who use wheelchairs to the 2nd floor. which is definitely the best.? 👍👍👍",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Elsa",
+        "rating": 5,
+        "text": "Best beauty clinic and my fav doctor Neng Silvia is here💜💜",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "yudhi bahtiar permana",
+        "rating": 5,
+        "text": "Service all out,great experience",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Irma Rosalina",
+        "rating": 5,
+        "text": "Nice place and good enviroment",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Maelia",
+        "rating": 5,
+        "text": "good service 👍🏻 thankyouu",
+        "time": "3 years ago"
+      }
+    ]
+  },
+
+
+  "ratuna-beauty-care": {
+    "name": "Ratuna Beauty Care",
+    "category": "Klinik Kecantikan",
+    "city": "Bogor",
+    "rating": 4.8,
+    "reviewCount": 281,
+    "phone": "+62 812-8556-9794",
+    "address": "Ruko Taman Yasmin Sektor VI, RT.04/RW.09, Curugmekar, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16113, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=18082329543050031543&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281285569794",
+    "tagline": "Your journey to radiant beauty starts here.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Ratuna",
+      "role": "Dermatologist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya ingin tahu perawatan untuk kulit kusam dan berjerawat.",
+        "doctor": "Tentu, kami memiliki berbagai perawatan yang bisa membantu. Untuk kulit kusam dan berjerawat, kami merekomendasikan facial detox dan terapi laser. Apakah Anda tertarik untuk melakukan konsultasi gratis?",
+        "recommendationTitle": "Rekomendasi Perawatan Kulit",
+        "recommendationDesc": "Kami merekomendasikan Facial Detox untuk membersihkan pori-pori secara mendalam dan Terapi Laser untuk mengurangi jerawat dan mencerahkan kulit kusam."
+      }
+    },
+    "categories": [
+      "Kecantikan",
+      "Perawatan Kulit",
+      "Klinik Estetika"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Detoks",
+        "desc": "Perawatan wajah untuk membersihkan pori-pori dan menghilangkan kotoran.",
+        "price": "Rp 250.000",
+        "category": "Facial"
+      },
+      {
+        "id": 2,
+        "name": "Terapi Laser",
+        "desc": "Perawatan untuk mengurangi jerawat, mencerahkan kulit, dan meratakan warna kulit.",
+        "price": "Rp 500.000",
+        "category": "Perawatan Khusus"
+      },
+      {
+        "id": 3,
+        "name": "Mikrodermabrasi",
+        "desc": "Eksfoliasi kulit non-invasif untuk tampilan yang lebih halus dan cerah.",
+        "price": "Rp 350.000",
+        "category": "Facial"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Jules",
+        "rating": 5,
+        "text": "Overall a good experience for a first timer. You could also do a short consultation session before deciding what treatment to take. Staffs are kind and welcoming too.",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "Noer Fiqih",
+        "rating": 5,
+        "text": "Ka Lisda overall service exelant, Not bad😊",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "Aura Chitra",
+        "rating": 5,
+        "text": "Great Service!!",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "Koko Puff",
+        "rating": 5,
+        "text": "Great service and treatments being offered, worth the price",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Michael Tjia",
+        "rating": 5,
+        "text": "Good services, Treatment 👍",
+        "time": "8 months ago"
+      }
+    ]
+  },
+
+
+  "klinik-estetika-humayra": {
+    "name": "Klinik Estetika Humayra",
+    "category": "Klinik Estetika",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 49,
+    "phone": "+62 812-8053-1066",
+    "address": "Jl. Raya Semplak No.275, RT.003/RW.006, Semplak, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16114, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=5976041472637102890&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281280531066",
+    "tagline": "Wujudkan kulit impianmu dengan perawatan terbaik dari Klinik Estetika Humayra.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Lia",
+      "role": "Dokter Estetika",
+      "avatarEmoji": "👩🏻‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo dr. Lia, saya punya masalah kulit kusam dan banyak bekas jerawat. Perawatan apa yang cocok ya?",
+        "doctor": "Halo! Untuk masalah kulit kusam dan bekas jerawat, kami memiliki beberapa perawatan yang sangat efektif. Saya bisa rekomendasikan Facial Glowing untuk mencerahkan, Chemical Peeling untuk regenerasi kulit, atau PRP Treatment yang sangat bagus untuk menghilangkan bekas jerawat. Mari kita jadwalkan konsultasi untuk menentukan perawatan terbaik sesuai kondisi kulit Anda.",
+        "recommendationTitle": "Rekomendasi Perawatan Kulit Kusam & Bekas Jerawat",
+        "recommendationDesc": "Untuk kulit kusam dan bekas jerawat, disarankan Facial Glowing, Chemical Peeling, atau PRP Treatment. Konsultasi langsung dengan dokter untuk penyesuaian."
+      }
+    },
+    "categories": [
+      "Perawatan Wajah",
+      "Kecantikan Kulit",
+      "Anti-Aging",
+      "Laser Treatment",
+      "Chemical Peeling",
+      "PRP Treatment"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Facial Glowing",
+        "desc": "Perawatan wajah untuk mencerahkan dan menyegarkan kulit kusam.",
+        "price": "Rp 150.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 2,
+        "name": "Chemical Peeling",
+        "desc": "Mengangkat sel kulit mati untuk kulit lebih cerah dan bebas noda.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "PRP Treatment",
+        "desc": "Terapi Platelet-Rich Plasma untuk regenerasi kulit dan menghilangkan bekas jerawat.",
+        "price": "Rp 750.000",
+        "tag": "Rekomendasi",
+        "category": "Terapi Kulit"
+      },
+      {
+        "id": 4,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk peremajaan kulit, mengurangi kerutan dan flek hitam.",
+        "price": "Rp 900.000",
+        "category": "Terapi Kulit"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Astrid Deviana",
+        "rating": 5,
+        "text": "I was recommended by my mum, the place is very aesthetic and clean, the service is very good and the prices are affordable. So worth it 🥰👍🏼",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Aditya Kusumastuti",
+        "rating": 5,
+        "text": "Its a cozy place and nice for any treatment. Very recomended❤",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "resmi widaswara",
+        "rating": 5,
+        "text": "👍🏻👍🏻",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Jihan khairina",
+        "rating": 5,
+        "text": "friendly staff n good experience",
+        "time": "in the last week"
+      },
+      {
+        "authorName": "Markas Jangkrik",
+        "rating": 5,
+        "text": "The treatment here is soooooo comfortable. The doctor is nice, patient, very friendly, and beautiful😍 I came home immediately glowing, I really like the PRP, it's my favorite treatment, all my acne is gone😭❤️ Thank you Doctor Lia🥰",
+        "time": "3 years ago"
+      }
+    ]
+  },
+
+
+  "iwan-mandagidr": {
+    "name": "Iwan Mandagi.dr",
+    "category": "Klinik Akupunktur dan Umum",
+    "city": "dramaga cilendek bubulak",
+    "rating": 4.9,
+    "reviewCount": 28,
+    "phone": "+62 815-9996-231",
+    "address": "Jl. RSAU No.3, RT.03/RW.10, Atang Senjaya, Kec. Kemang, Kabupaten Bogor, Jawa Barat 16310, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=7707827871424953546&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628159996231",
+    "tagline": "Pusat Akupunktur dan Pelayanan Kesehatan Umum Terbaik di Bogor",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "Dr. Iwan Mandagi",
+      "role": "Dokter Akupunktur & Umum",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, saya sering merasa pegal-pegal di punggung dan leher. Apa ada solusi yang bisa membantu?",
+        "doctor": "Tentu, dengan metode akupunktur, kita bisa membantu meredakan pegal-pegal Anda. Akupunktur dapat melancarkan peredaran darah dan mengurangi ketegangan otot. Mari kita jadwalkan konsultasi untuk penanganan lebih lanjut.",
+        "recommendationTitle": "Terapi Akupunktur untuk Nyeri Otot",
+        "recommendationDesc": "Akupunktur adalah pengobatan tradisional Tiongkok yang melibatkan penempatan jarum tipis pada titik-titik tertentu di tubuh. Ini efektif untuk meredakan nyeri otot, pegal-pegal, dan masalah sendi, serta meningkatkan relaksasi dan kesejahteraan umum."
+      }
+    },
+    "categories": [
+      "Akupunktur",
+      "Klinik Umum",
+      "Kesehatan",
+      "Terapi Fisik"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan dan konsultasi kesehatan menyeluruh dengan dokter umum.",
+        "price": "Rp 75.000",
+        "category": "Layanan Medis"
+      },
+      {
+        "id": 2,
+        "name": "Terapi Akupunktur",
+        "desc": "Sesi akupunktur untuk berbagai keluhan seperti nyeri otot, stres, dan kelelahan.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Terapi Alternatif"
+      },
+      {
+        "id": 3,
+        "name": "Cek Gula Darah",
+        "desc": "Pengecekan kadar gula darah sewaktu.",
+        "price": "Rp 30.000",
+        "category": "Pemeriksaan Laboratorium"
+      },
+      {
+        "id": 4,
+        "name": "Terapi Bekam",
+        "desc": "Pengobatan tradisional bekam untuk mengeluarkan toksin dari tubuh.",
+        "price": "Mulai dari Rp 100.000",
+        "category": "Terapi Alternatif"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Shanazqum QunQun",
+        "rating": 4,
+        "text": "For suggestions, most patients go through the back door and are interrupted. Poor people who have arrived first. Most of them go through the back door. Suggestions: The doctor should be firm, if possible, lock the back door so that patients do not just jump in line through the back door. Cultivate orderly queues. This often happens. .. Saturday Just now, a man and his family jumped in line through the back door while the first woman to arrive was waiting on the front sofa. Finally, they were interrupted.",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Kaesbe 358",
+        "rating": 4,
+        "text": "Pelayanan dokter cukup baik, namun sistem antrian masih perlu diperbaiki. Saat datang, pasien terlihat kebingungan karena tidak ada nomor atau daftar antrian yang jelas, hanya mengandalkan saling bertanya siapa yang terakhir. Meskipun terlihat sederhana, akan jauh lebih tertib dan nyaman jika disediakan kartu antrian atau sistem daftar pasien. Semoga ke depannya bisa ditingkatkan agar pelayanan menjadi lebih rapi dan profesional.",
+        "time": "3 months ago"
+      },
+      {
+        "authorName": "Muhammad Hafizhuddin",
+        "rating": 5,
+        "text": "Masya Allah wal hamdulillah, may the doctor always be healthy and live a long life, and may his expertise be very beneficial to many people. Blessed be Allah, doctor.",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "FADLI",
+        "rating": 5,
+        "text": "Top acupuncture in Bogor City, comfortable and clean, with a cafe. You can enjoy coffee while waiting for your loved ones to receive treatment.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Nila AlhijazBogor",
+        "rating": 5,
+        "text": "Thank God, the doctor and assistant were friendly, the waiting room was comfortable, there was a cafe, and the food and drinks were affordable. My dad, who couldn't get up from bed and couldn't walk, can now walk, although not yet normally. It's all by Allah's grace. Thank God. Thank you, Doctor Iwan, stay healthy 🤲😇",
+        "time": "a year ago"
+      }
+    ]
+  },
+
+
+  "klinik-gigi-yasmin-dental-ruko-taman-yasmin-sektor-vi-bogor": {
+    "name": "Klinik Gigi Yasmin Dental (Ruko Taman Yasmin sektor VI) Bogor",
+    "category": "Klinik Gigi",
+    "city": "Bogor",
+    "rating": 4.9,
+    "reviewCount": 347,
+    "phone": "+62 811-184-619",
+    "address": "Ruko Taman Yasmin Sektor VI Jl. KH. R. Abdullah Bin Nuh No.200, RT.05/RW.09, Curugmekar, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16113, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=10123188431498050646&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "62811184619",
+    "tagline": "Senyum Sehat, Percaya Diri Meningkat bersama Yasmin Dental",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Drg. Funny",
+      "role": "Dokter Gigi",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Gigi saya sakit sekali, dok, apakah bisa langsung diperiksa?",
+        "doctor": "Tentu, mari kita periksa penyebabnya. Kami akan berusaha membuat Anda nyaman.",
+        "recommendationTitle": "Perawatan Gigi Darurat",
+        "recommendationDesc": "Kami siap membantu Anda mengatasi sakit gigi segera. Hubungi kami untuk janji temu atau walk-in."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "Ortodontik",
+      "Pembersihan Gigi",
+      "Tambal Gigi",
+      "Cabut Gigi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pembersihan Karang Gigi (Scaling)",
+        "desc": "Pembersihan plak dan karang gigi untuk menjaga kesehatan mulut Anda.",
+        "price": "Mulai dari Rp 300.000",
+        "category": "Perawatan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Tambal Gigi",
+        "desc": "Penanganan gigi berlubang untuk mengembalikan fungsi dan estetika gigi.",
+        "price": "Mulai dari Rp 400.000",
+        "category": "Restorasi Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Cabut Gigi",
+        "desc": "Prosedur pencabutan gigi yang rusak atau tidak dapat diselamatkan dengan aman.",
+        "price": "Mulai dari Rp 350.000",
+        "category": "Bedah Minor"
+      },
+      {
+        "id": 4,
+        "name": "Pemasangan Behel (Ortodontik)",
+        "desc": "Perawatan untuk merapikan susunan gigi dan memperbaiki gigitan.",
+        "price": "Konsultasi Gratis, Paket Mulai dari Rp 8.000.000",
+        "tag": "Populer",
+        "category": "Ortodontik"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Elisabeth Venny",
+        "rating": 5,
+        "text": "Drg. Funny did my braces, Professional, efficient, and friendly, recommended!",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "tatalitha viantono",
+        "rating": 5,
+        "text": "Good jod drg. Funny👍🏻👍🏻👍🏻",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Avita Puteri",
+        "rating": 5,
+        "text": "I went here to drg. Funny for my braces in 2016 and never have the need go to other dentist ever since then, for any of my dental problems. Definitely the best one!",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Sylvia Nisrina",
+        "rating": 5,
+        "text": "My go to dentist! Always satidfied with the result. Been going here since i was small and will be going back.",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "drinc",
+        "rating": 5,
+        "text": "good",
+        "time": "4 months ago"
+      }
+    ]
+  },
+
+
+  "ranuderma-bogor-dokter-spesialis-kulit-kelamin-dan-kecantikan-spkkspdve": {
+    "name": "Ranuderma Bogor | Dokter Spesialis Kulit, Kelamin dan Kecantikan (Sp.KK/Sp.DVE)",
+    "category": "Dermatology Clinic",
+    "city": "Bogor",
+    "rating": 4.7,
+    "reviewCount": 17,
+    "phone": "+62 819-2021-402",
+    "address": "Ruko Taman Yasmin Sektor VI Jl. KH. R. Abdullah Bin Nuh No.118, RT.04/RW.09, Curugmekar, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16113, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=15900767308230559380&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628192021402",
+    "tagline": "Pakar Perawatan Kulit, Kelamin dan Kecantikan Terpercaya di Bogor",
+    "iconEmoji": "💆‍♀️",
+    "doctor": {
+      "name": "Dr. Spesialis Kulit Ranuderma",
+      "role": "Dermatologist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Kulit saya sering berjerawat dan kusam, apakah ada solusi yang tepat?",
+        "doctor": "Tentu, kami dapat membantu Anda. Dari gejala yang Anda sampaikan, kemungkinan ada beberapa faktor yang mempengaruhi. Saya sarankan untuk melakukan konsultasi langsung agar bisa diperiksa lebih lanjut dan kami bisa memberikan rekomendasi perawatan yang paling sesuai untuk kondisi kulit Anda.",
+        "recommendationTitle": "Konsultasi Kulit dan Perawatan Jerawat",
+        "recommendationDesc": "Dapatkan diagnosis akurat dan rencana perawatan personal untuk masalah jerawat dan kulit kusam Anda dari dokter spesialis kulit kami."
+      }
+    },
+    "categories": [
+      "Klinik Kulit",
+      "Dermatologi",
+      "Kecantikan",
+      "Perawatan Kulit"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Spesialis Kulit",
+        "desc": "Konsultasi komprehensif dengan dokter spesialis kulit untuk menganalisis kondisi kulit dan rekomendasi perawatan.",
+        "price": "Mulai dari Rp 200.000",
+        "category": "Layanan Utama"
+      },
+      {
+        "id": 2,
+        "name": "Facial Acne Treatment",
+        "desc": "Perawatan wajah khusus untuk mengatasi jerawat dan komedo, membantu membersihkan pori-pori dan mengurangi peradangan.",
+        "price": "Mulai dari Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "Chemical Peeling",
+        "desc": "Prosedur pengelupasan kimia untuk mengangkat sel kulit mati, memperbaiki tekstur kulit, dan mencerahkan wajah.",
+        "price": "Mulai dari Rp 500.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 4,
+        "name": "Laser Rejuvenation",
+        "desc": "Terapi laser untuk meremajakan kulit, mengurangi kerutan halus, flek hitam, dan meningkatkan elastisitas kulit.",
+        "price": "Mulai dari Rp 800.000",
+        "tag": "Premium",
+        "category": "Perawatan Khusus"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Gina Astarina",
+        "rating": 5,
+        "text": "The doctor was good and explained things in detail. The therapist was cute and adorable.",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "zahra tusita",
+        "rating": 5,
+        "text": "Thank you Ranu derma... the place is very comfortable, the nurses are kind & the doctors are very thorough😍😍",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Sumadi Tigerdepok",
+        "rating": 5,
+        "text": "It was amazing to visit a beauty clinic, where you're served by a young, experienced, friendly, sociable, and educational dermatologist, along with friendly and kind nurses. The location is strategic, and the clinic's atmosphere is comfortable and spacious, pampering its patients and customers. May it continue to run smoothly, be blessed, and have many regular patients. Continued success, Ranu Derma Bogor Clinic. 💪💪💪",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Fani Siregar",
+        "rating": 5,
+        "text": "So far, I've been here several times and I'm very satisfied with the service and results. The specialist's explanations are also generous, and the therapists are excellent.",
+        "time": "9 months ago"
+      },
+      {
+        "authorName": "susliyanthi gustiani",
+        "rating": 5,
+        "text": "The place is comfortable, the doctor is not in a rush to examine and consult, the nurses are friendly.",
+        "time": "6 months ago"
+      }
+    ]
+  },
+
+
+  "safubot-yasmin-bogor": {
+    "name": "Safubot Yasmin Bogor",
+    "category": "Klinik Gigi & Umum",
+    "city": "Bogor",
+    "rating": 5.0,
+    "reviewCount": 498,
+    "phone": "+62 812-2247-4564",
+    "address": "Ruko Taman Yasmin Sektor VI No.148 Curugmekar Kecamatan Bogor Barat Bogor, RT.04/RW.09, Curugmekar, kota, Yasmin, Jawa Barat 16113, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=12374354514791438340&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6281222474564",
+    "tagline": "Klinik terpercaya untuk kesehatan Anda.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "dr. Thoriq",
+      "role": "Dokter Umum & Gigi",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo dok, saya merasa kurang enak badan, batuk dan sedikit demam sejak kemarin.",
+        "doctor": "Baik, Bu/Pak. Dari gejala yang Anda sampaikan, kemungkinan ini flu biasa. Untuk diagnosis lebih lanjut, saya sarankan untuk datang ke klinik agar bisa diperiksa langsung.",
+        "recommendationTitle": "Pemeriksaan dan Konsultasi Flu",
+        "recommendationDesc": "Datang ke klinik untuk pemeriksaan fisik lengkap dan konsultasi dengan dokter terkait gejala flu, batuk, dan demam."
+      }
+    },
+    "categories": [
+      "Klinik",
+      "Kesehatan",
+      "Umum",
+      "Gigi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan dan diagnosis kesehatan umum.",
+        "price": "Rp 50.000",
+        "category": "Layanan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Pembersihan Karang Gigi",
+        "desc": "Perawatan untuk menghilangkan plak dan karang gigi.",
+        "price": "Rp 250.000",
+        "category": "Layanan Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Suntik Vitamin C",
+        "desc": "Injeksi vitamin C untuk meningkatkan daya tahan tubuh.",
+        "price": "Rp 150.000",
+        "category": "Terapi Vitamin"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "muhammad ayub",
+        "rating": 5,
+        "text": "excellent service and explanation from the doctor and staff 🙏🏻🙏🏻",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Avita Puteri",
+        "rating": 5,
+        "text": "Everyone was very helpful ❤️  A friend of mine recommended me this place and I owe her one!",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Dewi Supriyo Putri",
+        "rating": 5,
+        "text": "Many thanks to Safubot Yasmin Bogor, nice treatment, good service. Thank u to dr. Thoriq",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Said Fahmi",
+        "rating": 5,
+        "text": "Best !",
+        "time": "6 months ago"
+      },
+      {
+        "authorName": "Dina Mardani",
+        "rating": 5,
+        "text": "Ok",
+        "time": "3 months ago"
+      }
+    ]
+  },
+
+
+  "yolita-dental-care-bogor": {
+    "name": "Yolita Dental Care Bogor",
+    "category": "Klinik Gigi",
+    "city": "Bogor",
+    "rating": 4.8,
+    "reviewCount": 84,
+    "phone": "+62 852-8115-5343",
+    "address": "Jl. H. Encep Nawawi Ruko No.18 C, RT.002/RW.011, Bubulak, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16115, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=15827239038313485053&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJbyRACGAQgAA",
+    "hours": "",
+    "waNumber": "6285281155343",
+    "tagline": "Senyum sehat, gigi terawat, percaya diri meningkat.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Dr. Tiana",
+      "role": "Dokter Gigi Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "",
+      "sampleChat": {
+        "user": "Dok, gigi saya ngilu saat makan manis, apakah ini tanda gigi berlubang?",
+        "doctor": "Bisa jadi, ada beberapa penyebab gigi ngilu. Sebaiknya segera periksakan ke klinik agar dapat diagnosis yang tepat dan penanganan dini ya.",
+        "recommendationTitle": "Periksa Gigi Rutin",
+        "recommendationDesc": "Melakukan pemeriksaan gigi rutin setiap 6 bulan sekali dapat membantu mendeteksi masalah gigi sejak dini dan mencegah komplikasi yang lebih serius."
+      }
+    },
+    "categories": [
+      "Pemasangan Behel",
+      "Pembersihan Karang Gigi",
+      "Penambalan Gigi",
+      "Pencabutan Gigi",
+      "Perawatan Saluran Akar",
+      "Pencabutan Gigi Bungsu",
+      "Retainer"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Administrasi Kunjungan",
+        "desc": "Biaya administrasi per kunjungan.",
+        "price": "Rp 10.000",
+        "category": "Biaya Lain-lain"
+      },
+      {
+        "id": 2,
+        "name": "Rontgen Panoramik",
+        "desc": "Pemeriksaan rontgen gigi menyeluruh (dilakukan di luar klinik).",
+        "price": "Rp 208.000",
+        "category": "Pemeriksaan Penunjang"
+      },
+      {
+        "id": 3,
+        "name": "Pemasangan Bracket Belakang",
+        "desc": "Biaya tambahan untuk pemasangan bracket di gigi belakang (per gigi).",
+        "price": "Rp 100.000",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 4,
+        "name": "Penambalan Gigi",
+        "desc": "Penambalan gigi berlubang (tergantung kondisi lubang).",
+        "price": "Rp 150.000 - Rp 500.000",
+        "category": "Restorasi Gigi"
+      },
+      {
+        "id": 5,
+        "name": "Pencabutan Gigi Bungsu",
+        "desc": "Pencabutan gigi bungsu (per gigi).",
+        "price": "Rp 1.500.000 - Rp 3.000.000",
+        "category": "Pencabutan Gigi"
+      },
+      {
+        "id": 6,
+        "name": "Konsultasi Bulanan Behel",
+        "desc": "Kontrol dan konsultasi rutin bulanan setelah pemasangan behel.",
+        "price": "Rp 200.000",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 7,
+        "name": "Pelepasan Bracket",
+        "desc": "Biaya pelepasan bracket behel (per gigi).",
+        "price": "Rp 50.000",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 8,
+        "name": "Perbaikan Bracket Lepas",
+        "desc": "Biaya perbaikan atau penggantian bracket yang lepas (per gigi).",
+        "price": "Rp 100.000",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 9,
+        "name": "Penggantian Kawat Behel",
+        "desc": "Penggantian kawat behel setiap 3 bulan (per rahang).",
+        "price": "Rp 100.000",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 10,
+        "name": "Repositioning Gigi",
+        "desc": "Biaya reposisi gigi (per gigi).",
+        "price": "Rp 50.000",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 11,
+        "name": "Retainer",
+        "desc": "Pemasangan retainer untuk mempertahankan posisi gigi setelah behel.",
+        "price": "Rp 650.000 - Rp 1.000.000",
+        "tag": "Lifetime",
+        "category": "Ortodontik"
+      },
+      {
+        "id": 12,
+        "name": "Pencabutan Gigi Permanen",
+        "desc": "Pencabutan gigi permanen (bukan gigi bungsu), per gigi.",
+        "price": "Rp 300.000 - Rp 500.000",
+        "category": "Pencabutan Gigi"
+      },
+      {
+        "id": 13,
+        "name": "Pengangkatan Gusi Gigi Bungsu",
+        "desc": "Pengangkatan sebagian gusi yang menutupi mahkota gigi bungsu yang belum tumbuh sempurna, per gigi.",
+        "price": "Rp 300.000",
+        "category": "Bedah Minor"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Neysa Petrina",
+        "rating": 3,
+        "text": "I was handled by Dr. Tiana. The braces were neatly installed and painless. The doctor was informative and helpful if you actively asked questions, and her explanations were quite detailed. However, the back brackets often came loose, even though I rarely eat hard foods and had chosen premium braces that (they say) are strong and won't come loose easily. But I ended up wasting more time and money just fixing the brackets. 😮‍💨 For those of you getting braces for the first time (like me), please prepare enough money to take advantage of the promotional price, as there are other unexpected costs involved. - Admin fee of 10,000 Rupiah per visit - Dental X-rays must be taken at another hospital/clinic, as they don't have the equipment (yesterday I was at Karya Bhakti Pratiwi Hospital, where a panoramic X-ray cost 208,000 Rupiah) - Installation of the back brackets (before the wisdom teeth are excluded), so there's an additional fee of 100,000 Rupiah per tooth, totaling 400,000 Rupiah for the upper, lower, right, and left sides. - If there are cavities, they must be filled first, with a price range of around 150,000 Rupiah - 500,000 Rupiah per tooth (depending on the condition of the cavity). - Wisdom tooth extraction costs between 1.5 million Rupiah - 3 million Rupiah per tooth (4 wisdom teeth total) After installation: - Monthly consultations approximately 200,000 Rupiah - Bracket removal 50,000 Rupiah per tooth - Bracket loss 100,000 Rupiah per tooth - Wire replacement every 3 months 100,000 Rupiah per jaw - Repositioning 50,000 Rupiah per tooth After removal: - Retainer 650,000 Rupiah - 1 million Rupiah (lifetime) (I live to keep my teeth from returning to their original state.) Hopefully, this helps those of you saving up for braces 😉 FYI (again), if you have an overbite, it's better to have the teeth extracted first, then get braces. There's no point in delaying the extraction. Your teeth will only move further forward because there's no room for them to move, which can lead to mouth ulcers because the brackets are rubbing against your lips. Initially, I was told to have my four wisdom teeth extracted. Private clinics are incredibly expensive, and if you use BPJS, you have to wait 2-3 months, so I kept postponing until progress stalled. At my fifth checkup, I was informed that the molars (the ones directly after the canines) could be extracted because the doctor said my wisdom teeth were growing straight, so there was no problem. If I had been told from the start, I wouldn't have: 1. Signed up for BPJS Kesehatan so that my wisdom teeth extraction would be covered. I swear, I'd rather set aside my own money for an emergency fund than make monthly payments to BPJS, which offers slow service and suboptimal treatment. 2. I'm not going to get a filling yet, because it turns out the tooth that was filled is the one that can be extracted, which ends up doubling my expenses. If I'd been informed from the start, the progress would have been faster. Now I'm pregnant, so the tooth extraction will have to be postponed until after the birth. 🥲 For permanent tooth extractions (other than wisdom teeth), the cost is around 300,000-500,000 per tooth. If the wisdom teeth haven't fully grown (the gums still partially cover the crown), the gum removal can cost around 300,000 per tooth. So, my advice: if your dental x-rays are fine, don't have your wisdom teeth extracted. Do as much research as possible before getting braces. 🙃",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Caroline",
+        "rating": 2,
+        "text": "Bad customer service. I was quite disappointed to have booked an appointment on Monday for Wednesday, but it turned out the doctor was on leave without informing me. I'd even traveled from Jakarta to Bogor because I felt comfortable and trusted the friendly doctor at this dental office.",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Intan Auga",
+        "rating": 5,
+        "text": "The service and staff are good and friendly, the doctor is also friendly, I like it here, thank you.",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Santifebri Yanti",
+        "rating": 5,
+        "text": "The doctor was very kind, the scaling and impressions were painless and not at all. The price was also affordable and reliable👍🏻👍🏻",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Deri Wansa",
+        "rating": 1,
+        "text": "Bad service, my gums are bleeding, the doctor is not skilled yet",
+        "time": "4 months ago"
+      }
+    ]
+  },
+
+
+  "praktek-dokter-spesialis-kulit-dan-kelamin-dr-melly-maya-sari-spkk": {
+    "name": "Praktek Dokter Spesialis Kulit dan Kelamin Dr. Melly Maya Sari Sp.KK",
+    "category": "Dermatology Clinic",
+    "city": "dramaga cilendek bubulak",
+    "rating": 4.8,
+    "reviewCount": 132,
+    "phone": "+62 878-8032-0040",
+    "address": "Jl. Raya Semplak No.142, RT.01/RW.09, Cilendek Bar., Kec. Bogor Bar., Kota Bogor, Jawa Barat 16112, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=13230559544715480734&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6287880320040",
+    "tagline": "Your trusted partner for healthy skin and comprehensive dermatological care.",
+    "iconEmoji": "🩺",
+    "doctor": {
+      "name": "Dr. Melly Maya Sari Sp.KK",
+      "role": "Dermatologist",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Saya punya masalah jerawat yang parah di wajah, apakah ada solusi yang efektif?",
+        "doctor": "Tentu, kami dapat membantu Anda. Jerawat adalah masalah umum yang seringkali dapat diobati dengan kombinasi perawatan topikal, obat oral, dan perubahan gaya hidup. Saya akan melakukan pemeriksaan menyeluruh untuk menentukan jenis jerawat Anda dan merancang rencana perawatan yang paling sesuai.",
+        "recommendationTitle": "Penanganan Jerawat Komprehensif",
+        "recommendationDesc": "Kami menawarkan berbagai solusi untuk jerawat, mulai dari terapi topikal, resep obat oral, hingga prosedur estetika seperti peeling kimia dan laser. Konsultasi awal akan membantu kami memahami kondisi kulit Anda dan merekomendasikan pendekatan terbaik."
+      }
+    },
+    "categories": [
+      "Dermatology",
+      "Skin Care",
+      "Venereology",
+      "Clinic",
+      "Doctor"
+    ],
+    "menu": [],
+    "reviews": [
+      {
+        "authorName": "Meidina Ayuningtyas Chandra",
+        "rating": 5,
+        "text": "ok",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Sugih Harto",
+        "rating": 5,
+        "text": "Recommended 👍👍👍",
+        "time": "5 years ago"
+      },
+      {
+        "authorName": "Afrit Buana",
+        "rating": 5,
+        "text": "The service was very friendly. The doctor's explanations were also detailed. The first floor is the pharmacy, the second floor is the doctor's practice and waiting room. The pharmacy is open 24 hours. Payments can be made using QR code, bank transfer, cash, and debit cards. Parking is available as it's located in a shophouse. There are food stalls nearby, so you can enjoy some food while waiting.",
+        "time": "8 months ago"
+      },
+      {
+        "authorName": "Luckysyah F",
+        "rating": 4,
+        "text": "On the 2nd floor of the pharmacy, friendly staff, clean place, relatively affordable prices for treatment, detailed explanations from the doctor & skin checks by the doctor",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Riani Septiani",
+        "rating": 1,
+        "text": "I heard about it from Google reviews and was curious and decided to go. The service was mediocre, and the location was decent. The cream didn't suit my skin; perhaps patients and doctors have different preferences. The prices are quite high compared to other clinics, and it feels like an upsell.",
+        "time": "5 months ago"
+      }
+    ]
+  },
+
+
   "qdental-clinic-bogor": {
     "name": "Q-DENTAL CLINIC BOGOR",
     "category": "Klinik Gigi",

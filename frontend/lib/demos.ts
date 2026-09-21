@@ -48,6 +48,605 @@ export interface BusinessDemo {
 }
 
 export const DEMO_DATA: Record<string, BusinessDemo> = {
+  "klinik-seulanga": {
+    "name": "Klinik Seulanga",
+    "category": "Klinik Gigi",
+    "city": "cibinong",
+    "rating": 5.0,
+    "reviewCount": 28,
+    "phone": "+62 851-7989-8303",
+    "address": "Jl. HR. Lukman No.34B, Cirimekar, Kec. Cibinong, Kabupaten Bogor, Jawa Barat 16917, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=5337856313018979344&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285179898303",
+    "tagline": "Klinik Gigi terpercaya dengan layanan BPJS dan dokter yang ramah.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Dr. Rizal",
+      "role": "Dokter Gigi Umum",
+      "avatarEmoji": "👨‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Halo dok, saya ingin konsultasi scaling gigi. Apakah bisa menggunakan BPJS?",
+        "doctor": "Tentu, silakan datang untuk pemeriksaan awal. Scaling gigi dan penambalan bisa menggunakan BPJS di sini.",
+        "recommendationTitle": "Layanan Dokter Rizal",
+        "recommendationDesc": "Dr. Rizal dikenal sangat ramah, teliti, dan komunikatif, bahkan bagi pasien BPJS. Banyak ulasan positif tentang keramahannya saat melakukan pencabutan, scaling, dan penambalan gigi."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "BPJS",
+      "Pencabutan Gigi",
+      "Scaling Gigi",
+      "Penambalan Gigi",
+      "Kesehatan Gigi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pemeriksaan dan Konsultasi Gigi",
+        "desc": "Pemeriksaan kondisi gigi dan mulut, serta konsultasi rencana perawatan.",
+        "price": "Gratis (dengan BPJS)",
+        "category": "Layanan Umum"
+      },
+      {
+        "id": 2,
+        "name": "Pencabutan Gigi (BPJS)",
+        "desc": "Layanan pencabutan gigi dengan fasilitas BPJS.",
+        "price": "Gratis (dengan BPJS)",
+        "tag": "Populer",
+        "category": "Perawatan Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Scaling Gigi (BPJS)",
+        "desc": "Pembersihan karang gigi untuk menjaga kebersihan dan kesehatan mulut.",
+        "price": "Gratis (dengan BPJS)",
+        "tag": "Rekomendasi",
+        "category": "Perawatan Gigi"
+      },
+      {
+        "id": 4,
+        "name": "Penambalan Gigi (BPJS)",
+        "desc": "Penambalan gigi berlubang untuk mengembalikan fungsi dan estetika gigi.",
+        "price": "Gratis (dengan BPJS)",
+        "category": "Perawatan Gigi"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Saroni Roni",
+        "rating": 5,
+        "text": "good",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Muhammad Reza Hakiki",
+        "rating": 5,
+        "text": "Having a tooth pulled using BPJS here is highly recommended. Dr. Rizal is very kind and friendly even though you use BPJS. The staff are all friendly and informative.",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Raihanah",
+        "rating": 5,
+        "text": "The male dentist is really good, I had my tooth pulled in just 5 minutes. Wow, that's really cool even though I'm wearing braces! #raihanahapproved #recommended 😊😊😊",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Adinda Azzahra",
+        "rating": 5,
+        "text": "The service is fast, the doctor and staff are also very friendly, even though we use BPJS, we still receive good service, thank you",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Steven Vin",
+        "rating": 5,
+        "text": "Scaling and filling teeth here with Dr. Rizal, very kind, thorough, friendly. The fillings are free and covered by BPJS.",
+        "time": "a month ago"
+      }
+    ]
+  },
+
+
+  "ratunaruby-skincare-clinic-cab-cikaret-cibinong": {
+    "name": "Ratunaruby Skincare Clinic Cab. Cikaret Cibinong",
+    "category": "Skincare Clinic",
+    "city": "cibinong",
+    "rating": 4.9,
+    "reviewCount": 98,
+    "phone": "+62 811-9138-448",
+    "address": "RUKO NIRWANA ESTATE, Jl. Raya Cikaret No.1 blok B, Pakansari, Kec. Cibinong, Kabupaten Bogor, Jawa Barat 16916, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=8564879221001294925&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628119138448",
+    "tagline": "Pusat perawatan kulit terbaik untuk tampil percaya diri.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Amelia Putri",
+      "role": "Dokter Kecantikan",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, kulit saya terlihat kusam dan kurang glowing. Ada saran treatment?",
+        "doctor": "Untuk kulit kusam dan kurang glowing, kami merekomendasikan treatment brightening facial yang dipadukan dengan serum vitamin C. Ini akan membantu mencerahkan dan menyegarkan kulit Anda.",
+        "recommendationTitle": "Rekomendasi Perawatan Kulit Kusam dan Kurang Glowing",
+        "recommendationDesc": "Brightening facial dan serum vitamin C untuk mencerahkan dan menyegarkan kulit."
+      }
+    },
+    "categories": [
+      "Skincare Clinic",
+      "Beauty Clinic",
+      "Dermatology",
+      "Facial Treatment",
+      "Acne Treatment"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Basic Facial",
+        "desc": "Pembersihan mendalam, eksfoliasi, pijat wajah, masker, dan pelembap.",
+        "price": "Rp 150.000",
+        "tag": "Terlaris",
+        "category": "Facial"
+      },
+      {
+        "id": 2,
+        "name": "Acne Treatment",
+        "desc": "Perawatan khusus untuk kulit berjerawat, termasuk ekstraksi komedo dan masker anti-jerawat.",
+        "price": "Rp 250.000",
+        "tag": "Populer",
+        "category": "Treatment"
+      },
+      {
+        "id": 3,
+        "name": "Brightening Facial",
+        "desc": "Facial yang berfokus untuk mencerahkan kulit kusam dan meratakan warna kulit.",
+        "price": "Rp 200.000",
+        "category": "Facial"
+      },
+      {
+        "id": 4,
+        "name": "Serum Vitamin C",
+        "desc": "Serum dengan kandungan Vitamin C tinggi untuk antioksidan dan mencerahkan kulit.",
+        "price": "Rp 180.000",
+        "category": "Produk Skincare"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Nurbaety Asshobary",
+        "rating": 5,
+        "text": "Good treatment and most excited,thank you @Ratuna Ruby skincare.",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Chandra Ayu",
+        "rating": 5,
+        "text": "Good place for treatment with affordable price✨✨",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Kayla Ramadhani",
+        "rating": 5,
+        "text": "The product is really good, it gives a very fast change to the skin, the treatment is also good and there are lots of promotions every day with affordable prices, the nurses and doctors are friendly, fun, and cool♥️",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Harleni putri Putri",
+        "rating": 5,
+        "text": "Ratunaruby Skincare klinik kecantikan yang sangat sangat bagusss, pelayanan yg sangat ramah dan baik..banyak pilihan untuk treatment dan diberitahukan sesuai dengan keadaan kulit....produk dengan kualitas yg sangat sangat bagusss cocok untuk dipakai remaja maupun ibu ibu dan yg lainyaa",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "Kharisma Yunita",
+        "rating": 5,
+        "text": "The service is great👍🏻 the prices are affordable, the ladies are also nice",
+        "time": "6 months ago"
+      }
+    ]
+  },
+
+
+  "klinik-alya-medika": {
+    "name": "Klinik Alya Medika",
+    "category": "Klinik Umum",
+    "city": "Cibinong",
+    "rating": 4.5,
+    "reviewCount": 22,
+    "phone": "+62 21 29230758",
+    "address": "Jl. Lan Bau No.18, Sentul, Kec. Babakan Madang, Kabupaten Bogor, Jawa Barat 16810, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=2778109803736081890&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin-Minggu: 07:00 - 21:00 (Jam bisa bervariasi)",
+    "waNumber": "622129230758",
+    "tagline": "Pelayanan kesehatan keluarga terpercaya dengan dokter ramah dan fasilitas lengkap.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "Dr. Ayu Lestari",
+      "role": "Dokter Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://example.com/dr_ayu.png",
+      "sampleChat": {
+        "user": "Dok, saya demam dan batuk sudah 3 hari, apakah perlu datang untuk periksa?",
+        "doctor": "Halo, dengan gejala yang Anda alami, sangat disarankan untuk datang agar dokter bisa melakukan pemeriksaan fisik dan menentukan diagnosis serta penanganan yang tepat. Apakah Anda bisa datang hari ini?",
+        "recommendationTitle": "Konsultasi Demam & Batuk",
+        "recommendationDesc": "Saran untuk datang langsung ke klinik agar dokter dapat melakukan pemeriksaan fisik dan memberikan resep obat yang sesuai."
+      }
+    },
+    "categories": [
+      "Klinik Umum",
+      "Kesehatan Keluarga",
+      "BPJS",
+      "Pemeriksaan Medis"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Umum",
+        "desc": "Pemeriksaan dan konsultasi dengan dokter umum untuk berbagai keluhan kesehatan.",
+        "price": "Mulai Rp 50.000",
+        "category": "Layanan Utama"
+      },
+      {
+        "id": 2,
+        "name": "Pemeriksaan BPJS",
+        "desc": "Layanan pemeriksaan kesehatan bagi peserta BPJS Kesehatan.",
+        "price": "Sesuai ketentuan BPJS",
+        "tag": "BPJS",
+        "category": "Layanan Utama"
+      },
+      {
+        "id": 3,
+        "name": "Suntik Vitamin C",
+        "desc": "Meningkatkan daya tahan tubuh dan menjaga kesehatan kulit.",
+        "price": "Mulai Rp 100.000",
+        "category": "Layanan Tambahan"
+      },
+      {
+        "id": 4,
+        "name": "Perawatan Luka",
+        "desc": "Penanganan dan perawatan untuk berbagai jenis luka.",
+        "price": "Mulai Rp 75.000",
+        "category": "Layanan Tambahan"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Sule Sulaeman",
+        "rating": 5,
+        "text": "Ok",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Lisna Nalis",
+        "rating": 1,
+        "text": "Every time I go there, it's always closed... Even though the hours listed are 7:00 AM - 9:00 PM",
+        "time": "5 months ago"
+      },
+      {
+        "authorName": "Fukuri",
+        "rating": 5,
+        "text": "Berobat di sini dari masih SD sekarang udah mau punya anak, pas tau di sini nerima BPJS langsung pindah ke sini faskes nya. Buat minta rujukan sangat dimudahkan sekali apalagi dokter nya yang cewek itu komunikatif banget loh. Saran aja jam buka nya lebih diperjelas lagi dari jam berapa sampai jam berapa biar konsisten gitu soalnya pernah sekali mau berobat ternyata kliniknya tutup, untung nya deket dari rumah jadi ga masalah sih",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Reyan Sa12",
+        "rating": 1,
+        "text": "It's bad, it's open from 18.00 until 19.00, the doctors haven't arrived yet, there's only 1 doctor, there's no other doctor",
+        "time": "3 years ago"
+      },
+      {
+        "authorName": "Zyolla Al'ryanova Rosfilon",
+        "rating": 5,
+        "text": "Sis, how much does an ultrasound cost?",
+        "time": "3 years ago"
+      }
+    ]
+  },
+
+
+  "dmelz-clinic": {
+    "name": "Dmelz Clinic",
+    "category": "Klinik Kecantikan",
+    "city": "cibinong",
+    "rating": 5.0,
+    "reviewCount": 86,
+    "phone": "+62 851-2121-0052",
+    "address": "Pakansari, Kec. Cibinong, Kabupaten Bogor, Jawa Barat 16915, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=13750207201505987231&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "6285121210052",
+    "tagline": "Your trusted partner for healthy, radiant skin, with honest and personalized care.",
+    "iconEmoji": "🏥",
+    "doctor": {
+      "name": "Dr. Melz",
+      "role": "Dermatologis",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Dok, kulit saya kusam dan sering berjerawat, saya bingung harus mulai dari mana.",
+        "doctor": "Berdasarkan kondisi kulit Anda, kita akan fokus pada menyeimbangkan produksi minyak dan mengatasi peradangan. Saya sarankan Anda memulai dengan pembersih lembut dan serum dengan salicylic acid untuk mengatasi jerawat, serta pelembap non-komedogenik. Mari kita evaluasi setelah beberapa minggu.",
+        "recommendationTitle": "Rekomendasi Skincare untuk Kulit Kusam dan Berjerawat",
+        "recommendationDesc": "Fokus pada pembersihan lembut, eksfoliasi dengan BHA, dan hidrasi untuk menyeimbangkan kulit. Hindari produk yang terlalu keras dan perhatikan diet."
+      }
+    },
+    "categories": [
+      "Klinik Kecantikan",
+      "Perawatan Kulit",
+      "Dermatologi",
+      "Estetika"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Konsultasi Dokter Kulit",
+        "desc": "Pemeriksaan dan saran personal dari dokter kulit berpengalaman.",
+        "price": "Mulai dari Rp 150.000",
+        "category": "Layanan Utama"
+      },
+      {
+        "id": 2,
+        "name": "Facial Detoksifikasi",
+        "desc": "Pembersihan mendalam untuk mengangkat kotoran dan racun dari kulit.",
+        "price": "Mulai dari Rp 250.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "Chemical Peeling Ringan",
+        "desc": "Perawatan untuk mengatasi jerawat, noda hitam, dan meratakan tekstur kulit.",
+        "price": "Mulai dari Rp 400.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 4,
+        "name": "Microdermabrasi",
+        "desc": "Eksfoliasi mekanis untuk kulit lebih halus dan cerah.",
+        "price": "Mulai dari Rp 350.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 5,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk peremajaan kulit, mengurangi garis halus dan flek.",
+        "price": "Mulai dari Rp 750.000",
+        "category": "Perawatan Khusus"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "winarti puji08",
+        "rating": 5,
+        "text": "Friends who've been here before say the doctor is honest and doesn't push things. At first, I thought every clinic said that. But after visiting myself, it turns out it's true. The consultation felt genuine, and the treatment was tailored to my actual skin condition.",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Nandi Saputra",
+        "rating": 5,
+        "text": "I came here for the first time because my skin was starting to have issues and I didn't know where to start. The doctor explained my skin condition in detail and gave me sensible recommendations, not ones that would benefit the clinic the most. The prices are affordable and the location is comfortable.",
+        "time": "4 months ago"
+      },
+      {
+        "authorName": "Dyan Asri",
+        "rating": 5,
+        "text": "I brought my mother, who had long wanted to try skincare but was always worried about being forced to buy expensive products. At Dmelz, those concerns were unfounded. The doctor was very patient and her explanations were easy to understand, even for a layperson. My mother felt comfortable.",
+        "time": "4 months ago"
+      },
+      {
+        "authorName": "Nurna fisa Ibra",
+        "rating": 5,
+        "text": "I came here for the first time with many questions and concerns about skin care. The doctor answered all my questions patiently and clearly. Not a single question felt like it was being answered with the intention of selling something. It was a pleasant experience.",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Kesmi Qmoy",
+        "rating": 5,
+        "text": "We came here with a friend after a long planning. We both have different skin concerns, and the doctor explained our conditions differently. The results were different, but we were both satisfied. What we liked most was that there was no pressure to upgrade anything.",
+        "time": "4 months ago"
+      }
+    ]
+  },
+
+
+  "natasha-skin-clinic-cibinong": {
+    "name": "Natasha Skin Clinic Cibinong",
+    "category": "Klinik Kecantikan",
+    "city": "Cibinong",
+    "rating": 4.9,
+    "reviewCount": 495,
+    "phone": "+62 811-2988-478",
+    "address": "Jl. Cibinong City Center Blk. B No.2 & 3A, Pakansari, Kec. Cibinong, Kabupaten Bogor, Jawa Barat 16915, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=10452960079649189971&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin - Sabtu: 09:00 - 20:00",
+    "waNumber": "628112988478",
+    "tagline": "Solusi perawatan kulit terbaik untuk kecantikan alami Anda.",
+    "iconEmoji": "✨",
+    "doctor": {
+      "name": "Dr. Sarah Wijaya",
+      "role": "Dermatologis Estetika",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+      "sampleChat": {
+        "user": "Kulit saya terlihat kusam dan banyak noda hitam, Dok. Ada rekomendasi perawatan?",
+        "doctor": "Tentu, setelah pemeriksaan kami akan merekomendasikan perawatan pencerah kulit dan laser untuk noda hitam yang efektif.",
+        "recommendationTitle": "Rekomendasi Perawatan Pencerah Kulit & Laser",
+        "recommendationDesc": "Untuk mengatasi kulit kusam dan noda hitam, kami sarankan kombinasi perawatan pencerah kulit yang menutrisi serta terapi laser khusus untuk menghilangkan pigmentasi. Ini akan membantu kulit Anda terlihat lebih cerah dan merata."
+      }
+    },
+    "categories": [
+      "Klinik Kecantikan",
+      "Perawatan Kulit",
+      "Dermatologi",
+      "Estetika"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Basic Facial",
+        "desc": "Perawatan wajah dasar untuk membersihkan, menyegarkan, dan menutrisi kulit.",
+        "price": "Rp 250.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 2,
+        "name": "Acne Treatment",
+        "desc": "Perawatan khusus untuk kulit berjerawat, mengurangi inflamasi dan mencegah timbulnya jerawat baru.",
+        "price": "Rp 350.000",
+        "tag": "Populer",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 3,
+        "name": "Brightening Peel",
+        "desc": "Chemical peel untuk mencerahkan kulit kusam dan meratakan warna kulit.",
+        "price": "Rp 400.000",
+        "category": "Perawatan Wajah"
+      },
+      {
+        "id": 4,
+        "name": "Laser Rejuvenation",
+        "desc": "Perawatan laser untuk peremajaan kulit, mengurangi kerutan halus dan memperbaiki tekstur kulit.",
+        "price": "Rp 800.000",
+        "category": "Perawatan Laser"
+      },
+      {
+        "id": 5,
+        "name": "Konsultasi Dokter",
+        "desc": "Sesi konsultasi dengan dokter spesialis kulit untuk mendiagnosis dan merencanakan perawatan.",
+        "price": "Rp 150.000",
+        "category": "Layanan Lain"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "Maria Vencentcia",
+        "rating": 5,
+        "text": "friendly and good service",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Lidya Latif",
+        "rating": 5,
+        "text": "Everything good here, from the cs, doc Natasha the best deh, beautician. Thanks",
+        "time": "2 years ago"
+      },
+      {
+        "authorName": "Nisa Fathia Rahma",
+        "rating": 5,
+        "text": "Clean place, friendly doctor and helpful staffs!",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "cahaya rizky",
+        "rating": 5,
+        "text": "Best clinic for treatment, the staff and doctor very humble. The place comfortable and clean!",
+        "time": "a year ago"
+      },
+      {
+        "authorName": "ria trisna",
+        "rating": 5,
+        "text": "Good service. Recommended for me time n self love :)",
+        "time": "a year ago"
+      }
+    ]
+  },
+
+
+  "dokter-gigi-permata-cibinong": {
+    "name": "DOKTER GIGI PERMATA - CIBINONG",
+    "category": "Klinik Gigi",
+    "city": "Cibinong",
+    "rating": 4.8,
+    "reviewCount": 550,
+    "phone": "+62 812-1111-2194",
+    "address": "Cibinong, Ruko Graha, Jl. Raya Bogor No.KM 43 Blok A5, Cirimekar, Kec. Cibinong, Kabupaten Bogor, Jawa Barat 16917, Indonesia",
+    "googleMapsUrl": "https://maps.google.com/?cid=5216937119224697413&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+    "hours": "Senin-Sabtu: 09.00-20.00, Minggu: Tutup",
+    "waNumber": "6281211112194",
+    "tagline": "Senyum sehat dan cerah bersama Dokter Gigi Permata.",
+    "iconEmoji": "🦷",
+    "doctor": {
+      "name": "Dr. Permata Sari",
+      "role": "Dokter Gigi Umum",
+      "avatarEmoji": "👩‍⚕️",
+      "avatarUrl": "https://example.com/dr_permata.jpg",
+      "sampleChat": {
+        "user": "Dok, gigi saya terasa ngilu saat minum dingin.",
+        "doctor": "Berdasarkan gejala yang Anda rasakan, kemungkinan besar Anda mengalami sensitivitas gigi. Ada beberapa penyebabnya, seperti erosi email gigi atau gusi yang menurun. Untuk penanganan lebih lanjut, sebaiknya Anda datang untuk pemeriksaan.",
+        "recommendationTitle": "Sensitivitas Gigi",
+        "recommendationDesc": "Rekomendasi kami adalah menggunakan pasta gigi khusus untuk gigi sensitif dan menghindari makanan/minuman terlalu panas atau dingin. Jika rasa ngilu berlanjut, kami sarankan pemeriksaan langsung untuk diagnosis akurat."
+      }
+    },
+    "categories": [
+      "Klinik Gigi",
+      "Dokter Gigi",
+      "Kesehatan Gigi"
+    ],
+    "menu": [
+      {
+        "id": 1,
+        "name": "Pembersihan Karang Gigi (Scaling)",
+        "desc": "Pembersihan karang gigi untuk menjaga kesehatan gusi dan mencegah peradangan.",
+        "price": "Rp 250.000",
+        "category": "Perawatan Preventif"
+      },
+      {
+        "id": 2,
+        "name": "Penambalan Gigi",
+        "desc": "Penambalan gigi berlubang dengan bahan komposit berkualitas.",
+        "price": "Mulai Rp 300.000",
+        "category": "Restorasi Gigi"
+      },
+      {
+        "id": 3,
+        "name": "Pencabutan Gigi",
+        "desc": "Pencabutan gigi yang sudah tidak dapat dipertahankan atau gigi bungsu.",
+        "price": "Mulai Rp 400.000",
+        "category": "Bedah Minor"
+      },
+      {
+        "id": 4,
+        "name": "Bleaching Gigi (Pemutihan)",
+        "desc": "Prosedur pemutihan gigi untuk mengembalikan warna gigi yang lebih cerah.",
+        "price": "Rp 1.500.000",
+        "tag": "Populer",
+        "category": "Estetika Gigi"
+      }
+    ],
+    "reviews": [
+      {
+        "authorName": "PUTRI AGIL",
+        "rating": 5,
+        "text": "good facility, perfect ambience, and profesional hand, best bangett❤️✨",
+        "time": "a month ago"
+      },
+      {
+        "authorName": "Jemy Akvianto",
+        "rating": 5,
+        "text": "time so fast leaving, since 2019, this place is choices one in Bogor district. Quality, Cost very affordable and... friendly doctor and staff also. if you ask know how about the knowledge, the doctor explain very systemic.  recommended place if you want to take care your teeth and mouth. Go Ahead.. thanks you",
+        "time": "4 years ago"
+      },
+      {
+        "authorName": "Sofii Amaliaa",
+        "rating": 1,
+        "text": "Really bad attitude for the doctor and staffs. They overcharge my sister and treat badly on BPJS patient. The staffs are not friendly too. Their rotgen result was soo awful that they put it on plastic drugs and make it even worse!!!!! Dear the owner, please put much work on your buissness.",
+        "time": "5 years ago"
+      },
+      {
+        "authorName": "risky mixer",
+        "rating": 5,
+        "text": "Nice,good n clean",
+        "time": "2 months ago"
+      },
+      {
+        "authorName": "Panji Herlambang",
+        "rating": 5,
+        "text": "Good service, good ambiance",
+        "time": "3 months ago"
+      }
+    ]
+  },
+
+
   "ratuna-cifos-by-ratunaruby-skincare": {
     "name": "Ratuna Cifos by Ratunaruby Skincare",
     "category": "Klinik Kecantikan",

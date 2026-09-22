@@ -1,8 +1,12 @@
 'use client';
 
 import { Sparkles, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { OnboardingModal } from './onboarding-modal';
 
 export function Hero() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section id="home" className="relative overflow-hidden bg-[#0B0B0E] pt-24 pb-32 md:pt-32 md:pb-40 flex flex-col items-center justify-center min-h-[90vh]">
 
@@ -41,13 +45,13 @@ export function Hero() {
         {/* Dual-Action CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center animate-in fade-in slide-in-from-bottom-7 duration-700 delay-300 w-full sm:w-auto">
           {/* Primary CTA */}
-          <a
-            href="#contact"
+          <button
+            onClick={() => setIsModalOpen(true)}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-sm font-black rounded-full transition-colors active:scale-95 shadow-[0_0_20px_rgba(0,184,148,0.3)]"
           >
             <span>Get Started - Free</span>
             <ArrowRight className="w-4 h-4" />
-          </a>
+          </button>
 
           {/* Secondary CTA */}
           <a
@@ -67,6 +71,8 @@ export function Hero() {
         {/* Hard border line indicating the horizon */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[100%] h-[1px] bg-gradient-to-r from-transparent via-[#00b894] to-transparent opacity-40" />
       </div>
+
+      <OnboardingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 }

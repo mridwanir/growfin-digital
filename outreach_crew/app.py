@@ -49,7 +49,7 @@ def preview_osm():
         return jsonify({"error": "Missing parameters"}), 400
         
     query = f"""
-    [out:json][timeout:15];
+    [out:json][timeout:35];
     (
       node["amenity"~"clinic|dentist|doctors"](around:{radius},{lat},{lng});
       way["amenity"~"clinic|dentist|doctors"](around:{radius},{lat},{lng});
@@ -60,9 +60,25 @@ def preview_osm():
     """
     
     headers = {'User-Agent': 'GrowfinDigitalScanner/1.0'}
+    
+    # List of Overpass API mirrors
+    endpoints = [
+        "https://overpass-api.de/api/interpreter",
+        "https://lz4.overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter"
+    ]
+    
+    resp = None
+    for url in endpoints:
+        try:
+            resp = requests.get(url, params={'data': query}, headers=headers, timeout=40)
+            if resp.status_code == 200:
+                break
+        except requests.exceptions.RequestException:
+            continue
+            
     try:
-        resp = requests.get("https://overpass-api.de/api/interpreter", params={'data': query}, headers=headers, timeout=20)
-        if resp.status_code == 200:
+        if resp and resp.status_code == 200:
             data = resp.json()
             elements = data.get('elements', [])
             

@@ -1,69 +1,88 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
-  const waUrl = "https://wa.me/6289668078854?text=Halo%20Growfin,%20saya%20tertarik%20konsultasi%20pembuatan%20website%20demo%20klinik";
+  const waUrl = "https://wa.me/6289668078854?text=Hello%20Growfin,%20I'm%20interested%20in%20your%20software%20development%20and%20AI%20services.";
+
+  const navLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About' },
+    { id: 'services', label: 'Services' },
+    { id: 'pricing', label: 'Pricing' },
+    { id: 'faq', label: 'FAQ' },
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200; // Offset for header height
+
+      let currentActive = 'home';
+      for (const link of navLinks) {
+        const element = document.getElementById(link.id);
+        if (element && element.offsetTop <= scrollPosition) {
+          currentActive = link.id;
+        }
+      }
+      setActiveSection(currentActive);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[#262633] bg-[#0B0B0E]/90 backdrop-blur-md transition-all">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo & Healthcare Partner Badge */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white font-black text-lg shadow-md shadow-blue-500/25 group-hover:scale-105 transition-transform">
-                G
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-black text-slate-900 leading-none tracking-tight">
-                  Growfin<span className="text-blue-600">.my.id</span>
-                </span>
-                <span className="text-[9px] font-bold text-slate-400">Clinic Growth Partner</span>
-              </div>
+          {/* Brand Identifier (Left) */}
+          <div className="flex items-center gap-2">
+            <Link href="#home" className="flex items-center gap-2 group">
+              {/* Logoipsum generic SVG logo */}
+              <svg viewBox="0 0 100 100" className="w-8 h-8 text-[#00b894]" fill="currentColor">
+                <path d="M50 0L100 25V75L50 100L0 75V25L50 0ZM50 18.5L20 33.5V66.5L50 81.5L80 66.5V33.5L50 18.5Z" />
+              </svg>
+              <span className="text-[#FFFFFF] font-black tracking-tight text-xl">Growfin</span>
             </Link>
-            
-            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200/80">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
-              Healthcare Partner
-            </span>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-slate-600">
-            <a href="#fitur" className="hover:text-blue-600 transition-colors">
-              Fitur Unggulan
-            </a>
-            <a href="#demo" className="hover:text-blue-600 transition-colors">
-              Demo Interaktif
-            </a>
-            <a href="#harga" className="hover:text-blue-600 transition-colors">
-              Paket Harga
-            </a>
-            <a href="#faq" className="hover:text-blue-600 transition-colors">
-              FAQ
-            </a>
+          {/* Desktop Navigation Links (Center) */}
+          <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium">
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                className={`transition-colors duration-300 ${
+                  activeSection === link.id
+                    ? 'text-[#FFFFFF] font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'
+                    : 'text-[#8E8EA0] hover:text-[#FFFFFF]'
+                }`}
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
 
-          {/* Desktop CTA Button */}
+          {/* Primary Conversion Action (Right) */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white text-xs font-extrabold rounded-full shadow-md shadow-emerald-600/20 transition-all"
+              href="#contact"
+              className="inline-flex items-center justify-center px-6 py-2.5 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-[13px] font-semibold rounded-full shadow-md transition-all hover:shadow-[0_0_15px_rgba(112,66,244,0.4)]"
             >
-              <span>Konsultasi WA 💬</span>
+              Get Started
             </a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100"
+            className="md:hidden p-2 rounded-xl text-[#FFFFFF] hover:bg-white/10 transition-colors"
             aria-label="Toggle Navigation Menu"
           >
             <span className="text-xl">{mobileMenuOpen ? '✕' : '☰'}</span>
@@ -73,42 +92,26 @@ export function Header() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-5 space-y-3 animate-in slide-in-from-top duration-200 shadow-xl">
-          <a
-            href="#fitur"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-xs font-bold text-slate-700 py-2 border-b border-slate-50"
-          >
-            Fitur Unggulan
-          </a>
-          <a
-            href="#demo"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-xs font-bold text-slate-700 py-2 border-b border-slate-50"
-          >
-            Demo Interaktif
-          </a>
-          <a
-            href="#harga"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-xs font-bold text-slate-700 py-2 border-b border-slate-50"
-          >
-            Paket Harga
-          </a>
-          <a
-            href="#faq"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-xs font-bold text-slate-700 py-2 border-b border-slate-50"
-          >
-            FAQ
-          </a>
+        <div className="md:hidden border-t border-[#262633] bg-[#14141A] px-4 pt-3 pb-5 space-y-3 animate-in slide-in-from-top duration-300 shadow-xl">
+          {navLinks.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              onClick={() => setMobileMenuOpen(false)}
+              className={`block text-xs py-2 border-b border-[#262633] uppercase tracking-wide transition-colors ${
+                activeSection === link.id ? 'font-black text-[#00e0b8]' : 'font-bold text-[#FFFFFF]'
+              }`}
+            >
+              {link.label}
+            </a>
+          ))}
           <a
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white text-xs font-extrabold rounded-full shadow-md mt-2"
+            className="w-full flex items-center justify-center gap-2 py-3 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-xs font-extrabold rounded-full shadow-md mt-2 transition-colors"
           >
-            <span>Konsultasi WA Sekarang 💬</span>
+            <span>Contact Us &rarr;</span>
           </a>
         </div>
       )}

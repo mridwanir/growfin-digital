@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
 export function Footer() {
-  const waUrl = "https://wa.me/6289668078854?text=Halo%20Growfin,%20saya%20tertarik%20konsultasi%20pembuatan%20website%20demo%20klinik";
+  const waUrl = "https://wa.me/6289668078854?text=Hello%20Growfin,%20I'd%20like%20to%20consult%20about%20a%20software%20project.";
 
   return (
-    <footer className="bg-slate-950 text-white pt-16 pb-12 border-t border-slate-800">
+    <footer className="bg-[#0B0B0E] text-white pt-16 pb-12 border-t border-[#262633]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Top Grid */}
@@ -13,16 +13,11 @@ export function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-black text-xl shadow-md">
-                G
-              </div>
-              <span className="text-xl font-black tracking-tight text-white">
-                Growfin<span className="text-blue-500">.my.id</span>
-              </span>
+              <img src="/image/growfin_landscape.png" alt="Growfin Digital" className="h-8 object-contain brightness-0 invert opacity-90" />
             </div>
 
-            <p className="text-xs text-slate-400 leading-relaxed font-medium max-w-sm">
-              Mitra pertumbuhan digital untuk klinik lokal (Dental, Aesthetic, Medical) yang mengubah traffic Google Maps menjadi reservasi pasien WhatsApp yang siap berobat.
+            <p className="text-xs text-[#8E8EA0] leading-relaxed font-medium max-w-sm mt-4">
+              Your premium technology partner for custom software engineering, AI-driven automation, and scalable digital solutions.
             </p>
 
             <div className="pt-2">
@@ -30,9 +25,9 @@ export function Footer() {
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white text-xs font-bold rounded-full shadow-md shadow-emerald-600/20 transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#00b894] hover:bg-[#00e0b8] active:scale-98 text-[#FFFFFF] text-xs font-bold rounded-full shadow-md transition-all"
               >
-                <span>Hubungi Tim Growfin 💬</span>
+                <span>Contact Our Team 💬</span>
               </a>
             </div>
           </div>
@@ -40,46 +35,46 @@ export function Footer() {
           {/* Quick Links */}
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 text-xs">
             <div className="space-y-3">
-              <p className="font-black text-slate-200 uppercase tracking-wider text-[11px]">Demo Klinik</p>
-              <ul className="space-y-2 text-slate-400 font-medium">
+              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">Case Studies</p>
+              <ul className="space-y-2 text-[#8E8EA0] font-medium">
                 <li>
-                  <Link href="/demo/klinik-utama-bandung-dental-center" className="hover:text-blue-400 transition-colors">
-                    Klinik Dokter Gigi
+                  <Link href="/demo/klinik-utama-bandung-dental-center" className="hover:text-[#00e0b8] transition-colors">
+                    Dental Clinic AI
                   </Link>
                 </li>
                 <li>
-                  <Link href="/demo/vorta-beauty-clinic-bandung" className="hover:text-blue-400 transition-colors">
-                    Klinik Kecantikan & Estetika
+                  <Link href="/demo/vorta-beauty-clinic-bandung" className="hover:text-[#00e0b8] transition-colors">
+                    Aesthetic Center
                   </Link>
                 </li>
                 <li>
-                  <Link href="/demo/klinik-utama-dokter-kita" className="hover:text-blue-400 transition-colors">
-                    Klinik Pratama & Cek Lab
+                  <Link href="/demo/klinik-utama-dokter-kita" className="hover:text-[#00e0b8] transition-colors">
+                    Medical & Labs
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-3">
-              <p className="font-black text-slate-200 uppercase tracking-wider text-[11px]">Navigasi</p>
-              <ul className="space-y-2 text-slate-400 font-medium">
+              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">Navigation</p>
+              <ul className="space-y-2 text-[#8E8EA0] font-medium">
                 <li>
-                  <a href="#fitur" className="hover:text-blue-400 transition-colors">
-                    Fitur Unggulan
+                  <a href="#services" className="hover:text-[#00e0b8] transition-colors">
+                    Services
                   </a>
                 </li>
                 <li>
-                  <a href="#demo" className="hover:text-blue-400 transition-colors">
-                    Showcase Demo
+                  <a href="#showcase" className="hover:text-[#00e0b8] transition-colors">
+                    Showcase
                   </a>
                 </li>
                 <li>
-                  <a href="#harga" className="hover:text-blue-400 transition-colors">
-                    Paket Harga
+                  <a href="#pricing" className="hover:text-[#00e0b8] transition-colors">
+                    Pricing
                   </a>
                 </li>
                 <li>
-                  <a href="#faq" className="hover:text-blue-400 transition-colors">
+                  <a href="#faq" className="hover:text-[#00e0b8] transition-colors">
                     FAQ
                   </a>
                 </li>
@@ -87,12 +82,12 @@ export function Footer() {
             </div>
 
             <div className="space-y-3">
-              <p className="font-black text-slate-200 uppercase tracking-wider text-[11px]">Kontak & Support</p>
-              <ul className="space-y-2 text-slate-400 font-medium">
+              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">Contact & Support</p>
+              <ul className="space-y-2 text-[#8E8EA0] font-medium">
                 <li>WhatsApp: +62 896-6807-8854</li>
                 <li>Website: growfin.my.id</li>
-                <li>Email: support@growfin.my.id</li>
-                <li>Jam Kerja: 08:00 - 20:00 WIB</li>
+                <li>Email: hello@growfin.my.id</li>
+                <li>Hours: 08:00 - 20:00 (GMT+7)</li>
               </ul>
             </div>
           </div>
@@ -100,11 +95,11 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-4">
-          <p>© {new Date().getFullYear()} Growfin (growfin.my.id). All rights reserved.</p>
+        <div className="pt-8 border-t border-[#262633] flex flex-col sm:flex-row items-center justify-between text-xs text-[#8E8EA0] font-medium gap-4">
+          <p>© {new Date().getFullYear()} Growfin Digital. All rights reserved.</p>
           <div className="flex gap-6">
-            <span className="hover:text-slate-400 cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-slate-400 cursor-pointer font-bold text-blue-500">Healthcare Partner</span>
+            <span className="hover:text-[#FFFFFF] cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-[#FFFFFF] cursor-pointer font-bold text-[#00b894]">Innovation Partner</span>
           </div>
         </div>
 

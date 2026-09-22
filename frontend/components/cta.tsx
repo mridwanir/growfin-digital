@@ -1,6 +1,10 @@
+'use client';
 import { ArrowRight, Network } from 'lucide-react';
+import { useLanguage } from '@/lib/language-context';
 
 export function CTA() {
+  const { language } = useLanguage();
+
   return (
     <section id="contact" className="bg-[#0B0B0E] py-20 sm:py-32 px-4 sm:px-6 lg:px-8 border-t border-[#262633]">
       <div className="mx-auto max-w-6xl">
@@ -18,17 +22,23 @@ export function CTA() {
             
             {/* Kategori Badge */}
             <div className="inline-flex items-center rounded-full bg-white/20 border border-white/30 px-4 py-1.5 text-xs font-bold text-white shadow-sm mb-8 backdrop-blur-sm">
-              Try it now
+              {language === 'en' ? 'Try it now' : 'Coba Sekarang'}
             </div>
 
             {/* Display Headline (H2) */}
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-6">
-              Ready to Accelerate <br className="hidden md:block" /> Your Growth?
+              {language === 'en' ? (
+                <>Ready to Accelerate <br className="hidden md:block" /> Your Growth?</>
+              ) : (
+                <>Siap Mengakselerasi <br className="hidden md:block" /> Pertumbuhan Anda?</>
+              )}
             </h2>
 
             {/* Value Proposition Body */}
             <p className="text-lg md:text-xl text-white/90 font-medium mb-10 max-w-xl leading-relaxed">
-              Join hundreds of innovative businesses scaling their operations with our custom engineering and intelligent AI automation platform. Seamless implementation in minutes.
+              {language === 'en'
+                ? 'Join hundreds of innovative businesses scaling their operations with our custom engineering and intelligent AI automation platform. Seamless implementation in minutes.'
+                : 'Bergabunglah dengan ratusan bisnis inovatif yang meningkatkan skala operasi mereka dengan layanan rekayasa kustom dan platform otomatisasi AI cerdas kami. Implementasi mulus dalam hitungan menit.'}
             </p>
 
             {/* Dual-Action Buttons */}
@@ -60,3 +70,4 @@ export function CTA() {
     </section>
   );
 }
+

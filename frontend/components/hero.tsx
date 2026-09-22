@@ -1,11 +1,13 @@
 'use client';
 
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { OnboardingModal } from './onboarding-modal';
+import { useLanguage } from '@/lib/language-context';
 
 export function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { language } = useLanguage();
 
   return (
     <section id="home" className="relative overflow-hidden bg-[#0B0B0E] pt-24 pb-32 md:pt-32 md:pb-40 flex flex-col items-center justify-center min-h-[90vh]">
@@ -28,18 +30,27 @@ export function Hero() {
 
         {/* Category / Pill Badge */}
         <div className="inline-flex items-center gap-2 rounded-full bg-[#14141A] border border-[#262633] px-4 py-1.5 text-xs font-semibold text-[#00e0b8] shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Ready-to-Deploy Templates & Custom Solutions</span>
+          <span>
+            {language === 'en' 
+              ? 'Ready-to-Deploy Templates & Custom Solutions' 
+              : 'Template Siap Pakai & Solusi Kustom'}
+          </span>
         </div>
 
         {/* H1 Primary Heading */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-[#FFFFFF] leading-[1.1] mb-6 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
-          Launch Your Business App <br className="hidden sm:block" /> in Days, Not Months
+          {language === 'en' ? (
+            <>Launch Your Business App <br className="hidden sm:block" /> in Days, Not Months</>
+          ) : (
+            <>Luncurkan Aplikasi Bisnis Anda <br className="hidden sm:block" /> dalam Hitungan Hari</>
+          )}
         </h1>
 
         {/* Sub-headline */}
         <p className="text-base md:text-lg text-[#8E8EA0] max-w-2xl mx-auto font-medium mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-          Accelerate your digital transformation with our premium software templates and custom development services. We build scalable web, mobile, and AI solutions tailored for your industry.
+          {language === 'en'
+            ? 'Accelerate your digital transformation with our premium software templates and custom development services. We build scalable web, mobile, and AI solutions tailored for your industry.'
+            : 'Akselerasi transformasi digital Anda dengan template software premium dan layanan pengembangan kustom kami. Kami membangun solusi web, mobile, dan AI yang terukur khusus untuk industri Anda.'}
         </p>
 
         {/* Dual-Action CTA Buttons */}

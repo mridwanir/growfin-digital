@@ -1,42 +1,61 @@
+'use client';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/language-context';
 
 export function DemoShowcase() {
+  const { language } = useLanguage();
+
   const demoList = [
     {
       slug: 'klinik-utama-bandung-dental-center',
       title: 'Klinik Utama Bandung Dental Center',
-      category: 'Pusat Dokter Gigi & Bedah Mulut',
+      category: {
+        en: 'Dental & Oral Surgery Center',
+        id: 'Pusat Dokter Gigi & Bedah Mulut'
+      },
       rating: 4.7,
       reviews: 748,
-      emoji: '🦷',
       badge: 'Dental Specialty',
       badgeBg: 'bg-blue-50 text-blue-700 border-blue-200',
       image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=500&auto=format&fit=crop&q=80',
-      desc: 'An automated dental booking platform with AI-generated scheduling, service catalog, and direct WhatsApp CRM integration.',
+      desc: {
+        en: 'An automated dental booking platform with AI-generated scheduling, service catalog, and direct WhatsApp CRM integration.',
+        id: 'Platform pemesanan layanan gigi otomatis dengan penjadwalan AI, katalog layanan, dan integrasi WhatsApp CRM langsung.'
+      }
     },
     {
       slug: 'vorta-beauty-clinic-bandung',
       title: 'Vorta Beauty Clinic Bandung',
-      category: 'Klinik Kecantikan & Estetika Medis',
+      category: {
+        en: 'Beauty Clinic & Medical Aesthetics',
+        id: 'Klinik Kecantikan & Estetika Medis'
+      },
       rating: 5.0,
       reviews: 4018,
-      emoji: '✨',
       badge: 'Aesthetic Specialty',
       badgeBg: 'bg-purple-50 text-purple-700 border-purple-200',
       image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=500&auto=format&fit=crop&q=80',
-      desc: 'High-conversion aesthetic clinic landing page featuring fractional laser showcases and automated online consultations.',
+      desc: {
+        en: 'High-conversion aesthetic clinic landing page featuring fractional laser showcases and automated online consultations.',
+        id: 'Halaman arahan klinik estetika konversi tinggi dengan etalase laser fraksional dan konsultasi online otomatis.'
+      }
     },
     {
       slug: 'klinik-utama-dokter-kita',
       title: 'Klinik Utama Dokter Kita',
-      category: 'Klinik Pratama & Dokter Keluarga',
+      category: {
+        en: 'Primary Clinic & Family Doctor',
+        id: 'Klinik Pratama & Dokter Keluarga'
+      },
       rating: 4.8,
       reviews: 861,
-      emoji: '🩺',
       badge: 'Medical & Lab',
       badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
       image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=500&auto=format&fit=crop&q=80',
-      desc: 'Streamlined general medical booking system for routine checkups and complete blood laboratory reservations.',
+      desc: {
+        en: 'Streamlined general medical booking system for routine checkups and complete blood laboratory reservations.',
+        id: 'Sistem pemesanan medis umum yang efisien untuk pemeriksaan rutin dan reservasi laboratorium darah lengkap.'
+      }
     },
   ];
 
@@ -47,13 +66,19 @@ export function DemoShowcase() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <span className="text-xs font-black uppercase tracking-widest text-[#00e0b8] bg-[#00b894]/10 px-3 py-1 rounded-full border border-[#00b894]/20">
-            Featured Case Studies
+            {language === 'en' ? 'Featured Case Studies' : 'Studi Kasus Unggulan'}
           </span>
           <h2 className="text-3xl font-black text-[#FFFFFF] sm:text-5xl tracking-tight">
-            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">AI Outreach Engine</span> in Action
+            {language === 'en' ? (
+              <>Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">AI Outreach Engine</span> in Action</>
+            ) : (
+              <><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">Mesin Outreach AI</span> Kami Beraksi</>
+            )}
           </h2>
           <p className="text-sm sm:text-lg text-[#8E8EA0] leading-relaxed font-medium">
-            Explore live deployments of our intelligent booking and outreach platforms. Currently showcasing our Healthcare sector implementations (F&B and Retail coming soon).
+            {language === 'en' 
+              ? 'Explore live deployments of our intelligent booking and outreach platforms. Currently showcasing our Healthcare sector implementations (F&B and Retail coming soon).'
+              : 'Jelajahi penerapan langsung dari platform pemesanan dan pemasaran cerdas kami. Saat ini menampilkan implementasi di sektor Kesehatan (F&B dan Ritel segera hadir).'}
           </p>
         </div>
 
@@ -79,7 +104,7 @@ export function DemoShowcase() {
                     </span>
                     <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
                       <span>⭐ {item.rating}</span>
-                      <span className="text-slate-200">({item.reviews}+ ulasan)</span>
+                      <span className="text-slate-200">({item.reviews}+ {language === 'en' ? 'reviews' : 'ulasan'})</span>
                     </div>
                   </div>
                 </div>
@@ -87,14 +112,13 @@ export function DemoShowcase() {
                 {/* Details */}
                 <div className="space-y-1.5 pt-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{item.emoji}</span>
                     <h3 className="text-base font-black text-[#FFFFFF] leading-snug group-hover:text-[#00e0b8] transition-colors">
                       {item.title}
                     </h3>
                   </div>
-                  <p className="text-[11px] font-bold text-[#00e0b8]">{item.category}</p>
+                  <p className="text-[11px] font-bold text-[#00e0b8]">{item.category[language]}</p>
                   <p className="text-xs text-[#8E8EA0] leading-relaxed font-medium pt-1">
-                    {item.desc}
+                    {item.desc[language]}
                   </p>
                 </div>
               </div>
@@ -105,7 +129,7 @@ export function DemoShowcase() {
                   href={`/demo/${item.slug}`}
                   className="w-full flex items-center justify-center gap-2 py-3 bg-[#0B0B0E] hover:bg-[#00b894] active:scale-98 text-[#FFFFFF] text-xs font-extrabold rounded-2xl border border-[#262633] transition-all"
                 >
-                  <span>View Live Demo {item.emoji}</span>
+                  <span>View Live Demo</span>
                   <span>↗</span>
                 </Link>
               </div>
@@ -117,3 +141,4 @@ export function DemoShowcase() {
     </section>
   );
 }
+

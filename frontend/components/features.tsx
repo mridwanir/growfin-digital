@@ -1,19 +1,29 @@
+'use client';
 import { Code2, Bot, Cloud, TrendingUp } from 'lucide-react';
+import { useLanguage } from '@/lib/language-context';
 
 export function Features() {
+  const { language } = useLanguage();
+
   return (
     <section id="services" className="py-24 bg-[#0B0B0E] border-t border-[#262633]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <span className="text-xs font-black uppercase tracking-widest text-[#00e0b8] bg-[#00b894]/10 px-3 py-1 rounded-full border border-[#00b894]/20">
-            End-To-End Solutions
+            {language === 'en' ? 'End-To-End Solutions' : 'Solusi Menyeluruh'}
           </span>
           <h2 className="text-3xl font-black text-[#FFFFFF] sm:text-5xl tracking-tight">
-            From Templates to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">Custom Apps</span>
+            {language === 'en' ? (
+              <>From Templates to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">Custom Apps</span></>
+            ) : (
+              <>Dari Template hingga <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">Aplikasi Kustom</span></>
+            )}
           </h2>
           <p className="text-sm sm:text-lg text-[#8E8EA0] leading-relaxed font-medium">
-            Everything you need to go digital instantly, or build complex enterprise systems from scratch as your business grows.
+            {language === 'en'
+              ? 'Everything you need to go digital instantly, or build complex enterprise systems from scratch as your business grows.'
+              : 'Semua yang Anda butuhkan untuk go digital secara instan, atau membangun sistem perusahaan kompleks dari awal seiring pertumbuhan bisnis Anda.'}
           </p>
         </div>
 
@@ -28,10 +38,14 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <Code2 className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">Instant Business Templates</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">
+                  {language === 'en' ? 'Instant Business Templates' : 'Template Bisnis Instan'}
+                </h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Generate and launch a premium, mobile-ready website for your business in under 24 hours. Go live instantly.
+                {language === 'en'
+                  ? 'Generate and launch a premium, mobile-ready website for your business in under 24 hours. Go live instantly.'
+                  : 'Buat dan luncurkan website premium yang ramah seluler untuk bisnis Anda dalam waktu kurang dari 24 jam. Tayang secara instan.'}
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -65,10 +79,14 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <Bot className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">AI Workflow Automation</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">
+                  {language === 'en' ? 'AI Workflow Automation' : 'Otomatisasi Alur Kerja AI'}
+                </h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Upgrade your business with custom AI models to automate repetitive tasks, answer customer queries, and generate leads 24/7.
+                {language === 'en'
+                  ? 'Upgrade your business with custom AI models to automate repetitive tasks, answer customer queries, and generate leads 24/7.'
+                  : 'Tingkatkan bisnis Anda dengan model AI kustom untuk mengotomatisasi tugas berulang, menjawab pertanyaan pelanggan, dan menghasilkan prospek 24/7.'}
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -101,10 +119,14 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <Cloud className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">Enterprise Architecture</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">
+                  {language === 'en' ? 'Enterprise Architecture' : 'Arsitektur Skala Perusahaan'}
+                </h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                For large-scale operations, we build secure, microservices-based cloud systems from scratch tailored to your complex needs.
+                {language === 'en'
+                  ? 'For large-scale operations, we build secure, microservices-based cloud systems from scratch tailored to your complex needs.'
+                  : 'Untuk operasi skala besar, kami membangun sistem cloud berbasis layanan mikro yang aman dari awal, disesuaikan dengan kebutuhan kompleks Anda.'}
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -147,10 +169,14 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <TrendingUp className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">Custom Pro Features</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">
+                  {language === 'en' ? 'Custom Pro Features' : 'Fitur Pro Kustom'}
+                </h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Need more than a template? We seamlessly integrate custom payment gateways, booking systems, and data analytics dashboards.
+                {language === 'en'
+                  ? 'Need more than a template? We seamlessly integrate custom payment gateways, booking systems, and data analytics dashboards.'
+                  : 'Butuh lebih dari sekadar template? Kami mengintegrasikan gateway pembayaran kustom, sistem pemesanan, dan dasbor analitik data tanpa hambatan.'}
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -181,3 +207,4 @@ export function Features() {
     </section>
   );
 }
+

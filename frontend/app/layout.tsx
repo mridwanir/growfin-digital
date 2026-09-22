@@ -33,6 +33,8 @@ export const viewport: Viewport = {
   ],
 }
 
+import { LanguageProvider } from '@/lib/language-context';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,8 +43,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark bg-[#0B0B0E]">
       <body className="antialiased bg-[#0B0B0E] text-[#FFFFFF]">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <LanguageProvider>
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </LanguageProvider>
       </body>
     </html>
   )

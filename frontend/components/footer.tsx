@@ -1,6 +1,9 @@
+'use client';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/language-context';
 
 export function Footer() {
+  const { language } = useLanguage();
   const waUrl = "https://wa.me/6289668078854?text=Hello%20Growfin,%20I'd%20like%20to%20consult%20about%20a%20software%20project.";
 
   return (
@@ -17,7 +20,9 @@ export function Footer() {
             </div>
 
             <p className="text-xs text-[#8E8EA0] leading-relaxed font-medium max-w-sm mt-4">
-              Your premium technology partner for custom software engineering, AI-driven automation, and scalable digital solutions.
+              {language === 'en'
+                ? 'Your premium technology partner for custom software engineering, AI-driven automation, and scalable digital solutions.'
+                : 'Mitra teknologi premium Anda untuk rekayasa perangkat lunak kustom, otomatisasi berbasis AI, dan solusi digital terukur.'}
             </p>
 
             <div className="pt-2">
@@ -27,7 +32,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#00b894] hover:bg-[#00e0b8] active:scale-98 text-[#FFFFFF] text-xs font-bold rounded-full shadow-md transition-all"
               >
-                <span>Contact Our Team 💬</span>
+                <span>{language === 'en' ? 'Contact Our Team' : 'Hubungi Tim Kami'}</span>
               </a>
             </div>
           </div>
@@ -35,7 +40,7 @@ export function Footer() {
           {/* Quick Links */}
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 text-xs">
             <div className="space-y-3">
-              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">Case Studies</p>
+              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">{language === 'en' ? 'Case Studies' : 'Studi Kasus'}</p>
               <ul className="space-y-2 text-[#8E8EA0] font-medium">
                 <li>
                   <Link href="/demo/klinik-utama-bandung-dental-center" className="hover:text-[#00e0b8] transition-colors">
@@ -56,7 +61,7 @@ export function Footer() {
             </div>
 
             <div className="space-y-3">
-              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">Navigation</p>
+              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">{language === 'en' ? 'Navigation' : 'Navigasi'}</p>
               <ul className="space-y-2 text-[#8E8EA0] font-medium">
                 <li>
                   <a href="#services" className="hover:text-[#00e0b8] transition-colors">
@@ -82,12 +87,12 @@ export function Footer() {
             </div>
 
             <div className="space-y-3">
-              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">Contact & Support</p>
+              <p className="font-black text-[#FFFFFF] uppercase tracking-wider text-[11px]">{language === 'en' ? 'Contact & Support' : 'Kontak & Dukungan'}</p>
               <ul className="space-y-2 text-[#8E8EA0] font-medium">
                 <li>WhatsApp: +62 896-6807-8854</li>
                 <li>Website: growfin.my.id</li>
                 <li>Email: hello@growfin.my.id</li>
-                <li>Hours: 08:00 - 20:00 (GMT+7)</li>
+                <li>{language === 'en' ? 'Hours' : 'Jam Kerja'}: 08:00 - 20:00 (GMT+7)</li>
               </ul>
             </div>
           </div>
@@ -96,9 +101,9 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#262633] flex flex-col sm:flex-row items-center justify-between text-xs text-[#8E8EA0] font-medium gap-4">
-          <p>© {new Date().getFullYear()} Growfin Digital. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Growfin Digital. {language === 'en' ? 'All rights reserved.' : 'Hak cipta dilindungi.'}</p>
           <div className="flex gap-6">
-            <span className="hover:text-[#FFFFFF] cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-[#FFFFFF] cursor-pointer">{language === 'en' ? 'Privacy Policy' : 'Kebijakan Privasi'}</span>
             <span className="hover:text-[#FFFFFF] cursor-pointer font-bold text-[#00b894]">Innovation Partner</span>
           </div>
         </div>
@@ -107,3 +112,4 @@ export function Footer() {
     </footer>
   );
 }
+

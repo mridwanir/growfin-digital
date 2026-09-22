@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BusinessDemo, MenuItem } from '@/lib/demos';
+import { BusinessDemo, MenuItem } from '@/lib/types';
 
 export type ThemeKey = 'medical-blue' | 'rose-aesthetic' | 'emerald-health' | 'luxury-dark';
 

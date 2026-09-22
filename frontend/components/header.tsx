@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/language-context';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const { language, toggleLanguage } = useLanguage();
 
   const waUrl = "https://wa.me/6289668078854?text=Hello%20Growfin,%20I'm%20interested%20in%20your%20software%20development%20and%20AI%20services.";
 
@@ -70,7 +72,13 @@ export function Header() {
           </nav>
 
           {/* Primary Conversion Action (Right) */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-4">
+            <button 
+              onClick={toggleLanguage}
+              className="text-xs font-bold text-[#8E8EA0] hover:text-[#FFFFFF] uppercase border border-[#262633] px-3 py-1.5 rounded-full transition-colors"
+            >
+              {language === 'en' ? 'EN' : 'ID'}
+            </button>
             <a
               href="#contact"
               className="inline-flex items-center justify-center px-6 py-2.5 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-[13px] font-semibold rounded-full shadow-md transition-all hover:shadow-[0_0_15px_rgba(112,66,244,0.4)]"
@@ -80,13 +88,21 @@ export function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-[#FFFFFF] hover:bg-white/10 transition-colors"
-            aria-label="Toggle Navigation Menu"
-          >
-            <span className="text-xl">{mobileMenuOpen ? '✕' : '☰'}</span>
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button 
+              onClick={toggleLanguage}
+              className="text-[10px] font-bold text-[#8E8EA0] hover:text-[#FFFFFF] uppercase border border-[#262633] px-2 py-1 rounded-full transition-colors"
+            >
+              {language === 'en' ? 'EN' : 'ID'}
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-xl text-[#FFFFFF] hover:bg-white/10 transition-colors"
+              aria-label="Toggle Navigation Menu"
+            >
+              <span className="text-xl">{mobileMenuOpen ? '✕' : '☰'}</span>
+            </button>
+          </div>
         </div>
       </div>
 

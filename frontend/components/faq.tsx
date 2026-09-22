@@ -2,27 +2,52 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useLanguage } from '@/lib/language-context';
 
 export function FAQ() {
-  // Active State: Ditampilkan pada kartu pertama secara default (index 0)
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { language } = useLanguage();
 
   const faqItems = [
     {
-      q: 'How fast can my business website go live using the templates?',
-      a: 'With our Instant Template package, your business website can be customized and fully live on the internet within 24 hours. It is the fastest way to digitize your business.',
+      q: {
+        en: 'How fast can my business website go live using the templates?',
+        id: 'Seberapa cepat website bisnis saya bisa live menggunakan template?'
+      },
+      a: {
+        en: 'With our Instant Template package, your business website can be customized and fully live on the internet within 24 hours. It is the fastest way to digitize your business.',
+        id: 'Dengan paket Template Instan kami, website bisnis Anda dapat disesuaikan dan sepenuhnya live di internet dalam waktu 24 jam. Ini adalah cara tercepat untuk mendigitalkan bisnis Anda.'
+      }
     },
     {
-      q: 'Do I need any technical or coding skills to use your service?',
-      a: 'Not at all! We handle all the technical heavy lifting, from cloud hosting to domain setup. You just provide us with your business details, and we deliver a ready-to-use product.',
+      q: {
+        en: 'Do I need any technical or coding skills to use your service?',
+        id: 'Apakah saya memerlukan keahlian teknis atau coding untuk menggunakan layanan Anda?'
+      },
+      a: {
+        en: 'Not at all! We handle all the technical heavy lifting, from cloud hosting to domain setup. You just provide us with your business details, and we deliver a ready-to-use product.',
+        id: 'Sama sekali tidak! Kami menangani semua hal teknis yang rumit, mulai dari cloud hosting hingga pengaturan domain. Anda hanya perlu memberikan detail bisnis Anda, dan kami memberikan produk siap pakai.'
+      }
     },
     {
-      q: 'Can I add custom features to my template later as my business grows?',
-      a: 'Absolutely! That is the beauty of our platform. You can start with our affordable Instant Template, and upgrade to our Pro Custom plan anytime to add specific features like booking systems or payment gateways.',
+      q: {
+        en: 'Can I add custom features to my template later as my business grows?',
+        id: 'Bisakah saya menambahkan fitur kustom ke template saya nanti seiring berkembangnya bisnis saya?'
+      },
+      a: {
+        en: 'Absolutely! That is the beauty of our platform. You can start with our affordable Instant Template, and upgrade to our Pro Custom plan anytime to add specific features like booking systems or payment gateways.',
+        id: 'Tentu saja! Itulah keunggulan platform kami. Anda dapat mulai dengan Template Instan kami yang terjangkau, dan meningkatkan ke paket Pro Custom kapan saja untuk menambahkan fitur spesifik seperti sistem pemesanan atau gateway pembayaran.'
+      }
     },
     {
-      q: 'Are there any hidden monthly fees for the Instant Template?',
-      a: 'No hidden fees. Our Instant Template is a one-time setup fee. You only need to cover your standard yearly domain renewal costs, making it highly affordable for growing businesses.',
+      q: {
+        en: 'Are there any hidden monthly fees for the Instant Template?',
+        id: 'Apakah ada biaya bulanan tersembunyi untuk Template Instan?'
+      },
+      a: {
+        en: 'No hidden fees. Our Instant Template is a one-time setup fee. You only need to cover your standard yearly domain renewal costs, making it highly affordable for growing businesses.',
+        id: 'Tidak ada biaya tersembunyi. Template Instan kami adalah biaya pengaturan satu kali. Anda hanya perlu menanggung biaya pembaruan domain tahunan standar Anda, menjadikannya sangat terjangkau untuk bisnis yang sedang berkembang.'
+      }
     },
   ];
 
@@ -40,10 +65,12 @@ export function FAQ() {
           {/* Kolom Kiri (Anchor & Direct Support) */}
           <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-6 text-center lg:text-left">
             <h2 className="text-4xl md:text-5xl font-black text-[#FFFFFF] tracking-tight leading-tight">
-              Frequently Asked Questions
+              {language === 'en' ? 'Frequently Asked Questions' : 'Pertanyaan yang Sering Diajukan'}
             </h2>
             <p className="text-base text-[#8E8EA0] font-medium max-w-md mx-auto lg:mx-0">
-              Have another question? Please contact our team! We are here to help you understand every technical detail.
+              {language === 'en' 
+                ? 'Have another question? Please contact our team! We are here to help you understand every technical detail.'
+                : 'Punya pertanyaan lain? Silakan hubungi tim kami! Kami di sini untuk membantu Anda memahami setiap detail teknis.'}
             </p>
             <div className="pt-2 flex justify-center lg:justify-start">
               <a
@@ -69,7 +96,7 @@ export function FAQ() {
                     className="w-full flex items-center justify-between p-6 text-left"
                   >
                     <span className="pr-6 text-base font-semibold text-[#FFFFFF]">
-                      {item.q}
+                      {item.q[language]}
                     </span>
                     <span className={`shrink-0 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${isOpen ? 'bg-[#00b894]/20 text-[#00e0b8]' : 'bg-[#262633] text-[#FFFFFF]'}`}>
                       {isOpen ? (
@@ -83,7 +110,7 @@ export function FAQ() {
                   {/* Paragraf Jawaban: Regular font, light gray, loose line height */}
                   {isOpen && (
                     <div className="px-6 pb-6 text-sm text-[#8E8EA0] leading-loose font-normal border-t border-[#262633] pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                      {item.a}
+                      {item.a[language]}
                     </div>
                   )}
                 </div>

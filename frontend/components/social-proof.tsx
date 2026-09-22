@@ -1,11 +1,16 @@
+'use client';
+import { useLanguage } from '@/lib/language-context';
+
 export function SocialProof() {
+  const { language } = useLanguage();
+
   return (
     <section className="bg-[#0B0B0E] py-8 sm:py-12 relative z-10 border-t border-[#262633]">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="flex flex-col items-center justify-center space-y-6">
           {/* Context Label */}
           <p className="text-center text-[11px] font-semibold text-[#8E8EA0] uppercase tracking-widest">
-            Trusted by industry leaders
+            {language === 'en' ? 'Trusted by industry leaders' : 'Dipercaya oleh pemimpin industri'}
           </p>
           
           {/* Logo Bar */}
@@ -36,3 +41,4 @@ export function SocialProof() {
     </section>
   );
 }
+

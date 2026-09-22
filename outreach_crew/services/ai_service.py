@@ -1,47 +1,17 @@
-import re
-import json
 from typing import Optional
 from google import genai
+import re
+import json
 from config.settings import GEMINI_API_KEY
 from core.models import BusinessDemo
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-def generate_clinic_pitch(name: str, rating: float, reviews: int, address: str, slug: str) -> str:
-    prompt = f"""
-    Kamu adalah seorang calon pasien yang sedang mencari klinik di Google Maps dan ingin bertanya via WhatsApp.
-    Tulis pesan WhatsApp yang natural, santai, namun tetap sopan kepada admin klinik:
-    - Nama Klinik: {name}
-    - Rating: {rating} ({reviews} ulasan)
-    - Link Referensi (Demo): https://growfin.my.id/demo/{slug}
-
-    Instruksi Khusus (PENTING - STRATEGI TROJAN HORSE):
-    1. PERSONA PASIEN: 
-       - Kamu murni calon pasien, BUKAN agensi atau konsultan. 
-       - Sapa admin dengan santai (misal: "Halo min", "Siang admin [Nama Klinik]", atau "Permisi").
-    
-    2. ALUR PESAN (Make Sense & Manipulatif Halus):
-       - Buka dengan bilang kamu lihat klinik ini di Google Maps dan tertarik karena ratingnya bagus ({rating}⭐).
-       - Sampaikan keluhan (pain point): Kamu bingung/kesulitan mencari tahu rincian harga perawatan, jadwal dokter, atau katalog layanannya karena tidak ada link website di Maps/profil mereka.
-       - Masukkan link: Tanya apakah mereka punya daftar layanan yang mudah dibaca seperti contoh link ini: https://growfin.my.id/demo/{slug}
-       - Contoh gaya bahasa kalimat terakhir: "Saya nyari info harganya susah, apa klinik ini ada semacam katalog online yang rapi kayak gini ya min: [Link] biar saya gampang milihnya?"
-
-    3. TONE & FORMAT:
-       - Sangat singkat! Maksimal 3 kalimat pendek (40-60 kata).
-       - Gunakan gaya chat WhatsApp asli orang Indonesia (boleh sedikit santai/singkatan wajar seperti "kalo", "yg", "buat").
-       - DILARANG KERAS berjualan, menawarkan jasa, atau menggunakan kata-kata teknis seperti "simulasi reservasi" atau "referensi digital".
+def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str, city: str = "Bandung", reviews_data: list = None) -> Optional[dict]:
     """
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
-        return response.text.strip()
-    except Exception as e:
-        print(f"⚠️ Error Gemini Pitch: {e}")
-        return f"Halo admin {name}, saya mau tanya jadwal dan harga perawatan ada? Soalnya saya cari di Google Maps gak ada website/katalognya. Apa ada katalog online kayak gini min biar gampang bacanya: https://growfin.my.id/demo/{slug}"
-
-def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str, city: str = "Bandung", reviews_data: list = None) -> Optional[BusinessDemo]:
+    Menyusun struktur data JSON (Metadata JSONB) yang generik menggunakan Gemini
+    Bisa mengakomodasi F&B, Salon, Retail, Leisure, dll.
+    """
     clean_phone = re.sub(r'[^0-9]', '', phone)
     if clean_phone.startswith('0'):
         clean_phone = '62' + clean_phone[1:]
@@ -59,29 +29,67 @@ def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, ad
             reviews_text += f"  {i+1}. [{rtg}⭐] {author} ({time_str}): {text}\n"
 
     prompt = f"""
-    Buatkan struktur data JSON valid untuk klinik berikut sesuai skema:
-    - Nama: {name}
+    Kamu adalah sistem AI pembuat katalog cerdas untuk berbagai sektor bisnis lokal.
+    Buatkan struktur data JSON (Metadata) untuk dirender di website demo bisnis berikut:
+    - Nama Bisnis: {name}
     - Rating: {rating} ({reviews} ulasan)
     - Telepon: {phone}
     - WA Number: {clean_phone}
     - Alamat: {address}
-    - Maps URL: {maps_url}
-    - Kota: {city}
+    - Slug: {slug}
     {reviews_text}
-    
-    PENTING: Masukkan juga isi Data Ulasan Asli di atas ke dalam properti 'reviews' secara persis!
+
+    Panduan Konten:
+    1. Identifikasi jenis bisnis ini secara cerdas (contoh: Kafe, Restoran, Salon, Apotek, Pet Shop, Gym, Car Wash, dll).
+    2. Buatkan tagline yang menarik.
+    3. Buatkan jam operasional yang logis.
+    4. Buatkan 3-4 katalog/menu/layanan utama beserta estimasi harganya.
+    5. Jika jenis bisnis ini melibatkan konsultan/staf ahli (Salon, Gym), isi objek "doctor" (mewakili profil staf/admin/trainer). 
+       Jika ini Kafe/Restoran atau Retail, isi dengan profil Manager/Admin Customer Service.
+    6. Salin data ulasan asli ke properti 'reviews'.
+    7. Berikan heroImage yang relevan dari URL unspash.
+
+    Wajib return RAW JSON valid yang sesuai dengan skema berikut (tanpa markdown blok):
+    {{
+      "rating": {rating},
+      "reviewCount": {reviews},
+      "hours": "Senin - Minggu: 09:00 - 22:00",
+      "tagline": "Tagline bisnis yang menarik",
+      "iconEmoji": "✨",
+      "heroImage": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&auto=format&fit=crop&q=80",
+      "categories": ["Semua", "Kategori 1", "Kategori 2"],
+      "products": [
+        {{ "id": 1, "name": "Nama Produk/Layanan 1", "desc": "Deskripsi", "price": "Rp 50.000", "category": "Kategori 1", "imageUrl": "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=300&auto=format&fit=crop&q=80" }}
+      ],
+      "menu": [
+        {{ "id": 1, "name": "Sama persis seperti isi array products di atas", "desc": "...", "price": "...", "category": "..." }}
+      ],
+      "doctor": {{
+        "name": "Admin / Staf Profesional",
+        "role": "Customer Service",
+        "avatarEmoji": "👨‍💼",
+        "avatarUrl": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80",
+        "sampleChat": {{
+          "user": "Halo, saya mau bertanya / reservasi.",
+          "doctor": "Tentu, silakan beritahu detail pesanan/kunjungan Anda.",
+          "recommendationTitle": "Rekomendasi Terbaik",
+          "recommendationDesc": "Coba layanan/produk unggulan kami hari ini."
+        }}
+      }},
+      "reviews": [
+        {{ "authorName": "Reviewer 1", "rating": 5, "text": "Komentar...", "time": "1 bulan lalu" }}
+      ]
+    }}
     """
+
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt,
-            config={
-                "response_mime_type": "application/json",
-                "response_schema": BusinessDemo
-            }
+            config={"response_mime_type": "application/json"}
         )
-        raw_json = json.loads(response.text.strip())
-        return BusinessDemo.model_validate(raw_json)
+        # Parse JSON and return it as dictionary
+        return json.loads(response.text.strip())
     except Exception as e:
-        print(f"⚠️ Gagal validasi Pydantic / Gemini: {e}")
+        print(f"⚠️ Error Gemini API (Demo JSON): {e}")
         return None

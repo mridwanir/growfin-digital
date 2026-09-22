@@ -13,7 +13,7 @@ if sys.platform == "win32":
     sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 # Import the core logic for the pipeline
-from core.pipeline import run_outreach_pipeline
+from auto_lead_pipeline import run_pipeline
 
 load_dotenv()
 
@@ -51,10 +51,12 @@ def preview_osm():
     query = f"""
     [out:json][timeout:35];
     (
-      node["amenity"~"clinic|dentist|doctors"](around:{radius},{lat},{lng});
-      way["amenity"~"clinic|dentist|doctors"](around:{radius},{lat},{lng});
-      node["healthcare"](around:{radius},{lat},{lng});
-      way["healthcare"](around:{radius},{lat},{lng});
+      node["amenity"~"restaurant|cafe|fast_food|bar|pharmacy|veterinary"](around:{radius},{lat},{lng});
+      way["amenity"~"restaurant|cafe|fast_food|bar|pharmacy|veterinary"](around:{radius},{lat},{lng});
+      node["shop"~"pet|beauty|hairdresser|chemist|florist|sports"](around:{radius},{lat},{lng});
+      way["shop"~"pet|beauty|hairdresser|chemist|florist|sports"](around:{radius},{lat},{lng});
+      node["leisure"~"fitness_centre|sports_centre|spa"](around:{radius},{lat},{lng});
+      way["leisure"~"fitness_centre|sports_centre|spa"](around:{radius},{lat},{lng});
     );
     out center;
     """
@@ -87,20 +89,24 @@ def preview_osm():
             for e in elements:
                 tags = e.get('tags', {})
                 amenity = tags.get('amenity', '')
-                healthcare = tags.get('healthcare', '')
+                shop = tags.get('shop', '')
+                leisure = tags.get('leisure', '')
                 
                 category = "Umum/Lainnya"
-                if amenity == "dentist" or healthcare == "dentist":
-                    category = "Klinik Gigi"
-                elif amenity == "doctors" or healthcare == "doctor":
-                    category = "Dokter"
-                elif amenity == "clinic" or healthcare == "clinic":
-                    category = "Klinik"
-                
-                # Check name for skincare heuristics since OSM doesn't have a strict skincare tag usually
-                name = tags.get('name', '').lower()
-                if 'skin' in name or 'kecantikan' in name or 'beauty' in name or 'aesthetic' in name:
-                    category = "Skincare/Aesthetic"
+                if amenity in ["restaurant", "fast_food"]:
+                    category = "Restoran"
+                elif amenity in ["cafe", "bar"]:
+                    category = "Kafe & Bar"
+                elif amenity == "pharmacy" or shop == "chemist":
+                    category = "Apotek & Medis"
+                elif shop in ["beauty", "hairdresser"] or leisure == "spa":
+                    category = "Salon & Spa"
+                elif shop == "pet" or amenity == "veterinary":
+                    category = "Pet Shop & Hewan"
+                elif leisure in ["fitness_centre", "sports_centre"] or shop == "sports":
+                    category = "Gym & Olahraga"
+                elif shop == "florist":
+                    category = "Florist"
                     
                 lat_coord = e.get('lat') or e.get('center', {}).get('lat')
                 lng_coord = e.get('lon') or e.get('center', {}).get('lon')
@@ -144,8 +150,8 @@ def scan_area():
         print(f"[INFO] Memulai scan via Web UI: {city} ({lat}, {lng}) - {radius}m")
         
         # Run the existing pipeline logic
-        # It takes: lat, lng, radius, city
-        run_outreach_pipeline(lat, lng, radius, city)
+        # It takes: lat, lng, radius
+        run_pipeline(lat, lng, radius)
         
         return jsonify({
             "status": "success",

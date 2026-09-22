@@ -7,13 +7,13 @@ export function Features() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <span className="text-xs font-black uppercase tracking-widest text-[#00e0b8] bg-[#00b894]/10 px-3 py-1 rounded-full border border-[#00b894]/20">
-            Platform Capabilities
+            End-To-End Solutions
           </span>
           <h2 className="text-3xl font-black text-[#FFFFFF] sm:text-5xl tracking-tight">
-            Comprehensive <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">Tooling</span>
+            From Templates to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00b894] to-[#00e0b8]">Custom Apps</span>
           </h2>
           <p className="text-sm sm:text-lg text-[#8E8EA0] leading-relaxed font-medium">
-            Everything you need to automate workflows, scale operations, and integrate complex systems in one robust ecosystem.
+            Everything you need to go digital instantly, or build complex enterprise systems from scratch as your business grows.
           </p>
         </div>
 
@@ -28,10 +28,10 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <Code2 className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">Custom Development</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">Instant Business Templates</h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                We build high-performance, scalable web and mobile applications tailored exactly to your complex operational logic.
+                Generate and launch a premium, mobile-ready website for your business in under 24 hours. Go live instantly.
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -68,7 +68,7 @@ export function Features() {
                 <h3 className="text-xl font-bold text-[#FFFFFF]">AI Workflow Automation</h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Integrate intelligent AI models to cut costs and accelerate processes through smart, context-aware autonomous agents.
+                Upgrade your business with custom AI models to automate repetitive tasks, answer customer queries, and generate leads 24/7.
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -101,10 +101,10 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <Cloud className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">Cloud Infrastructure</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">Enterprise Architecture</h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Deploy robust, secure, and infinitely scalable cloud architecture with automated load balancing and 99.9% guaranteed uptime.
+                For large-scale operations, we build secure, microservices-based cloud systems from scratch tailored to your complex needs.
               </p>
             </div>
             {/* Interactive Mockup */}
@@ -147,10 +147,10 @@ export function Features() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00b894]/10 border border-[#00b894]/20 text-[#00e0b8]">
                   <TrendingUp className="w-5 h-5" />
                 </span>
-                <h3 className="text-xl font-bold text-[#FFFFFF]">Data Analytics & Growth</h3>
+                <h3 className="text-xl font-bold text-[#FFFFFF]">Custom Pro Features</h3>
               </div>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Drive targeted traffic and convert leads into loyal customers through data-driven SEO and precise analytical tracking.
+                Need more than a template? We seamlessly integrate custom payment gateways, booking systems, and data analytics dashboards.
               </p>
             </div>
             {/* Interactive Mockup */}

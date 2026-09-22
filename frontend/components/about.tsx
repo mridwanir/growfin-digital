@@ -14,16 +14,16 @@ export function About() {
 
           {/* Level 2 - Large Display Copy */}
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]">
-            <span className="text-[#8E8EA0]">Built On </span>
-            <span className="text-[#FFFFFF]">Creativity, Collaboration, </span>
+            <span className="text-[#8E8EA0]">Empowering </span>
+            <span className="text-[#FFFFFF]">Local Businesses </span>
             <br className="hidden md:block" />
-            <span className="text-[#8E8EA0]">And Top </span>
-            <span className="text-[#FFFFFF]">Excellence </span>
-            <span className="text-[#8E8EA0]">to drive your digital growth.</span>
+            <span className="text-[#8E8EA0]">With </span>
+            <span className="text-[#FFFFFF]">Instant Digital </span>
+            <span className="text-[#8E8EA0]">Transformation.</span>
           </h2>
           
           <p className="text-base sm:text-lg text-[#8E8EA0] max-w-2xl mx-auto font-medium">
-            Growfin Digital bridges the gap between complex enterprise technology and growing SMBs. We architect comprehensive digital ecosystems to scale your revenue.
+            Growfin Digital democratizes high-end technology. Whether you need a ready-to-deploy website template in 24 hours or a fully custom scalable application, we are your long-term growth partner.
           </p>
 
           {/* Level 3 - Secondary Action Button */}

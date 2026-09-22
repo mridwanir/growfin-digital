@@ -9,20 +9,20 @@ export function FAQ() {
 
   const faqItems = [
     {
-      q: 'How long does a typical software project take to build?',
-      a: 'A typical MVP takes between 2 to 4 weeks depending on the complexity of features. Custom enterprise solutions may take 2 to 6 months for complete architecture, development, and rigorous testing.',
+      q: 'How fast can my business website go live using the templates?',
+      a: 'With our Instant Template package, your business website can be customized and fully live on the internet within 24 hours. It is the fastest way to digitize your business.',
     },
     {
-      q: 'Do you provide post-launch maintenance and support?',
-      a: 'Yes, absolutely! We offer comprehensive SLA-backed maintenance plans to ensure your application remains secure, up-to-date, and fully operational 24/7 after launch.',
+      q: 'Do I need any technical or coding skills to use your service?',
+      a: 'Not at all! We handle all the technical heavy lifting, from cloud hosting to domain setup. You just provide us with your business details, and we deliver a ready-to-use product.',
     },
     {
-      q: 'Can you integrate AI into our existing business processes?',
-      a: 'Yes, we specialize in identifying workflow bottlenecks and integrating custom AI models (LLMs, computer vision, etc.) to automate repetitive tasks and improve data-driven decision making.',
+      q: 'Can I add custom features to my template later as my business grows?',
+      a: 'Absolutely! That is the beauty of our platform. You can start with our affordable Instant Template, and upgrade to our Pro Custom plan anytime to add specific features like booking systems or payment gateways.',
     },
     {
-      q: 'Who owns the intellectual property (source code) of the project?',
-      a: 'Upon project completion and final payment, you will have 100% ownership of the custom source code and all associated intellectual property rights.',
+      q: 'Are there any hidden monthly fees for the Instant Template?',
+      a: 'No hidden fees. Our Instant Template is a one-time setup fee. You only need to cover your standard yearly domain renewal costs, making it highly affordable for growing businesses.',
     },
   ];
 

@@ -1,8 +1,12 @@
 import { BusinessDemo } from '@/lib/types';
-import { ClinicDemoClient } from '@/components/clinic-demo-client';
-import { CafeDemoClient } from '@/components/cafe-demo-client';
+import { ClinicDemoClient } from '@/components/demo/clinic-demo-client';
+import { CafeDemoClient } from '@/components/demo/cafe-demo-client';
+import { RetailDemoClient } from '@/components/demo/retail-demo-client';
+import { GroomingDemoClient } from '@/components/demo/grooming-demo-client';
 import { getMockData } from '@/lib/mock-data';
 import { supabase } from '@/lib/supabase';
+import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider';
+import { resolveTemplateType } from '@/lib/template-resolver';
 import type { Metadata } from 'next';
 
 interface DemoPageProps {
@@ -49,33 +53,17 @@ export default async function DemoPage({ params }: DemoPageProps) {
     );
   }
 
-  // 3. Determine Data Source (Metadata vs Mock)
+  // 3. Determine Template Type using Resolver
+  const templateType = resolveTemplateType(dbData.category);
   const isMigratedData = !!dbData.metadata;
   const mock = isMigratedData ? null : getMockData(dbData.category);
-  const categoryLower = dbData.category.toLowerCase();
 
-  // For Cafe/Resto
-  if (categoryLower.includes('cafe') || categoryLower.includes('resto') || categoryLower.includes('coffee')) {
-    // If it's AI generated (no metadata), use mock. Currently Cafe doesn't have metadata structure in demos.ts,
-    // but if it did, we'd map it here. We'll use mock for now or merge metadata if it existed.
-    const profile = {
-      name: dbData.name,
-      category: dbData.category,
-      city: dbData.city,
-      phone: dbData.phone,
-      waNumber: dbData.phone.replace(/\D/g, ''),
-      mapsUrl: dbData.maps_url,
-      ...(isMigratedData ? dbData.metadata : mock),
-    };
-    return <CafeDemoClient profile={profile} />;
-  }
-
-  // For Clinic (or general legacy types)
-  let clinicClient: BusinessDemo;
+  // Common data transformation for Service, Retail, and FNB
+  let genericClient: BusinessDemo;
 
   if (isMigratedData) {
     // Use exact structure from Supabase metadata
-    clinicClient = {
+    genericClient = {
       name: dbData.name,
       category: dbData.category,
       city: dbData.city,
@@ -85,17 +73,34 @@ export default async function DemoPage({ params }: DemoPageProps) {
       rating: dbData.metadata.rating,
       reviewCount: dbData.metadata.reviewCount,
       address: dbData.metadata.address,
-      hours: dbData.metadata.hours,
+      hours: typeof dbData.metadata.hours === 'string'
+        ? dbData.metadata.hours
+        : (dbData.metadata.hours?.text || "Buka Setiap Hari"),
+      openTime: dbData.metadata.openTime || dbData.metadata.hours?.openTime,
+      closeTime: dbData.metadata.closeTime || dbData.metadata.hours?.closeTime,
       tagline: dbData.metadata.tagline,
-      iconEmoji: dbData.metadata.iconEmoji,
-      doctor: dbData.metadata.doctor,
-      categories: dbData.metadata.categories,
-      menu: dbData.metadata.menu,
-      reviews: dbData.metadata.reviews,
+      iconEmoji: dbData.metadata.iconEmoji || '🏢',
+      practitioners: dbData.metadata.practitioners || (dbData.metadata.doctor ? [
+        {
+          id: '1',
+          name: dbData.metadata.doctor.name || 'Admin',
+          role: dbData.metadata.doctor.role || 'Staff',
+          avatarEmoji: dbData.metadata.doctor.avatarEmoji || '👨‍💼',
+          avatarUrl: dbData.metadata.doctor.avatarUrl,
+        }
+      ] : [
+        { id: '1', name: 'Admin', role: 'Staff', avatarEmoji: '👨‍💼' }
+      ]),
+      categories: dbData.metadata.categories || [],
+      menu: dbData.metadata.menu || dbData.metadata.products || [],
+      reviews: dbData.metadata.reviews || [],
+      heroImage: dbData.metadata.heroImage,
+      instagramFeed: dbData.metadata.instagramFeed,
+      fbType: dbData.metadata.fbType,
     };
   } else {
     // Fallback to dynamic AI Generation + Mock Data
-    clinicClient = {
+    genericClient = {
       name: dbData.name,
       category: dbData.category,
       city: dbData.city,
@@ -105,33 +110,54 @@ export default async function DemoPage({ params }: DemoPageProps) {
       address: `${dbData.city}, Indonesia`,
       googleMapsUrl: dbData.maps_url,
       hours: mock!.hours,
+      openTime: mock!.openTime,
+      closeTime: mock!.closeTime,
       waNumber: dbData.phone.replace(/\D/g, ''),
       tagline: mock!.tagline,
-      iconEmoji: '⚕️',
-      doctor: {
-        name: 'dr. Ahli Utama',
-        role: 'Spesialis Medis',
-        avatarEmoji: '👨‍⚕️',
-        avatarUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&auto=format&fit=crop&q=80',
-        sampleChat: {
-          user: 'Halo, saya mau buat janji temu.',
-          doctor: 'Halo! Silakan beri tahu keluhan Anda agar kami bisa menjadwalkan kunjungan terbaik.',
-          recommendationTitle: 'Konsultasi & Pemeriksaan',
-          recommendationDesc: 'Jadwalkan sekarang untuk kesehatan Anda.',
+      iconEmoji: '🏢',
+      practitioners: [
+        {
+          id: '1',
+          name: 'Konsultan',
+          role: 'Spesialis',
+          avatarEmoji: '👨‍💼',
+          avatarUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&auto=format&fit=crop&q=80',
         }
-      },
-      categories: ['Semua', 'Pemeriksaan', 'Layanan Utama'],
+      ],
+      categories: ['Semua', ...Array.from(new Set(mock!.products.map(p => p.category)))],
       menu: mock!.products.map(p => ({
         id: p.id,
         name: p.name,
         desc: p.desc,
         price: p.price,
         category: p.category,
-        imageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=300&auto=format&fit=crop&q=80'
+        imageUrl: p.imageUrl || 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=300&auto=format&fit=crop&q=80',
+        variants: p.variants,
+        addons: p.addons,
       })),
       reviews: mock!.reviews,
+      heroImage: mock!.heroImage,
+      instagramFeed: mock!.instagramFeed,
+      fbType: mock!.fbType,
     };
   }
 
-  return <ClinicDemoClient client={clinicClient} />;
+  // Route to the appropriate template
+  let demoComponent;
+  if (templateType === 'fnb') {
+    demoComponent = <CafeDemoClient client={genericClient} />;
+  } else if (templateType === 'service') {
+    demoComponent = <ClinicDemoClient client={genericClient} />;
+  } else if (templateType === 'grooming') {
+    demoComponent = <GroomingDemoClient client={genericClient} />;
+  } else {
+    // Fallback / Retail Template
+    demoComponent = <RetailDemoClient client={genericClient} />;
+  }
+
+  return (
+    <DynamicThemeProvider themeColor={genericClient.themeColor} vibe={genericClient.vibe}>
+      {demoComponent}
+    </DynamicThemeProvider>
+  );
 }

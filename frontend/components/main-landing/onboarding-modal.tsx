@@ -12,7 +12,8 @@ interface OnboardingModalProps {
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const router = useRouter();
   const [mode, setMode] = useState<'generate' | 'find'>('generate');
-  const [step, setStep] = useState<'form' | 'loading' | 'existing'>('form');
+  const [step, setStep] = useState<'form' | 'loading' | 'existing' | 'confirmation'>('form');
+  const [realName, setRealName] = useState('');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -20,6 +21,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     phone: '',
     city: '',
     mapsUrl: '',
+    force: false
   });
 
   const [findPhone, setFindPhone] = useState('');
@@ -65,8 +67,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   };
 
-  const handleSubmitGenerate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmitGenerate = async (e?: React.FormEvent, isForce = false) => {
+    if (e) e.preventDefault();
     setErrorMsg('');
 
     const phoneError = validatePhone(formData.phone);
@@ -78,14 +80,21 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     setStep('loading');
 
     try {
+      const payload = { ...formData, force: isForce };
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       
+      if (data.needsConfirmation) {
+        setRealName(data.realName);
+        setStep('confirmation');
+        return;
+      }
+
       if (data.success && data.slug) {
         if (data.isExisting) {
           // Tell the user we found their existing template
@@ -393,6 +402,41 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             <div className="space-y-2">
               <h3 className="text-xl font-black text-white">Template Ditemukan!</h3>
               <p className="text-sm text-[#8E8EA0]">Nomor ini sudah memiliki template. Mengarahkan Anda ke live preview sekarang...</p>
+            </div>
+          </div>
+        )}
+
+        {step === 'confirmation' && (
+          <div className="p-8 flex flex-col items-center justify-center text-center space-y-6 animate-in zoom-in duration-300">
+            <div className="relative">
+              <div className="absolute inset-0 bg-yellow-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+              <div className="w-20 h-20 bg-[#14141A] border-2 border-yellow-500 rounded-full flex items-center justify-center relative z-10 shadow-[0_0_30px_rgba(234,179,8,0.3)]">
+                <Building2 className="w-10 h-10 text-yellow-400" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-black text-white">Konfirmasi Data Bisnis</h3>
+              <p className="text-sm text-[#8E8EA0] leading-relaxed">
+                Kami mendeteksi nama bisnis di link Google Maps tersebut adalah: <br/>
+                <span className="text-lg font-bold text-yellow-400 block mt-2 mb-1">{realName}</span>
+                (Sedangkan Anda menginput: <span className="font-semibold text-white">{formData.name}</span>).
+              </p>
+              <p className="text-sm text-[#8E8EA0]">Apakah Anda ingin tetap melanjutkan proses generasi menggunakan data asli dari Google Maps tersebut?</p>
+            </div>
+            
+            <div className="flex w-full gap-3 pt-4">
+              <button 
+                onClick={() => { setStep('form'); }}
+                className="flex-1 py-3 px-4 bg-[#14141A] border border-[#262633] hover:bg-[#262633] text-white text-sm font-semibold rounded-xl transition-colors"
+              >
+                Batal / Ubah Link
+              </button>
+              <button 
+                onClick={() => handleSubmitGenerate(undefined, true)}
+                className="flex-1 py-3 px-4 bg-yellow-500 hover:bg-yellow-400 text-[#14141A] text-sm font-black rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] active:scale-[0.98]"
+              >
+                Ya, Lanjutkan
+              </button>
             </div>
           </div>
         )}

@@ -1,3 +1,13 @@
+export interface MenuItemVariant {
+  name: string;
+  options: string[];
+}
+
+export interface MenuItemAddon {
+  name: string;
+  price: number;
+}
+
 export interface MenuItem {
   id: number;
   name: string;
@@ -6,19 +16,19 @@ export interface MenuItem {
   tag?: string;
   category?: string;
   imageUrl?: string;
+  duration?: number; // In minutes
+  variants?: MenuItemVariant[];
+  addons?: MenuItemAddon[];
 }
 
-export interface DoctorInfo {
+export interface PractitionerInfo {
+  id: string;
   name: string;
   role: string;
+  licenseNumber?: string;
   avatarEmoji?: string;
   avatarUrl?: string;
-  sampleChat?: {
-    user: string;
-    doctor: string;
-    recommendationTitle: string;
-    recommendationDesc: string;
-  };
+  schedule?: string;
 }
 
 export interface ReviewInfo {
@@ -26,6 +36,13 @@ export interface ReviewInfo {
   rating: number;
   text: string;
   time?: string;
+}
+
+export interface LookbookItem {
+  id: string;
+  name: string;
+  imageUrl: string;
+  desc?: string;
 }
 
 export interface BusinessDemo {
@@ -38,11 +55,19 @@ export interface BusinessDemo {
   address: string;
   googleMapsUrl: string;
   hours: string;
+  openTime?: string; // Format "HH:MM", e.g., "08:00"
+  closeTime?: string; // Format "HH:MM", e.g., "22:00"
   waNumber: string; // format internasional tanpa tanda +, contoh: 628123456789
   tagline: string;
   iconEmoji: string;
-  doctor: DoctorInfo;
+  practitioners?: PractitionerInfo[];
   categories: string[];
   menu: MenuItem[];
   reviews?: ReviewInfo[];
+  lookbook?: LookbookItem[];
+  heroImage?: string;
+  instagramFeed?: string[]; // Array of image URLs for social proof
+  fbType?: 'DINE_IN' | 'QUICK_SERVICE' | 'PRE_ORDER'; // Determines order form fields
+  themeColor?: string; // Hex color string, e.g. '#10b981'
+  vibe?: 'minimalist' | 'playful' | 'luxury'; // UI aesthetics config
 }

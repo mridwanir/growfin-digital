@@ -1,14 +1,14 @@
-import { Header } from '@/components/header';
-import { Hero } from '@/components/hero';
-import { SocialProof } from '@/components/social-proof';
-import { About } from '@/components/about';
-import { Features } from '@/components/features';
-import { DemoShowcase } from '@/components/demo-showcase';
-import { Pricing } from '@/components/pricing';
-import { Testimonials } from '@/components/testimonials';
-import { FAQ } from '@/components/faq';
-import { CTA } from '@/components/cta';
-import { Footer } from '@/components/footer';
+import { Header } from '@/components/main-landing/header';
+import { Hero } from '@/components/main-landing/hero';
+import { SocialProof } from '@/components/main-landing/social-proof';
+import { About } from '@/components/main-landing/about';
+import { Features } from '@/components/main-landing/features';
+import { DemoShowcase } from '@/components/main-landing/demo-showcase';
+import { Pricing } from '@/components/main-landing/pricing';
+import { Testimonials } from '@/components/main-landing/testimonials';
+import { FAQ } from '@/components/main-landing/faq';
+import { CTA } from '@/components/main-landing/cta';
+import { Footer } from '@/components/main-landing/footer';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

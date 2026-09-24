@@ -6,7 +6,7 @@ Our core value proposition is speed and affordability. We provide instant, ready
 
 This project operates as a monorepo containing two main components:
 1. **Frontend (`/frontend`)**: A Next.js SaaS landing page and the core **Template Generation & Preview Engine**.
-2. **Outreach & Automation Engine (`/outreach_crew`)**: An intelligent Python automation pipeline previously used for clinic lead gen, now serving as the backend automation worker for business discovery and data generation.
+2. **Outreach & Automation Engine (`/outreach_crew`)**: An intelligent Python automation pipeline used as the backend automation worker for mass outbound marketing and data mining.
 
 ---
 
@@ -15,13 +15,16 @@ This project operates as a monorepo containing two main components:
 ### 1. The Frontend Web App (`/frontend`)
 Built with **Next.js 16.3 (App Router)**, **React 19**, **TailwindCSS 4**, and **shadcn/ui**.
 - **Marketing Storefront**: The main landing page (`app/page.tsx`) showcasing our Template, Pro Custom, and Enterprise services.
-- **Dynamic Template Engine**: The core product feature. Users can select a business category (Clinic, Cafe, Resto), input their data, and instantly generate a live preview of their business website. 
+- **Dynamic Template Engine & Onboarding Flow**: The core product feature. Users can select a business category, input their data, and instantly generate a live preview of their business website.
+  - **The "Onboarding" API (`/api/generate`)**: Upon submission, the frontend calls this route, which performs a lookup using the **Google Places API** to gather real images, addresses, and reviews. 
+  - **AI Generation**: It then uses **Google Gemini 2.5 Flash** to automatically map the real-world data into structured JSON metadata (including UI vibe, theme colors, services/menus, and copywriting).
+  - **Database & Rendering**: The metadata is saved directly to **Supabase** and the user is redirected to a personalized live preview (`/demo/[slug]`).
 - **UMKM-Friendly Pricing**: Designed with an irresistible 3-tier pricing model starting at extremely affordable one-time setups (Rp 299.000) to encourage digital adoption among Indonesian SMEs.
 
 ### 2. The Automation Backend (`/outreach_crew`)
-A modular Python-based pipeline that acts as the "worker" of the operation.
-- Leverages **Google Places API** and **Google Gemini AI** for data enrichment, automated copywriting, and mock-data generation.
-- Capable of auto-deploying generated templates to the live frontend and sending real-time notifications via Telegram.
+A modular Python-based pipeline that acts as the "worker" for mass lead generation.
+- Leverages **Google Places API** and **Google Gemini AI** for scanning areas, enriching data, and automated copywriting.
+- Focuses on discovering potential leads automatically and sending them personalized outreach messages with pre-generated demo URLs.
 
 ---
 
@@ -40,12 +43,13 @@ Growfin's business model is built around a low barrier to entry to acquire a mas
 ### Prerequisites
 - Node.js & `pnpm` (for the frontend)
 - Python >= 3.10 & `uv` (for the automation backend)
-- Google Cloud Console API Key & Gemini API Key
+- Google Cloud Console API Key, Gemini API Key & Supabase Keys
 
 ### Setup Frontend
 ```bash
 cd frontend
 pnpm install
+# Ensure you configure your .env.local with GEMINI_API_KEY, GOOGLE_MAPS_API_KEY, and NEXT_PUBLIC_SUPABASE_* 
 pnpm dev
 ```
 The site will be available at `http://localhost:3000`.
@@ -62,9 +66,11 @@ python main.py
 ---
 
 ## 🛠️ Tech Stack Highlights
-- **Frontend**: Next.js, React, TailwindCSS, TypeScript, shadcn/ui
-- **Backend/AI**: Python, Google GenAI (Gemini), Pydantic
-- **Deployment**: GitHub, Vercel
+- **Frontend**: Next.js (App Router), React 19, TailwindCSS 4, TypeScript, shadcn/ui
+- **Database**: Supabase
+- **AI & Integrations**: Google GenAI (Gemini 2.5 Flash), Google Places API
+- **Backend Automation**: Python, Pydantic, uv
+- **Deployment**: Vercel
 
 ---
 *Empowering Indonesian businesses through instant digital transformation.*

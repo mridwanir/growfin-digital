@@ -10,6 +10,7 @@ interface DynamicThemeProviderProps {
 }
 
 export function DynamicThemeProvider({ children, themeColor = '#6366f1', vibe = 'minimalist' }: DynamicThemeProviderProps) {
+  console.log("DynamicThemeProvider initialized with themeColor:", themeColor, "and vibe:", vibe);
   // Generate the color palette
   const palette = generateThemePalette(themeColor);
 
@@ -23,11 +24,11 @@ export function DynamicThemeProvider({ children, themeColor = '#6366f1', vibe = 
 
   // Define CSS variables to inject
   const style = {
-    '--theme-primary': palette.primary,
-    '--theme-hover': palette.hover,
-    '--theme-light': palette.light,
-    '--theme-dark': palette.dark,
-    '--theme-radius': radius,
+    '--brand-primary': palette.primary,
+    '--brand-hover': palette.hover,
+    '--brand-light': palette.light,
+    '--brand-dark': palette.dark,
+    '--brand-radius': radius,
   } as React.CSSProperties;
 
   // For luxury vibe, we might force dark mode or give a very dark background

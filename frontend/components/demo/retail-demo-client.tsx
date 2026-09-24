@@ -14,7 +14,7 @@ function RetailDemoContent() {
   const { client } = useRetailDemo();
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 antialiased selection:bg-brand-primary selection:text-white relative overflow-hidden pb-20 md:pb-0">
+    <div className="min-h-screen flex flex-col font-sans antialiased selection:bg-brand-primary selection:text-white relative overflow-hidden pb-20 md:pb-0">
       
       {/* Background Decor */}
       <div className="fixed -top-64 -right-64 w-[600px] h-[600px] rounded-full blur-[120px] bg-gradient-to-br from-brand-primary to-brand-dark opacity-20 pointer-events-none" />

@@ -16,7 +16,7 @@ function CafeDemoContent() {
   
 
   return (
-    <div className={`min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-amber-500/30`}>
+    <div className={`min-h-screen font-sans selection:bg-brand-primary/30`}>
       <CafeHeader />
       
       <main>

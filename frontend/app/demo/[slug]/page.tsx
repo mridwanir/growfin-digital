@@ -98,7 +98,6 @@ export default async function DemoPage({ params }: DemoPageProps) {
       instagramFeed: dbData.metadata.instagramFeed,
       fbType: dbData.metadata.fbType,
       themeColor: dbData.metadata.themeColor || dbData.metadata.theme_color,
-      vibe: dbData.metadata.vibe,
     };
   } else {
     // Fallback to dynamic AI Generation + Mock Data
@@ -142,7 +141,6 @@ export default async function DemoPage({ params }: DemoPageProps) {
       instagramFeed: mock!.instagramFeed,
       fbType: mock!.fbType,
       themeColor: mock!.themeColor,
-      vibe: mock!.vibe,
     };
   }
 
@@ -160,7 +158,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
   }
 
   return (
-    <DynamicThemeProvider themeColor={genericClient.themeColor} vibe={genericClient.vibe}>
+    <DynamicThemeProvider themeColor={genericClient.themeColor}>
       {demoComponent}
     </DynamicThemeProvider>
   );

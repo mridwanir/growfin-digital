@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { Scissors } from 'lucide-react';
 import { BusinessDemo } from '@/lib/types';
 import { GroomingDemoProvider, useGroomingDemo } from './grooming/GroomingDemoContext';
 import { GroomingHeroScreen } from './grooming/GroomingHeroScreen';
@@ -7,91 +9,120 @@ import { GroomingLookbook } from './grooming/GroomingLookbook';
 import { GroomingServiceMenu } from './grooming/GroomingServiceMenu';
 import { GroomingSocialProof } from './grooming/GroomingSocialProof';
 import { GroomingBookingModal } from './grooming/GroomingBookingModal';
-import { GroomingFloatingDock } from './grooming/GroomingFloatingDock';
+import { GroomingStylistList } from './grooming/GroomingStylistList';
 
 function GroomingDemoContent() {
   const { client, setIsBookingModalOpen } = useGroomingDemo();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col font-sans antialiased selection:bg-brand-primary selection:text-white relative overflow-hidden pb-20 md:pb-0">
+    <div className="min-h-screen flex flex-col font-sans bg-stone-50 text-stone-800 antialiased selection:bg-brand-primary selection:text-white relative overflow-x-hidden">
       
-      {/* Background Decor */}
-      <div className="fixed -top-64 -right-64 w-[600px] h-[600px] rounded-full blur-[120px] bg-gradient-to-br from-brand-primary to-brand-dark opacity-10 pointer-events-none" />
-      <div className="fixed top-1/2 -left-64 w-[500px] h-[500px] rounded-full blur-[100px] bg-gradient-to-tr from-brand-primary to-brand-dark opacity-5 pointer-events-none" />
-
       {/* Navbar */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl shadow-sm border-b border-white/50">
-        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-dark text-white font-bold text-xl shadow-lg shadow-brand-primary/25">
-              {client.iconEmoji || '✂️'}
-            </span>
-            <div>
-              <h1 className="text-xl font-black text-slate-900 leading-none truncate max-w-[150px] sm:max-w-[300px]">
-                {client.name}
-              </h1>
-              <p className="text-[10px] font-black text-brand-primary mt-1 uppercase tracking-widest">{client.category}</p>
-            </div>
+      <nav className={`fixed w-full z-40 top-0 transition-all duration-300 ${scrolled ? 'shadow-md' : ''}`}>
+        <div className="absolute inset-0 bg-stone-50/90 backdrop-blur-md"></div>
+        <div className="container mx-auto px-6 py-4 relative flex justify-between items-center max-w-7xl">
+          <a href="#" className="text-2xl font-serif font-bold text-stone-900 flex items-center gap-2">
+            <span className="text-brand-primary"><Scissors className="w-6 h-6" /></span>
+            {client.name}
+          </a>
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            <a href="#layanan" className="text-sm font-medium hover:text-brand-primary transition-colors duration-200">Layanan</a>
+            <a href="#stylist" className="text-sm font-medium hover:text-brand-primary transition-colors duration-200">Stylist</a>
+            <a href="#lookbook" className="text-sm font-medium hover:text-brand-primary transition-colors duration-200">Lookbook</a>
+            <a href="#ulasan" className="text-sm font-medium hover:text-brand-primary transition-colors duration-200">Ulasan</a>
+            <button 
+              onClick={() => setIsBookingModalOpen(true)}
+              className="bg-stone-900 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-stone-800 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
+            >
+              Reservasi
+            </button>
           </div>
 
-          <div className="flex items-center gap-4">
-            <nav className="hidden md:flex items-center gap-8 mr-4 text-sm font-bold text-slate-600">
-              <a href="#hero" className="hover:text-brand-primary transition-colors">Beranda</a>
-              <a href="#lookbook" className="hover:text-brand-primary transition-colors">Gaya</a>
-              <a href="#layanan" className="hover:text-brand-primary transition-colors">Layanan & Harga</a>
-              <a href="#info" className="hover:text-brand-primary transition-colors">Info & Ulasan</a>
-            </nav>
-            <button
-              onClick={() => setIsBookingModalOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-6 py-3 rounded-full bg-brand-primary text-white hover:bg-brand-hover transition-colors shadow-lg shadow-brand-primary/25 font-bold text-sm relative group"
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden text-stone-900 text-2xl focus:outline-none" 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:hidden absolute top-full left-0 w-full bg-stone-50 shadow-lg border-t border-stone-200 flex-col`}>
+          <a href="#layanan" onClick={() => setMobileMenuOpen(false)} className="px-6 py-4 border-b border-stone-100 hover:bg-stone-100 transition">Layanan</a>
+          <a href="#stylist" onClick={() => setMobileMenuOpen(false)} className="px-6 py-4 border-b border-stone-100 hover:bg-stone-100 transition">Stylist</a>
+          <a href="#lookbook" onClick={() => setMobileMenuOpen(false)} className="px-6 py-4 border-b border-stone-100 hover:bg-stone-100 transition">Lookbook</a>
+          <a href="#ulasan" onClick={() => setMobileMenuOpen(false)} className="px-6 py-4 border-b border-stone-100 hover:bg-stone-100 transition">Ulasan</a>
+          <div className="px-6 py-4">
+            <button 
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsBookingModalOpen(true);
+              }}
+              className="w-full bg-stone-900 text-white px-6 py-3 rounded-xl font-medium hover:bg-stone-800 transition"
             >
-              <span className="text-lg leading-none">🗓️</span>
-              <span>Cek Antrean</span>
+              Reservasi Sekarang
             </button>
           </div>
         </div>
-      </header>
+      </nav>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-4 md:py-8 relative z-10">
+      <main className="flex-1 w-full">
         <GroomingHeroScreen />
-        <GroomingLookbook />
         <GroomingServiceMenu />
+        <GroomingStylistList />
+        <GroomingLookbook />
         <GroomingSocialProof />
       </main>
 
       {/* Footer */}
-      <footer className="mt-20 bg-slate-900 pt-20 pb-10 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-20">
-          <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-dark text-white text-2xl shadow-lg">
-                {client.iconEmoji || '✂️'}
-              </div>
-              <div>
-                <h3 className="text-2xl font-black text-white leading-none">{client.name}</h3>
-                <p className="text-xs font-bold text-brand-primary mt-1 uppercase tracking-widest">{client.category}</p>
-              </div>
+      <footer className="bg-stone-900 text-white py-12 border-t border-gray-800">
+        <div className="container mx-auto px-6 max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="md:col-span-2">
+            <a href="#" className="text-2xl font-serif font-bold text-white flex items-center gap-2 mb-4">
+              <span className="text-brand-primary"><Scissors className="w-6 h-6" /></span>
+              {client.name}
+            </a>
+            <p className="text-gray-400 max-w-sm mb-6">Membawa seni dalam perawatan diri. Kami hadir untuk menyempurnakan penampilan dan menenangkan pikiran Anda.</p>
+            <div className="flex space-x-4">
+              <a href={client.instagramUrl || '#'} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">IG</a>
+              <a href={client.tiktokUrl || '#'} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">TT</a>
+              <a href={`https://wa.me/${client.waNumber}`} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">WA</a>
             </div>
-            <p className="text-slate-400 leading-relaxed max-w-sm">
-              Tampil maksimal dengan pelayanan premium dan hasil memuaskan. 
-            </p>
           </div>
-          <div className="space-y-6">
-             <h4 className="text-lg font-bold text-white">Informasi Kontak & Lokasi</h4>
-             <p className="text-slate-400 leading-relaxed">
-               {client.address}<br/>
-               {client.hours}<br/>
-               {client.phone}
-             </p>
+          <div>
+            <h4 className="font-serif font-semibold text-lg mb-4">Tautan Cepat</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li><a href="#layanan" className="hover:text-white transition">Layanan & Harga</a></li>
+              <li><a href="#stylist" className="hover:text-white transition">Tim Artisan Kami</a></li>
+              <li><a href="#lookbook" className="hover:text-white transition">Galeri Portofolio</a></li>
+              <li><a href="#ulasan" className="hover:text-white transition">Ulasan Pelanggan</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-serif font-semibold text-lg mb-4">Informasi</h4>
+            <ul className="space-y-2 text-gray-400 text-sm">
+              <li className="flex flex-col gap-1"><span className="text-white font-medium">Operasional</span> <span>{client.hours}</span></li>
+              <li className="flex flex-col gap-1 mt-3"><span className="text-white font-medium">Lokasi</span> <span>{client.address}</span></li>
+            </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-slate-800 text-center text-sm font-medium text-slate-500">
-          <p>© {new Date().getFullYear()} {client.name} — Powered by Growfin Digital Templates.</p>
+        <div className="container mx-auto px-6 max-w-7xl mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+          &copy; {new Date().getFullYear()} {client.name}. All rights reserved.
         </div>
       </footer>
 
       <GroomingBookingModal />
-      <GroomingFloatingDock />
 
     </div>
   );

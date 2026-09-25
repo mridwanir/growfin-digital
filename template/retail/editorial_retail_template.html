@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATELIER | Editorial Retail Template</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+        body { font-family: var(--font-sans); }
+        h1, h2, h3, .font-serif { font-family: var(--font-serif); }
+        
+        /* Hide scrollbar for clean horizontal scrolls */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .drawer-open { overflow: hidden; }
+        
+        /* Marquee Animation */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 30s linear infinite;
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        atelier: {
+                            black: '#121212',
+                            dark: '#2A2A2A',
+                            gray: '#8E8E8E',
+                            light: '#F5F5F5',
+                            white: '#FFFFFF',
+                            accent: '#8C907E' /* Muted Olive for subtle highlights */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-atelier-light text-atelier-black antialiased relative">
+
+    <nav class="fixed w-full z-40 bg-atelier-light/80 backdrop-blur-md border-b border-gray-200 transition-all duration-300">
+        <div class="px-6 md:px-12 h-20 flex justify-between items-center">
+            <!-- Left: Minimalist Nav -->
+            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-medium text-atelier-dark">
+                <a href="#lookbook" class="hover:text-atelier-accent transition-colors">Lookbook</a>
+                <a href="#shop" class="hover:text-atelier-accent transition-colors">Shop</a>
+            </div>
+            
+            <!-- Center: Logo -->
+            <div class="absolute left-1/2 transform -translate-x-1/2 cursor-pointer">
+                <span class="font-serif font-bold text-3xl tracking-widest text-atelier-black">ATELIER</span>
+            </div>
+
+            <!-- Right: Cart -->
+            <div class="flex items-center space-x-6">
+                <button onclick="toggleCart()" class="relative group flex items-center gap-2">
+                    <span class="text-sm uppercase tracking-widest font-medium hidden md:block group-hover:text-atelier-accent transition-colors">Cart</span>
+                    <div class="relative">
+                        <svg class="w-6 h-6 text-atelier-dark group-hover:text-atelier-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span id="cart-badge" class="absolute -top-1 -right-2 w-4 h-4 bg-atelier-black text-white text-[10px] font-bold flex items-center justify-center rounded-full hidden">
+                            0
+                        </span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-20 min-h-screen flex flex-col md:flex-row bg-atelier-white">
+        <!-- Left Text/Promo -->
+        <div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-24 py-16 md:py-0 order-2 md:order-1 relative">
+            <div class="absolute top-10 left-10 hidden md:block text-xs uppercase tracking-[0.3em] text-atelier-gray rotate-90 origin-left">
+                FW 2026 Collection
+            </div>
+            
+            <span class="inline-block px-3 py-1 border border-atelier-black text-xs uppercase tracking-widest w-max mb-6">
+                Season Premiere
+            </span>
+            <h1 class="text-5xl md:text-7xl font-serif leading-[1.1] mb-6">
+                The Art <br/> of <span class="italic text-atelier-gray">Simplicity</span>
+            </h1>
+            <p class="text-atelier-gray mb-10 max-w-md text-lg font-light leading-relaxed">
+                Elevate your everyday wardrobe with our carefully curated essentials. Designed for the modern minimalist.
+            </p>
+            <a href="#shop" class="bg-atelier-black text-white text-sm uppercase tracking-widest px-8 py-4 w-max hover:bg-atelier-accent transition-colors duration-300">
+                Explore Collection
+            </a>
+        </div>
+        
+        <!-- Right Image -->
+        <div class="w-full md:w-1/2 h-[60vh] md:h-auto order-1 md:order-2">
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" alt="Editorial Hero" class="w-full h-full object-cover" />
+        </div>
+    </section>
+
+    <section id="lookbook" class="py-24 bg-atelier-light px-6 md:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <h2 class="text-4xl md:text-5xl font-serif">Curated <br/> <span class="italic text-atelier-gray">Looks</span></h2>
+                <p class="max-w-sm text-atelier-gray font-light">Draw inspiration from our seasonal lookbook. Unconventional pairings for the contemporary eye.</p>
+            </div>
+            
+            <!-- Asymmetrical Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                <!-- Large Portrait -->
+                <div class="md:col-span-5 relative group">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" alt="Look 1" class="w-full h-[600px] object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+                    <p class="mt-4 text-sm uppercase tracking-widest text-atelier-dark">01 — Urban Monolith</p>
+                </div>
+                
+                <!-- Spacer & Small Portrait -->
+                <div class="md:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-8 md:mt-24">
+                    <div class="md:col-start-2 relative group">
+                        <img src="https://images.unsplash.com/photo-1550614000-4b9560f61208?q=80&w=600&auto=format&fit=crop" alt="Look 2" class="w-full h-[400px] object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+                        <p class="mt-4 text-sm uppercase tracking-widest text-atelier-dark">02 — Fluid Textures</p>
+                    </div>
+                    <div class="md:col-span-2 relative group mt-8">
+                        <img src="https://images.unsplash.com/photo-1434389678232-06b2a413f12a?q=80&w=1200&auto=format&fit=crop" alt="Look 3" class="w-full h-[450px] object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+                        <p class="mt-4 text-sm uppercase tracking-widest text-atelier-dark">03 — Earth Tones</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="shop" class="py-24 bg-atelier-white px-6 md:px-12">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-serif mb-16 text-center">The <span class="italic text-atelier-gray">Archive</span></h2>
+            
+            <!-- 3-Column Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-16">
+                <!-- Products dynamically injected here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-atelier-black text-white overflow-hidden">
+        <div class="px-6 md:px-12 mb-12">
+            <h2 class="text-3xl font-serif text-center mb-4">Voices of Atelier</h2>
+            <div class="w-12 h-[1px] bg-white mx-auto"></div>
+        </div>
+        
+        <!-- Marquee -->
+        <div class="relative flex overflow-x-hidden border-y border-atelier-dark py-10">
+            <div class="animate-marquee whitespace-nowrap flex space-x-16 px-8">
+                <!-- Testimonial Items -->
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"Exceptional craftsmanship. The oversized cotton shirt is a staple in my daily rotation. Truly an editorial piece."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— Sarah Jenkins, NY</p>
+                </div>
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"Fast shipping and impeccable packaging. The denim jacket feels like vintage perfection. I will definitely order again."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— David L., London</p>
+                </div>
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"A brilliant curation of modern essentials. The pleated skirt drops perfectly and the material is top-notch."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— Elena R., Milan</p>
+                </div>
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"Every piece tells a story. The knitwear cardigan is my absolute favorite for the colder months."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— Mika T., Tokyo</p>
+                </div>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="animate-marquee whitespace-nowrap flex space-x-16 px-8" aria-hidden="true">
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"Exceptional craftsmanship. The oversized cotton shirt is a staple in my daily rotation. Truly an editorial piece."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— Sarah Jenkins, NY</p>
+                </div>
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"Fast shipping and impeccable packaging. The denim jacket feels like vintage perfection. I will definitely order again."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— David L., London</p>
+                </div>
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"A brilliant curation of modern essentials. The pleated skirt drops perfectly and the material is top-notch."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— Elena R., Milan</p>
+                </div>
+                <div class="inline-flex flex-col w-[400px] whitespace-normal">
+                    <p class="font-serif text-xl italic mb-6">"Every piece tells a story. The knitwear cardigan is my absolute favorite for the colder months."</p>
+                    <p class="text-sm tracking-widest uppercase text-atelier-gray">— Mika T., Tokyo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-atelier-light py-16 px-6 md:px-12 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="font-serif font-bold text-2xl tracking-widest text-atelier-black">ATELIER</div>
+            <div class="flex space-x-6 text-sm uppercase tracking-widest text-atelier-gray">
+                <a href="#" class="hover:text-atelier-black transition-colors">Instagram</a>
+                <a href="#" class="hover:text-atelier-black transition-colors">Journal</a>
+                <a href="#" class="hover:text-atelier-black transition-colors">Contact</a>
+            </div>
+            <p class="text-xs text-atelier-gray tracking-wider">&copy; 2026 ATELIER STUDIO. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <!-- Quick View Drawer (Overlay + Panel) -->
+    <div id="qv-drawer" class="fixed inset-0 z-50 pointer-events-none">
+        <!-- Backdrop -->
+        <div id="qv-backdrop" class="absolute inset-0 bg-atelier-black/30 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none" onclick="closeQuickView()"></div>
+        
+        <!-- Drawer Panel -->
+        <div id="qv-panel" class="absolute inset-y-0 right-0 w-full max-w-2xl bg-atelier-white shadow-2xl transform translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] flex flex-col pointer-events-auto h-full overflow-y-auto">
+            
+            <!-- Close Button -->
+            <button onclick="closeQuickView()" class="absolute top-6 right-6 z-10 p-2 text-atelier-dark hover:text-atelier-gray transition-colors bg-white/50 backdrop-blur rounded-full">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="flex flex-col h-full">
+                <!-- Vertical Image Gallery (Editorial style) -->
+                <div id="qv-images" class="w-full bg-atelier-light flex flex-col gap-1 p-1">
+                    <!-- Images injected via JS -->
+                </div>
+                
+                <!-- Product Details Container -->
+                <div class="p-10 flex-1 flex flex-col bg-white">
+                    <h3 id="qv-title" class="font-serif text-3xl mb-2 text-atelier-black">Product Name</h3>
+                    <p id="qv-price" class="text-xl font-light tracking-widest text-atelier-gray mb-8">Rp 0</p>
+                    
+                    <div class="mb-10">
+                        <p id="qv-desc" class="text-atelier-dark font-light leading-relaxed text-sm">Description goes here.</p>
+                    </div>
+                    
+                    <!-- Selectors -->
+                    <div class="space-y-8 mb-10">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="text-xs uppercase tracking-widest font-semibold text-atelier-black">Color</h4>
+                                <span id="qv-selected-color" class="text-xs text-atelier-gray">Select</span>
+                            </div>
+                            <div id="qv-colors" class="flex flex-wrap gap-3">
+                                <!-- Colors injected via JS -->
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="text-xs uppercase tracking-widest font-semibold text-atelier-black">Size</h4>
+                                <a href="#" class="text-[10px] uppercase tracking-widest underline text-atelier-gray">Size Guide</a>
+                            </div>
+                            <div id="qv-sizes" class="flex flex-wrap gap-3">
+                                <!-- Sizes injected via JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add to cart CTA -->
+                    <div class="mt-auto pt-8 border-t border-gray-200">
+                        <button onclick="addToCartFromDrawer()" class="w-full bg-atelier-black text-white uppercase tracking-widest text-sm py-5 hover:bg-atelier-accent transition-colors duration-300">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 pointer-events-none">
+        <!-- Backdrop -->
+        <div id="cart-backdrop" class="absolute inset-0 bg-atelier-black/30 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none" onclick="toggleCart()"></div>
+        
+        <!-- Drawer Panel -->
+        <div id="cart-panel" class="absolute inset-y-0 right-0 w-full max-w-md bg-atelier-light shadow-2xl transform translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] flex flex-col pointer-events-auto">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between p-8 bg-white border-b border-gray-200">
+                <h2 class="font-serif text-2xl">Your Cart</h2>
+                <button onclick="toggleCart()" class="text-atelier-dark hover:text-atelier-gray transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Cart Items (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-8 bg-atelier-light">
+                <!-- Empty State -->
+                <div id="cart-empty" class="text-center py-20 text-atelier-gray flex flex-col items-center">
+                    <p class="uppercase tracking-widest text-sm mb-4">Your cart is empty</p>
+                    <button onclick="toggleCart()" class="border-b border-atelier-gray pb-1 text-sm hover:text-atelier-black transition-colors">Continue Shopping</button>
+                </div>
+                
+                <!-- Items list -->
+                <div id="cart-items-list" class="space-y-6 mb-8"></div>
+
+                <!-- Logistics Form -->
+                <div id="checkout-form" class="hidden bg-white p-6 border border-gray-200">
+                    <h3 class="text-sm uppercase tracking-widest font-semibold mb-6 text-atelier-black">Shipping Details</h3>
+                    <div class="space-y-5 text-sm">
+                        <div>
+                            <input type="text" id="custName" class="w-full border-b border-gray-300 bg-transparent px-0 py-2 placeholder-atelier-gray focus:outline-none focus:border-atelier-black transition-colors" placeholder="Full Name">
+                        </div>
+                        <div>
+                            <textarea id="custAddress" rows="2" class="w-full border-b border-gray-300 bg-transparent px-0 py-2 placeholder-atelier-gray focus:outline-none focus:border-atelier-black transition-colors resize-none" placeholder="Complete Delivery Address"></textarea>
+                        </div>
+                        <div>
+                            <input type="text" id="custNotes" class="w-full border-b border-gray-300 bg-transparent px-0 py-2 placeholder-atelier-gray focus:outline-none focus:border-atelier-black transition-colors" placeholder="Delivery Notes (Optional)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Total & CTA -->
+            <div class="p-8 bg-white border-t border-gray-200">
+                <div class="flex justify-between items-end mb-6">
+                    <span class="text-xs uppercase tracking-widest text-atelier-gray">Subtotal</span>
+                    <span id="cart-total" class="font-serif text-2xl text-atelier-black">Rp 0</span>
+                </div>
+                <button onclick="checkoutWhatsApp()" id="btn-checkout" class="w-full bg-[#25D366] text-white uppercase tracking-widest text-sm py-4 hover:bg-[#1ebd5b] transition-colors flex justify-center items-center gap-3 opacity-50 cursor-not-allowed" disabled>
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Order via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Formatter Mata Uang
+        const formatIDR = (price) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
+        };
+
+        // Data Produk Mockup
+        const products = [
+            {
+                id: 'AT01',
+                name: 'Oversized Cotton Oxford',
+                price: 450000,
+                desc: 'A masterclass in proportion. Crafted from crisp, breathable 100% premium cotton, this oversized shirt features dropped shoulders and an extended hemline for a relaxed yet architectural silhouette.',
+                images: [
+                    'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1603252109303-2751441dd157?w=800&auto=format&fit=crop'
+                ],
+                colors: ['Optic White', 'Onyx Black', 'Sage'],
+                sizes: ['S', 'M', 'L', 'XL']
+            },
+            {
+                id: 'AT02',
+                name: 'Structured Midi Pleat',
+                price: 385000,
+                desc: 'Engineered pleats that hold their form. Cut from high-density technical fabric, this midi skirt creates striking volume and movement with every step. Concealed elastic waistband for comfort.',
+                images: [
+                    'https://images.unsplash.com/photo-1583496924849-c1873138b321?w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=800&auto=format&fit=crop'
+                ],
+                colors: ['Dusty Rose', 'Midnight', 'Taupe'],
+                sizes: ['O/S']
+            },
+            {
+                id: 'AT03',
+                name: 'Raw Edge Denim Jacket',
+                price: 750000,
+                desc: 'A contemporary take on a classic utilitarian piece. Heavyweight raw denim finished with subtle fraying at the hem. Boxy fit with oversized utility pockets.',
+                images: [
+                    'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1523205565295-f8e91625443b?w=800&auto=format&fit=crop'
+                ],
+                colors: ['Vintage Wash', 'Indigo'],
+                sizes: ['M', 'L', 'XL']
+            },
+            {
+                id: 'AT04',
+                name: 'Chunky Wool Cardigan',
+                price: 520000,
+                desc: 'Tactile texture for layering. Knitted from a soft wool-blend yarn, featuring a dropped shoulder design, deep V-neckline, and contrasting tortoiseshell buttons.',
+                images: [
+                    'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1434389678232-06b2a413f12a?w=800&auto=format&fit=crop'
+                ],
+                colors: ['Ecru', 'Crimson', 'Charcoal'],
+                sizes: ['S', 'M', 'L']
+            },
+            {
+                id: 'AT05',
+                name: 'Minimalist Tote Bag',
+                price: 290000,
+                desc: 'The only carry-all you need. Constructed from heavy-duty canvas with reinforced structural seams and genuine leather straps. Spacious interior accommodates up to a 15-inch laptop.',
+                images: [
+                    'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop'
+                ],
+                colors: ['Natural Canvas', 'Graphite'],
+                sizes: ['O/S']
+            },
+            {
+                id: 'AT06',
+                name: 'Tailored Wide Trousers',
+                price: 490000,
+                desc: 'Fluid drapery meets sharp tailoring. High-waisted wide-leg trousers crafted from a premium gabardine blend. Features front pleat detailing and invisible side pockets.',
+                images: [
+                    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1584865288642-42078afe6942?w=800&auto=format&fit=crop'
+                ],
+                colors: ['Black', 'Camel'],
+                sizes: ['S', 'M', 'L']
+            }
+        ];
+
+        // State Aplikasi
+        let cart = [];
+        let currentViewProduct = null;
+        let selectedVariant = { color: null, size: null };
+
+        const WA_NUMBER = "6281234567890"; 
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            products.forEach(prod => {
+                const card = `
+                    <div class="group cursor-pointer flex flex-col" onclick="openQuickView('${prod.id}')">
+                        <div class="w-full aspect-[3/4] bg-atelier-light overflow-hidden mb-6 relative">
+                            <img src="${prod.images[0]}" alt="${prod.name}" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+                            
+                            <!-- Overlay on Hover -->
+                            <div class="absolute inset-0 bg-atelier-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">
+                                <span class="bg-white text-atelier-black text-[10px] uppercase tracking-[0.2em] px-6 py-3 font-semibold translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                    Quick View
+                                </span>
+                            </div>
+                        </div>
+                        <h3 class="font-serif text-xl text-atelier-black group-hover:text-atelier-gray transition-colors">${prod.name}</h3>
+                        <p class="text-sm tracking-widest text-atelier-gray mt-2 font-light">${formatIDR(prod.price)}</p>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // Quick View Right Drawer Logic
+        function openQuickView(id) {
+            currentViewProduct = products.find(p => p.id === id);
+            if (!currentViewProduct) return;
+
+            // Reset selection
+            selectedVariant = { color: null, size: null };
+
+            // Populate Data
+            document.getElementById('qv-title').innerText = currentViewProduct.name;
+            document.getElementById('qv-price').innerText = formatIDR(currentViewProduct.price);
+            document.getElementById('qv-desc').innerText = currentViewProduct.desc;
+            
+            // Vertical Image Gallery
+            const imgContainer = document.getElementById('qv-images');
+            imgContainer.innerHTML = '';
+            currentViewProduct.images.forEach((img) => {
+                imgContainer.innerHTML += `
+                    <img src="${img}" class="w-full h-[60vh] object-cover bg-gray-100">
+                `;
+            });
+
+            renderVariants();
+
+            // Open Drawer
+            const drawer = document.getElementById('qv-drawer');
+            const backdrop = document.getElementById('qv-backdrop');
+            const panel = document.getElementById('qv-panel');
+            
+            drawer.classList.remove('pointer-events-none');
+            document.body.classList.add('drawer-open');
+            
+            // Animate in
+            backdrop.classList.add('pointer-events-auto');
+            backdrop.classList.remove('opacity-0');
+            panel.classList.remove('translate-x-full');
+        }
+
+        function closeQuickView() {
+            const drawer = document.getElementById('qv-drawer');
+            const backdrop = document.getElementById('qv-backdrop');
+            const panel = document.getElementById('qv-panel');
+            
+            backdrop.classList.add('opacity-0');
+            backdrop.classList.remove('pointer-events-auto');
+            panel.classList.add('translate-x-full');
+            
+            setTimeout(() => {
+                drawer.classList.add('pointer-events-none');
+                document.body.classList.remove('drawer-open');
+            }, 500);
+        }
+
+        function renderVariants() {
+            // Colors
+            const colorContainer = document.getElementById('qv-colors');
+            const selectedColorText = document.getElementById('qv-selected-color');
+            selectedColorText.innerText = selectedVariant.color || 'Select';
+            
+            colorContainer.innerHTML = '';
+            currentViewProduct.colors.forEach(color => {
+                const isActive = selectedVariant.color === color;
+                colorContainer.innerHTML += `
+                    <button onclick="selectVariant('color', '${color}')" class="px-5 py-2 border text-xs uppercase tracking-widest transition-colors ${isActive ? 'border-atelier-black bg-atelier-black text-white' : 'border-gray-200 text-atelier-gray hover:border-atelier-black hover:text-atelier-black'}">
+                        ${color}
+                    </button>
+                `;
+            });
+
+            // Sizes
+            const sizeContainer = document.getElementById('qv-sizes');
+            sizeContainer.innerHTML = '';
+            currentViewProduct.sizes.forEach(size => {
+                const isActive = selectedVariant.size === size;
+                sizeContainer.innerHTML += `
+                    <button onclick="selectVariant('size', '${size}')" class="w-12 h-12 border flex items-center justify-center text-xs uppercase tracking-widest transition-colors ${isActive ? 'border-atelier-black bg-atelier-black text-white' : 'border-gray-200 text-atelier-gray hover:border-atelier-black hover:text-atelier-black'}">
+                        ${size}
+                    </button>
+                `;
+            });
+        }
+
+        function selectVariant(type, value) {
+            selectedVariant[type] = value;
+            renderVariants();
+        }
+
+        function addToCartFromDrawer() {
+            if (!currentViewProduct || !selectedVariant.color || !selectedVariant.size) {
+                alert("Please select a color and size to continue.");
+                return;
+            }
+
+            const cartItemKey = `${currentViewProduct.id}_${selectedVariant.color}_${selectedVariant.size}`;
+            const existingItemIndex = cart.findIndex(item => item.cartKey === cartItemKey);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].qty += 1;
+            } else {
+                cart.push({
+                    cartKey: cartItemKey,
+                    id: currentViewProduct.id,
+                    name: currentViewProduct.name,
+                    price: currentViewProduct.price,
+                    image: currentViewProduct.images[0],
+                    color: selectedVariant.color,
+                    size: selectedVariant.size,
+                    qty: 1
+                });
+            }
+
+            updateCartUI();
+            closeQuickView();
+            setTimeout(toggleCart, 500); // Open cart after closing QV
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            
+            if (totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            const cartList = document.getElementById('cart-items-list');
+            const cartEmpty = document.getElementById('cart-empty');
+            const checkoutForm = document.getElementById('checkout-form');
+            const btnCheckout = document.getElementById('btn-checkout');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartList.innerHTML = '';
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                cartEmpty.classList.remove('hidden');
+                checkoutForm.classList.add('hidden');
+                btnCheckout.disabled = true;
+                btnCheckout.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                cartEmpty.classList.add('hidden');
+                checkoutForm.classList.remove('hidden');
+                btnCheckout.disabled = false;
+                btnCheckout.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                cart.forEach((item) => {
+                    totalPrice += item.price * item.qty;
+                    cartList.innerHTML += `
+                        <div class="flex gap-4 bg-white p-4 border border-gray-100 items-center">
+                            <img src="${item.image}" class="w-20 h-28 object-cover bg-gray-50">
+                            <div class="flex-1 flex flex-col justify-between h-28 py-1">
+                                <div>
+                                    <h4 class="font-serif text-lg leading-tight mb-1 text-atelier-black">${item.name}</h4>
+                                    <p class="text-[10px] uppercase tracking-widest text-atelier-gray">${item.color} / ${item.size}</p>
+                                </div>
+                                <div class="flex justify-between items-end">
+                                    <div class="flex items-center gap-4 text-sm border px-2 py-1">
+                                        <button onclick="updateQty('${item.cartKey}', -1)" class="text-atelier-gray hover:text-atelier-black">-</button>
+                                        <span class="w-4 text-center font-medium">${item.qty}</span>
+                                        <button onclick="updateQty('${item.cartKey}', 1)" class="text-atelier-gray hover:text-atelier-black">+</button>
+                                    </div>
+                                    <p class="text-sm font-medium tracking-wide">${formatIDR(item.price)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            cartTotal.innerText = formatIDR(totalPrice);
+        }
+
+        function updateQty(cartKey, delta) {
+            const index = cart.findIndex(item => item.cartKey === cartKey);
+            if (index > -1) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+                updateCartUI();
+            }
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const backdrop = document.getElementById('cart-backdrop');
+            const panel = document.getElementById('cart-panel');
+            
+            if (drawer.classList.contains('pointer-events-none')) {
+                // Open
+                drawer.classList.remove('pointer-events-none');
+                document.body.classList.add('drawer-open');
+                backdrop.classList.add('pointer-events-auto');
+                backdrop.classList.remove('opacity-0');
+                panel.classList.remove('translate-x-full');
+            } else {
+                // Close
+                backdrop.classList.add('opacity-0');
+                backdrop.classList.remove('pointer-events-auto');
+                panel.classList.add('translate-x-full');
+                
+                setTimeout(() => {
+                    drawer.classList.add('pointer-events-none');
+                    if(document.getElementById('qv-drawer').classList.contains('pointer-events-none')) {
+                        document.body.classList.remove('drawer-open');
+                    }
+                }, 500);
+            }
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return;
+
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!name || !address) {
+                alert("Please provide your Full Name and Delivery Address.");
+                return;
+            }
+
+            let message = `Hello Atelier Studio, I would like to place an order:\n\n`;
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                message += `${index + 1}. ${item.name}\n`;
+                message += `   Variant: ${item.color} / Size ${item.size}\n`;
+                message += `   Qty: ${item.qty} x ${formatIDR(item.price)}\n`;
+                message += `   Subtotal: ${formatIDR(subtotal)}\n\n`;
+            });
+
+            message += `*ORDER TOTAL: ${formatIDR(total)}*\n\n`;
+            message += `*Shipping Details:*\n`;
+            message += `Name: ${name}\n`;
+            message += `Address: ${address}\n`;
+            if (notes) message += `Notes: ${notes}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodedMessage}`;
+            
+            window.open(waUrl, '_blank');
+        }
+
+        // Initialize
+        window.onload = () => {
+            renderProducts();
+        };
+
+    </script>
+</body>
+</html>

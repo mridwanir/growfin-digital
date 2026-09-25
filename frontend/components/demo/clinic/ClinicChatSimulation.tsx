@@ -54,18 +54,15 @@ export function ClinicChatSimulation() {
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-100">
             <div>
-              <span className="block text-2xl mb-1">👨‍⚕️</span>
-              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">Pengalaman</span>
+              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5 mt-2">Pengalaman</span>
               <span className="text-sm font-bold text-slate-800">8+ Tahun</span>
             </div>
             <div>
-              <span className="block text-2xl mb-1">⭐</span>
-              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">Rating</span>
+              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5 mt-2">Rating</span>
               <span className="text-sm font-bold text-amber-500">{client.rating} / 5.0</span>
             </div>
             <div>
-              <span className="block text-2xl mb-1">⚡</span>
-              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">Respon WA</span>
+              <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5 mt-2">Respon WA</span>
               <span className={`text-sm font-bold text-brand-primary`}>&lt; 5 Menit</span>
             </div>
           </div>
@@ -81,7 +78,7 @@ export function ClinicChatSimulation() {
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img src={client.doctor.avatarUrl} alt={client.doctor.name} className="h-full w-full object-cover" />
               ) : (
-                <span>{client.doctor?.avatarEmoji || '👩‍⚕️'}</span>
+                <span className="font-bold text-lg">{client.doctor?.name?.[0] || 'D'}</span>
               )}
             </div>
             <div>

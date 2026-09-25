@@ -9,7 +9,7 @@ export function FloatingCart() {
 
   return (
     <div className="fixed bottom-24 sm:bottom-8 left-0 right-0 z-[60] flex justify-center px-4 pointer-events-none animate-in slide-in-from-bottom-10 fade-in duration-500">
-      <button 
+      <button
         onClick={() => setIsCartModalOpen(true)}
         className={`w-full max-w-sm flex items-center justify-between p-3 pl-4 rounded-2xl shadow-2xl pointer-events-auto transition-transform active:scale-95 bg-brand-primary hover:bg-brand-hover text-white`}
       >
@@ -25,7 +25,7 @@ export function FloatingCart() {
             <span className="text-sm font-black">Rp {cartTotal.toLocaleString('id-ID')}</span>
           </div>
         </div>
-        
+
         <span className="text-sm font-bold bg-white/20 px-4 py-2 rounded-xl backdrop-blur-md">
           Checkout ➔
         </span>

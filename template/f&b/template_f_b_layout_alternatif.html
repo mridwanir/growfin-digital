@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bite & Brew - Quick Commerce</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316', // Orange 500
+                            600: '#ea580c', // Orange 600 - Main
+                            700: '#c2410c',
+                        },
+                        base: {
+                            800: '#27272a', // Zinc 800
+                            900: '#18181b', // Zinc 900
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal Scale Animation */
+        .modal-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Overlay Fade Animation */
+        .overlay-fade {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .overlay-fade.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Drawer Slide Animation */
+        .drawer-slide {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .drawer-slide.active {
+            transform: translateX(0);
+        }
+
+        /* Masonry Support */
+        .masonry-grid {
+            column-count: 2;
+            column-gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-zinc-50 text-base-800 antialiased relative overflow-x-hidden">
+
+    <header class="relative w-full min-h-[90vh] flex flex-col lg:flex-row bg-white">
+        <!-- Text Content (Left) -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16 order-2 lg:order-1 z-10 bg-white">
+            <div class="max-w-xl w-full reveal">
+                <!-- Open Now Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 border border-brand-100 text-brand-600 text-sm font-bold mb-6 shadow-sm">
+                    <span class="relative flex h-2.5 w-2.5">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
+                    </span>
+                    Buka • 08:00 - 22:00
+                </div>
+                
+                <h1 class="text-4xl lg:text-6xl font-extrabold text-base-900 mb-6 leading-tight">
+                    Cita Rasa Baru,<br> <span class="text-brand-600">Lebih Dekat.</span>
+                </h1>
+                <p class="text-zinc-500 text-lg mb-8 leading-relaxed">
+                    Rasakan pengalaman kuliner modern dengan sentuhan bahan lokal terbaik. Pesan sekarang tanpa antre, kami siapkan selagi hangat.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#menu-section" class="px-8 py-4 bg-base-900 hover:bg-black text-white rounded-2xl font-bold shadow-xl shadow-base-900/20 active:scale-95 transition-all flex justify-center items-center gap-2">
+                        Pesan Sekarang <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#gallery-section" class="px-8 py-4 bg-zinc-100 hover:bg-zinc-200 text-base-900 rounded-2xl font-bold active:scale-95 transition-all flex justify-center items-center gap-2">
+                        Lihat Suasana
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Image Content (Right) -->
+        <div class="w-full lg:w-1/2 h-[50vh] lg:h-auto order-1 lg:order-2 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=1200&q=80" alt="Cafe Experience" class="absolute inset-0 w-full h-full object-cover scale-105 transform hover:scale-100 transition-transform duration-1000">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 lg:hidden"></div>
+        </div>
+    </header>
+
+    <section id="menu-section" class="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-3xl lg:text-4xl font-bold text-base-900 mb-4">Pilihan Menu</h2>
+            
+            <!-- Horizontal Category Pills -->
+            <div class="flex overflow-x-auto hide-scrollbar gap-3 justify-start md:justify-center mt-8 pb-4" id="category-filters">
+                <button class="filter-btn active px-6 py-2.5 rounded-full bg-base-900 text-white font-semibold text-sm active:scale-95 transition-all whitespace-nowrap shadow-md" data-category="Semua">Semua Menu</button>
+                <button class="filter-btn px-6 py-2.5 rounded-full bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50 font-semibold text-sm active:scale-95 transition-all whitespace-nowrap" data-category="Signature">Signature Drink</button>
+                <button class="filter-btn px-6 py-2.5 rounded-full bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50 font-semibold text-sm active:scale-95 transition-all whitespace-nowrap" data-category="Main Course">Main Course</button>
+                <button class="filter-btn px-6 py-2.5 rounded-full bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50 font-semibold text-sm active:scale-95 transition-all whitespace-nowrap" data-category="Dessert">Dessert</button>
+            </div>
+        </div>
+
+        <!-- Horizontal Menu List Grid -->
+        <div id="menu-list" class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 reveal">
+            <!-- Items rendered via JS -->
+        </div>
+    </section>
+
+    <section id="gallery-section" class="py-20 bg-white px-4 md:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10 reveal">
+                <div class="max-w-xl">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-base-900 mb-4">Momen & Ruang</h2>
+                    <p class="text-zinc-500">Dirancang untuk kenyamanan, mengabadikan setiap momen kebersamaan Anda bersama kami.</p>
+                </div>
+            </div>
+            
+            <!-- Masonry Grid -->
+            <div class="masonry-grid reveal">
+                <div class="masonry-item rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=600&q=80" alt="Gallery 1" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="masonry-item rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1525610553991-2bede1a236e2?auto=format&fit=crop&w=600&q=80" alt="Gallery 2" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="masonry-item rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?auto=format&fit=crop&w=600&q=80" alt="Gallery 3" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="masonry-item rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=80" alt="Gallery 4" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="masonry-item rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Gallery 5" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-zinc-50 px-4 md:px-8 overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center reveal">
+            <h2 class="text-3xl font-bold text-base-900 mb-12">Cerita Pelanggan</h2>
+            
+            <div class="flex overflow-x-auto hide-scrollbar gap-6 pb-8 snap-x snap-mandatory text-left">
+                <!-- Review 1 -->
+                <div class="snap-center shrink-0 w-[85vw] md:w-96 bg-white p-8 rounded-3xl shadow-sm border border-zinc-100">
+                    <div class="text-brand-500 text-sm mb-4 flex gap-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-base-900 font-medium text-lg mb-6 leading-relaxed">
+                        "Ambience-nya dapet banget, makanannya juga cepat saji tapi kualitasnya tetep resto bintang lima. Pasti bakal sering kesini."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=68" alt="User" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold text-sm text-base-900">Sarah Wijaya</h4>
+                            <p class="text-xs text-zinc-500">Pekerja Lepas</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="snap-center shrink-0 w-[85vw] md:w-96 bg-white p-8 rounded-3xl shadow-sm border border-zinc-100">
+                    <div class="text-brand-500 text-sm mb-4 flex gap-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <p class="text-base-900 font-medium text-lg mb-6 leading-relaxed">
+                        "Fitur order via web ini ngebantu banget pas lagi rame. Ga perlu nunggu pelayan, langsung pilih dan bayar. Super praktis!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="User" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold text-sm text-base-900">Dimas Pratama</h4>
+                            <p class="text-xs text-zinc-500">Mahasiswa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="fixed inset-0 bg-base-900/60 backdrop-blur-sm z-50 overlay-fade flex items-center justify-center p-4" onclick="closeCustomizer()">
+        
+        <!-- Modal Content -->
+        <div id="customizer-modal" class="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl modal-scale" onclick="event.stopPropagation()">
+            
+            <div class="p-4 border-b border-zinc-100 flex justify-between items-center shrink-0">
+                <h3 class="font-bold text-lg text-base-900">Kustomisasi Pesanan</h3>
+                <button onclick="closeCustomizer()" class="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 text-zinc-500 hover:text-base-900 hover:bg-zinc-200 transition-colors active:scale-95">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Body -->
+            <div class="p-6 overflow-y-auto hide-scrollbar flex-1">
+                <div class="flex gap-4 mb-6">
+                    <img id="modal-product-img" src="" class="w-24 h-24 rounded-2xl object-cover shrink-0 shadow-sm">
+                    <div>
+                        <h3 id="modal-product-name" class="text-xl font-bold text-base-900 mb-1 leading-tight">Nama Produk</h3>
+                        <p id="modal-product-desc" class="text-zinc-500 text-sm line-clamp-2">Deskripsi produk...</p>
+                    </div>
+                </div>
+
+                <!-- Variants Selection -->
+                <div id="modal-variants-container"></div>
+
+                <!-- Add-ons Selection -->
+                <div id="modal-addons-container" class="mt-4"></div>
+                
+                <!-- Notes -->
+                <div class="mt-6">
+                    <h4 class="font-bold text-sm text-base-900 mb-2">Catatan Tambahan</h4>
+                    <input type="text" id="modal-note" class="w-full p-4 bg-zinc-50 border border-zinc-200 rounded-2xl text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none" placeholder="Cth: Jangan pakai bawang...">
+                </div>
+            </div>
+
+            <!-- Fixed Footer -->
+            <div class="p-5 border-t border-zinc-100 bg-white rounded-b-3xl shrink-0 flex items-center gap-4">
+                <div class="flex items-center bg-zinc-100 rounded-2xl p-1">
+                    <button onclick="updateQty(-1)" class="w-10 h-10 rounded-xl text-zinc-600 hover:bg-white hover:shadow-sm active:scale-95 transition-all"><i class="fa-solid fa-minus text-sm"></i></button>
+                    <span id="modal-qty" class="w-10 text-center font-bold text-base-900">1</span>
+                    <button onclick="updateQty(1)" class="w-10 h-10 rounded-xl text-zinc-600 hover:bg-white hover:shadow-sm active:scale-95 transition-all"><i class="fa-solid fa-plus text-sm"></i></button>
+                </div>
+                
+                <button onclick="addToCartProcess()" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white py-3.5 px-6 rounded-2xl font-bold flex justify-between items-center active:scale-95 transition-transform shadow-lg shadow-brand-600/30">
+                    <span>Tambah</span>
+                    <span id="modal-total-price">Rp 0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawer Overlay -->
+    <div id="drawer-overlay" class="fixed inset-0 bg-base-900/60 backdrop-blur-sm z-50 overlay-fade" onclick="toggleDrawer(false)"></div>
+    
+    <!-- Drawer Panel (Offcanvas Right) -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-[450px] bg-white shadow-2xl z-50 drawer-slide flex flex-col">
+        
+        <div class="p-6 border-b border-zinc-100 flex justify-between items-center shrink-0 bg-white">
+            <h3 class="font-bold text-xl text-base-900 flex items-center gap-2">
+                <i class="fa-solid fa-basket-shopping text-brand-600"></i> Keranjang
+            </h3>
+            <button onclick="toggleDrawer(false)" class="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 text-zinc-500 hover:text-base-900 transition-colors active:scale-95">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Cart Items Body -->
+        <div class="flex-1 overflow-y-auto hide-scrollbar p-6 bg-zinc-50">
+            
+            <div id="checkout-items-container" class="space-y-4 mb-8">
+                <!-- Cart empty state fallback -->
+                <div class="text-center py-10 text-zinc-400">
+                    <i class="fa-solid fa-cart-arrow-down text-4xl mb-3"></i>
+                    <p>Keranjang masih kosong</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div id="checkout-form" class="bg-white p-5 rounded-3xl border border-zinc-200 shadow-sm hidden">
+                
+                <!-- Admin Profile Info -->
+                <div class="flex items-center gap-3 mb-6 p-4 bg-zinc-50 rounded-2xl border border-zinc-100">
+                    <img src="https://i.pravatar.cc/150?img=44" alt="Admin" class="w-12 h-12 rounded-full border border-zinc-200 shadow-sm">
+                    <div>
+                        <p class="text-sm font-bold text-base-900">Admin Reza</p>
+                        <p class="text-xs text-brand-600 font-semibold flex items-center gap-1">
+                            <i class="fa-brands fa-whatsapp"></i> Siap membantu pesanan
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex bg-zinc-100 p-1.5 rounded-2xl mb-5">
+                    <button id="btn-type-dinein" onclick="setOrderType('dine-in')" class="flex-1 py-2.5 text-sm font-bold rounded-xl bg-white shadow-sm text-base-900 transition-all active:scale-95">Dine-in / Pick-up</button>
+                    <button id="btn-type-delivery" onclick="setOrderType('delivery')" class="flex-1 py-2.5 text-sm font-bold rounded-xl text-zinc-500 hover:text-base-900 transition-all active:scale-95 bg-transparent">Delivery</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-500 mb-1.5 ml-1">Nama Lengkap</label>
+                        <input type="text" id="input-customer-name" class="w-full p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition-all" placeholder="Nama Anda">
+                    </div>
+
+                    <div id="input-dinein" class="block reveal active">
+                        <label class="block text-xs font-bold text-zinc-500 mb-1.5 ml-1">Nomor Meja (Opsional)</label>
+                        <input type="text" id="input-table" class="w-full p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition-all" placeholder="Isi jika makan di tempat">
+                    </div>
+                    
+                    <div id="input-delivery" class="hidden reveal">
+                        <label class="block text-xs font-bold text-zinc-500 mb-1.5 ml-1">Alamat Pengiriman</label>
+                        <textarea id="input-address" rows="3" class="w-full p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none" placeholder="Alamat lengkap tujuan"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-6 bg-white border-t border-zinc-100 shrink-0">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-zinc-500 font-medium">Total Harga</span>
+                <span id="checkout-grand-total" class="text-2xl font-extrabold text-base-900">Rp 0</span>
+            </div>
+            
+            <button id="btn-submit-order" onclick="checkoutToWhatsApp()" disabled class="w-full bg-[#25D366] disabled:bg-zinc-300 disabled:cursor-not-allowed hover:bg-[#1da851] text-white py-4 px-6 rounded-2xl font-bold flex justify-center items-center gap-2 transition-all active:scale-95 shadow-lg shadow-[#25D366]/20">
+                <i class="fa-brands fa-whatsapp text-xl"></i> Kirim ke WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Trigger -->
+    <button id="floating-cart-btn" class="fixed bottom-6 right-6 z-40 bg-base-900 text-white rounded-full p-4 shadow-2xl flex items-center gap-3 hover:bg-black transition-all active:scale-90 transform translate-y-20 opacity-0" onclick="toggleDrawer(true)">
+        <div class="relative">
+            <i class="fa-solid fa-basket-shopping text-xl"></i>
+            <span id="cart-badge" class="absolute -top-2 -right-2 bg-brand-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-base-900">0</span>
+        </div>
+    </button>
+
+    <script>
+        /* --- MOCK DATA --- */
+        const menuData = [
+            {
+                id: 'm1', name: 'Artisan Iced Latte', category: 'Signature', price: 35000, 
+                desc: 'Kopi susu dengan racikan biji kopi arabica pilihan dan susu oat.',
+                img: 'https://images.unsplash.com/photo-1559525839-b184a4d698c7?auto=format&fit=crop&w=300&q=80',
+                variants: [
+                    { name: 'Pilihan Susu', options: [{ label: 'Oat Milk', price: 0, default: true }, { label: 'Almond Milk', price: 5000 }] },
+                ],
+                addons: [ { label: 'Extra Shot Espresso', price: 8000 }, { label: 'Caramel Syrup', price: 5000 } ]
+            },
+            {
+                id: 'm2', name: 'Matcha Espresso Fusion', category: 'Signature', price: 38000, 
+                desc: 'Lapisan matcha premium Kyoto dengan espresso shot yang pekat.',
+                img: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=300&q=80',
+                variants: [ { name: 'Suhu', options: [{ label: 'Dingin', price: 0, default: true }, { label: 'Panas', price: 0 }] } ],
+                addons: []
+            },
+            {
+                id: 'm3', name: 'Truffle Mushroom Burger', category: 'Main Course', price: 65000, 
+                desc: 'Burger sapi wagyu dengan saus truffle jamur, keju swiss, disajikan dengan kentang.',
+                img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80',
+                variants: [],
+                addons: [ { label: 'Extra Beef Patty', price: 25000 }, { label: 'Upgrade Curly Fries', price: 10000 } ]
+            },
+            {
+                id: 'm4', name: 'Salmon Teriyaki Bowl', category: 'Main Course', price: 72000, 
+                desc: 'Nasi pulen dengan potongan salmon panggang saus teriyaki dan edamame.',
+                img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=300&q=80',
+                variants: [],
+                addons: [ { label: 'Tambah Telur Onsen', price: 8000 } ]
+            },
+            {
+                id: 'm5', name: 'Basque Cheesecake', category: 'Dessert', price: 45000, 
+                desc: 'Cheesecake panggang ala Spanyol dengan tekstur lembut dan bagian luar karamelisasi.',
+                img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=300&q=80',
+                variants: [],
+                addons: [ { label: 'Saus Berry', price: 5000 } ]
+            },
+            {
+                id: 'm6', name: 'Classic Tiramisu', category: 'Dessert', price: 40000, 
+                desc: 'Lapisan ladyfinger dengan kopi, krim mascarpone, dan taburan kakao.',
+                img: 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=300&q=80',
+                variants: [],
+                addons: []
+            }
+        ];
+
+        /* --- STATE --- */
+        let cart = [];
+        let currentCustomizerItem = null;
+        let customizerQty = 1;
+        let customizerSelections = { variants: {}, addons: [] };
+        let orderType = 'dine-in';
+
+        /* --- UTILS --- */
+        const formatRp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+
+        /* --- SCROLL REVEAL (Intersection Observer) --- */
+        const observeElements = () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: unobserve if you only want it to animate once
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        };
+
+        /* --- RENDER HORIZONTAL MENU CARDS --- */
+        const renderMenu = (category = 'Semua') => {
+            const container = document.getElementById('menu-list');
+            container.innerHTML = '';
+            
+            const filtered = category === 'Semua' ? menuData : menuData.filter(i => i.category === category);
+            
+            filtered.forEach((item, index) => {
+                const delay = index * 100; // staggered animation delay
+                const el = document.createElement('div');
+                el.className = `flex flex-row bg-white rounded-3xl p-3 gap-4 border border-zinc-100 shadow-sm hover:shadow-md transition-shadow reveal group`;
+                el.style.transitionDelay = `${delay}ms`;
+                
+                el.innerHTML = `
+                    <div class="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-2xl overflow-hidden relative">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="flex flex-col flex-1 py-1 pr-2">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base-900 text-lg leading-tight">${item.name}</h3>
+                        </div>
+                        <p class="text-zinc-500 text-xs md:text-sm line-clamp-2 mb-3">${item.desc}</p>
+                        
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="font-extrabold text-brand-600">${formatRp(item.price)}</span>
+                            <button onclick="openCustomizer('${item.id}')" class="w-10 h-10 bg-base-900 hover:bg-black text-white rounded-xl flex items-center justify-center active:scale-90 transition-transform shadow-md">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            // Re-observe new elements
+            setTimeout(observeElements, 50);
+        };
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-base-900', 'text-white', 'shadow-md');
+                    b.classList.add('bg-white', 'text-zinc-600');
+                });
+                const target = e.currentTarget;
+                target.classList.remove('bg-white', 'text-zinc-600');
+                target.classList.add('bg-base-900', 'text-white', 'shadow-md');
+                renderMenu(target.dataset.category);
+            });
+        });
+
+        /* --- STREAMING_CHUNK:Customizer & Cart Logic --- */
+        const overlay = document.getElementById('modal-overlay');
+        const customizerModal = document.getElementById('customizer-modal');
+
+        const openCustomizer = (id) => {
+            const item = menuData.find(i => i.id === id);
+            if(!item) return;
+
+            currentCustomizerItem = item;
+            customizerQty = 1;
+            customizerSelections = { variants: {}, addons: [] };
+
+            document.getElementById('modal-product-img').src = item.img;
+            document.getElementById('modal-product-name').innerText = item.name;
+            document.getElementById('modal-product-desc').innerText = item.desc;
+            document.getElementById('modal-qty').innerText = customizerQty;
+            document.getElementById('modal-note').value = '';
+
+            // Render Variants
+            const vContainer = document.getElementById('modal-variants-container');
+            vContainer.innerHTML = '';
+            item.variants.forEach((v, vIdx) => {
+                let html = `<div class="mt-4"><h4 class="font-bold text-sm text-base-900 mb-2">${v.name}</h4><div class="grid grid-cols-2 gap-2">`;
+                v.options.forEach((opt, oIdx) => {
+                    if(opt.default) customizerSelections.variants[v.name] = opt;
+                    const checked = opt.default ? 'checked' : '';
+                    html += `
+                        <label class="flex items-center gap-2 p-3 border border-zinc-200 rounded-xl cursor-pointer hover:bg-zinc-50 transition-colors has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                            <input type="radio" name="var_${vIdx}" value="${oIdx}" ${checked} class="w-4 h-4 text-brand-600 focus:ring-brand-500 accent-brand-600" onchange="updateVariant('${v.name}', ${oIdx})">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold text-base-900">${opt.label}</span>
+                                ${opt.price > 0 ? `<span class="text-xs text-brand-600">+${formatRp(opt.price)}</span>` : ''}
+                            </div>
+                        </label>
+                    `;
+                });
+                vContainer.innerHTML += html + `</div></div>`;
+            });
+
+            // Render Addons
+            const aContainer = document.getElementById('modal-addons-container');
+            aContainer.innerHTML = '';
+            if(item.addons.length > 0) {
+                let html = `<h4 class="font-bold text-sm text-base-900 mb-2">Tambahan</h4><div class="space-y-2">`;
+                item.addons.forEach((a, aIdx) => {
+                    html += `
+                        <label class="flex items-center justify-between p-3 border border-zinc-200 rounded-xl cursor-pointer hover:bg-zinc-50 transition-colors has-[:checked]:border-brand-500">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 accent-brand-600" onchange="updateAddon(this, ${aIdx})">
+                                <span class="text-sm font-semibold text-base-900">${a.label}</span>
+                            </div>
+                            <span class="text-sm font-bold text-zinc-500">+${formatRp(a.price)}</span>
+                        </label>
+                    `;
+                });
+                aContainer.innerHTML = html + `</div>`;
+            }
+
+            calcPrice();
+            
+            // Show modal
+            overlay.classList.add('active');
+            customizerModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeCustomizer = () => {
+            overlay.classList.remove('active');
+            customizerModal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        const updateQty = (change) => {
+            if (customizerQty + change > 0) {
+                customizerQty += change;
+                document.getElementById('modal-qty').innerText = customizerQty;
+                calcPrice();
+            }
+        };
+
+        const updateVariant = (vName, oIdx) => {
+            const vObj = currentCustomizerItem.variants.find(v => v.name === vName);
+            customizerSelections.variants[vName] = vObj.options[oIdx];
+            calcPrice();
+        };
+
+        const updateAddon = (el, idx) => {
+            const aObj = currentCustomizerItem.addons[idx];
+            if(el.checked) customizerSelections.addons.push(aObj);
+            else customizerSelections.addons = customizerSelections.addons.filter(a => a.label !== aObj.label);
+            calcPrice();
+        };
+
+        const calcPrice = () => {
+            let base = currentCustomizerItem.price;
+            Object.values(customizerSelections.variants).forEach(v => base += v.price);
+            customizerSelections.addons.forEach(a => base += a.price);
+            const total = base * customizerQty;
+            document.getElementById('modal-total-price').innerText = formatRp(total);
+            return total;
+        };
+
+        const addToCartProcess = () => {
+            const unitPrice = calcPrice() / customizerQty;
+            cart.push({
+                product: currentCustomizerItem,
+                qty: customizerQty,
+                variants: {...customizerSelections.variants},
+                addons: [...customizerSelections.addons],
+                note: document.getElementById('modal-note').value.trim(),
+                unitPrice,
+                totalPrice: unitPrice * customizerQty
+            });
+            closeCustomizer();
+            updateCartBtn();
+            
+            // Auto open drawer to show feedback
+            setTimeout(() => toggleDrawer(true), 300);
+        };
+
+        /* --- DRAWER & CHECKOUT LOGIC --- */
+        const drawerOverlay = document.getElementById('drawer-overlay');
+        const drawer = document.getElementById('cart-drawer');
+
+        const toggleDrawer = (show) => {
+            if(show) {
+                renderCart();
+                drawerOverlay.classList.add('active');
+                drawer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawerOverlay.classList.remove('active');
+                drawer.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        const updateCartBtn = () => {
+            const btn = document.getElementById('floating-cart-btn');
+            if(cart.length > 0) {
+                btn.classList.remove('translate-y-20', 'opacity-0');
+                document.getElementById('cart-badge').innerText = cart.reduce((acc, i) => acc + i.qty, 0);
+            } else {
+                btn.classList.add('translate-y-20', 'opacity-0');
+            }
+        };
+
+        const renderCart = () => {
+            const container = document.getElementById('checkout-items-container');
+            const formContainer = document.getElementById('checkout-form');
+            const btnSubmit = document.getElementById('btn-submit-order');
+            
+            if(cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-zinc-400">
+                        <i class="fa-solid fa-basket-shopping text-4xl mb-3"></i>
+                        <p>Keranjang kosong</p>
+                    </div>`;
+                formContainer.classList.add('hidden');
+                document.getElementById('checkout-grand-total').innerText = 'Rp 0';
+                btnSubmit.disabled = true;
+                return;
+            }
+
+            formContainer.classList.remove('hidden');
+            btnSubmit.disabled = false;
+            container.innerHTML = '';
+            let grandTotal = 0;
+
+            cart.forEach((item, idx) => {
+                grandTotal += item.totalPrice;
+                let details = [];
+                Object.values(item.variants).forEach(v => details.push(v.label));
+                item.addons.forEach(a => details.push(a.label));
+                const detailStr = details.length ? `<p class="text-[11px] text-zinc-500 mt-1">${details.join(', ')}</p>` : '';
+                const noteStr = item.note ? `<p class="text-[11px] italic text-brand-600 mt-1">Catatan: ${item.note}</p>` : '';
+
+                container.innerHTML += `
+                    <div class="flex gap-4 bg-white p-4 rounded-2xl border border-zinc-100 shadow-sm relative reveal active">
+                        <img src="${item.product.img}" class="w-16 h-16 rounded-xl object-cover">
+                        <div class="flex-1">
+                            <h5 class="font-bold text-base-900 text-sm pr-6 leading-tight">${item.product.name}</h5>
+                            ${detailStr}
+                            ${noteStr}
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="font-extrabold text-brand-600 text-sm">${item.qty}x ${formatRp(item.unitPrice)}</span>
+                            </div>
+                        </div>
+                        <button onclick="removeCart(${idx})" class="absolute top-4 right-4 text-zinc-300 hover:text-red-500 transition-colors active:scale-90">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            document.getElementById('checkout-grand-total').innerText = formatRp(grandTotal);
+        };
+
+        const removeCart = (idx) => {
+            cart.splice(idx, 1);
+            updateCartBtn();
+            renderCart();
+            if(cart.length === 0) toggleDrawer(false);
+        };
+
+        const setOrderType = (type) => {
+            orderType = type;
+            const diBtn = document.getElementById('btn-type-dinein');
+            const delBtn = document.getElementById('btn-type-delivery');
+            const diInput = document.getElementById('input-dinein');
+            const delInput = document.getElementById('input-delivery');
+
+            if (type === 'dine-in') {
+                diBtn.className = 'flex-1 py-2.5 text-sm font-bold rounded-xl bg-white shadow-sm text-base-900 transition-all active:scale-95';
+                delBtn.className = 'flex-1 py-2.5 text-sm font-bold rounded-xl text-zinc-500 hover:text-base-900 transition-all active:scale-95 bg-transparent';
+                
+                delInput.classList.remove('active');
+                setTimeout(() => { delInput.classList.add('hidden'); diInput.classList.remove('hidden'); 
+                    setTimeout(() => diInput.classList.add('active'), 50); 
+                }, 300);
+            } else {
+                delBtn.className = 'flex-1 py-2.5 text-sm font-bold rounded-xl bg-white shadow-sm text-base-900 transition-all active:scale-95';
+                diBtn.className = 'flex-1 py-2.5 text-sm font-bold rounded-xl text-zinc-500 hover:text-base-900 transition-all active:scale-95 bg-transparent';
+                
+                diInput.classList.remove('active');
+                setTimeout(() => { diInput.classList.add('hidden'); delInput.classList.remove('hidden'); 
+                    setTimeout(() => delInput.classList.add('active'), 50); 
+                }, 300);
+            }
+        };
+
+        const checkoutToWhatsApp = () => {
+            const name = document.getElementById('input-customer-name').value.trim();
+            if(!name) { document.getElementById('input-customer-name').focus(); return; }
+
+            let locStr = '';
+            if(orderType === 'dine-in') {
+                const tbl = document.getElementById('input-table').value.trim();
+                locStr = tbl ? `Dine-in (Meja: ${tbl})` : 'Takeaway';
+            } else {
+                const add = document.getElementById('input-address').value.trim();
+                if(!add) { document.getElementById('input-address').focus(); return; }
+                locStr = `Delivery\nAlamat: ${add}`;
+            }
+
+            let grandTotal = 0;
+            let list = '';
+            cart.forEach((i, idx) => {
+                grandTotal += i.totalPrice;
+                let details = [];
+                Object.values(i.variants).forEach(v => details.push(v.label));
+                i.addons.forEach(a => details.push(a.label));
+                
+                let dStr = details.length ? ` (${details.join(', ')})` : '';
+                let nStr = i.note ? `\n   Note: ${i.note}` : '';
+                list += `${idx+1}. ${i.product.name}${dStr}\n   ${i.qty}x ${formatRp(i.unitPrice)} = ${formatRp(i.totalPrice)}${nStr}\n\n`;
+            });
+
+            const msg = `Halo Bite & Brew! ☕\nPesanan baru:\n\n*Pemesan:* ${name}\n*Tipe:* ${locStr}\n\n*Rincian:*\n${list}*TOTAL: ${formatRp(grandTotal)}*\n\nMohon diproses ya, terima kasih!`;
+            
+            const waNumber = "628111222333";
+            window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+            observeElements();
+        });
+    </script>
+</body>
+</html>

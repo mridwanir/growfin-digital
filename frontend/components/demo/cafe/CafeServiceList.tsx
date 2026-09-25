@@ -2,45 +2,57 @@ import { useState } from 'react';
 import { useCafeDemo } from './CafeDemoContext';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { MenuItem } from '@/lib/types';
+import { Plus } from 'lucide-react';
+
+const CAFE_MENU_IMAGES = [
+  '/image/cafe/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
+  '/image/cafe/haydn-golden-EVoICOUotkg-unsplash.jpg',
+  '/image/cafe/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg',
+  '/image/cafe/chad-montano-MqT0asuoIcU-unsplash.jpg',
+  '/image/cafe/anna-tukhfatullina-food-photographer-stylist-Mzy-OjtCI70-unsplash.jpg',
+  '/image/cafe/mahesa-tyo-X0HP9m0euz0-unsplash.jpg'
+];
 
 function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const { setSelectedProductForCustomization, setIsCustomizationModalOpen } = useCafeDemo();
   const delay = (index % 4) * 100;
   const { ref, isVisible } = useScrollReveal(0.1, delay);
 
+  const formatRupiah = (val: string | number) => {
+    return typeof val === 'number' ? `Rp ${val.toLocaleString('id-ID')}` : val;
+  };
+
+  const menuImageUrl = CAFE_MENU_IMAGES[index % CAFE_MENU_IMAGES.length];
+
   return (
-    <div 
+    <div
       ref={ref}
-      className={`p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-xl hover:border-slate-200 transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+      className={`bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
     >
-      <div className="flex gap-4 flex-1">
-        {item.imageUrl && (
-          <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-2xl overflow-hidden bg-slate-100 relative shadow-sm">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-            {item.tag && (
-              <span className={`absolute top-0 right-0 px-2 py-0.5 rounded-bl-xl text-[9px] font-black text-white bg-brand-primary`}>
-                {item.tag}
-              </span>
-            )}
-          </div>
-        )}
-        <div className="flex-1">
-          <h4 className="text-lg font-bold mb-1 text-slate-800 leading-tight">{item.name}</h4>
-          <p className="text-xs text-slate-500 leading-relaxed max-w-[280px] font-medium">{item.desc}</p>
+      <div className="h-48 overflow-hidden relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={menuImageUrl} alt={item.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-lg text-xs font-semibold text-stone-900 shadow-sm">
+          {item.category}
         </div>
       </div>
-      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 mt-2 sm:mt-0">
-        <span className="text-lg font-black text-slate-900 block">{item.price}</span>
-        <button 
-          onClick={() => {
-            setSelectedProductForCustomization(item);
-            setIsCustomizationModalOpen(true);
-          }}
-          className={`text-xs font-bold px-4 py-2 rounded-full transition-all active:scale-95 shadow-sm hover:shadow-md bg-brand-primary hover:bg-brand-hover text-white`}
-        >
-          Pesan +
-        </button>
+      <div className="p-5 flex flex-col flex-1">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-bold text-lg text-stone-900 leading-tight">{item.name}</h3>
+        </div>
+        <p className="text-stone-500 text-sm mb-4 line-clamp-2">{item.desc}</p>
+        <div className="mt-auto flex items-center justify-between">
+          <span className="font-bold text-brand-primary">{formatRupiah(item.price)}</span>
+          <button
+            onClick={() => {
+              setSelectedProductForCustomization(item);
+              setIsCustomizationModalOpen(true);
+            }}
+            className="bg-stone-900 hover:bg-black text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -58,42 +70,41 @@ export function CafeServiceList() {
     : client.menu.filter(p => p.category === activeCategory);
 
   return (
-    <section id="menu" className="py-20 bg-slate-50/50 scroll-mt-20">
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
-        <div 
-          ref={headerRef}
-          className={`text-center mb-12 transition-all duration-700 transform ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-        >
-          <h2 className="text-3xl sm:text-4xl font-black mb-4 text-slate-900">Menu <span className="text-brand-primary">Kami</span></h2>
-          <p className="text-slate-500 font-medium">Dibuat dengan bahan premium dan penuh cinta.</p>
+    <section id="menu" className="py-16 max-w-7xl mx-auto px-4 min-h-screen scroll-mt-20">
+      <div
+        ref={headerRef}
+        className={`flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 transition-all duration-700 transform ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      >
+        <div>
+          <h2 className="text-3xl font-bold text-stone-900 mb-2">Eksplorasi Menu</h2>
+          <p className="text-stone-500">Pilih hidangan favoritmu dan sesuaikan selera</p>
         </div>
 
-        {/* Categories (Horizontal Scroll Pills) */}
-        <div className="flex gap-2 mb-10 overflow-x-auto pb-4 scrollbar-none px-1 -mx-1 snap-x">
+        {/* Category Filter Pills */}
+        <div className="flex overflow-x-auto scrollbar-none gap-2 pb-2">
           {categories.map(c => {
             const isActive = activeCategory === c;
             return (
               <button
                 key={c}
                 onClick={() => setActiveCategory(c as string)}
-                className={`snap-start shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
-                  isActive
-                    ? `bg-brand-primary text-white shadow-md scale-105`
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:scale-105 shadow-sm'
-                }`}
+                className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-colors ${isActive
+                    ? `bg-stone-900 text-white`
+                    : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-100'
+                  }`}
               >
                 {c}
               </button>
             );
           })}
         </div>
+      </div>
 
-        {/* Menu Grid */}
-        <div className="grid lg:grid-cols-2 gap-6">
-          {filteredProducts.map((p, idx) => (
-            <MenuCard key={p.id} item={p} index={idx} />
-          ))}
-        </div>
+      {/* Menu Grid Container */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredProducts.map((p, idx) => (
+          <MenuCard key={p.id} item={p} index={idx} />
+        ))}
       </div>
     </section>
   );

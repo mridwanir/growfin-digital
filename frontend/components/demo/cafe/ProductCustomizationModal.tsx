@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useCafeDemo } from './CafeDemoContext';
 
+const CAFE_MENU_IMAGES = [
+  '/image/cafe/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
+  '/image/cafe/haydn-golden-EVoICOUotkg-unsplash.jpg',
+  '/image/cafe/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg',
+  '/image/cafe/chad-montano-MqT0asuoIcU-unsplash.jpg',
+  '/image/cafe/anna-tukhfatullina-food-photographer-stylist-Mzy-OjtCI70-unsplash.jpg',
+  '/image/cafe/mahesa-tyo-X0HP9m0euz0-unsplash.jpg'
+];
+
 export function ProductCustomizationModal() {
-  const { isCustomizationModalOpen, 
-    setIsCustomizationModalOpen, 
+  const { isCustomizationModalOpen,
+    setIsCustomizationModalOpen,
     selectedProductForCustomization: product,
     addToCart } = useCafeDemo();
 
@@ -36,7 +45,7 @@ export function ProductCustomizationModal() {
 
   const calculateTotal = () => {
     let base = getBasePriceNumber(product.price);
-    
+
     // add variant extra prices
     Object.values(selectedVariants).forEach(opt => {
       const match = opt.match(/\(\+Rp\s*([\d.]+)\)/);
@@ -70,19 +79,17 @@ export function ProductCustomizationModal() {
     setIsCustomizationModalOpen(false);
   };
 
+  const menuImageUrl = CAFE_MENU_IMAGES[(product.id || 0) % CAFE_MENU_IMAGES.length];
+
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
       <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
+
         {/* Header Image */}
         <div className="relative h-48 bg-slate-100 shrink-0">
-          {product.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
-          ) : (
-            <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-primary to-brand-dark opacity-50`} />
-          )}
-          <button 
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={menuImageUrl} alt={product.name} className="w-full h-full object-cover" />
+          <button
             onClick={() => setIsCustomizationModalOpen(false)}
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors"
           >
@@ -109,11 +116,10 @@ export function ProductCustomizationModal() {
                         <button
                           key={opt}
                           onClick={() => setSelectedVariants(prev => ({ ...prev, [variant.name]: opt }))}
-                          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
-                            isSelected 
-                              ? `bg-brand-primary text-white border-transparent shadow-md`
-                              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-                          }`}
+                          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${isSelected
+                            ? `bg-brand-primary text-white border-transparent shadow-md`
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                            }`}
                         >
                           {opt}
                         </button>
@@ -134,8 +140,8 @@ export function ProductCustomizationModal() {
                 return (
                   <label key={addon.name} className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${isSelected ? `border-2 text-brand-primary bg-slate-50` : 'border-slate-200 hover:bg-slate-50'}`}>
                     <div className="flex items-center gap-3">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={isSelected}
                         onChange={(e) => {
                           if (e.target.checked) setSelectedAddons(prev => [...prev, addon.name]);
@@ -155,7 +161,7 @@ export function ProductCustomizationModal() {
           {/* Notes */}
           <div className="mb-6">
             <p className="font-bold text-slate-900 mb-2">Catatan Tambahan (Opsional)</p>
-            <textarea 
+            <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
               placeholder="Contoh: Jangan pakai daun bawang, minta pedas..."
@@ -163,7 +169,7 @@ export function ProductCustomizationModal() {
               rows={2}
             />
           </div>
-          
+
         </div>
 
         {/* Footer Actions */}
@@ -173,8 +179,8 @@ export function ProductCustomizationModal() {
             <span className="w-4 text-center font-black">{quantity}</span>
             <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center font-black text-xl text-slate-600 bg-white rounded-lg shadow-sm hover:text-slate-900">+</button>
           </div>
-          
-          <button 
+
+          <button
             onClick={handleAddToCart}
             className={`flex-1 flex items-center justify-between px-5 py-3 rounded-xl font-bold text-white transition-all active:scale-95 shadow-md bg-brand-primary hover:bg-brand-hover`}
           >

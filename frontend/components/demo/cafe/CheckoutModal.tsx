@@ -2,13 +2,22 @@ import { useState } from 'react';
 import { useCafeDemo } from './CafeDemoContext';
 import { Trash2 } from 'lucide-react';
 
+const CAFE_MENU_IMAGES = [
+  '/image/cafe/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
+  '/image/cafe/haydn-golden-EVoICOUotkg-unsplash.jpg',
+  '/image/cafe/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg',
+  '/image/cafe/chad-montano-MqT0asuoIcU-unsplash.jpg',
+  '/image/cafe/anna-tukhfatullina-food-photographer-stylist-Mzy-OjtCI70-unsplash.jpg',
+  '/image/cafe/mahesa-tyo-X0HP9m0euz0-unsplash.jpg'
+];
+
 export function CheckoutModal() {
-  const { client, 
-    isCartModalOpen, 
-    setIsCartModalOpen, 
-    cart, 
-    updateCartItemQuantity, 
-    removeFromCart, 
+  const { client,
+    isCartModalOpen,
+    setIsCartModalOpen,
+    cart,
+    updateCartItemQuantity,
+    removeFromCart,
     cartTotal } = useCafeDemo();
 
   // Contextual Form State
@@ -21,26 +30,30 @@ export function CheckoutModal() {
 
   if (!isCartModalOpen) return null;
 
+  const getMenuImageUrl = (id: number) => {
+    return CAFE_MENU_IMAGES[(id || 0) % CAFE_MENU_IMAGES.length];
+  };
+
   const generateWhatsAppUrl = () => {
     let message = `Halo ${client.name}, saya ingin memesan:\n\n`;
-    
+
     // Items
     cart.forEach((item, idx) => {
       message += `${idx + 1}. *${item.product.name}* (x${item.quantity})\n`;
-      
+
       const variantEntries = Object.entries(item.selectedVariants);
       if (variantEntries.length > 0) {
-        message += `   Variasi: ${variantEntries.map(([k,v]) => `${k}: ${v}`).join(', ')}\n`;
+        message += `   Variasi: ${variantEntries.map(([k, v]) => `${k}: ${v}`).join(', ')}\n`;
       }
-      
+
       if (item.selectedAddons.length > 0) {
         message += `   Tambahan: ${item.selectedAddons.join(', ')}\n`;
       }
-      
+
       if (item.notes) {
         message += `   Catatan: _${item.notes}_\n`;
       }
-      
+
       message += `   Harga: Rp ${item.totalPrice.toLocaleString('id-ID')}\n\n`;
     });
 
@@ -70,14 +83,14 @@ export function CheckoutModal() {
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
       <div className="w-full max-w-lg bg-slate-50 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
+
         {/* Header */}
         <div className="p-5 bg-white border-b border-slate-100 flex items-center justify-between shrink-0">
           <div>
             <h2 className="text-xl font-black text-slate-900">Pesanan Anda</h2>
             <p className="text-xs font-bold text-slate-400 mt-0.5">Keranjang Belanja</p>
           </div>
-          <button 
+          <button
             onClick={() => setIsCartModalOpen(false)}
             className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full transition-colors font-bold"
           >
@@ -87,7 +100,7 @@ export function CheckoutModal() {
 
         {/* Content */}
         <div className="p-5 overflow-y-auto flex-1 space-y-6">
-          
+
           {/* Empty State */}
           {cart.length === 0 ? (
             <div className="text-center py-10 opacity-50">
@@ -103,15 +116,13 @@ export function CheckoutModal() {
                     <button onClick={() => removeFromCart(item.id)} className="absolute -top-2 -right-2 w-7 h-7 bg-white border border-rose-100 text-rose-500 rounded-full flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
-                    {item.product.imageUrl && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.product.imageUrl} alt={item.product.name} className="w-16 h-16 rounded-xl object-cover bg-slate-100 shrink-0" />
-                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={getMenuImageUrl(item.product.id)} alt={item.product.name} className="w-16 h-16 rounded-xl object-cover bg-slate-100 shrink-0" />
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-slate-900 mb-1">{item.product.name}</h4>
-                      
+
                       <div className="text-[10px] text-slate-500 mb-2 space-y-0.5">
-                        {Object.entries(item.selectedVariants).map(([k,v]) => (
+                        {Object.entries(item.selectedVariants).map(([k, v]) => (
                           <div key={k}><span className="font-bold">{k}:</span> {v}</div>
                         ))}
                         {item.selectedAddons.length > 0 && (
@@ -138,7 +149,7 @@ export function CheckoutModal() {
               {/* Order Form Contextual */}
               <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
                 <h3 className="font-black text-slate-900 border-b border-slate-100 pb-2">Detail Pemesan</h3>
-                
+
                 <div>
                   <label className="block text-xs font-bold text-slate-500 mb-1">Nama Pemesan</label>
                   <input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-amber-400" placeholder="Contoh: Budi" />
@@ -194,7 +205,7 @@ export function CheckoutModal() {
               <span className="font-bold text-slate-500">Total Harga</span>
               <span className="font-black text-slate-900 text-lg">Rp {cartTotal.toLocaleString('id-ID')}</span>
             </div>
-            <a 
+            <a
               href={generateWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"

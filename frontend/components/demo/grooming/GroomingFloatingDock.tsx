@@ -1,6 +1,7 @@
 'use client';
 
 import { useGroomingDemo } from './GroomingDemoContext';
+import { Calendar, Scissors, MapPin } from 'lucide-react';
 
 export function GroomingFloatingDock() {
   const { client, setIsBookingModalOpen, selectedServices } = useGroomingDemo();
@@ -18,18 +19,18 @@ export function GroomingFloatingDock() {
           onClick={() => setIsBookingModalOpen(true)} 
           className="flex-1 flex flex-col items-center justify-center py-1 gap-1 text-slate-500 hover:text-brand-primary transition-colors bg-brand-light/50 rounded-xl"
         >
-          <span className="text-xl">🗓️</span>
-          <span className="text-[10px] font-bold text-brand-primary">Cek Antrean</span>
+          <Calendar className="w-5 h-5" />
+          <span className="text-[10px] font-bold text-brand-primary mt-1">Cek Antrean</span>
         </button>
 
         <a href="#layanan" className="flex-1 flex flex-col items-center justify-center py-1 gap-1 text-slate-500 hover:text-brand-primary transition-colors">
-          <span className="text-xl">✂️</span>
-          <span className="text-[10px] font-bold">Daftar Harga</span>
+          <Scissors className="w-5 h-5" />
+          <span className="text-[10px] font-bold mt-1">Daftar Harga</span>
         </a>
 
         <a href={client.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center py-1 gap-1 text-slate-500 hover:text-blue-500 transition-colors">
-          <span className="text-xl">📍</span>
-          <span className="text-[10px] font-bold">Navigasi Lokasi</span>
+          <MapPin className="w-5 h-5" />
+          <span className="text-[10px] font-bold mt-1">Navigasi Lokasi</span>
         </a>
 
       </div>

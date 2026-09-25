@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRetailDemo, FulfillmentMode } from './RetailDemoContext';
+import { getRetailImageUrl } from './RetailProductList';
 
 export function RetailCheckoutModal() {
   const { 
@@ -87,8 +88,7 @@ export function RetailCheckoutModal() {
         <div className="flex-1 overflow-y-auto p-5">
           {cart.length === 0 ? (
             <div className="text-center py-10">
-              <span className="text-4xl mb-4 block">🛒</span>
-              <p className="font-bold text-slate-500 mb-2">Keranjang masih kosong</p>
+              <p className="font-bold text-slate-500 mb-2 mt-4">Keranjang masih kosong</p>
               <button 
                 onClick={() => setIsCartModalOpen(false)}
                 className="text-brand-primary font-bold text-sm"
@@ -104,7 +104,7 @@ export function RetailCheckoutModal() {
                 {cart.map(item => (
                   <div key={item.id} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex gap-4">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.product.imageUrl} alt={item.product.name} className="w-16 h-16 rounded-xl object-cover bg-slate-100 shrink-0" />
+                    <img src={getRetailImageUrl(item.product.id)} alt={item.product.name} className="w-16 h-16 rounded-xl object-cover bg-slate-100 shrink-0" />
                     
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-slate-900 leading-tight mb-1 truncate">{item.product.name}</h3>
@@ -199,6 +199,7 @@ export function RetailCheckoutModal() {
               onClick={handleSendWA}
               className="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black shadow-lg shadow-emerald-500/25 transition-transform active:scale-[0.98] flex items-center justify-center gap-2"
             >
+              <MessageCircle className="w-5 h-5" />
               <span>Order via WhatsApp</span>
             </button>
             <p className="text-center text-[10px] text-slate-400 mt-3 font-medium">Pembayaran dan ongkir dikonfirmasi via WA</p>

@@ -1,5 +1,5 @@
 import { useCafeDemo } from './CafeDemoContext';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Coffee } from 'lucide-react';
 
 export function CafeHeader() {
   const { client, cartItemCount, setIsCartModalOpen } = useCafeDemo();
@@ -12,8 +12,8 @@ export function CafeHeader() {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md transform group-hover:scale-105 transition-all bg-gradient-to-br from-brand-primary to-brand-dark text-white`}>
-            {client.iconEmoji || '☕'}
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md transform group-hover:scale-105 transition-all bg-gradient-to-br from-brand-primary to-brand-dark text-white`}>
+            <Coffee className="w-5 h-5" />
           </div>
           <span className="text-xl font-black tracking-tight text-slate-900 group-hover:text-slate-700 transition-colors">
             {client.name}

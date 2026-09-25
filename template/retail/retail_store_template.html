@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumière | Modern Retail Template</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .modal-active { overflow: hidden; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf8f6',
+                            100: '#f2e8e5',
+                            500: '#d97757',
+                            600: '#c25a3a',
+                            900: '#4a261d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-800 antialiased relative">
+
+    <nav class="fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <span class="font-bold text-2xl tracking-tighter text-brand-900">LUMIÈRE</span>
+                </div>
+                
+                <!-- Center Nav -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-brand-600 font-medium transition-colors">Beranda</a>
+                    <a href="#lookbook" class="text-gray-600 hover:text-brand-600 font-medium transition-colors">Lookbook</a>
+                    <a href="#koleksi" class="text-gray-600 hover:text-brand-600 font-medium transition-colors">Koleksi</a>
+                    <a href="#ulasan" class="text-gray-600 hover:text-brand-600 font-medium transition-colors">Ulasan</a>
+                </div>
+
+                <!-- Right Nav (Cart) -->
+                <div class="flex items-center">
+                    <button onclick="toggleCart()" class="relative p-2 text-gray-600 hover:text-brand-600 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span id="cart-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-brand-600 rounded-full hidden">
+                            0
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="pt-20 relative bg-gray-50">
+        <div class="relative h-[70vh] w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" alt="Hero Fashion" class="absolute inset-0 w-full h-full object-cover object-top" />
+            <div class="absolute inset-0 bg-black/40"></div>
+            
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-start">
+                <span class="inline-block py-1 px-3 rounded-full bg-brand-500 text-white text-sm font-semibold tracking-wide mb-4">FLASH SALE - UP TO 50%</span>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight max-w-2xl">
+                    Temukan Gaya <br/> Eksklusif Musim Ini
+                </h1>
+                <p class="text-lg text-gray-200 mb-8 max-w-xl">
+                    Koleksi premium terbaru dengan bahan berkualitas tinggi. Tingkatkan kepercayaan dirimu dengan sentuhan elegan dari Lumière.
+                </p>
+                <a href="#koleksi" class="bg-white text-brand-900 px-8 py-4 rounded-full font-bold hover:bg-brand-50 transition-colors shadow-lg">
+                    Belanja Sekarang
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="lookbook" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Lookbook Inspirasi</h2>
+                <p class="text-gray-500">Padu padan gaya terbaik untuk setiap momen berhargamu.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
+                <div class="relative rounded-2xl overflow-hidden group md:col-span-2 md:row-span-2">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Trend 1">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-xl font-semibold">Casual Elegance</p>
+                    </div>
+                </div>
+                <div class="relative rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1550614000-4b9560f61208?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Trend 2">
+                </div>
+                <div class="relative rounded-2xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1434389678232-06b2a413f12a?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Trend 3">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="koleksi" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Koleksi Terbaru</h2>
+                    <p class="text-gray-500">Pilihan produk dengan kualitas terbaik.</p>
+                </div>
+                <a href="#" class="hidden md:block text-brand-600 font-medium hover:underline">Lihat Semua</a>
+            </div>
+
+            <!-- Product Grid Container (Injected via JS) -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Products will be rendered here -->
+            </div>
+        </div>
+    </section>
+
+    <section id="ulasan" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Kata Mereka</h2>
+                <p class="text-gray-500">Ulasan dari pelanggan setia kami.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review Card -->
+                <div class="bg-gray-50 p-8 rounded-3xl">
+                    <div class="flex text-yellow-400 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-700 mb-6 italic">"Bahan kemejanya sangat adem dan jahitannya rapi. Pengiriman juga super cepat. Sangat direkomendasikan!"</p>
+                    <div class="flex items-center">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <p class="font-semibold text-gray-900">Sarah M.</p>
+                            <p class="text-sm text-gray-500">Jakarta Selatan</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review Card -->
+                <div class="bg-gray-50 p-8 rounded-3xl">
+                    <div class="flex text-yellow-400 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-700 mb-6 italic">"Desain bajunya selalu up to date. Kemarin beli dress buat kondangan dan banyak yang puji bagus."</p>
+                    <div class="flex items-center">
+                        <img src="https://i.pravatar.cc/100?img=5" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <p class="font-semibold text-gray-900">Nadia K.</p>
+                            <p class="text-sm text-gray-500">Bandung</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review Card -->
+                <div class="bg-gray-50 p-8 rounded-3xl">
+                    <div class="flex text-yellow-400 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-700 mb-6 italic">"Sering belanja grosir di sini buat dijual lagi. Selalu dapat harga terbaik dan barang mulus semua."</p>
+                    <div class="flex items-center">
+                        <img src="https://i.pravatar.cc/100?img=11" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <p class="font-semibold text-gray-900">Budi Santoso</p>
+                            <p class="text-sm text-gray-500">Surabaya</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-2xl font-bold tracking-tighter mb-4">LUMIÈRE</h3>
+            <p class="text-gray-400 mb-8 max-w-md mx-auto">Solusi fashion modern dengan kualitas premium untuk gaya hidup masa kini.</p>
+            <p class="text-gray-500 text-sm">&copy; 2026 Lumière Retail. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <div id="quick-view-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeQuickView()"></div>
+        
+        <!-- Modal Content -->
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="relative bg-white rounded-3xl overflow-hidden text-left shadow-2xl transform transition-all sm:my-8 sm:max-w-4xl w-full">
+                <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 p-2 bg-white/80 rounded-full text-gray-500 hover:text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <!-- Image Gallery -->
+                    <div class="bg-gray-100 flex flex-col h-full">
+                        <div class="relative h-80 md:h-[500px] w-full">
+                            <img id="qv-main-img" src="" alt="Product" class="absolute inset-0 w-full h-full object-cover">
+                        </div>
+                        <div id="qv-thumbnails" class="flex p-4 gap-2 overflow-x-auto hide-scrollbar bg-white">
+                            <!-- Thumbnails injected via JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="p-8 flex flex-col">
+                        <h3 id="qv-title" class="text-3xl font-bold text-gray-900 mb-2">Product Name</h3>
+                        <p id="qv-price" class="text-2xl font-semibold text-brand-600 mb-6">Rp 0</p>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Deskripsi</h4>
+                            <p id="qv-desc" class="text-gray-600 text-sm leading-relaxed">Description goes here.</p>
+                        </div>
+                        
+                        <!-- Selectors -->
+                        <div class="mb-6 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-2">Warna</h4>
+                                <div id="qv-colors" class="flex gap-2">
+                                    <!-- Colors injected via JS -->
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-2">Ukuran</h4>
+                                <div id="qv-sizes" class="flex gap-2">
+                                    <!-- Sizes injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Add to cart -->
+                        <div class="mt-auto pt-6 border-t border-gray-100">
+                            <button onclick="addToCartFromModal()" class="w-full bg-brand-600 text-white font-bold py-4 rounded-xl hover:bg-brand-900 transition-colors flex justify-center items-center gap-2 shadow-lg shadow-brand-500/30">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                Tambah ke Keranjang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-slideover" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleCart()"></div>
+        
+        <!-- Slide-over Panel -->
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out" id="cart-panel">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b border-gray-100">
+                <h2 class="text-xl font-bold text-gray-900">Keranjang Belanja</h2>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Cart Items (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6" id="cart-items-container">
+                <!-- Empty State -->
+                <div id="cart-empty" class="text-center py-10 text-gray-500">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    Keranjang masih kosong.
+                </div>
+                
+                <!-- Items list injected via JS -->
+                <div id="cart-items-list" class="space-y-4"></div>
+
+                <!-- Form Logistik -->
+                <div id="checkout-form" class="hidden mt-8 pt-6 border-t border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Informasi Pengiriman</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penerima</label>
+                            <input type="text" id="custName" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-brand-500 focus:border-brand-500" placeholder="Budi Santoso">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                            <textarea id="custAddress" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-brand-500 focus:border-brand-500" placeholder="Jl. Sudirman No. 123, RT/RW, Kec, Kota, Kode Pos"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Catatan (Opsional)</label>
+                            <input type="text" id="custNotes" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-brand-500 focus:border-brand-500" placeholder="Tinggalkan di pos satpam">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Total & CTA -->
+            <div class="p-6 border-t border-gray-100 bg-gray-50">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-600">Total Belanja</span>
+                    <span id="cart-total" class="text-2xl font-bold text-gray-900">Rp 0</span>
+                </div>
+                <button onclick="checkoutWhatsApp()" id="btn-checkout" class="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl hover:bg-[#1ebd5b] transition-colors flex justify-center items-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Checkout via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Formatter Mata Uang
+        const formatIDR = (price) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
+        };
+
+        // Data Produk Mockup
+        const products = [
+            {
+                id: 'P01',
+                name: 'Kemeja Oversized Cotton',
+                price: 250000,
+                desc: 'Kemeja oversized berbahan 100% katun premium yang sejuk dan menyerap keringat. Cocok untuk tampilan kasual sehari-hari maupun acara semi-formal. Potongan loose fit memberikan kenyamanan maksimal.',
+                images: [
+                    'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=600&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1603252109303-2751441dd157?w=600&auto=format&fit=crop'
+                ],
+                colors: ['Putih', 'Hitam', 'Sage Green'],
+                sizes: ['S', 'M', 'L', 'XL']
+            },
+            {
+                id: 'P02',
+                name: 'Pleated Midi Skirt',
+                price: 185000,
+                desc: 'Rok plisket dengan panjang midi ini memberikan siluet elegan. Dibuat dari bahan hyget super yang jatuh dan tidak mudah kusut. Pinggang full karet elastis yang nyaman.',
+                images: [
+                    'https://images.unsplash.com/photo-1583496924849-c1873138b321?w=600&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=600&auto=format&fit=crop'
+                ],
+                colors: ['Dusty Pink', 'Navy', 'Mocca'],
+                sizes: ['All Size']
+            },
+            {
+                id: 'P03',
+                name: 'Urban Denim Jacket',
+                price: 350000,
+                desc: 'Jaket denim klasik dengan sentuhan urban modern. Bahan denim tebal namun tetap lembut saat dipakai. Dilengkapi dengan kantong multifungsi di bagian dada dan samping.',
+                images: [
+                    'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1523205565295-f8e91625443b?w=600&auto=format&fit=crop'
+                ],
+                colors: ['Light Blue', 'Dark Wash'],
+                sizes: ['M', 'L', 'XL', 'XXL']
+            },
+            {
+                id: 'P04',
+                name: 'Knit Wear Cardigan',
+                price: 210000,
+                desc: 'Cardigan rajut dengan motif serat yang estetik. Cocok dipakai untuk layering atau sebagai outer musim dingin ringan. Bahan acrylic wool yang hangat dan tidak gatal.',
+                images: [
+                    'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1434389678232-06b2a413f12a?w=600&auto=format&fit=crop'
+                ],
+                colors: ['Khaki', 'Maroon', 'Black'],
+                sizes: ['S', 'M', 'L']
+            }
+        ];
+
+        // State Aplikasi
+        let cart = [];
+        let currentViewProduct = null;
+        let selectedVariant = { color: null, size: null };
+
+        // Nomor WA Toko (Ganti dengan nomor aslimu)
+        const WA_NUMBER = "6281234567890"; 
+
+        // Render Product Grid
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            products.forEach(prod => {
+                const card = `
+                    <div class="group cursor-pointer" onclick="openQuickView('${prod.id}')">
+                        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-gray-100">
+                            <img src="${prod.images[0]}" alt="${prod.name}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            
+                            <!-- Hover Action (Dekstop) -->
+                            <div class="absolute bottom-4 left-4 right-4 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                <div class="bg-white/90 backdrop-blur text-center py-3 rounded-xl font-medium text-gray-900 shadow-lg">
+                                    Quick View
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-brand-600 transition-colors">${prod.name}</h3>
+                        <p class="text-gray-500 font-medium">${formatIDR(prod.price)}</p>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // Quick View Modal Logic
+        function openQuickView(id) {
+            currentViewProduct = products.find(p => p.id === id);
+            if (!currentViewProduct) return;
+
+            // Reset selection
+            selectedVariant = { color: currentViewProduct.colors[0], size: currentViewProduct.sizes[0] };
+
+            // Populate Data
+            document.getElementById('qv-title').innerText = currentViewProduct.name;
+            document.getElementById('qv-price').innerText = formatIDR(currentViewProduct.price);
+            document.getElementById('qv-desc').innerText = currentViewProduct.desc;
+            
+            // Images
+            document.getElementById('qv-main-img').src = currentViewProduct.images[0];
+            const thumbContainer = document.getElementById('qv-thumbnails');
+            thumbContainer.innerHTML = '';
+            currentViewProduct.images.forEach((img, idx) => {
+                thumbContainer.innerHTML += `
+                    <img src="${img}" class="w-16 h-16 rounded-lg object-cover cursor-pointer border-2 ${idx === 0 ? 'border-brand-600' : 'border-transparent'} hover:border-brand-500 transition-all" onclick="changeMainImg(this, '${img}')">
+                `;
+            });
+
+            renderVariants();
+
+            // Show Modal
+            const modal = document.getElementById('quick-view-modal');
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-active');
+            
+            // Trigger animation
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quick-view-modal');
+            modal.classList.add('opacity-0');
+            document.body.classList.remove('modal-active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function changeMainImg(element, src) {
+            document.getElementById('qv-main-img').src = src;
+            // Update active thumbnail border
+            const thumbs = document.getElementById('qv-thumbnails').children;
+            for(let t of thumbs) { t.classList.remove('border-brand-600'); t.classList.add('border-transparent'); }
+            element.classList.remove('border-transparent');
+            element.classList.add('border-brand-600');
+        }
+
+        function renderVariants() {
+            // Colors
+            const colorContainer = document.getElementById('qv-colors');
+            colorContainer.innerHTML = '';
+            currentViewProduct.colors.forEach(color => {
+                const isActive = selectedVariant.color === color;
+                colorContainer.innerHTML += `
+                    <button onclick="selectVariant('color', '${color}')" class="px-4 py-2 border rounded-lg text-sm font-medium transition-colors ${isActive ? 'border-brand-600 bg-brand-50 text-brand-900' : 'border-gray-200 text-gray-600 hover:border-gray-300'}">
+                        ${color}
+                    </button>
+                `;
+            });
+
+            // Sizes
+            const sizeContainer = document.getElementById('qv-sizes');
+            sizeContainer.innerHTML = '';
+            currentViewProduct.sizes.forEach(size => {
+                const isActive = selectedVariant.size === size;
+                sizeContainer.innerHTML += `
+                    <button onclick="selectVariant('size', '${size}')" class="px-4 py-2 border rounded-lg text-sm font-medium transition-colors ${isActive ? 'border-brand-600 bg-brand-50 text-brand-900' : 'border-gray-200 text-gray-600 hover:border-gray-300'}">
+                        ${size}
+                    </button>
+                `;
+            });
+        }
+
+        function selectVariant(type, value) {
+            selectedVariant[type] = value;
+            renderVariants();
+        }
+
+        // Cart Logic
+        function addToCartFromModal() {
+            if (!currentViewProduct || !selectedVariant.color || !selectedVariant.size) {
+                alert("Pilih varian warna dan ukuran terlebih dahulu");
+                return;
+            }
+
+            const cartItemKey = `${currentViewProduct.id}_${selectedVariant.color}_${selectedVariant.size}`;
+            const existingItemIndex = cart.findIndex(item => item.cartKey === cartItemKey);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].qty += 1;
+            } else {
+                cart.push({
+                    cartKey: cartItemKey,
+                    id: currentViewProduct.id,
+                    name: currentViewProduct.name,
+                    price: currentViewProduct.price,
+                    image: currentViewProduct.images[0],
+                    color: selectedVariant.color,
+                    size: selectedVariant.size,
+                    qty: 1
+                });
+            }
+
+            updateCartUI();
+            closeQuickView();
+            toggleCart(); // Auto open cart
+        }
+
+        function updateCartUI() {
+            // Update Badge
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            
+            if (totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // Render Cart Panel
+            const cartList = document.getElementById('cart-items-list');
+            const cartEmpty = document.getElementById('cart-empty');
+            const checkoutForm = document.getElementById('checkout-form');
+            const btnCheckout = document.getElementById('btn-checkout');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartList.innerHTML = '';
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                cartEmpty.classList.remove('hidden');
+                checkoutForm.classList.add('hidden');
+                btnCheckout.disabled = true;
+                btnCheckout.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                cartEmpty.classList.add('hidden');
+                checkoutForm.classList.remove('hidden');
+                btnCheckout.disabled = false;
+                btnCheckout.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                cart.forEach((item, index) => {
+                    totalPrice += item.price * item.qty;
+                    cartList.innerHTML += `
+                        <div class="flex gap-4 items-center bg-white p-2 border border-gray-100 rounded-xl">
+                            <img src="${item.image}" class="w-16 h-20 object-cover rounded-lg bg-gray-50">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-900 leading-tight">${item.name}</h4>
+                                <p class="text-xs text-gray-500 mt-1">${item.color}, Size ${item.size}</p>
+                                <p class="text-sm font-bold text-brand-600 mt-1">${formatIDR(item.price)}</p>
+                            </div>
+                            <div class="flex flex-col items-center gap-2">
+                                <button onclick="updateQty('${item.cartKey}', -1)" class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-gray-600 hover:bg-gray-200">-</button>
+                                <span class="text-sm font-medium w-6 text-center">${item.qty}</span>
+                                <button onclick="updateQty('${item.cartKey}', 1)" class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-gray-600 hover:bg-gray-200">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            cartTotal.innerText = formatIDR(totalPrice);
+        }
+
+        function updateQty(cartKey, delta) {
+            const index = cart.findIndex(item => item.cartKey === cartKey);
+            if (index > -1) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1); // Hapus item jika qty 0
+                }
+                updateCartUI();
+            }
+        }
+
+        function toggleCart() {
+            const slideover = document.getElementById('cart-slideover');
+            const panel = document.getElementById('cart-panel');
+            
+            if (slideover.classList.contains('hidden')) {
+                // Open
+                slideover.classList.remove('hidden');
+                document.body.classList.add('modal-active');
+                setTimeout(() => {
+                    slideover.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                // Close
+                slideover.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                document.body.classList.remove('modal-active');
+                setTimeout(() => {
+                    slideover.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return;
+
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!name || !address) {
+                alert("Mohon isi Nama dan Alamat Lengkap pengiriman.");
+                return;
+            }
+
+            let message = `Halo Admin Lumière, saya ingin memesan:\n\n`;
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                message += `${index + 1}. ${item.name}\n`;
+                message += `   Varian: ${item.color}, Size ${item.size}\n`;
+                message += `   Jumlah: ${item.qty} x ${formatIDR(item.price)}\n`;
+                message += `   Subtotal: ${formatIDR(subtotal)}\n\n`;
+            });
+
+            message += `*TOTAL PESANAN: ${formatIDR(total)}*\n\n`;
+            message += `*Data Pengiriman:*\n`;
+            message += `Nama: ${name}\n`;
+            message += `Alamat: ${address}\n`;
+            if (notes) message += `Catatan: ${notes}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodedMessage}`;
+            
+            // Redirect to WA
+            window.open(waUrl, '_blank');
+        }
+
+        // Inisialisasi saat load
+        window.onload = () => {
+            renderProducts();
+        };
+
+    </script>
+</body>
+</html>

@@ -4,6 +4,7 @@ import { BusinessDemo } from '@/lib/types';
 import { CafeDemoProvider, useCafeDemo } from './cafe/CafeDemoContext';
 import { CafeHeader } from './cafe/CafeHeader';
 import { CafeHeroScreen } from './cafe/CafeHeroScreen';
+import { CafeGallery } from './cafe/CafeGallery';
 import { CafeServiceList } from './cafe/CafeServiceList';
 import { CafeSocialProof } from './cafe/CafeSocialProof';
 import { CafeProfileScreen } from './cafe/CafeProfileScreen';
@@ -16,13 +17,14 @@ function CafeDemoContent() {
   
 
   return (
-    <div className={`min-h-screen font-sans selection:bg-brand-primary/30`}>
+    <div className={`min-h-screen font-sans selection:bg-brand-primary/30 bg-stone-50 text-stone-800`}>
       <CafeHeader />
       
       <main>
         <CafeHeroScreen />
-        <CafeServiceList />
+        <CafeGallery />
         <CafeSocialProof />
+        <CafeServiceList />
       </main>
 
       <CafeProfileScreen />

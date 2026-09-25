@@ -62,8 +62,7 @@ export function resolveServiceTerminology(category: string | undefined | null) {
       customerTitle: 'Pelanggan',
       serviceLabel: 'Layanan Perbaikan',
       consultationLabel: 'Konsultasi Kendaraan',
-      bookingActionLabel: 'Booking Servis',
-      staffEmoji: '👨‍🔧'
+      bookingActionLabel: 'Booking Servis'
     };
   }
 
@@ -73,8 +72,7 @@ export function resolveServiceTerminology(category: string | undefined | null) {
       customerTitle: 'Pelanggan',
       serviceLabel: 'Layanan Treatment',
       consultationLabel: 'Konsultasi Gaya',
-      bookingActionLabel: 'Booking Treatment',
-      staffEmoji: '💇‍♀️'
+      bookingActionLabel: 'Booking Treatment'
     };
   }
 
@@ -84,7 +82,6 @@ export function resolveServiceTerminology(category: string | undefined | null) {
     customerTitle: 'Pasien',
     serviceLabel: 'Layanan Medis',
     consultationLabel: 'Konsultasi Dokter',
-    bookingActionLabel: 'Booking Jadwal',
-    staffEmoji: '👨‍⚕️'
+    bookingActionLabel: 'Booking Jadwal'
   };
 }

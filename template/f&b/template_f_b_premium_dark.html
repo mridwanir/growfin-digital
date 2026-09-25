@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noir & Gold - Premium F&B</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            400: '#fbbf24', // Amber 400
+                            500: '#f59e0b', // Amber 500 (Main Gold)
+                            600: '#d97706', // Amber 600
+                        },
+                        dark: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617', // Main Background
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom Scrollbar for Modal/Drawer */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* Intersection Observer Animation */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .fade-in-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* UI States */
+        .btn-active {
+            transition: transform 0.15s ease, background-color 0.2s ease;
+        }
+        .btn-active:active {
+            transform: scale(0.95);
+        }
+
+        /* Drawer Slide Animation */
+        .drawer-right {
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .drawer-right.open {
+            transform: translateX(0);
+        }
+
+        /* Modal Scale Animation */
+        .modal-zoom {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+        .modal-zoom.open {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="antialiased relative overflow-x-hidden selection:bg-brand-500 selection:text-dark-950">
+
+    <header class="relative w-full h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1920&q=80" alt="Cafe Interior" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-b from-dark-950/80 via-dark-950/60 to-dark-950"></div>
+        </div>
+        
+        <!-- Content Centered -->
+        <div class="relative z-10 text-center px-4 max-w-4xl fade-in-up">
+            <!-- Dynamic Status Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-dark-900/80 border border-brand-500/30 text-brand-400 text-sm font-medium mb-8 backdrop-blur-sm">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+                </span>
+                <span id="hero-status">Buka Sekarang • 08:00 - 23:00</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
+                Crafted for the <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600 font-extrabold">Connoisseur.</span>
+            </h1>
+            <p class="text-slate-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light">
+                Experience premium artisanal coffee and gourmet bites, crafted with uncompromising quality and passion.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#menu-section" class="btn-active px-8 py-4 bg-brand-500 hover:bg-brand-400 text-dark-950 rounded-none font-bold text-lg w-full sm:w-auto text-center flex justify-center items-center gap-3">
+                    Explore Menu <i class="fa-solid fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+            <i class="fa-solid fa-chevron-down text-slate-500 text-xl"></i>
+        </div>
+    </header>
+
+    <section id="menu-section" class="relative pt-20 pb-24 bg-dark-950">
+        <!-- Sticky Category Header -->
+        <div class="sticky top-0 z-30 bg-dark-950/90 backdrop-blur-md border-b border-dark-800 pt-4 pb-4 px-4 md:px-8 mb-12">
+            <div class="max-w-6xl mx-auto flex overflow-x-auto hide-scrollbar gap-4 justify-start md:justify-center items-center">
+                <button class="menu-filter-btn px-6 py-2 rounded-full bg-brand-500 text-dark-950 font-semibold text-sm btn-active whitespace-nowrap" data-category="All">All Menu</button>
+                <button class="menu-filter-btn px-6 py-2 rounded-full bg-dark-800 text-slate-300 hover:text-white border border-transparent hover:border-dark-700 font-medium text-sm btn-active whitespace-nowrap" data-category="Espresso Bar">Espresso Bar</button>
+                <button class="menu-filter-btn px-6 py-2 rounded-full bg-dark-800 text-slate-300 hover:text-white border border-transparent hover:border-dark-700 font-medium text-sm btn-active whitespace-nowrap" data-category="Artisan Burger">Artisan Burger</button>
+                <button class="menu-filter-btn px-6 py-2 rounded-full bg-dark-800 text-slate-300 hover:text-white border border-transparent hover:border-dark-700 font-medium text-sm btn-active whitespace-nowrap" data-category="Pastry">Pastry</button>
+            </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+            <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Menu items injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery-section" class="py-24 bg-dark-900 border-t border-dark-800">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">The Atmosphere</h2>
+                <p class="text-slate-400 max-w-xl mx-auto">A glimpse into our meticulously designed space, where modern elegance meets cozy warmth.</p>
+            </div>
+            
+            <!-- Asymmetric Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]">
+                <div class="col-span-2 row-span-2 relative overflow-hidden group fade-in-up">
+                    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80" alt="Gallery 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                </div>
+                <div class="col-span-1 row-span-1 relative overflow-hidden group fade-in-up" style="transition-delay: 100ms;">
+                    <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=400&q=80" alt="Gallery 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div class="col-span-1 row-span-2 relative overflow-hidden group fade-in-up" style="transition-delay: 200ms;">
+                    <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=400&q=80" alt="Gallery 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div class="col-span-1 row-span-1 relative overflow-hidden group fade-in-up" style="transition-delay: 300ms;">
+                    <img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?auto=format&fit=crop&w=400&q=80" alt="Gallery 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-dark-950 border-t border-dark-800">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-end mb-12 fade-in-up">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">Words of Praise</h2>
+                    <p class="text-slate-400">What our guests say about their experience.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Review Card 1 -->
+                <div class="bg-dark-900 border border-dark-800 p-8 fade-in-up">
+                    <div class="flex text-brand-500 mb-6 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 italic mb-8">"Absolutely stunning interior and the best pour-over I've had in the city. The attention to detail is unmatched."</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="Avatar" class="w-12 h-12 rounded-full grayscale opacity-80 border border-dark-700">
+                        <div>
+                            <h4 class="text-white font-semibold text-sm">Eleanor M.</h4>
+                            <span class="text-xs text-slate-500">Local Guide</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review Card 2 -->
+                <div class="bg-dark-900 border border-dark-800 p-8 fade-in-up" style="transition-delay: 100ms;">
+                    <div class="flex text-brand-500 mb-6 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 italic mb-8">"The Truffle Burger is a masterpiece. Ordering through their web app while sitting at the table was seamless."</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="w-12 h-12 rounded-full grayscale opacity-80 border border-dark-700">
+                        <div>
+                            <h4 class="text-white font-semibold text-sm">James W.</h4>
+                            <span class="text-xs text-slate-500">Food Critic</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review Card 3 -->
+                <div class="bg-dark-900 border border-dark-800 p-8 fade-in-up" style="transition-delay: 200ms;">
+                    <div class="flex text-brand-500 mb-6 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <p class="text-slate-300 italic mb-8">"A perfect blend of dark, moody aesthetics and warm hospitality. The pastries are baked fresh daily."</p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=47" alt="Avatar" class="w-12 h-12 rounded-full grayscale opacity-80 border border-dark-700">
+                        <div>
+                            <h4 class="text-white font-semibold text-sm">Sophia L.</h4>
+                            <span class="text-xs text-slate-500">Regular</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overlays -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overlay" onclick="closeModal()"></div>
+    
+    <!-- Product Customization Modal -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-zoom" onclick="event.stopPropagation()">
+        <div class="bg-dark-900 border border-dark-800 w-full max-w-md max-h-[90vh] flex flex-col shadow-2xl relative">
+            
+            <!-- Close Btn -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-dark-950/80 text-white rounded-full flex items-center justify-center hover:text-brand-500 transition-colors border border-dark-700 btn-active">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Image Header -->
+            <div class="h-48 w-full relative shrink-0">
+                <img id="modal-img" src="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent"></div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="p-6 overflow-y-auto custom-scroll flex-1 -mt-6 relative z-10">
+                <h3 id="modal-name" class="text-2xl font-bold text-white mb-2 font-heading">Product Name</h3>
+                <p id="modal-desc" class="text-slate-400 text-sm mb-6 leading-relaxed">Description goes here.</p>
+
+                <!-- Dynamic Variants -->
+                <div id="modal-variants" class="space-y-6"></div>
+
+                <!-- Dynamic Addons -->
+                <div id="modal-addons" class="mt-6 space-y-3"></div>
+
+                <!-- Special Instructions -->
+                <div class="mt-8">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Special Instructions</label>
+                    <textarea id="modal-note" rows="2" class="w-full bg-dark-950 border border-dark-800 rounded p-3 text-sm text-white placeholder-slate-600 focus:ring-1 focus:ring-brand-500 focus:border-brand-500 outline-none resize-none transition-all" placeholder="Any requests? e.g., Less ice..."></textarea>
+                </div>
+            </div>
+
+            <!-- Footer Add to Cart -->
+            <div class="p-4 bg-dark-950 border-t border-dark-800 shrink-0 flex gap-4 items-center">
+                <div class="flex items-center bg-dark-900 border border-dark-800 p-1">
+                    <button onclick="updateQty(-1)" class="w-8 h-8 flex justify-center items-center text-slate-400 hover:text-white btn-active"><i class="fa-solid fa-minus text-xs"></i></button>
+                    <span id="modal-qty" class="w-8 text-center text-white font-semibold text-sm">1</span>
+                    <button onclick="updateQty(1)" class="w-8 h-8 flex justify-center items-center text-slate-400 hover:text-white btn-active"><i class="fa-solid fa-plus text-xs"></i></button>
+                </div>
+                <button onclick="addToCart()" class="flex-1 bg-brand-500 hover:bg-brand-400 text-dark-950 py-3 px-4 font-bold flex justify-between items-center btn-active text-sm">
+                    <span>Add to Order</span>
+                    <span id="modal-price" class="tracking-wide">Rp 0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawer Overlay -->
+    <div id="drawer-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 overlay" onclick="toggleDrawer(false)"></div>
+
+    <!-- Right Drawer -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-[420px] bg-dark-950 border-l border-dark-800 z-50 flex flex-col drawer-right shadow-2xl">
+        
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-dark-800 flex justify-between items-center bg-dark-900 shrink-0">
+            <h3 class="font-heading font-bold text-xl text-white flex items-center gap-3">
+                <i class="fa-solid fa-bag-shopping text-brand-500"></i> Your Order
+            </h3>
+            <button onclick="toggleDrawer(false)" class="text-slate-400 hover:text-white transition-colors btn-active p-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Body -->
+        <div class="flex-1 overflow-y-auto custom-scroll p-6 bg-dark-950 flex flex-col">
+            
+            <!-- Cart Items -->
+            <div id="cart-items" class="space-y-4 mb-8">
+                <!-- Empty state placeholder -->
+                <div class="text-center py-12 text-slate-600 flex flex-col items-center">
+                    <i class="fa-solid fa-basket-shopping text-4xl mb-4 opacity-50"></i>
+                    <p class="font-medium text-slate-400">Your bag is empty.</p>
+                </div>
+            </div>
+
+            <!-- Checkout Form (Hidden by default if empty) -->
+            <div id="checkout-section" class="mt-auto hidden border-t border-dark-800 pt-8">
+                
+                <!-- CS Profile -->
+                <div class="flex items-center gap-4 p-4 bg-dark-900 border border-dark-800 mb-6">
+                    <div class="relative">
+                        <img src="https://i.pravatar.cc/150?img=60" alt="Admin" class="w-12 h-12 rounded-full border border-brand-500/50">
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-dark-900 rounded-full"></div>
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-bold font-heading">David (Concierge)</p>
+                        <p class="text-xs text-brand-400 flex items-center gap-1 mt-0.5">
+                            <i class="fa-brands fa-whatsapp"></i> Ready to assist
+                        </p>
+                    </div>
+                </div>
+
+                <h4 class="text-white font-heading font-semibold mb-4 text-sm uppercase tracking-wider text-slate-400">Fulfillment Details</h4>
+                
+                <!-- Order Type Toggle -->
+                <div class="flex bg-dark-900 border border-dark-800 p-1 mb-5">
+                    <button id="tab-dinein" onclick="switchOrderType('dine-in')" class="flex-1 py-2 text-xs font-bold bg-dark-800 text-white shadow-sm transition-all btn-active uppercase tracking-wide">Dine-In</button>
+                    <button id="tab-delivery" onclick="switchOrderType('delivery')" class="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-white transition-all btn-active uppercase tracking-wide">Delivery</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Guest Name</label>
+                        <input type="text" id="cust-name" class="w-full bg-dark-900 border border-dark-800 rounded p-3 text-sm text-white placeholder-slate-600 focus:ring-1 focus:ring-brand-500 outline-none" placeholder="Your name">
+                    </div>
+                    
+                    <div id="field-table" class="block transition-all duration-300">
+                        <label class="block text-xs text-slate-400 mb-1">Table Number</label>
+                        <input type="text" id="cust-table" class="w-full bg-dark-900 border border-dark-800 rounded p-3 text-sm text-white placeholder-slate-600 focus:ring-1 focus:ring-brand-500 outline-none" placeholder="e.g., T-12">
+                    </div>
+
+                    <div id="field-address" class="hidden transition-all duration-300">
+                        <label class="block text-xs text-slate-400 mb-1">Delivery Address</label>
+                        <textarea id="cust-address" rows="2" class="w-full bg-dark-900 border border-dark-800 rounded p-3 text-sm text-white placeholder-slate-600 focus:ring-1 focus:ring-brand-500 outline-none resize-none" placeholder="Full address"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-6 bg-dark-900 border-t border-dark-800 shrink-0">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-slate-400 text-sm font-medium">Subtotal</span>
+                <span id="cart-total" class="text-xl font-bold text-brand-500 font-heading tracking-wide">Rp 0</span>
+            </div>
+            
+            <button id="btn-checkout" onclick="sendToWhatsApp()" disabled class="w-full bg-[#25D366] disabled:bg-dark-800 disabled:text-slate-600 disabled:cursor-not-allowed text-dark-950 hover:bg-[#1fa855] py-4 font-bold flex justify-center items-center gap-2 btn-active transition-colors text-sm uppercase tracking-wide">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Complete Order
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Cart Trigger -->
+    <button id="float-cart" onclick="toggleDrawer(true)" class="fixed bottom-6 right-6 z-30 bg-brand-500 text-dark-950 w-14 h-14 rounded-none border border-brand-400 shadow-[0_0_20px_rgba(245,158,11,0.3)] flex items-center justify-center btn-active translate-y-24 opacity-0 transition-all duration-500">
+        <div class="relative">
+            <i class="fa-solid fa-bag-shopping text-xl"></i>
+            <span id="float-badge" class="absolute -top-3 -right-3 bg-dark-950 text-brand-500 border border-brand-500 text-[10px] font-bold h-5 w-5 flex items-center justify-center">0</span>
+        </div>
+    </button>
+
+    <script>
+        /* --- MOCK DATA --- */
+        const menuData = [
+            {
+                id: 'm1', name: 'Noir Signature Espresso', category: 'Espresso Bar', price: 45000,
+                desc: 'Our proprietary dark roast blend, offering notes of dark chocolate, black cherry, and a hint of smoke.',
+                img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Bean Choice', options: [{ label: 'House Dark Roast', price: 0, default: true }, { label: 'Single Origin Ethiopia', price: 15000 }] }
+                ],
+                addons: [{ label: 'Extra Shot', price: 12000 }]
+            },
+            {
+                id: 'm2', name: 'Charcoal Vanilla Latte', category: 'Espresso Bar', price: 55000,
+                desc: 'Activated charcoal infused with Madagascar vanilla bean syrup and micro-foamed milk.',
+                img: 'https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Temperature', options: [{ label: 'Hot', price: 0, default: true }, { label: 'Iced', price: 0 }] },
+                    { name: 'Milk Type', options: [{ label: 'Whole Milk', price: 0, default: true }, { label: 'Oat Milk', price: 8000 }] }
+                ],
+                addons: []
+            },
+            {
+                id: 'm3', name: 'The Gold Standard Burger', category: 'Artisan Burger', price: 125000,
+                desc: 'Dry-aged wagyu beef patty, black truffle aioli, aged cheddar, served on a toasted brioche bun.',
+                img: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Meat Doneness', options: [{ label: 'Medium', price: 0, default: true }, { label: 'Medium Well', price: 0 }, { label: 'Well Done', price: 0 }] }
+                ],
+                addons: [{ label: 'Add Foie Gras', price: 75000 }, { label: 'Truffle Fries Upgrade', price: 25000 }]
+            },
+            {
+                id: 'm4', name: 'Spicy Noir Chicken', category: 'Artisan Burger', price: 85000,
+                desc: 'Crispy chicken thigh dusted in ghost pepper ash, buttermilk slaw, house pickles.',
+                img: 'https://images.unsplash.com/photo-1615719413546-198b25453f85?auto=format&fit=crop&w=600&q=80',
+                variants: [],
+                addons: [{ label: 'Extra Pickles', price: 5000 }]
+            },
+            {
+                id: 'm5', name: 'Dark Chocolate Tart', category: 'Pastry', price: 65000,
+                desc: '70% Valrhona dark chocolate ganache in a charcoal cocoa shell, topped with gold leaf.',
+                img: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=600&q=80',
+                variants: [],
+                addons: [{ label: 'Vanilla Bean Gelato Scoop', price: 20000 }]
+            },
+            {
+                id: 'm6', name: 'Almond Noir Croissant', category: 'Pastry', price: 42000,
+                desc: 'Twice-baked charcoal croissant filled with rich almond frangipane.',
+                img: 'https://images.unsplash.com/photo-1549903072-7e6e0d234288?auto=format&fit=crop&w=600&q=80',
+                variants: [],
+                addons: []
+            }
+        ];
+
+        /* --- STATE --- */
+        let cart = [];
+        let curItem = null;
+        let qty = 1;
+        let selections = { variants: {}, addons: [] };
+        let orderType = 'dine-in';
+
+        const fmtRp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+
+        /* --- INTERSECTION OBSERVER --- */
+        const initObserver = () => {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if(e.isIntersecting) {
+                        e.target.classList.add('is-visible');
+                        obs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in-up').forEach(el => obs.observe(el));
+        };
+
+        /* --- RENDER MENU --- */
+        const renderMenu = (category = 'All') => {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+            const filtered = category === 'All' ? menuData : menuData.filter(i => i.category === category);
+            
+            filtered.forEach((item, idx) => {
+                const delay = (idx % 3) * 100;
+                grid.innerHTML += `
+                    <div class="bg-dark-900 border border-dark-800 flex flex-col group fade-in-up transition-colors hover:border-dark-700" style="transition-delay: ${delay}ms;">
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100">
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <h3 class="text-xl font-bold text-white mb-2 font-heading tracking-wide">${item.name}</h3>
+                            <p class="text-slate-400 text-sm line-clamp-2 mb-6 font-light">${item.desc}</p>
+                            <div class="mt-auto flex justify-between items-center">
+                                <span class="text-brand-500 font-bold font-heading text-lg">${fmtRp(item.price)}</span>
+                                <button onclick="openModal('${item.id}')" class="w-10 h-10 border border-brand-500/50 text-brand-500 hover:bg-brand-500 hover:text-dark-950 flex items-center justify-center transition-colors btn-active">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            setTimeout(initObserver, 50); // Re-observe new elements
+        };
+
+        // Filter Setup
+        document.querySelectorAll('.menu-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.menu-filter-btn').forEach(b => {
+                    b.className = 'menu-filter-btn px-6 py-2 rounded-full bg-dark-800 text-slate-300 hover:text-white border border-transparent hover:border-dark-700 font-medium text-sm btn-active whitespace-nowrap';
+                });
+                e.target.className = 'menu-filter-btn px-6 py-2 rounded-full bg-brand-500 text-dark-950 font-semibold text-sm btn-active whitespace-nowrap';
+                renderMenu(e.target.dataset.category);
+            });
+        });
+
+        /* --- MODAL LOGIC --- */
+        const openModal = (id) => {
+            curItem = menuData.find(i => i.id === id);
+            qty = 1; selections = { variants: {}, addons: [] };
+
+            document.getElementById('modal-img').src = curItem.img;
+            document.getElementById('modal-name').innerText = curItem.name;
+            document.getElementById('modal-desc').innerText = curItem.desc;
+            document.getElementById('modal-qty').innerText = qty;
+            document.getElementById('modal-note').value = '';
+
+            // Variants UI
+            const vCont = document.getElementById('modal-variants');
+            vCont.innerHTML = '';
+            curItem.variants.forEach((v, vIdx) => {
+                let html = `<div><h4 class="text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wider text-xs">${v.name}</h4><div class="grid grid-cols-2 gap-3">`;
+                v.options.forEach((opt, oIdx) => {
+                    if(opt.default) selections.variants[v.name] = opt;
+                    const chk = opt.default ? 'checked' : '';
+                    html += `
+                        <label class="relative flex flex-col p-3 border border-dark-700 bg-dark-950 cursor-pointer transition-colors has-[:checked]:border-brand-500 has-[:checked]:bg-dark-800">
+                            <input type="radio" name="v_${vIdx}" value="${oIdx}" ${chk} class="peer sr-only" onchange="updVar('${v.name}', ${oIdx})">
+                            <span class="text-sm text-white font-medium">${opt.label}</span>
+                            ${opt.price > 0 ? `<span class="text-xs text-brand-400 mt-1">+${fmtRp(opt.price)}</span>` : ''}
+                            <div class="absolute top-3 right-3 w-3 h-3 rounded-full border border-dark-600 peer-checked:border-brand-500 peer-checked:bg-brand-500"></div>
+                        </label>`;
+                });
+                vCont.innerHTML += html + `</div></div>`;
+            });
+
+            // Addons UI
+            const aCont = document.getElementById('modal-addons');
+            aCont.innerHTML = '';
+            if(curItem.addons.length > 0) {
+                let html = `<h4 class="text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wider text-xs">Enhancements</h4><div class="space-y-2">`;
+                curItem.addons.forEach((a, aIdx) => {
+                    html += `
+                        <label class="flex items-center justify-between p-3 border border-dark-700 bg-dark-950 cursor-pointer transition-colors has-[:checked]:border-brand-500 hover:bg-dark-800">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex items-center justify-center w-4 h-4 border border-dark-600 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500">
+                                    <input type="checkbox" class="peer sr-only" onchange="updAddon(this, ${aIdx})">
+                                    <i class="fa-solid fa-check text-[10px] text-dark-950 opacity-0 peer-checked:opacity-100 absolute"></i>
+                                </div>
+                                <span class="text-sm text-white">${a.label}</span>
+                            </div>
+                            <span class="text-xs text-brand-400">+${fmtRp(a.price)}</span>
+                        </label>`;
+                });
+                aCont.innerHTML = html + `</div>`;
+            }
+
+            calcModalPrice();
+            
+            document.getElementById('modal-backdrop').classList.add('open');
+            document.getElementById('product-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+            document.getElementById('modal-backdrop').classList.remove('open');
+            document.getElementById('product-modal').classList.remove('open');
+            document.body.style.overflow = '';
+        };
+
+        const updateQty = (chg) => { if (qty + chg > 0) { qty += chg; document.getElementById('modal-qty').innerText = qty; calcModalPrice(); } };
+        const updVar = (vName, idx) => { selections.variants[vName] = curItem.variants.find(v=>v.name===vName).options[idx]; calcModalPrice(); };
+        const updAddon = (el, idx) => {
+            const add = curItem.addons[idx];
+            if(el.checked) selections.addons.push(add); else selections.addons = selections.addons.filter(a=>a.label!==add.label);
+            calcModalPrice();
+        };
+
+        const calcModalPrice = () => {
+            let base = curItem.price;
+            Object.values(selections.variants).forEach(v => base += v.price);
+            selections.addons.forEach(a => base += a.price);
+            document.getElementById('modal-price').innerText = fmtRp(base * qty);
+            return base * qty;
+        };
+
+        /* --- CART LOGIC --- */
+        const addToCart = () => {
+            const unitPrice = calcModalPrice() / qty;
+            cart.push({ product: curItem, qty, variants: {...selections.variants}, addons: [...selections.addons], note: document.getElementById('modal-note').value, unitPrice, total: unitPrice * qty });
+            closeModal();
+            updateFloatBtn();
+            setTimeout(() => toggleDrawer(true), 200);
+        };
+
+        const updateFloatBtn = () => {
+            const btn = document.getElementById('float-cart');
+            if(cart.length > 0) {
+                btn.classList.remove('translate-y-24', 'opacity-0');
+                document.getElementById('float-badge').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+            } else {
+                btn.classList.add('translate-y-24', 'opacity-0');
+            }
+        };
+
+        const toggleDrawer = (open) => {
+            if(open) {
+                renderCart();
+                document.getElementById('drawer-backdrop').classList.add('open');
+                document.getElementById('cart-drawer').classList.add('open');
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.getElementById('drawer-backdrop').classList.remove('open');
+                document.getElementById('cart-drawer').classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        };
+
+        const renderCart = () => {
+            const cont = document.getElementById('cart-items');
+            const checkSec = document.getElementById('checkout-section');
+            const btnSub = document.getElementById('btn-checkout');
+            
+            if(cart.length === 0) {
+                cont.innerHTML = `<div class="text-center py-12 text-slate-600 flex flex-col items-center"><i class="fa-solid fa-basket-shopping text-4xl mb-4 opacity-50"></i><p class="font-medium text-slate-400">Your bag is empty.</p></div>`;
+                checkSec.classList.add('hidden');
+                document.getElementById('cart-total').innerText = 'Rp 0';
+                btnSub.disabled = true;
+                return;
+            }
+
+            checkSec.classList.remove('hidden');
+            btnSub.disabled = false;
+            cont.innerHTML = '';
+            let gTotal = 0;
+
+            cart.forEach((item, i) => {
+                gTotal += item.total;
+                let det = [...Object.values(item.variants).map(v=>v.label), ...item.addons.map(a=>a.label)];
+                let detStr = det.length ? `<p class="text-xs text-slate-500 mt-1">${det.join(' • ')}</p>` : '';
+                let noteStr = item.note ? `<p class="text-[11px] italic text-brand-400 mt-1">"${item.note}"</p>` : '';
+
+                cont.innerHTML += `
+                    <div class="flex gap-4 p-4 bg-dark-900 border border-dark-800 relative group">
+                        <img src="${item.product.img}" class="w-16 h-16 object-cover border border-dark-700">
+                        <div class="flex-1 pr-6">
+                            <h5 class="font-bold text-white text-sm tracking-wide">${item.product.name}</h5>
+                            ${detStr} ${noteStr}
+                            <div class="mt-2 text-brand-500 font-bold font-heading text-sm">${item.qty} × ${fmtRp(item.unitPrice)}</div>
+                        </div>
+                        <button onclick="rmCart(${i})" class="absolute top-4 right-4 text-slate-500 hover:text-red-500 transition-colors btn-active">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            document.getElementById('cart-total').innerText = fmtRp(gTotal);
+        };
+
+        const rmCart = (idx) => { cart.splice(idx, 1); updateFloatBtn(); renderCart(); if(!cart.length) toggleDrawer(false); };
+
+        const switchOrderType = (type) => {
+            orderType = type;
+            const diBtn = document.getElementById('tab-dinein');
+            const dlBtn = document.getElementById('tab-delivery');
+            const diF = document.getElementById('field-table');
+            const dlF = document.getElementById('field-address');
+
+            if(type === 'dine-in') {
+                diBtn.className = "flex-1 py-2 text-xs font-bold bg-dark-800 text-white shadow-sm transition-all btn-active uppercase tracking-wide";
+                dlBtn.className = "flex-1 py-2 text-xs font-bold text-slate-500 hover:text-white transition-all btn-active uppercase tracking-wide";
+                dlF.classList.add('hidden'); diF.classList.remove('hidden');
+            } else {
+                dlBtn.className = "flex-1 py-2 text-xs font-bold bg-dark-800 text-white shadow-sm transition-all btn-active uppercase tracking-wide";
+                diBtn.className = "flex-1 py-2 text-xs font-bold text-slate-500 hover:text-white transition-all btn-active uppercase tracking-wide";
+                diF.classList.add('hidden'); dlF.classList.remove('hidden');
+            }
+        };
+
+        const sendToWhatsApp = () => {
+            const name = document.getElementById('cust-name').value.trim();
+            if(!name) return alert('Please enter your name.');
+
+            let typeInfo = '';
+            if(orderType === 'dine-in') {
+                const tbl = document.getElementById('cust-table').value.trim();
+                typeInfo = tbl ? `Dine-in (Table: ${tbl})` : 'Takeaway';
+            } else {
+                const add = document.getElementById('cust-address').value.trim();
+                if(!add) return alert('Please enter delivery address.');
+                typeInfo = `Delivery\nAddress: ${add}`;
+            }
+
+            let text = `*New Order - Noir & Gold* 🥂\n\n*Guest:* ${name}\n*Type:* ${typeInfo}\n\n*Order Details:*\n`;
+            let total = 0;
+            cart.forEach((i, idx) => {
+                total += i.total;
+                let det = [...Object.values(i.variants).map(v=>v.label), ...i.addons.map(a=>a.label)];
+                let dStr = det.length ? `\n   ↳ ${det.join(', ')}` : '';
+                let nStr = i.note ? `\n   ↳ Note: ${i.note}` : '';
+                text += `${idx+1}. ${i.product.name} (x${i.qty})${dStr}${nStr}\n   ${fmtRp(i.total)}\n\n`;
+            });
+            text += `*GRAND TOTAL: ${fmtRp(total)}*\n\nPlease confirm this order. Thank you!`;
+            
+            window.open(`https://wa.me/628111222333?text=${encodeURIComponent(text)}`, '_blank');
+        };
+
+        // Init
+        window.addEventListener('DOMContentLoaded', () => { renderMenu(); initObserver(); });
+    </script>
+</body>
+</html>

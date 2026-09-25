@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRetailDemo } from './RetailDemoContext';
+import { getRetailImageUrl } from './RetailProductList';
 
 export function RetailProductModal() {
   const { 
@@ -89,7 +90,7 @@ export function RetailProductModal() {
         <div className="relative h-48 sm:h-64 shrink-0 bg-slate-100">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
-            src={product.imageUrl || `https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&auto=format&fit=crop&q=80`} 
+            src={getRetailImageUrl(product.id)} 
             alt={product.name}
             className="w-full h-full object-cover"
           />

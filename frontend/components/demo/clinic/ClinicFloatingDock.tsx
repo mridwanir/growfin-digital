@@ -1,6 +1,7 @@
 'use client';
 
 import { useClinicDemo } from './ClinicDemoContext';
+import { Calendar, Users, MapPin } from 'lucide-react';
 
 export function ClinicFloatingDock() {
   const { client, setIsBookingModalOpen } = useClinicDemo();
@@ -13,18 +14,18 @@ export function ClinicFloatingDock() {
           onClick={() => setIsBookingModalOpen(true)} 
           className="flex-1 flex flex-col items-center justify-center py-1 gap-1 text-slate-500 hover:text-brand-primary transition-colors bg-brand-light/50 rounded-xl"
         >
-          <span className="text-xl">🗓️</span>
-          <span className="text-[10px] font-bold text-brand-primary">Buat Janji</span>
+          <Calendar className="w-5 h-5" />
+          <span className="text-[10px] font-bold text-brand-primary mt-1">Buat Janji</span>
         </button>
 
         <a href="#praktisi" className="flex-1 flex flex-col items-center justify-center py-1 gap-1 text-slate-500 hover:text-brand-primary transition-colors">
-          <span className="text-xl">👨‍⚕️</span>
-          <span className="text-[10px] font-bold">Praktisi</span>
+          <Users className="w-5 h-5" />
+          <span className="text-[10px] font-bold mt-1">Praktisi</span>
         </a>
 
         <a href={client.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center py-1 gap-1 text-slate-500 hover:text-blue-500 transition-colors">
-          <span className="text-xl">📍</span>
-          <span className="text-[10px] font-bold">Rute Klinik</span>
+          <MapPin className="w-5 h-5" />
+          <span className="text-[10px] font-bold mt-1">Rute Klinik</span>
         </a>
 
       </div>

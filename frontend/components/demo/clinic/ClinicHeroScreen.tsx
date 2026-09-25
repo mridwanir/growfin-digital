@@ -2,71 +2,62 @@
 
 import { useClinicDemo } from './ClinicDemoContext';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { Calendar } from 'lucide-react';
 
 export function ClinicHeroScreen() {
-  const { client, isOpenNow } = useClinicDemo();
+  const { client, setIsBookingModalOpen } = useClinicDemo();
   const { ref, isVisible } = useScrollReveal(0.1);
 
-  return (
-    <section id="hero" className="mb-16 scroll-mt-24 pt-8">
-      <div 
-        ref={ref}
-        className={`relative h-[400px] w-full overflow-hidden rounded-[40px] shadow-2xl transition-all duration-1000 transform ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} group`}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-primary to-brand-dark opacity-80 mix-blend-overlay z-10" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={client.heroImage || "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&auto=format&fit=crop&q=80"}
-          alt="Clinic View"
-          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-1000"
-        />
-        <div className="absolute inset-0 bg-slate-900/40 z-10" />
-        
-        {/* Floating Operational Status */}
-        <div className="absolute top-6 left-6 z-20">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 shadow-lg">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isOpenNow ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isOpenNow ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
-            </span>
-            <span className="text-xs font-bold text-white">{isOpenNow ? 'Buka Sekarang' : 'Sedang Tutup'}</span>
-          </div>
-        </div>
+  const heroImage = '/image/service/anton-savinov-aQxOYwG_GyI-unsplash.jpg';
 
-        <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-8 mt-4">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 drop-shadow-xl max-w-4xl">
-            {client.tagline}
-          </h2>
-          
-          <a 
-            href={`tel:${client.phone}`}
-            className="flex items-center gap-3 px-8 py-4 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-black text-lg shadow-xl shadow-rose-600/30 transition-transform active:scale-95 animate-pulse [animation-duration:2s]"
-          >
-            <span className="text-2xl">🚨</span>
-            Darurat / UGD: Hubungi Segera
+  return (
+    <section id="home" className="relative h-screen min-h-[600px] flex items-center justify-center pt-20 -mx-4 sm:mx-0 sm:rounded-[40px] overflow-hidden -mt-8 mb-16">
+      {/* Background Image & Overlay */}
+      <div
+        className="absolute inset-0 z-0 bg-slate-900"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={heroImage} alt="Hero" className="w-full h-full object-cover opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-900/60 to-slate-900/90" />
+      </div>
+
+      <div
+        ref={ref}
+        className={`relative max-w-4xl mx-auto px-6 sm:px-6 lg:px-8 text-center text-white z-10 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      >
+        <span className="inline-block py-1.5 px-4 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-light text-sm font-semibold mb-6 backdrop-blur-md">
+          Pelayanan Profesional & Terpercaya
+        </span>
+
+        <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+          {client.tagline}
+        </h1>
+
+        <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed">
+          Kami menyediakan fasilitas berstandar tinggi dengan dukungan tenaga ahli berpengalaman untuk memastikan hasil yang memuaskan dan efisien.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={() => setIsBookingModalOpen(true)}
+            className="bg-brand-primary hover:bg-brand-hover text-white px-8 py-4 rounded-full font-bold text-lg transition shadow-lg shadow-brand-primary/40 flex items-center justify-center gap-2"
+          ><Calendar className="w-5 h-5" />
+            <span className="text-[10px] font-bold text-brand-primary mt-1"></span> Jadwalkan Konsultasi
+          </button>
+          <a href="#services" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-4 rounded-full font-semibold text-lg transition backdrop-blur-sm flex items-center justify-center">
+            Pelajari Lebih Lanjut
           </a>
         </div>
+      </div>
 
-        {/* Trust Badges Bar */}
-        <div className="absolute bottom-0 left-0 w-full z-20 bg-white/10 backdrop-blur-md border-t border-white/20">
-          <div className="flex flex-nowrap items-center justify-start md:justify-center gap-8 overflow-x-auto px-6 py-4 scrollbar-none">
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xl">🛡️</span>
-              <span className="text-xs font-bold text-white uppercase tracking-widest">Peralatan Steril Medis</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-white/50 shrink-0 hidden md:block"></div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xl">📜</span>
-              <span className="text-xs font-bold text-white uppercase tracking-widest">Lisensi Resmi Profesional</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-white/50 shrink-0 hidden md:block"></div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xl">🔒</span>
-              <span className="text-xs font-bold text-white uppercase tracking-widest">Privasi & Data Dijamin</span>
-            </div>
-          </div>
+      {/* Trust Indicators Bottom Hero */}
+      <div className="absolute bottom-0 w-full bg-white/10 backdrop-blur-md border-t border-white/10 py-4 hidden md:block z-10">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-white text-sm font-medium">
+          <div className="flex items-center gap-2"><span>🛡️</span> Tersertifikasi Resmi</div>
+          <div className="flex items-center gap-2"><span>⏰</span> Respon Cepat</div>
+          <div className="flex items-center gap-2"><span>⭐</span> {client.rating}/5 Rating Kepuasan</div>
+          <div className="flex items-center gap-2"><span>🔒</span> Garansi Layanan</div>
         </div>
-
       </div>
     </section>
   );

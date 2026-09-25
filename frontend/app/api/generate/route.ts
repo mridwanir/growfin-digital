@@ -107,10 +107,10 @@ export async function POST(request: Request) {
     if (urlPlaceName && !force) {
       const inputName = name.toLowerCase();
       const realNameLower = urlPlaceName.toLowerCase();
-      
+
       const ignoreWords = ['kopi', 'warung', 'toko', 'klinik', 'cafe', 'salon', 'apotek'];
       const inputWords = inputName.split(' ').filter((w: string) => w.length > 2 && !ignoreWords.includes(w));
-      
+
       let hasMeaningfulMatch = false;
       if (inputWords.length === 0) {
         hasMeaningfulMatch = realNameLower.includes(inputName);
@@ -119,9 +119,9 @@ export async function POST(request: Request) {
       }
 
       if (!hasMeaningfulMatch && !realNameLower.includes(inputName) && !inputName.includes(realNameLower)) {
-        return NextResponse.json({ 
-          needsConfirmation: true, 
-          realName: urlPlaceName 
+        return NextResponse.json({
+          needsConfirmation: true,
+          realName: urlPlaceName
         });
       }
     }
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
     const placesHeaders = {
       "Content-Type": "application/json",
       "X-Goog-Api-Key": googleApiKey,
-      "X-Goog-FieldMask": "places.displayName,places.primaryType,places.rating,places.userRatingCount,places.formattedAddress,places.googleMapsUri,places.reviews,places.photos"
+      "X-Goog-FieldMask": "places.displayName,places.primaryType,places.rating,places.userRatingCount,places.formattedAddress,places.googleMapsUri,places.reviews"
     };
 
     const placesPayload: any = {
@@ -164,11 +164,11 @@ export async function POST(request: Request) {
       const originalPlaceName = places[0].displayName?.text || "";
       const firstMatchName = originalPlaceName.toLowerCase();
       const inputName = name.toLowerCase();
-      
+
       // Hitung kata yang cocok (abaikan kata generik seperti kopi, warung, toko, klinik)
       const ignoreWords = ['kopi', 'warung', 'toko', 'klinik', 'cafe', 'salon', 'apotek'];
       const inputWords = inputName.split(' ').filter((w: string) => w.length > 2 && !ignoreWords.includes(w));
-      
+
       let hasMeaningfulMatch = false;
       if (inputWords.length === 0) {
         // Jika input hanya berisi kata generik (misal: "Kopi"), kita cek apakah input ada di nama hasil
@@ -176,18 +176,18 @@ export async function POST(request: Request) {
       } else {
         hasMeaningfulMatch = inputWords.some((w: string) => firstMatchName.includes(w));
       }
-      
+
       if (!hasMeaningfulMatch && !firstMatchName.includes(inputName) && !inputName.includes(firstMatchName)) {
         // Nama terlalu melenceng (Google mengembalikan rekomendasi acak atau nama aslinya beda)
         if (lat && lng) {
           // Jika URL valid (ada titik), mungkin mereka salah input nama. Minta konfirmasi!
-          return NextResponse.json({ 
-            needsConfirmation: true, 
-            realName: originalPlaceName 
+          return NextResponse.json({
+            needsConfirmation: true,
+            realName: originalPlaceName
           });
         } else {
           // Jika tidak ada URL dan nama melenceng jauh, tolak langsung.
-          places = []; 
+          places = [];
         }
       }
     }
@@ -208,17 +208,7 @@ export async function POST(request: Request) {
     const reviewCount = place.userRatingCount || 0;
     const primaryType = place.primaryType || 'store';
 
-    // 3. Ekstrak Foto Real dari Google Maps
-    const realPhotos: string[] = [];
-    if (place.photos && place.photos.length > 0) {
-      // Ambil hingga 5 foto teratas
-      place.photos.slice(0, 5).forEach((p: any) => {
-        if (p.name) {
-          const photoUrl = `https://places.googleapis.com/v1/${p.name}/media?maxHeightPx=600&maxWidthPx=800&key=${googleApiKey}`;
-          realPhotos.push(photoUrl);
-        }
-      });
-    }
+    // (Fitur ekstraksi foto Google Maps ditiadakan, sistem akan skip url gambar bisnis)
 
     // Override kategori jika terjadi mis-match
     const adjustedCategory = mapPrimaryTypeToCategory(primaryType, category);
@@ -236,10 +226,7 @@ export async function POST(request: Request) {
       });
     }
 
-    let photosText = "";
-    if (realPhotos.length > 0) {
-      photosText = "Daftar URL Foto Asli (Wajib gunakan ini untuk imageUrl dan heroImage secara acak, prioritaskan foto pertama untuk heroImage):\n" + realPhotos.join("\n");
-    }
+    // (photosText ditiadakan)
 
     // 5. Generate JSON menggunakan Gemini AI
     const prompt = `
@@ -256,18 +243,16 @@ export async function POST(request: Request) {
       
       ${reviewsText}
 
-      ${photosText}
-
+      
       Panduan Konten:
-      1. Buatkan "tagline" yang menarik & profesional dalam bahasa Indonesia.
+      1. Buatkan "tagline" yang menarik & profesional dalam bahasa Indonesia. WAJIB sangat singkat (Maksimal 6-8 kata, atau sekitar 50 karakter) agar tidak merusak estetika UI.
       2. Buatkan "hours" (Jam Operasional) berupa teks, misal: "Senin - Minggu: 09:00 - 22:00". Sebagai field terpisah di root JSON, buat juga "openTime" (misal "09:00") dan "closeTime" (misal "22:00").
-      3. Tentukan "themeColor" hex code dan "vibe" (minimalist / playful / luxury) yang cocok dengan industri ${adjustedCategory}.
+      3. Tentukan "themeColor" hex code yang cocok dengan industri ${adjustedCategory}.
       4. Buatkan "fbType" (DINE_IN / QUICK_SERVICE / PRE_ORDER) khusus jika ini F&B. Jika bukan, kosongkan.
       5. Isi array "categories" minimal dengan ["Semua", "Kategori A", "Kategori B"].
       6. Buatkan array "menu" atau "products" berisi 4-5 layanan/produk utama dengan harga yang logis untuk di Indonesia.
-         Format item: { "id": 1, "name": "...", "desc": "...", "price": "Rp ...", "category": "Kategori A", "imageUrl": "URL FOTO DI SINI", "duration": 45 }
-         WAJIB: Untuk imageUrl dan heroImage, gunakan Daftar URL Foto Asli di atas. Jika kurang, baru gunakan Unsplash.
-      7. Jika bisnis ini Klinik/Salon/Jasa, buat object "doctor" { name, role, avatarEmoji, avatarUrl, sampleChat: { user, doctor, recommendationTitle, recommendationDesc } }. 
+         Format item: { "id": 1, "name": "...", "desc": "...", "price": "Rp ...", "category": "Kategori A", "duration": 45 }
+      7. Jika bisnis ini Klinik/Salon/Jasa, buat object "doctor" { name, role, sampleChat: { user, doctor, recommendationTitle, recommendationDesc } }. 
          Jika ini Kafe/Retail, buat profil Admin Reservasi.
       8. Salin ulasan pelanggan ke property "reviews": [{ authorName, rating, text, time }].
       

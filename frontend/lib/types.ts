@@ -69,5 +69,4 @@ export interface BusinessDemo {
   instagramFeed?: string[]; // Array of image URLs for social proof
   fbType?: 'DINE_IN' | 'QUICK_SERVICE' | 'PRE_ORDER'; // Determines order form fields
   themeColor?: string; // Hex color string, e.g. '#10b981'
-  vibe?: 'minimalist' | 'playful' | 'luxury'; // UI aesthetics config
 }

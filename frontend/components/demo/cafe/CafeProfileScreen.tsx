@@ -1,5 +1,5 @@
 import { useCafeDemo } from './CafeDemoContext';
-import { MapPin, Clock, Phone, Navigation } from 'lucide-react';
+import { MapPin, Clock, Phone, Navigation, Coffee } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 export function CafeProfileScreen() {
@@ -8,16 +8,16 @@ export function CafeProfileScreen() {
 
   return (
     <footer id="kontak" className="bg-slate-900 text-slate-300 py-16 sm:py-24 scroll-mt-20">
-      <div 
+      <div
         ref={ref}
         className={`max-w-6xl mx-auto px-4 md:px-8 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
       >
-        
+
         {/* Left Side: Brand & Contacts */}
         <div className="space-y-8">
           <div className="flex items-center gap-4">
-            <span className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-dark text-white font-bold text-3xl shadow-lg`}>
-              {client.iconEmoji || '☕'}
+            <span className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-dark text-white shadow-lg`}>
+              <Coffee className="w-8 h-8" />
             </span>
             <div>
               <h2 className="text-3xl font-black text-white tracking-tight">{client.name}</h2>
@@ -55,7 +55,7 @@ export function CafeProfileScreen() {
         {/* Right Side: Map Actions */}
         <div className="bg-slate-800 border border-slate-700 p-8 rounded-[32px] space-y-6">
           <h3 className="text-xl font-bold text-white mb-2">Lokasi & Navigasi</h3>
-          
+
           <div className="bg-slate-900/50 p-5 rounded-2xl border border-slate-800">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Petunjuk Arah Kurir / Ojol</p>
             <p className="text-sm text-slate-300 font-medium leading-relaxed">
@@ -64,9 +64,9 @@ export function CafeProfileScreen() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <a 
-              href={client.googleMapsUrl} 
-              target="_blank" 
+            <a
+              href={client.googleMapsUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold transition-all bg-brand-primary hover:bg-brand-hover text-white shadow-lg`}
             >
@@ -74,9 +74,9 @@ export function CafeProfileScreen() {
             </a>
           </div>
         </div>
-        
+
       </div>
-      
+
       <div className="max-w-6xl mx-auto px-4 mt-20 pt-8 border-t border-slate-800 text-center text-sm font-medium text-slate-500">
         <p>© {new Date().getFullYear()} {client.name} — Powered by Growfin Digital Templates.</p>
       </div>

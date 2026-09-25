@@ -4,67 +4,84 @@ import { useRetailDemo } from './RetailDemoContext';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 export function RetailHeroScreen() {
-  const { client, isOpenNow } = useRetailDemo();
-  const { ref, isVisible } = useScrollReveal(0.1);
+  const { client } = useRetailDemo();
+  const { ref: heroRef, isVisible: isHeroVisible } = useScrollReveal(0.1);
+  const { ref: lookbookRef, isVisible: isLookbookVisible } = useScrollReveal(0.1);
+
+  // Fallback images if not provided
+  const heroImg = '/image/retail/heather-ford-5gkYsrH_ebY-unsplash.jpg';
+  
+  const lookbooks = client.lookbook && client.lookbook.length >= 3 
+    ? client.lookbook 
+    : [
+        { id: '1', name: 'Casual Elegance', imageUrl: '/image/retail/alina-bordunova-Lq78VGxRJhc-unsplash.jpg' },
+        { id: '2', name: 'Urban Chic', imageUrl: '/image/retail/caio-coelho-QRN47la37gw-unsplash.jpg' },
+        { id: '3', name: 'Modern Classic', imageUrl: '/image/retail/tanya-layko-QINaeQQHghQ-unsplash.jpg' }
+      ];
 
   return (
-    <section id="hero" className="mb-16 scroll-mt-24 pt-8">
-      <div 
-        ref={ref}
-        className={`relative h-[400px] w-full overflow-hidden rounded-[40px] shadow-2xl transition-all duration-1000 transform ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} group`}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-primary to-brand-dark opacity-80 mix-blend-overlay z-10" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={client.heroImage || "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&auto=format&fit=crop&q=80"}
-          alt="Store Vibes"
-          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-1000"
-        />
-        <div className="absolute inset-0 bg-black/20 z-10" />
-        
-        {/* Floating Operational Status */}
-        <div className="absolute top-6 left-6 z-20">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 shadow-lg">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isOpenNow ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isOpenNow ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+    <>
+      <section id="home" className="relative bg-gray-50 -mt-8 mx-[-16px] sm:mx-0 sm:rounded-[40px] overflow-hidden">
+        <div 
+          ref={heroRef}
+          className={`relative h-[70vh] w-full overflow-hidden transition-all duration-1000 transform ${isHeroVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={heroImg} alt="Hero" className="absolute inset-0 w-full h-full object-cover object-top" />
+          <div className="absolute inset-0 bg-black/40"></div>
+          
+          <div className="relative max-w-7xl mx-auto px-6 lg:px-12 h-full flex flex-col justify-center items-start">
+            <span className="inline-block py-1 px-3 rounded-full bg-brand-primary text-white text-sm font-semibold tracking-wide mb-4">
+              PILIHAN TERBAIK MINGGU INI
             </span>
-            <span className="text-xs font-bold text-white">{isOpenNow ? 'Buka Sekarang' : 'Sedang Tutup'}</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight max-w-2xl">
+              {client.tagline}
+            </h1>
+            <p className="text-lg text-gray-200 mb-8 max-w-xl">
+              Koleksi premium terbaru dengan kualitas tinggi. Tingkatkan kepercayaan dirimu dengan sentuhan elegan dari {client.name}.
+            </p>
+            <a href="#koleksi" className="bg-white text-brand-dark px-8 py-4 rounded-full font-bold hover:bg-brand-light hover:text-brand-dark transition-colors shadow-lg">
+              Belanja Sekarang
+            </a>
           </div>
         </div>
+      </section>
 
-        <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center p-8 mt-4">
-          <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight mb-4 drop-shadow-xl max-w-3xl">
-            {client.tagline}
-          </h2>
-        </div>
-
-        {/* Lead Time Tracker (Credibility) */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg z-20">
-          <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl flex items-center justify-between gap-4 border border-white/50">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-brand-light flex items-center justify-center text-brand-primary text-xl">
-                ⚡
+      <section id="lookbook" className="py-20 bg-white">
+        <div 
+          ref={lookbookRef}
+          className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 transform ${isLookbookVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Lookbook Inspirasi</h2>
+            <p className="text-gray-500">Padu padan gaya terbaik untuk setiap momen berhargamu.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
+            {lookbooks[0] && (
+              <div className="relative rounded-2xl overflow-hidden group md:col-span-2 md:row-span-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={lookbooks[0].imageUrl} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Trend 1" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-white text-xl font-semibold">{lookbooks[0].name}</p>
+                </div>
               </div>
-              <div className="text-left">
-                <p className="text-xs font-bold text-slate-500">Estimasi Layanan</p>
-                <p className="text-sm font-black text-slate-900 leading-tight">Diproses dalam 1-2 Jam</p>
+            )}
+            {lookbooks[1] && (
+              <div className="relative rounded-2xl overflow-hidden group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={lookbooks[1].imageUrl} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Trend 2" />
               </div>
-            </div>
-            <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
-            <div className="items-center gap-3 hidden sm:flex">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 text-xl">
-                ⏰
+            )}
+            {lookbooks[2] && (
+              <div className="relative rounded-2xl overflow-hidden group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={lookbooks[2].imageUrl} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt="Trend 3" />
               </div>
-              <div className="text-left">
-                <p className="text-xs font-bold text-slate-500">Batas Order</p>
-                <p className="text-sm font-black text-slate-900 leading-tight">Maks 16.00 WIB</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
-
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

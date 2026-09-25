@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layanan Profesional - Booking Appointment</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config for Custom Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .bg-hero {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 antialiased bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <div class="w-10 h-10 bg-primary-600 text-white rounded-lg flex items-center justify-center text-xl font-bold shadow-lg">
+                        <i class="fa-solid fa-leaf"></i> <!-- Ganti icon sesuai industri: fa-stethoscope untuk medis, fa-wrench untuk teknis -->
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-gray-900">Pro<span class="text-primary-600">Layanan</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-primary-600 font-medium transition">Beranda</a>
+                    <a href="#services" class="text-gray-600 hover:text-primary-600 font-medium transition">Layanan</a>
+                    <a href="#experts" class="text-gray-600 hover:text-primary-600 font-medium transition">Pakar Kami</a>
+                    <a href="#gallery" class="text-gray-600 hover:text-primary-600 font-medium transition">Fasilitas</a>
+                    <a href="#reviews" class="text-gray-600 hover:text-primary-600 font-medium transition">Ulasan</a>
+                </div>
+                <div class="hidden md:flex">
+                    <button class="btn-booking bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-md shadow-primary-500/30">
+                        Booking Sekarang
+                    </button>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative bg-hero h-screen min-h-[600px] flex items-center justify-center pt-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white z-10">
+            <span class="inline-block py-1 px-3 rounded-full bg-primary-500/20 border border-primary-400/30 text-primary-200 text-sm font-semibold mb-6 backdrop-blur-sm">
+                Pelayanan Profesional & Terpercaya
+            </span>
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                Solusi Tepat untuk Kebutuhan <br class="hidden md:block"/> <span class="text-primary-400">Layanan Anda</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Kami menyediakan fasilitas berstandar tinggi dengan dukungan tenaga ahli berpengalaman untuk memastikan hasil yang memuaskan dan efisien.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="btn-booking bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-full font-bold text-lg transition shadow-lg shadow-primary-600/40 flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-calendar-check"></i> Jadwalkan Konsultasi
+                </button>
+                <a href="#services" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-4 rounded-full font-semibold text-lg transition backdrop-blur-sm flex items-center justify-center">
+                    Pelajari Lebih Lanjut
+                </a>
+            </div>
+        </div>
+        
+        <!-- Trust Indicators Bottom Hero -->
+        <div class="absolute bottom-0 w-full bg-white/10 backdrop-blur-md border-t border-white/10 py-4 hidden md:block">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center text-white text-sm font-medium">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-certificate text-primary-400 text-lg"></i> Tersertifikasi Resmi</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-clock text-primary-400 text-lg"></i> Respon Cepat 24/7</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-star text-primary-400 text-lg"></i> 4.9/5 Rating Kepuasan</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-primary-400 text-lg"></i> Garansi Layanan</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Catalog Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-primary-600 font-semibold tracking-wide uppercase text-sm mb-2">Katalog Layanan</h2>
+                <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Layanan Unggulan Kami</h3>
+                <p class="text-gray-600">Solusi menyeluruh yang disesuaikan dengan standar industri tertinggi untuk menjawab setiap permasalahan Anda.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl transition duration-300 group">
+                    <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 text-2xl mb-6 group-hover:bg-primary-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-stethoscope"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Pemeriksaan Menyeluruh</h4>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Diagnosa lengkap menggunakan peralatan modern untuk mengetahui akar masalah secara akurat.</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Mulai dari</p>
+                            <p class="text-lg font-bold text-primary-600">Rp 150.000</p>
+                        </div>
+                        <button class="btn-booking w-10 h-10 rounded-full bg-gray-100 text-gray-700 hover:bg-primary-600 hover:text-white flex items-center justify-center transition">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl transition duration-300 group">
+                    <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 text-2xl mb-6 group-hover:bg-primary-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-wrench"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Perawatan Berkala</h4>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Paket perawatan standar untuk menjaga performa dan mencegah kerusakan lebih lanjut.</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Mulai dari</p>
+                            <p class="text-lg font-bold text-primary-600">Rp 350.000</p>
+                        </div>
+                        <button class="btn-booking w-10 h-10 rounded-full bg-gray-100 text-gray-700 hover:bg-primary-600 hover:text-white flex items-center justify-center transition">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl transition duration-300 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">POPULER</div>
+                    <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 text-2xl mb-6 group-hover:bg-primary-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-star-of-life"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Tindakan Khusus</h4>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Penanganan masalah berat yang membutuhkan tingkat keahlian spesifik dan peralatan canggih.</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Mulai dari</p>
+                            <p class="text-lg font-bold text-primary-600">Rp 850.000</p>
+                        </div>
+                        <button class="btn-booking w-10 h-10 rounded-full bg-gray-100 text-gray-700 hover:bg-primary-600 hover:text-white flex items-center justify-center transition">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-booking bg-white border-2 border-primary-600 text-primary-600 hover:bg-primary-50 px-8 py-3 rounded-full font-semibold transition">
+                    Lihat Semua Layanan & Harga
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expert Profiles Section -->
+    <section id="experts" class="py-20 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+                <div class="max-w-2xl">
+                    <h2 class="text-primary-600 font-semibold tracking-wide uppercase text-sm mb-2">Profil Praktisi</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ditangani oleh Ahlinya</h3>
+                    <p class="text-gray-600">Tim spesialis kami memiliki sertifikasi resmi dan jam terbang tinggi dalam menangani berbagai macam kasus di bidangnya.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Expert 1 -->
+                <div class="group">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 shadow-md aspect-[3/4] bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop" alt="Pakar 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                            <button class="btn-booking bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-500 transition">Booking Jadwal</button>
+                        </div>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900">Dr. Sarah Johnson, Sp.G</h4>
+                    <p class="text-primary-600 text-sm font-medium mb-2">Spesialis Utama</p>
+                    <p class="text-gray-500 text-sm text-xs"><i class="fa-solid fa-graduation-cap mr-1"></i> Sertifikasi Internasional 2018</p>
+                </div>
+
+                <!-- Expert 2 -->
+                <div class="group">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 shadow-md aspect-[3/4] bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop" alt="Pakar 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                            <button class="btn-booking bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-500 transition">Booking Jadwal</button>
+                        </div>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900">Michael Chang, ST.</h4>
+                    <p class="text-primary-600 text-sm font-medium mb-2">Kepala Teknisi / Diagnostik</p>
+                    <p class="text-gray-500 text-sm text-xs"><i class="fa-solid fa-award mr-1"></i> Pengalaman > 10 Tahun</p>
+                </div>
+                
+                <!-- Expert 3 -->
+                <div class="group">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 shadow-md aspect-[3/4] bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1594824436998-ddf10d64f0b2?q=80&w=800&auto=format&fit=crop" alt="Pakar 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                            <button class="btn-booking bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-500 transition">Booking Jadwal</button>
+                        </div>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900">Drg. Amanda Siregar</h4>
+                    <p class="text-primary-600 text-sm font-medium mb-2">Konsultan Ahli</p>
+                    <p class="text-gray-500 text-sm text-xs"><i class="fa-solid fa-ribbon mr-1"></i> Lulusan Terbaik UI 2015</p>
+                </div>
+
+                <!-- Expert 4 -->
+                <div class="group">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 shadow-md aspect-[3/4] bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=800&auto=format&fit=crop" alt="Pakar 4" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                            <button class="btn-booking bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-500 transition">Booking Jadwal</button>
+                        </div>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900">Budi Santoso</h4>
+                    <p class="text-primary-600 text-sm font-medium mb-2">Spesialis Perbaikan Khusus</p>
+                    <p class="text-gray-500 text-sm text-xs"><i class="fa-solid fa-certificate mr-1"></i> Master Certified 2021</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facility Gallery Section -->
+    <section id="gallery" class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-primary-400 font-semibold tracking-wide uppercase text-sm mb-2">Fasilitas & Hasil Kerja</h2>
+                <h3 class="text-3xl md:text-4xl font-bold mb-4">Didukung Teknologi Terkini</h3>
+                <p class="text-gray-400">Transparansi adalah kunci. Lihat sendiri kualitas peralatan yang kami gunakan dan bukti nyata hasil pengerjaan (Before/After) kami.</p>
+            </div>
+
+            <!-- CSS Grid for Gallery -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Large Image -->
+                <div class="col-span-2 row-span-2 overflow-hidden rounded-xl bg-gray-800">
+                    <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000&auto=format&fit=crop" alt="Fasilitas Utama" class="w-full h-full object-cover hover:scale-105 transition duration-700">
+                </div>
+                <!-- Small Images -->
+                <div class="overflow-hidden rounded-xl bg-gray-800 aspect-square">
+                    <img src="https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=80&w=500&auto=format&fit=crop" alt="Alat Modern" class="w-full h-full object-cover hover:scale-105 transition duration-700">
+                </div>
+                <div class="overflow-hidden rounded-xl bg-gray-800 aspect-square relative">
+                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=500&auto=format&fit=crop" alt="Ruang Tunggu" class="w-full h-full object-cover hover:scale-105 transition duration-700">
+                </div>
+                <div class="overflow-hidden rounded-xl bg-gray-800 aspect-square relative">
+                    <div class="absolute inset-0 flex">
+                        <div class="w-1/2 bg-black overflow-hidden border-r-2 border-white"><img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=250&auto=format&fit=crop" alt="Before" class="w-full h-full object-cover opacity-70"></div>
+                        <div class="w-1/2 bg-black overflow-hidden"><img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=250&auto=format&fit=crop" alt="After" class="w-full h-full object-cover"></div>
+                    </div>
+                    <div class="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-1 rounded">Before</div>
+                    <div class="absolute top-2 right-2 bg-black/60 text-white text-[10px] px-2 py-1 rounded">After</div>
+                </div>
+                <div class="overflow-hidden rounded-xl bg-gray-800 aspect-square flex items-center justify-center relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=500&auto=format&fit=crop" alt="Lebih Banyak" class="w-full h-full object-cover opacity-40 group-hover:scale-105 transition duration-700">
+                    <span class="absolute text-lg font-bold"><i class="fa-solid fa-images mr-2"></i>Lihat Galeri</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section id="reviews" class="py-20 bg-blue-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <div class="flex justify-center items-center gap-1 text-yellow-400 text-2xl mb-4">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Kepercayaan Mereka, Kebanggaan Kami</h3>
+                <p class="text-gray-600">Ribuan orang telah merasakan kualitas pelayanan kami. Ini kata mereka berdasarkan ulasan terverifikasi di Google.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Review Card 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Andi+Susanto&background=random" alt="User" class="w-12 h-12 rounded-full">
+                        <div>
+                            <h5 class="font-bold text-gray-900 text-sm">Andi Susanto</h5>
+                            <p class="text-xs text-gray-500">2 hari yang lalu</p>
+                        </div>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Review" class="w-5 h-5 ml-auto">
+                    </div>
+                    <div class="flex text-yellow-400 text-xs mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm italic mb-4 flex-grow">"Layanannya sangat profesional. Dari awal reservasi sampai selesai pengerjaan, komunikasinya jelas. Fasilitasnya sangat bersih dan modern. Sangat direkomendasikan!"</p>
+                </div>
+
+                <!-- Review Card 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Ratna+Dewi&background=random" alt="User" class="w-12 h-12 rounded-full">
+                        <div>
+                            <h5 class="font-bold text-gray-900 text-sm">Ratna Dewi</h5>
+                            <p class="text-xs text-gray-500">1 minggu yang lalu</p>
+                        </div>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Review" class="w-5 h-5 ml-auto">
+                    </div>
+                    <div class="flex text-yellow-400 text-xs mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm italic mb-4 flex-grow">"Dokternya/Ahlinya ramah dan informatif. Keluhan saya teratasi dengan cepat tanpa biaya yang mengada-ada. Booking online via web sangat memudahkan hidup saya."</p>
+                </div>
+
+                <!-- Review Card 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Faisal+Akbar&background=random" alt="User" class="w-12 h-12 rounded-full">
+                        <div>
+                            <h5 class="font-bold text-gray-900 text-sm">Faisal Akbar</h5>
+                            <p class="text-xs text-gray-500">1 bulan yang lalu</p>
+                        </div>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Review" class="w-5 h-5 ml-auto">
+                    </div>
+                    <div class="flex text-yellow-400 text-xs mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm italic mb-4 flex-grow">"Tempat langganan keluarga. Hasil kerjanya selalu rapi, ruang tunggunya nyaman, dan yang paling penting harganya masuk akal sesuai dengan kualitas yang didapat."</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <a href="#" class="inline-flex items-center text-primary-600 font-semibold hover:text-primary-700">
+                    Lihat Semua Ulasan di Google <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-primary-600 text-white rounded-md flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">Pro<span class="text-primary-500">Layanan</span></span>
+                </div>
+                <p class="text-sm text-gray-400 mb-6 max-w-sm">Melayani dengan integritas, profesionalitas, dan teknologi terkini. Komitmen kami adalah memberikan hasil terbaik untuk kepuasan Anda.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-semibold mb-4">Informasi</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#services" class="hover:text-primary-400 transition">Layanan Kami</a></li>
+                    <li><a href="#experts" class="hover:text-primary-400 transition">Profil Ahli</a></li>
+                    <li><a href="#gallery" class="hover:text-primary-400 transition">Fasilitas</a></li>
+                    <li><a href="#" class="hover:text-primary-400 transition">Syarat & Ketentuan</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-semibold mb-4">Kontak</h4>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-location-dot mt-1 text-primary-500"></i>
+                        <span>Jl. Sudirman No. 123, Pusat Bisnis Terpadu, Jakarta</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-phone text-primary-500"></i>
+                        <span>(021) 555-0198</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-envelope text-primary-500"></i>
+                        <span>halo@prolayanan.com</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-gray-800 text-sm text-center text-gray-500">
+            &copy; 2026 ProLayanan. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Booking Modal Backdrop -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-900/75 backdrop-blur-sm transition-opacity" id="modalOverlay"></div>
+
+        <!-- Modal panel -->
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                
+                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-gray-100">
+                    
+                    <!-- Header -->
+                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold leading-6 text-gray-900" id="modal-title">
+                            <i class="fa-regular fa-calendar-plus text-primary-600 mr-2"></i> Form Reservasi Jadwal
+                        </h3>
+                        <button type="button" id="closeModalBtn" class="text-gray-400 hover:text-red-500 transition focus:outline-none">
+                            <i class="fa-solid fa-xmark text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Form Body -->
+                    <div class="px-6 py-6">
+                        <p class="text-sm text-gray-500 mb-5">Silakan isi detail di bawah ini. Anda akan diarahkan ke WhatsApp untuk konfirmasi jadwal dengan resepsionis kami.</p>
+                        
+                        <form id="bookingForm" class="space-y-4">
+                            
+                            <!-- Pilih Layanan/Spesialis -->
+                            <div>
+                                <label for="expert" class="block text-sm font-medium leading-6 text-gray-900 mb-1">Pilih Praktisi / Layanan <span class="text-red-500">*</span></label>
+                                <select id="expert" required class="block w-full rounded-lg border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 bg-white">
+                                    <option value="" disabled selected>-- Pilih Layanan/Ahli --</option>
+                                    <option value="Dr. Sarah Johnson (Pemeriksaan)">Dr. Sarah Johnson (Pemeriksaan Menyeluruh)</option>
+                                    <option value="Michael Chang (Perawatan)">Michael Chang (Perawatan Berkala)</option>
+                                    <option value="Tindakan Khusus Umum">Tindakan Khusus (Spesialis Tersedia)</option>
+                                    <option value="Konsultasi Umum">Konsultasi Umum (Bantu saya pilihkan)</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Date Picker -->
+                                <div>
+                                    <label for="date" class="block text-sm font-medium leading-6 text-gray-900 mb-1">Tanggal <span class="text-red-500">*</span></label>
+                                    <input type="date" id="date" required min="" class="block w-full rounded-lg border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                                </div>
+                                <!-- Time Shift -->
+                                <div>
+                                    <label for="time" class="block text-sm font-medium leading-6 text-gray-900 mb-1">Shift Waktu <span class="text-red-500">*</span></label>
+                                    <select id="time" required class="block w-full rounded-lg border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 bg-white">
+                                        <option value="" disabled selected>Pilih Jam</option>
+                                        <option value="Pagi (08:00 - 11:00)">Pagi (08:00 - 11:00)</option>
+                                        <option value="Siang (13:00 - 15:00)">Siang (13:00 - 15:00)</option>
+                                        <option value="Sore (15:00 - 18:00)">Sore (15:00 - 18:00)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Textarea -->
+                            <div>
+                                <label for="issue" class="block text-sm font-medium leading-6 text-gray-900 mb-1">Detail Keluhan / Kebutuhan <span class="text-red-500">*</span></label>
+                                <textarea id="issue" rows="3" required placeholder="Jelaskan secara singkat keluhan atau layanan yang Anda butuhkan..." class="block w-full rounded-lg border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"></textarea>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="mt-6 flex items-center justify-end gap-x-3 pt-4 border-t border-gray-100">
+                                <button type="button" id="cancelBtn" class="text-sm font-semibold leading-6 text-gray-900 hover:text-red-600 px-3 py-2 transition">Batal</button>
+                                <button type="submit" class="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transition flex items-center gap-2">
+                                    <i class="fa-brands fa-whatsapp text-lg"></i> Lanjut ke WhatsApp
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set minimum date for datepicker to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').setAttribute('min', today);
+
+            const modal = document.getElementById('bookingModal');
+            const openBtns = document.querySelectorAll('.btn-booking');
+            const closeBtn = document.getElementById('closeModalBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const overlay = document.getElementById('modalOverlay');
+            const form = document.getElementById('bookingForm');
+
+            // Open Modal Logic
+            const openModal = (e) => {
+                if(e) e.preventDefault();
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            };
+
+            // Close Modal Logic
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            };
+
+            // Event Listeners
+            openBtns.forEach(btn => btn.addEventListener('click', openModal));
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', closeModal);
+
+            // Handle Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+
+            // Form Submit Logic to WhatsApp
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Collect data
+                const expert = document.getElementById('expert').value;
+                const date = document.getElementById('date').value;
+                const time = document.getElementById('time').value;
+                const issue = document.getElementById('issue').value;
+
+                // Format Date nicely
+                const dateObj = new Date(date);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = dateObj.toLocaleDateString('id-ID', options);
+
+                // Construct WhatsApp Message
+                const message = `Halo Admin, saya ingin melakukan *Booking Appointment*. Berikut detailnya:%0A%0A` +
+                                `*Layanan/Praktisi:* ${expert}%0A` +
+                                `*Tanggal:* ${formattedDate}%0A` +
+                                `*Shift:* ${time}%0A` +
+                                `*Keluhan/Keterangan:* ${issue}%0A%0A` +
+                                `Mohon konfirmasinya. Terima kasih.`;
+
+                // URL target (Replace with actual business phone number, using 62 format)
+                const phoneNumber = '6281234567890';
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+                // Open WhatsApp in new tab
+                window.open(whatsappUrl, '_blank');
+                
+                // Reset form and close modal
+                form.reset();
+                closeModal();
+            });
+        });
+    </script>
+</body>
+</html>

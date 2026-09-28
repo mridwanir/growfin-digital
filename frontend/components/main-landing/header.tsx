@@ -60,11 +60,10 @@ export function Header() {
               <a
                 key={link.id}
                 href={`#${link.id}`}
-                className={`transition-colors duration-300 ${
-                  activeSection === link.id
-                    ? 'text-[#FFFFFF] font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'
-                    : 'text-[#8E8EA0] hover:text-[#FFFFFF]'
-                }`}
+                className={`transition-colors duration-300 ${activeSection === link.id
+                  ? 'text-[#FFFFFF] font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'
+                  : 'text-[#8E8EA0] hover:text-[#FFFFFF]'
+                  }`}
               >
                 {link.label}
               </a>
@@ -73,23 +72,23 @@ export function Header() {
 
           {/* Primary Conversion Action (Right) */}
           <div className="hidden md:flex items-center gap-4">
-            <button 
+            <button
               onClick={toggleLanguage}
               className="text-xs font-bold text-[#8E8EA0] hover:text-[#FFFFFF] uppercase border border-[#262633] px-3 py-1.5 rounded-full transition-colors"
             >
               {language === 'en' ? 'EN' : 'ID'}
             </button>
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center px-6 py-2.5 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-[13px] font-semibold rounded-full shadow-md transition-all hover:shadow-[0_0_15px_rgba(112,66,244,0.4)]"
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center px-6 py-2.5 bg-[#262633] hover:bg-[#323242] text-[#FFFFFF] text-[13px] font-semibold rounded-full shadow-md transition-all border border-[#262633]"
             >
-              Get Started
-            </a>
+              Login
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
-            <button 
+            <button
               onClick={toggleLanguage}
               className="text-[10px] font-bold text-[#8E8EA0] hover:text-[#FFFFFF] uppercase border border-[#262633] px-2 py-1 rounded-full transition-colors"
             >
@@ -114,21 +113,18 @@ export function Header() {
               key={link.id}
               href={`#${link.id}`}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block text-xs py-2 border-b border-[#262633] uppercase tracking-wide transition-colors ${
-                activeSection === link.id ? 'font-black text-[#00e0b8]' : 'font-bold text-[#FFFFFF]'
-              }`}
+              className={`block text-xs py-2 border-b border-[#262633] uppercase tracking-wide transition-colors ${activeSection === link.id ? 'font-black text-[#00e0b8]' : 'font-bold text-[#FFFFFF]'
+                }`}
             >
               {link.label}
             </a>
           ))}
-          <a
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 py-3 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-xs font-extrabold rounded-full shadow-md mt-2 transition-colors"
+          <Link
+            href="/login"
+            className="w-full flex items-center justify-center gap-2 py-3 bg-[#262633] hover:bg-[#323242] text-[#FFFFFF] text-xs font-extrabold rounded-full shadow-md mt-2 transition-colors border border-[#262633]"
           >
-            <span>Contact Us &rarr;</span>
-          </a>
+            <span>Login to Dashboard &rarr;</span>
+          </Link>
         </div>
       )}
     </header>

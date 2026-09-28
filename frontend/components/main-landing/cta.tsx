@@ -1,9 +1,12 @@
 'use client';
 import { ArrowRight, Network } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
+import { useState } from 'react';
+import { OnboardingModal } from './onboarding-modal';
 
 export function CTA() {
   const { language } = useLanguage();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <section id="contact" className="bg-[#0B0B0E] py-20 sm:py-32 px-4 sm:px-6 lg:px-8 border-t border-[#262633]">
@@ -45,13 +48,13 @@ export function CTA() {
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               
               {/* Primary CTA */}
-              <a
-                href="#"
+              <button
+                onClick={() => setIsModalOpen(true)}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-gray-100 text-[#0B0B0E] text-sm font-black rounded-full transition-colors active:scale-95 shadow-lg"
               >
                 <span>Get Started - Free</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </button>
 
               {/* Secondary CTA */}
               <a
@@ -67,6 +70,8 @@ export function CTA() {
         </div>
 
       </div>
+
+      <OnboardingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 }

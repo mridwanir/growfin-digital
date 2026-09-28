@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ironwood - Barbershop & Hair Salon</title>
+    
+    <!-- Tailwind CSS v4 Browser Build -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    <!-- Google Fonts for Vintage Masculine Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style type="text/tailwindcss">
+        @theme {
+            --font-display: 'Oswald', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+            --color-vintage-900: #0a0a0a;
+            --color-vintage-800: #1a1a1a;
+            --color-vintage-700: #2d2d2d;
+            --color-copper-500: #c0824b;
+            --color-copper-600: #a36939;
+            --color-paper: #f4ece2;
+        }
+        body { font-family: var(--font-serif); background-color: var(--color-vintage-900); color: var(--color-paper); }
+        h1, h2, h3, h4, .font-display { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.05em; }
+    </style>
+</head>
+<body class="antialiased selection:bg-copper-500 selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-vintage-900/90 backdrop-blur-md border-b border-vintage-700 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-display text-2xl font-bold tracking-widest text-copper-500">IRONWOOD.</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center font-display text-sm tracking-widest">
+                    <a href="#lookbook" class="text-paper/70 hover:text-copper-500 transition-colors">Lookbook</a>
+                    <a href="#reviews" class="text-paper/70 hover:text-copper-500 transition-colors">Reviews</a>
+                    <a href="#treatments" class="text-paper/70 hover:text-copper-500 transition-colors">Services</a>
+                    <a href="#barbers" class="text-paper/70 hover:text-copper-500 transition-colors">Barbers</a>
+                    <button onclick="openModal()" class="px-6 py-2.5 border border-copper-500 text-copper-500 hover:bg-copper-500 hover:text-vintage-900 transition-colors font-bold">
+                        BOOK NOW
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Aesthetic Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0 bg-vintage-900">
+            <!-- Masculine/Vintage Barbershop vibe -->
+            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Vintage Barbershop" class="w-full h-full object-cover object-center opacity-40 mix-blend-luminosity">
+            <div class="absolute inset-0 bg-gradient-to-t from-vintage-900 via-vintage-900/60 to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+            <span class="text-copper-500 tracking-[0.3em] text-sm font-display mb-6 block border-b border-copper-500/30 pb-4 inline-block">EST. 2026 • GENTLEMAN'S LOUNGE</span>
+            <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                SENI KLASIK, <br/>KETAMPANAN <span class="text-copper-500">MODERN.</span>
+            </h1>
+            <p class="text-paper/80 text-lg md:text-xl mb-10 font-serif max-w-2xl mx-auto italic">
+                Bukan sekadar potong rambut. Ini adalah ritual relaksasi, tempat maskulinitas ditempa dengan pisau cukur presisi dan handuk hangat.
+            </p>
+            <a href="#lookbook" class="inline-flex items-center justify-center px-8 py-4 bg-copper-500 text-vintage-900 font-display font-bold hover:bg-white transition-all duration-300">
+                LIHAT MAHAKARYA KAMI
+            </a>
+        </div>
+    </header>
+
+    <!-- 2. Lookbook Portfolio -->
+    <section id="lookbook" class="py-24 bg-vintage-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl text-white mb-4">Galeri Karya</h2>
+                <p class="text-paper/60 font-serif italic">Presisi dalam setiap tarikan mesin dan gunting.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="group relative overflow-hidden h-[400px]">
+                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=800&q=80" alt="Pompadour" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-vintage-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center border-4 border-transparent group-hover:border-copper-500/50">
+                        <span class="text-copper-500 font-display text-2xl tracking-wide">CLASSIC POMPADOUR</span>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-[400px]">
+                    <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=800&q=80" alt="Skin Fade" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-vintage-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center border-4 border-transparent group-hover:border-copper-500/50">
+                        <span class="text-copper-500 font-display text-2xl tracking-wide">EXECUTIVE FADE</span>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-[400px]">
+                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80" alt="Beard Trim" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-vintage-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center border-4 border-transparent group-hover:border-copper-500/50">
+                        <span class="text-copper-500 font-display text-2xl tracking-wide">HOT TOWEL BEARD SHAVE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Social Proof (Review Suasana) -->
+    <section id="reviews" class="py-24 bg-vintage-900 border-y border-vintage-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-display text-4xl text-white mb-16">Testimoni Pria</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-vintage-800 p-8 border border-vintage-700">
+                    <div class="flex justify-center text-copper-500 mb-4 text-xl">
+                        ★★★★★
+                    </div>
+                    <p class="text-paper/80 italic mb-6 font-serif">"Detail cukurannya luar biasa tajam. Handuk hangat dan pijat kepala setelah cukur benar-benar merilekskan otot yang tegang sepulang kerja."</p>
+                    <h4 class="font-display text-white tracking-wider">- Adrian K.</h4>
+                </div>
+                <!-- Review 2 -->
+                <div class="bg-vintage-800 p-8 border border-vintage-700">
+                    <div class="flex justify-center text-copper-500 mb-4 text-xl">
+                        ★★★★★
+                    </div>
+                    <p class="text-paper/80 italic mb-6 font-serif">"Vibenya sangat maskulin dan otentik. Bro Alex tahu betul cara menangani rambut ikal saya. Terbaik di kota ini, tanpa keraguan."</p>
+                    <h4 class="font-display text-white tracking-wider">- Michael D.</h4>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-vintage-800 p-8 border border-vintage-700">
+                    <div class="flex justify-center text-copper-500 mb-4 text-xl">
+                        ★★★★★
+                    </div>
+                    <p class="text-paper/80 italic mb-6 font-serif">"Hair spa untuk pria di sini juara. Produk yang dipakai premium, aroma sandalwood-nya bikin betah. Sangat direkomendasikan!"</p>
+                    <h4 class="font-display text-white tracking-wider">- Rezky P.</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Treatment Catalog -->
+    <section id="treatments" class="py-24 bg-vintage-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl text-white mb-4">Layanan & Ritual</h2>
+                <p class="text-paper/60 font-serif italic">Silakan pilih ritual grooming Anda hari ini.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-vintage-900 border border-vintage-700 p-8 hover:border-copper-500 transition-colors group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-display text-2xl text-white">The Ironwood Cut</h3>
+                            <span class="text-xs bg-vintage-700 text-copper-500 px-3 py-1 font-display tracking-widest">
+                                ⏱ 45 MIN
+                            </span>
+                        </div>
+                        <p class="text-paper/70 mb-6 font-serif text-sm">Konsultasi gaya, pencucian rambut, potongan presisi, penataan dengan pomade premium, dan pijat bahu singkat.</p>
+                    </div>
+                    <button onclick="openModal('The Ironwood Cut')" class="w-full mt-4 py-3 border border-copper-500 text-copper-500 font-display font-bold group-hover:bg-copper-500 group-hover:text-vintage-900 transition-colors tracking-widest">
+                        RESERVASI
+                    </button>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-vintage-900 border border-vintage-700 p-8 hover:border-copper-500 transition-colors group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-display text-2xl text-white">Royal Hot Towel Shave</h3>
+                            <span class="text-xs bg-vintage-700 text-copper-500 px-3 py-1 font-display tracking-widest">
+                                ⏱ 30 MIN
+                            </span>
+                        </div>
+                        <p class="text-paper/70 mb-6 font-serif text-sm">Ritual cukur kumis/jenggot tradisional dengan straight razor, uap handuk hangat, dan aplikasi aftershave balm penyejuk.</p>
+                    </div>
+                    <button onclick="openModal('Royal Hot Towel Shave')" class="w-full mt-4 py-3 border border-copper-500 text-copper-500 font-display font-bold group-hover:bg-copper-500 group-hover:text-vintage-900 transition-colors tracking-widest">
+                        RESERVASI
+                    </button>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-vintage-900 border border-vintage-700 p-8 hover:border-copper-500 transition-colors group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-display text-2xl text-white">Gentleman's Hair Spa</h3>
+                            <span class="text-xs bg-vintage-700 text-copper-500 px-3 py-1 font-display tracking-widest">
+                                ⏱ 60 MIN
+                            </span>
+                        </div>
+                        <p class="text-paper/70 mb-6 font-serif text-sm">Perawatan kulit kepala khusus pria dengan scrub eksfoliasi, pijat akupresur relaksasi mendalam, dan vitamin rambut.</p>
+                    </div>
+                    <button onclick="openModal('Gentleman\'s Hair Spa')" class="w-full mt-4 py-3 border border-copper-500 text-copper-500 font-display font-bold group-hover:bg-copper-500 group-hover:text-vintage-900 transition-colors tracking-widest">
+                        RESERVASI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Katalog Kapster / Stylist -->
+    <section id="barbers" class="py-24 bg-vintage-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl text-white mb-4">The Craftsmen</h2>
+                <p class="text-paper/60 font-serif italic">Seniman di balik setiap mahakarya.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
+                <!-- Barber 1 -->
+                <div>
+                    <img src="https://images.unsplash.com/photo-1620052309838-89c566fb0a42?auto=format&fit=crop&w=400&q=80" alt="Alex" class="w-56 h-56 rounded-none object-cover mx-auto mb-6 grayscale hover:grayscale-0 transition-all duration-500 border-4 border-vintage-700 hover:border-copper-500">
+                    <h3 class="font-display text-2xl text-white">ALEX</h3>
+                    <p class="text-copper-500 text-sm font-display tracking-widest mt-2">MASTER BARBER</p>
+                </div>
+                <!-- Barber 2 -->
+                <div>
+                    <img src="https://images.unsplash.com/photo-1575456481014-a9009eb5845c?auto=format&fit=crop&w=400&q=80" alt="Raka" class="w-56 h-56 rounded-none object-cover mx-auto mb-6 grayscale hover:grayscale-0 transition-all duration-500 border-4 border-vintage-700 hover:border-copper-500">
+                    <h3 class="font-display text-2xl text-white">RAKA</h3>
+                    <p class="text-copper-500 text-sm font-display tracking-widest mt-2">FADE & TEXTURE SPECIALIST</p>
+                </div>
+                <!-- Barber 3 -->
+                <div>
+                    <img src="https://images.unsplash.com/photo-1616421063629-6c3d52d9a304?auto=format&fit=crop&w=400&q=80" alt="Doni" class="w-56 h-56 rounded-none object-cover mx-auto mb-6 grayscale hover:grayscale-0 transition-all duration-500 border-4 border-vintage-700 hover:border-copper-500">
+                    <h3 class="font-display text-2xl text-white">DONI</h3>
+                    <p class="text-copper-500 text-sm font-display tracking-widest mt-2">SENIOR HAIR THERAPIST</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-vintage-900 border-t border-vintage-700 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-display text-3xl mb-4 text-copper-500 tracking-widest">IRONWOOD.</h2>
+            <p class="text-sm text-paper/60 font-serif italic mb-8">Forging confidence through classic grooming.</p>
+            <p class="text-xs text-paper/40 font-display tracking-widest">© 2026 IRONWOOD BARBERSHOP & SALON. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <!-- 6. Treatment Booking Modal (Konversi) -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-vintage-800 p-8 border border-copper-500/50 shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b border-vintage-700 pb-4">
+                <h3 class="font-display text-2xl text-white">RESERVASI KURSI</h3>
+                <button onclick="closeModal()" class="text-paper/50 hover:text-copper-500 text-3xl leading-none">&times;</button>
+            </div>
+            
+            <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-5 font-serif">
+                <div>
+                    <label class="block text-sm text-paper/70 mb-2 font-display tracking-widest">PILIH LAYANAN</label>
+                    <select id="treatmentSelect" required class="w-full border border-vintage-700 bg-vintage-900 p-3 text-paper focus:outline-none focus:border-copper-500">
+                        <option value="">-- Layanan Grooming --</option>
+                        <option value="The Ironwood Cut">The Ironwood Cut (45 Min)</option>
+                        <option value="Royal Hot Towel Shave">Royal Hot Towel Shave (30 Min)</option>
+                        <option value="Gentleman's Hair Spa">Gentleman's Hair Spa (60 Min)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-paper/70 mb-2 font-display tracking-widest">KAPSTER / BARBER FAVORIT</label>
+                    <select id="stylistSelect" required class="w-full border border-vintage-700 bg-vintage-900 p-3 text-paper focus:outline-none focus:border-copper-500">
+                        <option value="">-- Pilih Barber --</option>
+                        <option value="Alex">Alex (Master Barber)</option>
+                        <option value="Raka">Raka (Fade & Texture Specialist)</option>
+                        <option value="Doni">Doni (Senior Hair Therapist)</option>
+                        <option value="Siapa saja yang tersedia">Siapa saja yang tersedia</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-paper/70 mb-2 font-display tracking-widest">TANGGAL</label>
+                        <input type="date" id="dateSelect" required class="w-full border border-vintage-700 bg-vintage-900 p-3 text-paper focus:outline-none focus:border-copper-500 [color-scheme:dark]">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-paper/70 mb-2 font-display tracking-widest">JAM</label>
+                        <input type="time" id="timeSelect" required class="w-full border border-vintage-700 bg-vintage-900 p-3 text-paper focus:outline-none focus:border-copper-500 [color-scheme:dark]">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full mt-6 bg-copper-500 text-vintage-900 py-4 text-sm font-display font-bold tracking-widest hover:bg-white transition-colors flex items-center justify-center gap-2">
+                    AMANKAN KURSI VIA WHATSAPP
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(treatmentName) {
+            document.getElementById('bookingModal').classList.remove('hidden');
+            
+            if(treatmentName) {
+                const treatmentSelect = document.getElementById('treatmentSelect');
+                treatmentSelect.value = treatmentName;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        function submitBooking(event) {
+            event.preventDefault();
+            
+            const treatment = document.getElementById('treatmentSelect').value;
+            const stylist = document.getElementById('stylistSelect').value;
+            const date = document.getElementById('dateSelect').value;
+            const time = document.getElementById('timeSelect').value;
+            
+            const text = `Halo Admin Ironwood, saya ingin mengamankan slot reservasi kursi dengan detail berikut:%0A%0A`
+                       + `💈 *Layanan*: ${treatment}%0A`
+                       + `✂️ *Barber*: ${stylist}%0A`
+                       + `📅 *Tanggal*: ${date}%0A`
+                       + `⌚ *Jam*: ${time}%0A%0A`
+                       + `Mohon konfirmasi ketersediaan slotnya. Terima kasih.`;
+            
+            // Masukkan nomor WhatsApp operasional Barbershop (Format 62)
+            const waNumber = "6281234567890";
+            const waUrl = `https://wa.me/${waNumber}?text=${text}`;
+            
+            window.open(waUrl, '_blank');
+            closeModal();
+        }
+    </script>
+</body>
+</html>

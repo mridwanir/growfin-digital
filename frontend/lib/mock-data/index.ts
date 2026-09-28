@@ -18,28 +18,28 @@ export interface MockData {
 export function getMockData(category: string): MockData {
   const normalizedCat = category.toLowerCase();
 
-  if (normalizedCat === 'cafe' || normalizedCat === 'coffee shop') {
+  if (normalizedCat === 'fnb' || normalizedCat === 'coffee shop') {
     return {
       tagline: 'Tempat nyaman untuk menikmati kopi spesialti dan momen berharga bersama teman.',
       hours: 'Setiap Hari: 08:00 - 22:00',
-      heroImage: '/image/cafe/mitch-Da1F2k3BFeU-unsplash.jpg',
+      heroImage: '/image/fnb/mitch-Da1F2k3BFeU-unsplash.jpg',
       features: [
         { id: 1, title: 'Biji Kopi Pilihan', description: 'Kopi 100% Arabica dari petani lokal terbaik.', icon: '☕' },
-        { id: 2, title: 'Free WiFi Ngebut', description: 'Cocok untuk WFC (Work From Cafe) seharian.', icon: '📶' },
+        { id: 2, title: 'Free WiFi Ngebut', description: 'Cocok untuk WFC (Work From Fnb) seharian.', icon: '📶' },
         { id: 3, title: 'Pastry Fresh Oven', description: 'Aneka roti dan kue yang dipanggang segar setiap hari.', icon: '🥐' },
       ],
       products: [
         { 
-          id: 1, name: 'Es Kopi Susu Aren', desc: 'Signature espresso dengan gula aren asli dan susu krimi.', price: 'Rp 25.000', category: 'Signature', imageUrl: '/image/cafe/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
+          id: 1, name: 'Es Kopi Susu Aren', desc: 'Signature espresso dengan gula aren asli dan susu krimi.', price: 'Rp 25.000', category: 'Signature', imageUrl: '/image/fnb/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
           variants: [{ name: 'Ukuran', options: ['Regular', 'Large (+Rp 5.000)'] }, { name: 'Jenis Susu', options: ['Susu Sapi (Full Cream)', 'Oatmilk (+Rp 8.000)'] }]
         },
         { 
-          id: 2, name: 'Caramel Macchiato', desc: 'Espresso dengan sirup caramel dan vanilla foam.', price: 'Rp 35.000', category: 'Espresso Based', imageUrl: '/image/cafe/haydn-golden-EVoICOUotkg-unsplash.jpg',
+          id: 2, name: 'Caramel Macchiato', desc: 'Espresso dengan sirup caramel dan vanilla foam.', price: 'Rp 35.000', category: 'Espresso Based', imageUrl: '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg',
           variants: [{ name: 'Suhu', options: ['Hot', 'Ice'] }, { name: 'Ukuran', options: ['Regular', 'Large (+Rp 5.000)'] }]
         },
-        { id: 3, name: 'Almond Butter Croissant', desc: 'Croissant renyah dengan isian almond butter premium.', price: 'Rp 30.000', category: 'Pastry', imageUrl: '/image/cafe/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg' },
+        { id: 3, name: 'Almond Butter Croissant', desc: 'Croissant renyah dengan isian almond butter premium.', price: 'Rp 30.000', category: 'Pastry', imageUrl: '/image/fnb/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg' },
         { 
-          id: 4, name: 'Truffle French Fries', desc: 'Kentang goreng renyah dengan aroma truffle oil.', price: 'Rp 28.000', category: 'Snacks', imageUrl: '/image/cafe/chad-montano-MqT0asuoIcU-unsplash.jpg',
+          id: 4, name: 'Truffle French Fries', desc: 'Kentang goreng renyah dengan aroma truffle oil.', price: 'Rp 28.000', category: 'Snacks', imageUrl: '/image/fnb/chad-montano-MqT0asuoIcU-unsplash.jpg',
           addons: [{ name: 'Extra Cheese Sauce', price: 6000 }, { name: 'Extra Truffle Oil', price: 8000 }]
         },
       ],
@@ -51,10 +51,10 @@ export function getMockData(category: string): MockData {
       openTime: '08:00',
       closeTime: '22:00',
       instagramFeed: [
-        '/image/cafe/anna-tukhfatullina-food-photographer-stylist-Mzy-OjtCI70-unsplash.jpg',
-        '/image/cafe/mahesa-tyo-X0HP9m0euz0-unsplash.jpg',
-        '/image/cafe/queensland-australia-7WVpQhFGUqQ-unsplash.jpg',
-        '/image/cafe/mitch-Da1F2k3BFeU-unsplash.jpg'
+        '/image/fnb/anna-tukhfatullina-food-photographer-stylist-Mzy-OjtCI70-unsplash.jpg',
+        '/image/fnb/mahesa-tyo-X0HP9m0euz0-unsplash.jpg',
+        '/image/fnb/queensland-australia-7WVpQhFGUqQ-unsplash.jpg',
+        '/image/fnb/mitch-Da1F2k3BFeU-unsplash.jpg'
       ],
       themeColor: '#8b5a2b' // Amber/Brown for Coffee Shop
     };

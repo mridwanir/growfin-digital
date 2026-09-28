@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUMIÈRE Nail Atelier & Spa — Aesthetic Nail Care</title>
+  
+  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            nude: {
+              50: '#FDFBF7',
+              100: '#F7F3EC',
+              200: '#EDE4D8',
+              300: '#DFD0C0',
+              400: '#C7B198',
+              500: '#A89279',
+            },
+            roseclay: {
+              100: '#F5EBE6',
+              200: '#EBD7CE',
+              400: '#C59E8F',
+              600: '#9E6B58',
+              800: '#693F30'
+            },
+            charcoal: '#242120'
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    .glass-card {
+      background: rgba(253, 251, 247, 0.85);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-nude-50 text-charcoal font-sans antialiased selection:bg-roseclay-200 selection:text-charcoal">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="fixed top-0 left-0 w-full z-40 bg-nude-50/80 backdrop-blur-md border-b border-nude-200/60 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="text-2xl md:text-3xl font-serif tracking-widest uppercase font-semibold text-charcoal">
+        Lumière <span class="text-roseclay-600 italic text-xl font-normal lowercase tracking-normal">atelier</span>
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+        <a href="#services" class="hover:text-roseclay-600 transition">Services & Duration</a>
+        <a href="#artists" class="hover:text-roseclay-600 transition">Nail Artists</a>
+        <a href="#lookbook" class="hover:text-roseclay-600 transition">Lookbook</a>
+        <a href="#reviews" class="hover:text-roseclay-600 transition">Vibe & Reviews</a>
+      </nav>
+
+      <button onclick="openBookingModal()" class="px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest bg-charcoal text-white hover:bg-roseclay-600 transition-all duration-300 shadow-sm hover:shadow-md">
+        Book Appointment
+      </button>
+    </div>
+  </header>
+
+  <main class="pt-20">
+
+    <!-- ================= 1. AESTHETIC HERO ================= -->
+    <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-6 py-20">
+      <!-- Ambient Glow / Organic Shapes -->
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-roseclay-100 rounded-full blur-3xl opacity-70 pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-nude-200 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-roseclay-400/40 bg-roseclay-100/60 text-roseclay-800 text-xs uppercase tracking-widest font-semibold">
+            <span class="w-2 h-2 rounded-full bg-roseclay-600 animate-pulse"></span>
+            A Sanctuary of Quiet Luxury & Nail Artistry
+          </div>
+          
+          <h1 class="text-4xl sm:text-6xl xl:text-7xl font-serif leading-[1.1] text-charcoal">
+            Elevating your nails into a <span class="italic font-normal text-roseclay-600">masterpiece</span> of calm elegance.
+          </h1>
+          
+          <p class="text-neutral-600 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
+            Lepaskan penat dalam balutan aroma terapi lavender, sentuhan lembut terapis tersertifikasi, dan seni kuku presisi dengan produk non-toxic berkualitas tinggi.
+          </p>
+
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <button onclick="openBookingModal()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-charcoal text-white text-xs uppercase tracking-widest font-semibold hover:bg-roseclay-600 transition shadow-lg hover:shadow-roseclay-600/20">
+              Reservasi Slot Kursi
+            </button>
+            <a href="#lookbook" class="w-full sm:w-auto px-8 py-4 rounded-full border border-nude-300 text-charcoal text-xs uppercase tracking-widest font-semibold hover:bg-white transition text-center">
+              Lihat Lookbook
+            </a>
+          </div>
+
+          <!-- Quick Highlight -->
+          <div class="pt-8 border-t border-nude-200/80 flex items-center justify-center lg:justify-start gap-8 text-neutral-500 text-xs uppercase tracking-wider">
+            <div><span class="block text-xl font-serif text-charcoal font-semibold">100%</span> Cruelty-Free Gel</div>
+            <div class="w-px h-8 bg-nude-300"></div>
+            <div><span class="block text-xl font-serif text-charcoal font-semibold">Medical Grade</span> Sterilization</div>
+            <div class="w-px h-8 bg-nude-300"></div>
+            <div><span class="block text-xl font-serif text-charcoal font-semibold">Private</span> Nail Suite</div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-md">
+            <!-- Frame Aesthetic -->
+            <div class="relative overflow-hidden rounded-[2.5rem] shadow-2xl border-8 border-white">
+              <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=900&q=80" alt="Nail Salon Interior Vibe" class="w-full h-[520px] object-cover hover:scale-105 transition-transform duration-700">
+            </div>
+            
+            <!-- Floating Badge -->
+            <div class="absolute -bottom-6 -left-6 glass-card p-4 rounded-2xl shadow-xl border border-white/60 flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-roseclay-100 flex items-center justify-center text-roseclay-600 text-xl">
+                <i class="fa-solid fa-mug-hot"></i>
+              </div>
+              <div>
+                <p class="text-xs text-neutral-500 font-medium">Complimentary</p>
+                <p class="text-sm font-semibold text-charcoal">Artisan Tea & Macaron</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 2. TREATMENT CATALOG WITH DURATION ================= -->
+    <section id="services" class="py-24 bg-nude-100/70 border-y border-nude-200/70">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <p class="text-xs uppercase tracking-[0.25em] text-roseclay-600 font-semibold mb-3">Care Crafted For You</p>
+          <h2 class="text-3xl sm:text-5xl font-serif text-charcoal">Menu Layanan & Estimasi Waktu</h2>
+          <p class="mt-4 text-neutral-600 text-sm leading-relaxed">
+            Setiap treatment dirancang presisi tanpa terburu-buru demi hasil sempurna dan relaksasi maksimal.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Item 1 -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-nude-200/60 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-roseclay-600 tracking-wider uppercase mb-3">
+                <span>Manicure Care</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-roseclay-100/80"><i class="fa-regular fa-clock"></i> 60 Menit</span>
+              </div>
+              <h3 class="text-2xl font-serif text-charcoal group-hover:text-roseclay-600 transition">Lumière Signature Russian Manicure</h3>
+              <p class="text-neutral-500 text-sm mt-3 leading-relaxed">
+                Pembersihan kutikula elektrik secara higienis, pembentukan kuku rapi, scrub organik, dan pijat tangan dengan essential oil.
+              </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-nude-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-neutral-400 block">Mulai dari</span>
+                <span class="text-xl font-serif font-semibold text-charcoal">IDR 249.000</span>
+              </div>
+              <button onclick="selectServiceAndBook('Lumière Signature Russian Manicure')" class="p-3.5 rounded-full bg-nude-100 text-charcoal hover:bg-charcoal hover:text-white transition">
+                <i class="fa-solid fa-arrow-right -rotate-45"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-nude-200/60 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-roseclay-600 tracking-wider uppercase mb-3">
+                <span>Art & Gel</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-roseclay-100/80"><i class="fa-regular fa-clock"></i> 90 Menit</span>
+              </div>
+              <h3 class="text-2xl font-serif text-charcoal group-hover:text-roseclay-600 transition">Custom Japanese Gel Artistry</h3>
+              <p class="text-neutral-500 text-sm mt-3 leading-relaxed">
+                Lukisan kuku estetik hand-painted, chrome mirror, efek 3D resin, cat eye magnetik, atau gradasi ombre natural.
+              </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-nude-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-neutral-400 block">Mulai dari</span>
+                <span class="text-xl font-serif font-semibold text-charcoal">IDR 385.000</span>
+              </div>
+              <button onclick="selectServiceAndBook('Custom Japanese Gel Artistry')" class="p-3.5 rounded-full bg-nude-100 text-charcoal hover:bg-charcoal hover:text-white transition">
+                <i class="fa-solid fa-arrow-right -rotate-45"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-nude-200/60 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-roseclay-600 tracking-wider uppercase mb-3">
+                <span>Extension</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-roseclay-100/80"><i class="fa-regular fa-clock"></i> 120 Menit</span>
+              </div>
+              <h3 class="text-2xl font-serif text-charcoal group-hover:text-roseclay-600 transition">Soft Gel Tips & Apres Sculpting</h3>
+              <p class="text-neutral-500 text-sm mt-3 leading-relaxed">
+                Sambung kuku ringan, tidak merusak dasar kuku asli, presisi alami dan ketahanan hingga 5-6 minggu.
+              </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-nude-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-neutral-400 block">Mulai dari</span>
+                <span class="text-xl font-serif font-semibold text-charcoal">IDR 450.000</span>
+              </div>
+              <button onclick="selectServiceAndBook('Soft Gel Tips & Apres Sculpting')" class="p-3.5 rounded-full bg-nude-100 text-charcoal hover:bg-charcoal hover:text-white transition">
+                <i class="fa-solid fa-arrow-right -rotate-45"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-nude-200/60 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-roseclay-600 tracking-wider uppercase mb-3">
+                <span>Pedicure & Spa</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-roseclay-100/80"><i class="fa-regular fa-clock"></i> 75 Menit</span>
+              </div>
+              <h3 class="text-2xl font-serif text-charcoal group-hover:text-roseclay-600 transition">Rose Petal Foot Spa & Pedicure</h3>
+              <p class="text-neutral-500 text-sm mt-3 leading-relaxed">
+                Rendam kaki kelopak mawar & garam himalaya, pengikisan tumit kasar, masker hidrasi, dan pijat relaksasi mendalam.
+              </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-nude-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-neutral-400 block">Mulai dari</span>
+                <span class="text-xl font-serif font-semibold text-charcoal">IDR 310.000</span>
+              </div>
+              <button onclick="selectServiceAndBook('Rose Petal Foot Spa & Pedicure')" class="p-3.5 rounded-full bg-nude-100 text-charcoal hover:bg-charcoal hover:text-white transition">
+                <i class="fa-solid fa-arrow-right -rotate-45"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-nude-200/60 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-roseclay-600 tracking-wider uppercase mb-3">
+                <span>Special Occasion</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-roseclay-100/80"><i class="fa-regular fa-clock"></i> 135 Menit</span>
+              </div>
+              <h3 class="text-2xl font-serif text-charcoal group-hover:text-roseclay-600 transition">Bridal Elegance Atelier</h3>
+              <p class="text-neutral-500 text-sm mt-3 leading-relaxed">
+                Dirancang khusus pengantin: French ombré, taburan Swarovski asli, hand collagen glove, dan free touch-up kit.
+              </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-nude-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-neutral-400 block">Mulai dari</span>
+                <span class="text-xl font-serif font-semibold text-charcoal">IDR 620.000</span>
+              </div>
+              <button onclick="selectServiceAndBook('Bridal Elegance Atelier')" class="p-3.5 rounded-full bg-nude-100 text-charcoal hover:bg-charcoal hover:text-white transition">
+                <i class="fa-solid fa-arrow-right -rotate-45"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-nude-200/60 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-roseclay-600 tracking-wider uppercase mb-3">
+                <span>Safe Care</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-roseclay-100/80"><i class="fa-regular fa-clock"></i> 40 Menit</span>
+              </div>
+              <h3 class="text-2xl font-serif text-charcoal group-hover:text-roseclay-600 transition">Non-Damaging Gel Removal & Keratin</h3>
+              <p class="text-neutral-500 text-sm mt-3 leading-relaxed">
+                Pelepasan gel tanpa kikis berlebihan dilengkapi treatment infus keratin untuk mengembalikan ketebalan kuku rapuh.
+              </p>
+            </div>
+            <div class="mt-8 pt-6 border-t border-nude-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-neutral-400 block">Mulai dari</span>
+                <span class="text-xl font-serif font-semibold text-charcoal">IDR 120.000</span>
+              </div>
+              <button onclick="selectServiceAndBook('Non-Damaging Gel Removal & Keratin')" class="p-3.5 rounded-full bg-nude-100 text-charcoal hover:bg-charcoal hover:text-white transition">
+                <i class="fa-solid fa-arrow-right -rotate-45"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. KATALOG KAPSTER / NAIL ARTIST ================= -->
+    <section id="artists" class="py-24 px-6 max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <p class="text-xs uppercase tracking-[0.25em] text-roseclay-600 font-semibold mb-2">Artisans Behind The Work</p>
+          <h2 class="text-3xl sm:text-5xl font-serif text-charcoal">Pilih Nail Artist Favoritmu</h2>
+        </div>
+        <p class="text-neutral-500 text-sm max-w-md font-light">
+          Setiap sentuhan personal. Kamu dapat mencocokkan gaya desain impianmu dengan spesialisasi masing-masing artist kami.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Artist 1 -->
+        <div class="bg-white rounded-3xl p-6 border border-nude-200/80 shadow-sm hover:shadow-xl transition-all duration-300">
+          <div class="relative overflow-hidden rounded-2xl mb-6 aspect-[4/5]">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80" alt="Clarissa Hartono" class="w-full h-full object-cover">
+            <span class="absolute top-4 left-4 bg-charcoal/80 backdrop-blur-md text-white text-[11px] uppercase tracking-widest px-3 py-1 rounded-full">
+              Master Artist
+            </span>
+          </div>
+          <h3 class="text-2xl font-serif font-semibold text-charcoal">Clarissa Hartono</h3>
+          <p class="text-roseclay-600 text-xs uppercase tracking-widest font-semibold mt-1">Lead Creative & 3D Art Expert</p>
+          <p class="text-neutral-500 text-xs mt-3 leading-relaxed">
+            Spesialisasi dalam hand-painted karakter detail, 3D resin sculpture, dan style kuku Harajuku/Korean pop luxury.
+          </p>
+          <button onclick="selectArtistAndBook('Clarissa Hartono (Master Artist)')" class="mt-6 w-full py-3 rounded-full border border-nude-300 text-xs uppercase tracking-widest font-semibold text-charcoal hover:bg-roseclay-600 hover:text-white hover:border-roseclay-600 transition">
+            Pilih Clarissa
+          </button>
+        </div>
+
+        <!-- Artist 2 -->
+        <div class="bg-white rounded-3xl p-6 border border-nude-200/80 shadow-sm hover:shadow-xl transition-all duration-300">
+          <div class="relative overflow-hidden rounded-2xl mb-6 aspect-[4/5]">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=700&q=80" alt="Nadine Aurelia" class="w-full h-full object-cover">
+            <span class="absolute top-4 left-4 bg-roseclay-600/90 backdrop-blur-md text-white text-[11px] uppercase tracking-widest px-3 py-1 rounded-full">
+              Senior Specialist
+            </span>
+          </div>
+          <h3 class="text-2xl font-serif font-semibold text-charcoal">Nadine Aurelia</h3>
+          <p class="text-roseclay-600 text-xs uppercase tracking-widest font-semibold mt-1">Russian Manicure & Minimalist</p>
+          <p class="text-neutral-500 text-xs mt-3 leading-relaxed">
+            Dikenal atas kerapian e-file manicure ultra-bersih, aksen gold foil, french nude subtle, dan finish clean-girl look.
+          </p>
+          <button onclick="selectArtistAndBook('Nadine Aurelia (Senior Specialist)')" class="mt-6 w-full py-3 rounded-full border border-nude-300 text-xs uppercase tracking-widest font-semibold text-charcoal hover:bg-roseclay-600 hover:text-white hover:border-roseclay-600 transition">
+            Pilih Nadine
+          </button>
+        </div>
+
+        <!-- Artist 3 -->
+        <div class="bg-white rounded-3xl p-6 border border-nude-200/80 shadow-sm hover:shadow-xl transition-all duration-300">
+          <div class="relative overflow-hidden rounded-2xl mb-6 aspect-[4/5]">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80" alt="Valerie Wong" class="w-full h-full object-cover">
+            <span class="absolute top-4 left-4 bg-charcoal/80 backdrop-blur-md text-white text-[11px] uppercase tracking-widest px-3 py-1 rounded-full">
+              Bridal & Extension Specialist
+            </span>
+          </div>
+          <h3 class="text-2xl font-serif font-semibold text-charcoal">Valerie Wong</h3>
+          <p class="text-roseclay-600 text-xs uppercase tracking-widest font-semibold mt-1">Apres Gel & Bridal Designer</p>
+          <p class="text-neutral-500 text-xs mt-3 leading-relaxed">
+            Pakar extension kuku alami berdaya tahan tinggi, kombinasi kristal Swarovski glamor untuk momen pernikahan sakral.
+          </p>
+          <button onclick="selectArtistAndBook('Valerie Wong (Bridal Specialist)')" class="mt-6 w-full py-3 rounded-full border border-nude-300 text-xs uppercase tracking-widest font-semibold text-charcoal hover:bg-roseclay-600 hover:text-white hover:border-roseclay-600 transition">
+            Pilih Valerie
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 4. LOOKBOOK PORTOFOLIO ================= -->
+    <section id="lookbook" class="py-24 bg-nude-100/50 border-t border-nude-200/80">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <p class="text-xs uppercase tracking-[0.25em] text-roseclay-600 font-semibold mb-3">Recent Gallery</p>
+          <h2 class="text-3xl sm:text-5xl font-serif text-charcoal">The Lookbook</h2>
+          <p class="mt-3 text-neutral-600 text-sm">
+            Karya nyata dari jemari nail artist kami minggu ini di salon.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div class="group relative overflow-hidden rounded-2xl aspect-[3/4] bg-neutral-200 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=600&q=80" alt="Milky French Gradient" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
+              <span class="text-[10px] tracking-widest uppercase text-roseclay-200">By Clarissa</span>
+              <p class="font-serif text-base">Milky French Ombré</p>
+            </div>
+          </div>
+
+          <div class="group relative overflow-hidden rounded-2xl aspect-[3/4] bg-neutral-200 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1519014816548-bf785179c2ff?auto=format&fit=crop&w=600&q=80" alt="Cat-Eye Velvet Shimmer" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
+              <span class="text-[10px] tracking-widest uppercase text-roseclay-200">By Nadine</span>
+              <p class="font-serif text-base">Velvet Cat-Eye Emerald</p>
+            </div>
+          </div>
+
+          <div class="group relative overflow-hidden rounded-2xl aspect-[3/4] bg-neutral-200 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80" alt="Clean Girl Nude Glaze" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
+              <span class="text-[10px] tracking-widest uppercase text-roseclay-200">By Nadine</span>
+              <p class="font-serif text-base">Clean Girl Chrome Glaze</p>
+            </div>
+          </div>
+
+          <div class="group relative overflow-hidden rounded-2xl aspect-[3/4] bg-neutral-200 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=600&q=80" alt="Bridal Pearls & Gems" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
+              <span class="text-[10px] tracking-widest uppercase text-roseclay-200">By Valerie</span>
+              <p class="font-serif text-base">Bridal Pearls Sculpt</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 5. SOCIAL PROOF (REVIEW SUASANA) ================= -->
+    <section id="reviews" class="py-24 px-6 max-w-7xl mx-auto">
+      <div class="text-center max-w-xl mx-auto mb-16">
+        <div class="flex items-center justify-center gap-1 text-amber-500 mb-3">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-serif text-charcoal">Suasana & Kesan Tamu</h2>
+        <p class="text-neutral-500 text-sm mt-3">Kenyamanan tanpa kompromi adalah janji kami kepada Anda.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Review 1 -->
+        <div class="p-8 rounded-3xl bg-white border border-nude-200 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center gap-1 text-amber-500 text-xs mb-4">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="font-serif italic text-lg text-charcoal leading-relaxed mb-6">
+            "Bukan cuma salon kuku biasa, vibenya beneran relaxing sanctuary! Kursinya empuk banget, dapet complimentary matcha latte hangat, dan Mbak Nadine ngerjain kutikulanya rapi gak perih sama sekali."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-roseclay-100 text-roseclay-700 font-semibold flex items-center justify-center text-sm">
+              GA
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-charcoal">Gisella Anastasia</p>
+              <p class="text-xs text-neutral-400">Regular Member</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="p-8 rounded-3xl bg-white border border-nude-200 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center gap-1 text-amber-500 text-xs mb-4">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="font-serif italic text-lg text-charcoal leading-relaxed mb-6">
+            "Kuku wedding saya dipercayakan ke Kak Valerie, hasilnya stunning & tahan sampai honeymoon 3 minggu kemudian! Detail nail art-nya bersih banget. Sangat worth the price."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-roseclay-100 text-roseclay-700 font-semibold flex items-center justify-center text-sm">
+              TI
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-charcoal">Tara Indira</p>
+              <p class="text-xs text-neutral-400">Bridal Client</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="p-8 rounded-3xl bg-white border border-nude-200 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center gap-1 text-amber-500 text-xs mb-4">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="font-serif italic text-lg text-charcoal leading-relaxed mb-6">
+            "Alat-alatnya dibuka baru dari pouch steril segel di depan mata kita. Untuk yang higienis-freak kayak aku, ini safe banget. Selalu reservasi sama Clarissa tiap bulan."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-roseclay-100 text-roseclay-700 font-semibold flex items-center justify-center text-sm">
+              SK
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-charcoal">Stefani Kusuma</p>
+              <p class="text-xs text-neutral-400">Verified Guest</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA BANNER ================= -->
+    <section class="pb-24 px-6">
+      <div class="max-w-7xl mx-auto rounded-[3rem] bg-charcoal text-white p-10 md:p-20 text-center relative overflow-hidden">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-roseclay-800/40 rounded-full blur-3xl pointer-events-none"></div>
+        <p class="text-xs uppercase tracking-[0.25em] text-roseclay-400 font-semibold mb-3">Limited Daily Slots</p>
+        <h2 class="text-3xl sm:text-5xl font-serif max-w-2xl mx-auto leading-tight">
+          Manjakan diri Anda dengan sentuhan artistik yang tak lekang oleh waktu.
+        </h2>
+        <p class="text-neutral-300 text-sm max-w-lg mx-auto mt-4 font-light">
+          Kami membatasi tamu tiap jam untuk menjamin kenyamanan intim dan sterilisasi total ruangan.
+        </p>
+        <button onclick="openBookingModal()" class="mt-8 px-9 py-4 rounded-full bg-white text-charcoal hover:bg-roseclay-200 transition font-semibold text-xs tracking-widest uppercase shadow-xl">
+          Reservasi Sekarang
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white border-t border-nude-200 py-12 px-6 text-xs text-neutral-500">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="text-center md:text-left">
+        <p class="text-lg font-serif text-charcoal uppercase tracking-widest font-semibold">LUMIÈRE NAIL ATELIER</p>
+        <p class="mt-1">Jl. Senopati No. 42, Kebayoran Baru, Jakarta Selatan</p>
+      </div>
+      <p>© 2026 Lumière Atelier. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ================= 6. TREATMENT BOOKING MODAL ================= -->
+  <div id="bookingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative w-full max-w-lg bg-nude-50 rounded-3xl shadow-2xl border border-white/60 p-6 sm:p-8 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="modalContainer">
+      
+      <!-- Close Button -->
+      <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-neutral-400 hover:text-charcoal transition text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="mb-6">
+        <span class="text-xs uppercase tracking-widest text-roseclay-600 font-semibold">Reservasi Kursi</span>
+        <h3 class="text-2xl font-serif text-charcoal mt-1">Konfirmasi Jadwal Salon</h3>
+        <p class="text-xs text-neutral-500 mt-1">Pilih detail treatment & terapis, lalu kami hubungkan langsung ke WhatsApp kasir untuk konfirmasi nomor antrean.</p>
+      </div>
+
+      <form id="reservationForm" onsubmit="submitToWhatsApp(event)" class="space-y-4">
+        <!-- Nama Tamu -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-1">Nama Lengkap</label>
+          <input type="text" id="custName" required placeholder="Contoh: Jessica Melinda" class="w-full px-4 py-3 rounded-xl border border-nude-300 focus:outline-none focus:border-charcoal bg-white text-sm">
+        </div>
+
+        <!-- Pilih Treatment -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-1">Pilihan Treatment</label>
+          <select id="selectedTreatment" required class="w-full px-4 py-3 rounded-xl border border-nude-300 focus:outline-none focus:border-charcoal bg-white text-sm">
+            <option value="" disabled selected>Pilih Layanan Treatment</option>
+            <option value="Lumière Signature Russian Manicure (60 Menit)">Lumière Signature Russian Manicure (60 Menit)</option>
+            <option value="Custom Japanese Gel Artistry (90 Menit)">Custom Japanese Gel Artistry (90 Menit)</option>
+            <option value="Soft Gel Tips & Apres Sculpting (120 Menit)">Soft Gel Tips & Apres Sculpting (120 Menit)</option>
+            <option value="Rose Petal Foot Spa & Pedicure (75 Menit)">Rose Petal Foot Spa & Pedicure (75 Menit)</option>
+            <option value="Bridal Elegance Atelier (135 Menit)">Bridal Elegance Atelier (135 Menit)</option>
+            <option value="Non-Damaging Gel Removal & Keratin (40 Menit)">Non-Damaging Gel Removal & Keratin (40 Menit)</option>
+          </select>
+        </div>
+
+        <!-- Pilih Nail Artist -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-1">Pilihan Nail Artist / Stylist</label>
+          <select id="selectedArtist" required class="w-full px-4 py-3 rounded-xl border border-nude-300 focus:outline-none focus:border-charcoal bg-white text-sm">
+            <option value="" disabled selected>Pilih Artist Favorit</option>
+            <option value="Clarissa Hartono (Master Artist - 3D & Japanese Art)">Clarissa Hartono (Master Artist - 3D & Japanese Art)</option>
+            <option value="Nadine Aurelia (Senior Specialist - Russian Clean Mani)">Nadine Aurelia (Senior Specialist - Russian Clean Mani)</option>
+            <option value="Valerie Wong (Bridal & Extension Specialist)">Valerie Wong (Bridal & Extension Specialist)</option>
+            <option value="Siapa saja yang tersedia (First Available)">Siapa saja yang tersedia (First Available)</option>
+          </select>
+        </div>
+
+        <!-- Tanggal & Jam -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-1">Tanggal</label>
+            <input type="date" id="bookDate" required class="w-full px-4 py-3 rounded-xl border border-nude-300 focus:outline-none focus:border-charcoal bg-white text-sm">
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-1">Jam Slot</label>
+            <select id="bookTime" required class="w-full px-4 py-3 rounded-xl border border-nude-300 focus:outline-none focus:border-charcoal bg-white text-sm">
+              <option value="10:00 WIB">10:00 WIB</option>
+              <option value="12:00 WIB">12:00 WIB</option>
+              <option value="14:00 WIB">14:00 WIB</option>
+              <option value="16:00 WIB">16:00 WIB</option>
+              <option value="18:00 WIB">18:00 WIB</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Catatan Khusus -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-1">Catatan Khusus / Referensi (Opsional)</label>
+          <input type="text" id="custNote" placeholder="Misal: ada kuku rusak atau request warna soft nude" class="w-full px-4 py-3 rounded-xl border border-nude-300 focus:outline-none focus:border-charcoal bg-white text-sm">
+        </div>
+
+        <button type="submit" class="w-full mt-4 py-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs tracking-widest uppercase transition flex items-center justify-center gap-2 shadow-lg">
+          <i class="fa-brands fa-whatsapp text-base"></i> Amankan Slot via WhatsApp Kasir
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= LOGIKA JAVASCRIPT ================= -->
+  <script>
+    const bookingModal = document.getElementById('bookingModal');
+    const modalContainer = document.getElementById('modalContainer');
+    const selectedTreatment = document.getElementById('selectedTreatment');
+    const selectedArtist = document.getElementById('selectedArtist');
+
+    // Default set tanggal minimal ke hari ini
+    const dateInput = document.getElementById('bookDate');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    dateInput.value = today;
+
+    function openBookingModal() {
+      bookingModal.classList.remove('opacity-0', 'pointer-events-none');
+      bookingModal.classList.add('opacity-100', 'pointer-events-auto');
+      modalContainer.classList.remove('scale-95');
+      modalContainer.classList.add('scale-100');
+    }
+
+    function closeBookingModal() {
+      bookingModal.classList.add('opacity-0', 'pointer-events-none');
+      bookingModal.classList.remove('opacity-100', 'pointer-events-auto');
+      modalContainer.classList.add('scale-95');
+      modalContainer.classList.remove('scale-100');
+    }
+
+    // Trigger dari tombol "Pilih Treatment"
+    function selectServiceAndBook(serviceName) {
+      for (let option of selectedTreatment.options) {
+        if (option.value.includes(serviceName)) {
+          selectedTreatment.value = option.value;
+          break;
+        }
+      }
+      openBookingModal();
+    }
+
+    // Trigger dari tombol "Pilih Stylist"
+    function selectArtistAndBook(artistName) {
+      for (let option of selectedArtist.options) {
+        if (option.value.includes(artistName.split(' ')[0])) {
+          selectedArtist.value = option.value;
+          break;
+        }
+      }
+      openBookingModal();
+    }
+
+    // Tutup modal jika klik di luar area modal
+    bookingModal.addEventListener('click', (e) => {
+      if (e.target === bookingModal) {
+        closeBookingModal();
+      }
+    });
+
+    // Alur konversi: format pesan WhatsApp & redirect ke kasir
+    function submitToWhatsApp(e) {
+      e.preventDefault();
+      
+      const phoneKasir = "6281234567890"; // Ganti dengan nomor WhatsApp Salon Anda
+      const name = document.getElementById('custName').value;
+      const treatment = selectedTreatment.value;
+      const artist = selectedArtist.value;
+      const date = document.getElementById('bookDate').value;
+      const time = document.getElementById('bookTime').value;
+      const note = document.getElementById('custNote').value || '-';
+
+      const message = 
+        `Halo Kasir Lumière Nail Atelier ✨,%0A%0A` +
+        `Saya ingin mengamankan slot reservasi kursi berikut:%0A` +
+        `• *Nama Tamu:* ${encodeURIComponent(name)}%0A` +
+        `• *Layanan:* ${encodeURIComponent(treatment)}%0A` +
+        `• *Nail Artist:* ${encodeURIComponent(artist)}%0A` +
+        `• *Tanggal:* ${encodeURIComponent(date)}%0A` +
+        `• *Jam:* ${encodeURIComponent(time)}%0A` +
+        `• *Catatan:* ${encodeURIComponent(note)}%0A%0A` +
+        `Mohon konfirmasi ketersediaan slot kursi ini. Terima kasih!`;
+
+      // Redirect ke WhatsApp
+      window.open(`https://wa.me/${phoneKasir}?text=${message}`, '_blank');
+      closeBookingModal();
+    }
+  </script>
+</body>
+</html>

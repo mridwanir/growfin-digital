@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA ÉLÉGANTE | Luxury Make-up Artist & Beauty Studio</title>
+
+  <!-- Google Fonts: Cormorant Garamond (Editorial Luxury) & Plus Jakarta Sans (Clean Modern) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #2D2424;
+    }
+    .font-serif {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    /* Custom subtle glass effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+  </style>
+</head>
+<body class="selection:bg-[#D4A373]/30 selection:text-[#2D2424]">
+
+  <!-- ================= TOP NOTIFICATION / AMBIENCE BAR ================= -->
+  <div class="bg-[#2D2424] text-[#EFE8DD] text-xs py-2 px-4 text-center tracking-widest uppercase font-medium">
+    ✨ Exclusive Slot Musim Pernikahan & Wisuda Terbatas — Reservasi Lebih Awal
+  </div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#E8DFD5]">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="flex flex-col">
+        <span class="font-serif text-2xl lg:text-3xl tracking-[0.25em] font-semibold text-[#2D2424]">AURA</span>
+        <span class="text-[9px] uppercase tracking-[0.4em] text-[#A67C52] font-semibold -mt-1">Élégante Atelier</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest text-[#5E5047] font-medium">
+        <a href="#services" class="hover:text-[#A67C52] transition-colors">Treatments</a>
+        <a href="#artists" class="hover:text-[#A67C52] transition-colors">Artists</a>
+        <a href="#lookbook" class="hover:text-[#A67C52] transition-colors">Lookbook</a>
+        <a href="#reviews" class="hover:text-[#A67C52] transition-colors">Experience</a>
+      </nav>
+
+      <button onclick="openBookingModal()" class="hidden sm:inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#2D2424] text-[#FAF7F2] text-xs uppercase tracking-widest hover:bg-[#A67C52] transition-all shadow-sm">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>Book Appointment</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= AESTHETIC HERO ================= -->
+  <section class="relative min-h-[88vh] flex items-center overflow-hidden">
+    <!-- Ambient subtle background blur bubbles -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#F3E5D8] rounded-full filter blur-3xl opacity-70"></div>
+    <div class="absolute top-1/2 -right-32 w-[32rem] h-[32rem] bg-[#EADDCD] rounded-full filter blur-3xl opacity-60"></div>
+
+    <div class="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-12 gap-12 items-center relative z-10">
+      <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F3EBE1] border border-[#E2D5C7] text-xs tracking-widest uppercase text-[#8C6239] font-medium">
+          <i data-lucide="flower-2" class="w-3.5 h-3.5"></i>
+          Bespoke Beauty Sanctuary
+        </div>
+        
+        <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.08] text-[#2D2424] font-medium">
+          Sentuhan Magis untuk <br class="hidden sm:inline"><span class="italic font-normal">Kecantikan Otentik</span> Anda.
+        </h1>
+        
+        <p class="text-base sm:text-lg text-[#6B5E55] max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+          Bukan sekadar polesan riasan, ini adalah ritual relaksasi & perayaan keanggunan. Ditangani langsung oleh artisan berdedikasi tinggi dengan produk premium berkelas dunia.
+        </p>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+          <button onclick="openBookingModal()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-[#2D2424] text-[#FAF7F2] hover:bg-[#8C6239] transition-all duration-300 shadow-md text-xs uppercase tracking-[0.2em] font-semibold flex items-center justify-center gap-3">
+            <span>Reservasi Slot Personal</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+          <a href="#lookbook" class="w-full sm:w-auto px-8 py-4 rounded-full border border-[#D5C4B4] text-[#55473F] hover:bg-white/60 transition text-xs uppercase tracking-[0.2em] font-semibold text-center">
+            Eksplorasi Karya
+          </a>
+        </div>
+
+        <!-- Micro stats -->
+        <div class="pt-8 border-t border-[#E8DFD5] grid grid-cols-3 gap-6 text-center lg:text-left">
+          <div>
+            <div class="font-serif text-3xl font-semibold text-[#2D2424]">1,800+</div>
+            <div class="text-xs text-[#7A6B61] tracking-wider uppercase mt-1">Brides & Muses</div>
+          </div>
+          <div>
+            <div class="font-serif text-3xl font-semibold text-[#2D2424]">100%</div>
+            <div class="text-xs text-[#7A6B61] tracking-wider uppercase mt-1">Dermatologist Safe</div>
+          </div>
+          <div>
+            <div class="font-serif text-3xl font-semibold text-[#2D2424]">4.98</div>
+            <div class="text-xs text-[#7A6B61] tracking-wider uppercase mt-1">Customer Bliss</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Composition -->
+      <div class="lg:col-span-5 relative">
+        <div class="relative mx-auto max-w-md">
+          <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white/80">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80" alt="Make-up Artist in Action" class="w-full h-full object-cover">
+          </div>
+          
+          <!-- Floating badge: Cozy ambiance -->
+          <div class="absolute -bottom-6 -left-6 glass-card p-5 rounded-2xl border border-white/60 shadow-lg max-w-[240px]">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[#FAF3EC] flex items-center justify-center text-[#8C6239] shadow-inner">
+                <i data-lucide="coffee" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xs uppercase tracking-wider font-semibold text-[#2D2424]">Intimate Atelier</p>
+                <p class="text-[11px] text-[#7A6B61] leading-tight">Private cabin, warm tea, relaxing aromatherapy.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TREATMENT CATALOG WITH DURATION ================= -->
+  <section id="services" class="py-24 bg-[#F5EFEB]/60 border-y border-[#E8DFD5]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-xs uppercase tracking-[0.25em] text-[#8C6239] font-semibold">Curated Treatments</span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-medium text-[#2D2424] mt-2 mb-4">Daftar Layanan & Durasi Waktu</h2>
+        <p class="text-sm text-[#736358] leading-relaxed">
+          Setiap sesi dirancang dengan presisi, kesabaran, dan tanpa terburu-buru untuk memastikan kenyamanan kulit serta ketahanan hasil riasan hingga penghujung acara.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Service Card 1 -->
+        <div class="glass-card rounded-3xl p-7 border border-[#E8DFD5] hover:shadow-xl hover:border-[#D4A373]/60 transition-all flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between text-xs text-[#8C6239] font-medium tracking-wider uppercase mb-3">
+              <span>Signature Signature</span>
+              <span class="inline-flex items-center gap-1.5 bg-[#FAF7F2] px-3 py-1 rounded-full border border-[#E5DACD]">
+                <i data-lucide="clock-3" class="w-3.5 h-3.5"></i> 90 Menit
+              </span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium text-[#2D2424] group-hover:text-[#8C6239] transition">Radiant Glam Makeover</h3>
+            <p class="text-xs text-[#7A6B61] mt-2 leading-relaxed">
+              Makeup natural glowing untuk gala dinner, wisuda, atau photo session. Termasuk deep skin-prep hidrasi, shading kontur presisi, dan free setting spray tahan 16 jam.
+            </p>
+            <div class="my-5 border-t border-dashed border-[#E3D6C9]"></div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-xs uppercase text-[#9B887C]">Mulai dari</span>
+              <span class="font-serif text-2xl font-semibold text-[#2D2424]">Rp 650.000</span>
+            </div>
+          </div>
+          <button onclick="selectServiceForBooking('Radiant Glam Makeover (90 Menit)')" class="mt-6 w-full py-3 rounded-full border border-[#2D2424] text-[#2D2424] group-hover:bg-[#2D2424] group-hover:text-white transition text-xs tracking-widest uppercase font-semibold flex items-center justify-center gap-2">
+            <span>Pilih Layanan</span>
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Service Card 2 -->
+        <div class="glass-card rounded-3xl p-7 border-2 border-[#D4A373] shadow-lg relative flex flex-col justify-between group">
+          <div class="absolute -top-3.5 right-6 bg-[#8C6239] text-[#FAF7F2] text-[10px] uppercase font-bold tracking-widest px-3.5 py-1 rounded-full shadow">
+            Most Popular
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-xs text-[#8C6239] font-medium tracking-wider uppercase mb-3">
+              <span>Royal Bridal</span>
+              <span class="inline-flex items-center gap-1.5 bg-[#FAF7F2] px-3 py-1 rounded-full border border-[#E5DACD]">
+                <i data-lucide="clock-3" class="w-3.5 h-3.5"></i> 180 Menit
+              </span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium text-[#2D2424] group-hover:text-[#8C6239] transition">Bridal Elegance Full Ritual</h3>
+            <p class="text-xs text-[#7A6B61] mt-2 leading-relaxed">
+              Riasan pengantin impian nan abadi. Termasuk face lifting massage, luxury diamond skin prep, high-end lashes, hair styling/hijab styling, serta touch-up kit eksklusif.
+            </p>
+            <div class="my-5 border-t border-dashed border-[#E3D6C9]"></div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-xs uppercase text-[#9B887C]">Mulai dari</span>
+              <span class="font-serif text-2xl font-semibold text-[#2D2424]">Rp 2.800.000</span>
+            </div>
+          </div>
+          <button onclick="selectServiceForBooking('Bridal Elegance Full Ritual (180 Menit)')" class="mt-6 w-full py-3 rounded-full bg-[#2D2424] text-white hover:bg-[#8C6239] transition text-xs tracking-widest uppercase font-semibold flex items-center justify-center gap-2 shadow">
+            <span>Pilih Layanan</span>
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Service Card 3 -->
+        <div class="glass-card rounded-3xl p-7 border border-[#E8DFD5] hover:shadow-xl hover:border-[#D4A373]/60 transition-all flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between text-xs text-[#8C6239] font-medium tracking-wider uppercase mb-3">
+              <span>Touch & Relax</span>
+              <span class="inline-flex items-center gap-1.5 bg-[#FAF7F2] px-3 py-1 rounded-full border border-[#E5DACD]">
+                <i data-lucide="clock-3" class="w-3.5 h-3.5"></i> 60 Menit
+              </span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium text-[#2D2424] group-hover:text-[#8C6239] transition">Flawless Daily & Pre-Shoot</h3>
+            <p class="text-xs text-[#7A6B61] mt-2 leading-relaxed">
+              Makeup natural "no-makeup look" dengan efek glass-skin segar. Sempurna untuk photoshoot maternity, family portrait, atau casual content creator.
+            </p>
+            <div class="my-5 border-t border-dashed border-[#E3D6C9]"></div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-xs uppercase text-[#9B887C]">Mulai dari</span>
+              <span class="font-serif text-2xl font-semibold text-[#2D2424]">Rp 450.000</span>
+            </div>
+          </div>
+          <button onclick="selectServiceForBooking('Flawless Daily & Pre-Shoot (60 Menit)')" class="mt-6 w-full py-3 rounded-full border border-[#2D2424] text-[#2D2424] group-hover:bg-[#2D2424] group-hover:text-white transition text-xs tracking-widest uppercase font-semibold flex items-center justify-center gap-2">
+            <span>Pilih Layanan</span>
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= KATALOG ARTISAN / MUA & STYLIST ================= -->
+  <section id="artists" class="py-24 bg-[#FAF7F2]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <span class="text-xs uppercase tracking-[0.25em] text-[#8C6239] font-semibold">The Maestros</span>
+          <h2 class="font-serif text-4xl sm:text-5xl font-medium text-[#2D2424] mt-2">Pilih Kapster & Makeup Artist Favorit</h2>
+        </div>
+        <p class="text-sm text-[#736358] max-w-md">
+          Kecocokan riasan adalah hal yang sangat intim & personal. Kenali karakter tangan setiap artisan kami sebelum menentukan pilihan Anda.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Artist 1 -->
+        <div class="group bg-white rounded-3xl overflow-hidden border border-[#E8DFD5] hover:shadow-xl transition-all duration-300">
+          <div class="aspect-[3/4] overflow-hidden relative">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Valerie Aurelia" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded bg-[#D4A373]/90 text-white inline-block mb-1">Lead Makeup Maestro</span>
+              <h3 class="font-serif text-2xl font-normal">Valerie Aurelia</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1.5 text-xs text-[#8C6239] font-medium mb-2">
+              <i data-lucide="award" class="w-4 h-4"></i> 9+ Tahun Pengalaman • Bridal Specialist
+            </div>
+            <p class="text-xs text-[#6B5E55] leading-relaxed mb-5">
+              Spesialis kompleksi wajah tanpa pori (*flawless poreless*) dengan sentuhan smokey eye dramatis nan berkelas untuk busana adat maupun modern gown.
+            </p>
+            <button onclick="selectStylistForBooking('Valerie Aurelia - Lead Makeup Maestro')" class="w-full py-2.5 rounded-full border border-[#D5C4B4] hover:border-[#2D2424] hover:bg-[#2D2424] hover:text-white transition text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+              <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+              <span>Pilih Valerie</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Artist 2 -->
+        <div class="group bg-white rounded-3xl overflow-hidden border border-[#E8DFD5] hover:shadow-xl transition-all duration-300">
+          <div class="aspect-[3/4] overflow-hidden relative">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" alt="Clarissa Chen" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded bg-[#D4A373]/90 text-white inline-block mb-1">Senior Glow Specialist</span>
+              <h3 class="font-serif text-2xl font-normal">Clarissa Chen</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1.5 text-xs text-[#8C6239] font-medium mb-2">
+              <i data-lucide="award" class="w-4 h-4"></i> 6+ Tahun • Korean Dewy Skin
+            </div>
+            <p class="text-xs text-[#6B5E55] leading-relaxed mb-5">
+              Ahli menciptakan efek kulit kaca (*Korean glass-skin*) yang ringan, awet muda, serta pulasan bibir ombre yang merona natural sepanjang hari.
+            </p>
+            <button onclick="selectStylistForBooking('Clarissa Chen - Senior Glow Specialist')" class="w-full py-2.5 rounded-full border border-[#D5C4B4] hover:border-[#2D2424] hover:bg-[#2D2424] hover:text-white transition text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+              <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+              <span>Pilih Clarissa</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Artist 3 -->
+        <div class="group bg-white rounded-3xl overflow-hidden border border-[#E8DFD5] hover:shadow-xl transition-all duration-300">
+          <div class="aspect-[3/4] overflow-hidden relative">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Nadia Saraswati" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded bg-[#D4A373]/90 text-white inline-block mb-1">Senior Hair & Hijab Stylist</span>
+              <h3 class="font-serif text-2xl font-normal">Nadia Saraswati</h3>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1.5 text-xs text-[#8C6239] font-medium mb-2">
+              <i data-lucide="award" class="w-4 h-4"></i> 7+ Tahun • Hair & Hijab Do Expert
+            </div>
+            <p class="text-xs text-[#6B5E55] leading-relaxed mb-5">
+              Master tata rambut bertekstur romantic updo, braids, wave kontemporer, serta kreasi hijab clean & syar'i couture yang menawan dari berbagai angle.
+            </p>
+            <button onclick="selectStylistForBooking('Nadia Saraswati - Hair & Hijab Stylist')" class="w-full py-2.5 rounded-full border border-[#D5C4B4] hover:border-[#2D2424] hover:bg-[#2D2424] hover:text-white transition text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+              <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+              <span>Pilih Nadia</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LOOKBOOK PORTOFOLIO ================= -->
+  <section id="lookbook" class="py-24 bg-[#F2EBE1]/70 border-y border-[#E8DFD5]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-xs uppercase tracking-[0.25em] text-[#8C6239] font-semibold">Visual Archives</span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-medium text-[#2D2424] mt-2 mb-4">Galeri Hasil Makeover</h2>
+        <p class="text-sm text-[#736358]">Dokumentasi asli karya artisan kami pada para klien istimewa.</p>
+      </div>
+
+      <!-- Masonry-like modern aesthetic grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm">
+          <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Look 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <span class="text-white text-xs font-medium tracking-wider">Soft Romantic Bride</span>
+          </div>
+        </div>
+
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm md:translate-y-4">
+          <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80" alt="Look 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <span class="text-white text-xs font-medium tracking-wider">Dewy Glass Glow</span>
+          </div>
+        </div>
+
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm">
+          <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80" alt="Look 3" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <span class="text-white text-xs font-medium tracking-wider">Intimate Studio Session</span>
+          </div>
+        </div>
+
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm md:translate-y-4">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" alt="Look 4" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <span class="text-white text-xs font-medium tracking-wider">Flawless Modern Hijab</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SOCIAL PROOF / REVIEWS ================= -->
+  <section id="reviews" class="py-24 bg-[#FAF7F2]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-xl mx-auto mb-16">
+        <div class="flex items-center justify-center gap-1 text-[#D4A373] mb-3">
+          <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+        </div>
+        <h2 class="font-serif text-4xl sm:text-5xl font-medium text-[#2D2424]">Pengalaman & Kenyamanan Suasana</h2>
+        <p class="text-sm text-[#736358] mt-2">Bukan hanya riasan yang memukau, namun juga ruang tenang di mana Anda merasa diprioritaskan.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass-card p-8 rounded-3xl border border-[#E8DFD5] relative">
+          <i data-lucide="quote" class="w-8 h-8 text-[#D4A373]/40 mb-4"></i>
+          <p class="text-sm text-[#5C4F46] italic leading-relaxed mb-6">
+            "Ruangannya harum bunga melati & vanila, sangat tenang di tengah stres persiapan pernikahan subuh. Kak Valerie make-up nya teliti banget, foundation tidak crack sama sekali dari jam 6 pagi sampai jam 10 malam!"
+          </p>
+          <div class="border-t border-[#E8DFD5] pt-4 flex items-center justify-between">
+            <div>
+              <h4 class="font-medium text-sm text-[#2D2424]">Sabrina L.</h4>
+              <p class="text-[11px] text-[#8C6239]">Bridal Client (Pernikahan Balai Sarbini)</p>
+            </div>
+            <span class="text-xs text-[#8C6239] font-bold">5.0 ★</span>
+          </div>
+        </div>
+
+        <div class="glass-card p-8 rounded-3xl border border-[#E8DFD5] relative">
+          <i data-lucide="quote" class="w-8 h-8 text-[#D4A373]/40 mb-4"></i>
+          <p class="text-sm text-[#5C4F46] italic leading-relaxed mb-6">
+            "Suka sekali karena tidak ada bau kimia yang menyengat. Kursinya ergonomis, dapat seduhan teh hangat chamomile. Hasil makeup Clarissa benar-benar bikin kulitku kelihatan glowing alami tanpa dempul tebal."
+          </p>
+          <div class="border-t border-[#E8DFD5] pt-4 flex items-center justify-between">
+            <div>
+              <h4 class="font-medium text-sm text-[#2D2424]">Dian Paramita</h4>
+              <p class="text-[11px] text-[#8C6239]">Wisuda & Photoshoot</p>
+            </div>
+            <span class="text-xs text-[#8C6239] font-bold">5.0 ★</span>
+          </div>
+        </div>
+
+        <div class="glass-card p-8 rounded-3xl border border-[#E8DFD5] relative">
+          <i data-lucide="quote" class="w-8 h-8 text-[#D4A373]/40 mb-4"></i>
+          <p class="text-sm text-[#5C4F46] italic leading-relaxed mb-6">
+            "Styling hijab dari Kak Nadia sangat rapi, jarumnya tidak menusuk kepala dan tetap tegak paripurna meski diterpa angin saat foto outdoor. Pelayanan salon yang sangat menghargai privasi muslimah."
+          </p>
+          <div class="border-t border-[#E8DFD5] pt-4 flex items-center justify-between">
+            <div>
+              <h4 class="font-medium text-sm text-[#2D2424]">Anindya Farah</h4>
+              <p class="text-[11px] text-[#8C6239]">Engagement Day</p>
+            </div>
+            <span class="text-xs text-[#8C6239] font-bold">5.0 ★</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER / CTA STRIP ================= -->
+  <footer class="bg-[#261E1E] text-[#E8DFD5] pt-16 pb-12">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-12 gap-10 pb-12 border-b border-[#3E3434]">
+      <div class="md:col-span-5 space-y-4">
+        <span class="font-serif text-2xl tracking-[0.25em] text-[#FAF7F2]">AURA ÉLÉGANTE</span>
+        <p class="text-xs text-[#B5A89D] max-w-sm leading-relaxed">
+          Atelier tata rias wajah & rambut eksklusif. Mendedikasikan keindahan, higienitas tinggi, dan ketenangan jiwa dalam setiap sentuhan riasan.
+        </p>
+        <p class="text-xs text-[#A67C52]">Jl. Senopati No. 42, Kebayoran Baru, Jakarta Selatan</p>
+      </div>
+
+      <div class="md:col-span-3 space-y-2">
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-[#FAF7F2]">Jam Operasional</h4>
+        <p class="text-xs text-[#B5A89D]">Senin - Minggu: 07:00 - 20:00 WIB</p>
+        <p class="text-xs text-[#B5A89D] italic">*Early morning call (04:00 AM) tersedia via perjanjian khusus.</p>
+      </div>
+
+      <div class="md:col-span-4 space-y-3">
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-[#FAF7F2]">Amankan Kursi Anda</h4>
+        <p class="text-xs text-[#B5A89D]">Konsultasikan warna kulit & konsep riasan secara gratis via WhatsApp Kasir kami.</p>
+        <button onclick="openBookingModal()" class="w-full py-3 rounded-full bg-[#D4A373] text-[#261E1E] hover:bg-[#FAF7F2] font-semibold text-xs tracking-widest uppercase transition">
+          Reservasi Online Sekarang
+        </button>
+      </div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-6 pt-8 text-center text-[11px] text-[#8A7C72]">
+      © 2026 AURA ÉLÉGANTE ATELIER. All Rights Reserved. Crafted for Beauty Enthusiasts.
+    </div>
+  </footer>
+
+  <!-- ================= TREATMENT BOOKING MODAL (POPUP CONVERSION) ================= -->
+  <div id="bookingModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <!-- Backdrop Blur -->
+    <div onclick="closeBookingModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Modal Box -->
+    <div class="relative w-full max-w-lg bg-[#FAF7F2] rounded-3xl p-6 sm:p-8 shadow-2xl border border-[#E8DFD5] overflow-y-auto max-h-[90vh]">
+      <!-- Close button -->
+      <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-[#736358] hover:text-[#2D2424] p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <span class="text-[10px] uppercase tracking-[0.25em] text-[#8C6239] font-bold">Fast Reservation</span>
+        <h3 class="font-serif text-2xl sm:text-3xl font-medium text-[#2D2424] mt-1">Reservasi Slot Salon</h3>
+        <p class="text-xs text-[#736358] mt-1">Pilih stylist & waktu kedatangan Anda untuk langsung tersambung ke WhatsApp Kasir.</p>
+      </div>
+
+      <form id="bookingForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        <!-- Nama Klien -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-[#5C4F46] font-semibold mb-1.5">Nama Lengkap</label>
+          <input type="text" id="clientName" required placeholder="Contoh: Jessica Wijaya" class="w-full px-4 py-3 rounded-xl border border-[#DDD1C3] bg-white text-xs text-[#2D2424] focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+        </div>
+
+        <!-- Treatment Selection (With Duration) -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-[#5C4F46] font-semibold mb-1.5">Pilihan Treatment (Durasi)</label>
+          <select id="serviceSelect" required class="w-full px-4 py-3 rounded-xl border border-[#DDD1C3] bg-white text-xs text-[#2D2424] focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+            <option value="" disabled selected>-- Pilih Layanan --</option>
+            <option value="Radiant Glam Makeover (90 Menit)">Radiant Glam Makeover — 90 Menit (Rp 650.000)</option>
+            <option value="Bridal Elegance Full Ritual (180 Menit)">Bridal Elegance Full Ritual — 180 Menit (Rp 2.800.000)</option>
+            <option value="Flawless Daily & Pre-Shoot (60 Menit)">Flawless Daily & Pre-Shoot — 60 Menit (Rp 450.000)</option>
+          </select>
+        </div>
+
+        <!-- Stylist / Kapster Selection -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-[#5C4F46] font-semibold mb-1.5">Pilihan Stylist / Kapster Spesifik</label>
+          <select id="stylistSelect" required class="w-full px-4 py-3 rounded-xl border border-[#DDD1C3] bg-white text-xs text-[#2D2424] focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+            <option value="" disabled selected>-- Pilih Artisan Anda --</option>
+            <option value="Valerie Aurelia - Lead Makeup Maestro">Valerie Aurelia (Lead Makeup Maestro / Bridal)</option>
+            <option value="Clarissa Chen - Senior Glow Specialist">Clarissa Chen (Senior Glow / Korean Glass-Skin)</option>
+            <option value="Nadia Saraswati - Hair & Hijab Stylist">Nadia Saraswati (Senior Hair & Hijab Specialist)</option>
+            <option value="Siapa Saja yang Tersedia">Rekomendasi Terbaik dari Studio (Any Stylist)</option>
+          </select>
+        </div>
+
+        <!-- Tanggal & Jam Kedatangan -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs uppercase tracking-wider text-[#5C4F46] font-semibold mb-1.5">Tanggal</label>
+            <input type="date" id="bookingDate" required class="w-full px-4 py-3 rounded-xl border border-[#DDD1C3] bg-white text-xs text-[#2D2424] focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-wider text-[#5C4F46] font-semibold mb-1.5">Waktu / Jam</label>
+            <input type="time" id="bookingTime" required class="w-full px-4 py-3 rounded-xl border border-[#DDD1C3] bg-white text-xs text-[#2D2424] focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+          </div>
+        </div>
+
+        <!-- Catatan Khusus -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-[#5C4F46] font-semibold mb-1.5">Catatan Khusus (Alergi / Konsep)</label>
+          <input type="text" id="bookingNotes" placeholder="Misal: Kulit sensitif, dress warna sage green" class="w-full px-4 py-3 rounded-xl border border-[#DDD1C3] bg-white text-xs text-[#2D2424] focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-4 mt-2 rounded-full bg-[#128C7E] hover:bg-[#075E54] text-white font-semibold text-xs tracking-widest uppercase transition flex items-center justify-center gap-2 shadow-lg">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Kirim & Amankan Slot via WhatsApp</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // Inisialisasi ikon Lucide
+    lucide.createIcons();
+
+    const bookingModal = document.getElementById('bookingModal');
+    const serviceSelect = document.getElementById('serviceSelect');
+    const stylistSelect = document.getElementById('stylistSelect');
+
+    // Buka Modal Biasa
+    function openBookingModal() {
+      bookingModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Tutup Modal
+    function closeBookingModal() {
+      bookingModal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Klik tombol Treatment -> Set otomatis select option lalu buka modal
+    function selectServiceForBooking(serviceName) {
+      serviceSelect.value = serviceName;
+      openBookingModal();
+    }
+
+    // Klik tombol Stylist -> Set otomatis select option lalu buka modal
+    function selectStylistForBooking(stylistName) {
+      stylistSelect.value = stylistName;
+      openBookingModal();
+    }
+
+    // Format & redirect WhatsApp Kasir Salon
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('clientName').value;
+      const service = serviceSelect.value;
+      const stylist = stylistSelect.value;
+      const date = document.getElementById('bookingDate').value;
+      const time = document.getElementById('bookingTime').value;
+      const notes = document.getElementById('bookingNotes').value || '-';
+
+      // Nomor WhatsApp Kasir Salon (Ganti dengan nomor kasir Anda)
+      const whatsappNumber = "6281234567890";
+
+      // Template pesan ramah & detail
+      const message = `Halo Kasir *AURA ÉLÉGANTE Atelier*, saya ingin konfirmasi ketersediaan slot reservasi:%0A%0A` +
+        `👤 *Nama Klien:* ${encodeURIComponent(name)}%0A` +
+        `💄 *Treatment:* ${encodeURIComponent(service)}%0A` +
+        `🎨 *Stylist / MUA:* ${encodeURIComponent(stylist)}%0A` +
+        `📅 *Tanggal:* ${encodeURIComponent(date)}%0A` +
+        `⏰ *Jam Kedatangan:* ${encodeURIComponent(time)} WIB%0A` +
+        `📝 *Catatan Tambahan:* ${encodeURIComponent(notes)}%0A%0A` +
+        `Mohon info ketersediaan slot kursi & detail pembayaran DP. Terima kasih! ✨`;
+
+      // Buka tab WhatsApp
+      window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+      
+      closeBookingModal();
+    }
+  </script>
+</body>
+</html>

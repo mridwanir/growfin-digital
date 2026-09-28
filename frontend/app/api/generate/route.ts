@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { resolveTemplateType } from '@/lib/template-resolver';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // 1. Inisialisasi Gemini
@@ -25,21 +26,34 @@ function normalizePhone(phone: string): string {
   return digits;
 }
 
-// Map Google Places primaryType ke Kategori kita
-function mapPrimaryTypeToCategory(primaryType: string, fallbackCategory: string): string {
+// Map Google Places primaryType ke Kategori kita secara pintar
+function mapPrimaryTypeToCategory(primaryType: string, userCategory: string): string {
   const type = primaryType.toLowerCase();
 
-  const fnb = ['restaurant', 'cafe', 'coffee_shop', 'bakery', 'bar', 'fast_food_restaurant', 'meal_takeaway', 'ice_cream_shop'];
-  const grooming = ['beauty_salon', 'barber_shop', 'spa', 'hair_care', 'massage_spa', 'nail_salon'];
-  const clinic = ['medical_clinic', 'dentist', 'doctor', 'hospital', 'veterinary_care', 'pharmacy'];
-  const retail = ['pet_store', 'florist', 'clothing_store', 'electronics_store', 'supermarket', 'convenience_store', 'hardware_store', 'store'];
+  const fnbTypes = ['restaurant', 'cafe', 'coffee_shop', 'bakery', 'bar', 'fast_food_restaurant', 'meal_takeaway', 'ice_cream_shop'];
+  const groomingTypes = ['beauty_salon', 'barber_shop', 'spa', 'hair_care', 'massage_spa', 'nail_salon'];
+  const retailTypes = ['pet_store', 'florist', 'clothing_store', 'electronics_store', 'supermarket', 'convenience_store', 'hardware_store', 'store'];
+  const serviceTypes = ['medical_clinic', 'dentist', 'doctor', 'hospital', 'veterinary_care', 'pharmacy', 'laundry', 'car_repair', 'travel_agency', 'real_estate_agency'];
 
-  if (fnb.includes(type)) return 'Cafe'; // atau Resto
-  if (grooming.includes(type)) return 'Salon / Barbershop';
-  if (clinic.includes(type)) return 'Klinik';
-  if (retail.includes(type)) return 'Retail';
+  const fnbCategories = ['Restaurant', 'Cafe & Coffee Shop', 'Bakery & Dessert Shop', 'Fast Food Restaurant', 'Bubble Tea Shop / Juice Shop', 'Bar & Pub'];
+  const groomingCategories = ['Beauty Salon', 'Hair Salon & Barbershop', 'Nail Salon', 'Day Spa & Massage Spa', 'Skin Care Clinic', 'Make-up Artist'];
+  const retailCategories = ['Supermarket & Grocery Store', 'Convenience Store', 'Clothing Store & Boutique', 'Electronics Store', 'Shoe Store', 'Pet Store', 'Hardware Store'];
+  const serviceCategories = ['Laundry Service & Dry Cleaner', 'Car Repair & Maintenance', 'Cleaning Service', 'Tailor (Penjahit)', 'Travel Agency', 'Real Estate Agency'];
 
-  return fallbackCategory;
+  if (fnbTypes.includes(type)) {
+    return fnbCategories.includes(userCategory) ? userCategory : 'Restaurant';
+  }
+  if (groomingTypes.includes(type)) {
+    return groomingCategories.includes(userCategory) ? userCategory : 'Beauty Salon';
+  }
+  if (retailTypes.includes(type)) {
+    return retailCategories.includes(userCategory) ? userCategory : 'Supermarket & Grocery Store';
+  }
+  if (serviceTypes.includes(type)) {
+    return serviceCategories.includes(userCategory) ? userCategory : 'Laundry Service & Dry Cleaner';
+  }
+
+  return userCategory;
 }
 
 export async function POST(request: Request) {
@@ -280,6 +294,16 @@ export async function POST(request: Request) {
 
     const slug = generateSlug(realName);
 
+    // Determine correct default layout
+    const templateType = resolveTemplateType(adjustedCategory);
+    let defaultLayoutId = 'retail-clothing-default';
+    if (templateType === 'fnb') {
+      if (adjustedCategory.toLowerCase().includes('restaurant')) defaultLayoutId = 'fnb-restaurant-default';
+      else defaultLayoutId = 'fnb-cafe-default';
+    } else if (templateType === 'grooming') {
+      defaultLayoutId = 'grooming-beautynspa-default';
+    }
+
     // 6. Simpan ke Supabase beserta metadata
     const { data, error } = await supabase
       .from('business_demos')
@@ -292,7 +316,8 @@ export async function POST(request: Request) {
           city,
           maps_url: mapsUrl,
           metadata: metadata,
-          scraping_status: 'completed'
+          scraping_status: 'completed',
+          layout_id: defaultLayoutId
         }
       ])
       .select()

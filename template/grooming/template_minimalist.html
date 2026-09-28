@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe | Minimalist Grooming</title>
+    
+    <!-- Fonts: Cormorant Garamond for elegant serif headings, Inter for clean sans body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for minimal icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#0a0a0a',
+                            white: '#ffffff',
+                            gray: '#f4f4f5',
+                            darkgray: '#52525b',
+                            light: '#a1a1aa'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Minimalist specific overrides */
+        body {
+            background-color: #ffffff;
+            color: #0a0a0a;
+        }
+        
+        /* Subtle image interactions */
+        .img-hover-color {
+            filter: grayscale(100%);
+            transition: filter 0.7s ease;
+        }
+        .group:hover .img-hover-color {
+            filter: grayscale(0%);
+        }
+
+        /* Minimal form inputs */
+        .minimal-input {
+            border: none;
+            border-bottom: 1px solid #e4e4e7;
+            border-radius: 0;
+            padding: 0.5rem 0;
+            background: transparent;
+            transition: border-color 0.3s ease;
+        }
+        .minimal-input:focus {
+            outline: none;
+            border-bottom-color: #0a0a0a;
+            box-shadow: none;
+        }
+
+        /* Hide scrollbar for drawer */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e4e4e7; }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <nav class="fixed w-full z-40 top-0 bg-white/90 backdrop-blur-sm border-b border-gray-100 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 md:px-12 h-20 flex justify-between items-center">
+            <a href="#" class="text-2xl font-serif tracking-widest text-brand-black uppercase">
+                Luxe.
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-12">
+                <a href="#layanan" class="text-sm font-light tracking-wide hover:text-brand-light transition-colors duration-200">Layanan</a>
+                <a href="#stylist" class="text-sm font-light tracking-wide hover:text-brand-light transition-colors duration-200">Artisan</a>
+                <a href="#lookbook" class="text-sm font-light tracking-wide hover:text-brand-light transition-colors duration-200">Lookbook</a>
+                <button onclick="toggleDrawer()" class="text-sm font-medium tracking-widest uppercase border-b border-brand-black pb-1 hover:text-brand-light hover:border-brand-light transition-all duration-300">
+                    Reservasi
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-brand-black text-xl focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-100 flex flex-col items-center py-6 space-y-6">
+            <a href="#layanan" class="text-sm font-light tracking-widest uppercase" onclick="toggleMobileMenu()">Layanan</a>
+            <a href="#stylist" class="text-sm font-light tracking-widest uppercase" onclick="toggleMobileMenu()">Artisan</a>
+            <a href="#lookbook" class="text-sm font-light tracking-widest uppercase" onclick="toggleMobileMenu()">Lookbook</a>
+            <button onclick="toggleDrawer(); toggleMobileMenu();" class="text-sm font-medium tracking-widest uppercase border-b border-brand-black pb-1">
+                Reservasi
+            </button>
+        </div>
+    </nav>
+
+    <section class="min-h-screen flex flex-col md:flex-row pt-20 md:pt-0">
+        <!-- Text Content -->
+        <div class="flex-1 flex flex-col justify-center px-8 md:px-24 py-16 md:py-0 order-2 md:order-1">
+            <span class="text-xs tracking-[0.3em] text-brand-light uppercase mb-8">Editorial Grooming</span>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-light leading-tight mb-8">
+                Seni<br>
+                <span class="italic text-brand-darkgray">Merawat</span><br>
+                Diri.
+            </h1>
+            <p class="font-light text-brand-darkgray mb-12 max-w-md leading-relaxed">
+                Pendekatan minimalis untuk gaya personal Anda. Ruang tenang, hasil presisi, tanpa kompromi.
+            </p>
+            <div>
+                <button onclick="toggleDrawer()" class="group flex items-center space-x-4 text-sm uppercase tracking-widest font-medium">
+                    <span class="border-b border-brand-black pb-1 group-hover:pr-4 transition-all duration-300">Mulai Reservasi</span>
+                    <i class="fa-solid fa-arrow-right font-light opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 transition-all duration-300"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Hero Image -->
+        <div class="flex-1 relative order-1 md:order-2 h-[50vh] md:h-screen">
+            <img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&q=80&w=1920" alt="Minimalist Salon Interior" class="w-full h-full object-cover grayscale-[20%]" />
+        </div>
+    </section>
+
+    <section id="layanan" class="py-32 px-6 md:px-12 max-w-5xl mx-auto">
+        <div class="mb-20 flex flex-col md:flex-row md:items-end justify-between">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-serif font-light mb-4">Treatment Menu</h2>
+                <p class="text-brand-light font-light max-w-sm">Kurasi layanan khusus untuk esensi perawatan fundamental.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col">
+            <!-- List Item 1 -->
+            <div class="group border-b border-gray-200 py-8 flex flex-col md:flex-row md:items-center justify-between hover:bg-gray-50 transition-colors px-4 -mx-4">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="font-serif text-2xl md:text-3xl mb-1 group-hover:italic transition-all">Signature Cut & Style</h3>
+                    <p class="text-sm text-brand-light font-light flex items-center gap-2">
+                        <span>45 Menit</span> &mdash; <span>Konsultasi, Cuci, Potong, Penataan</span>
+                    </p>
+                </div>
+                <div class="flex items-center justify-between md:justify-end md:gap-12 w-full md:w-auto">
+                    <span class="font-light text-lg">Rp 150.000</span>
+                    <button onclick="openBooking('Signature Cut & Style')" class="text-xs uppercase tracking-widest border border-brand-black px-6 py-2 hover:bg-brand-black hover:text-white transition-colors duration-300">
+                        Pilih
+                    </button>
+                </div>
+            </div>
+
+            <!-- List Item 2 -->
+            <div class="group border-b border-gray-200 py-8 flex flex-col md:flex-row md:items-center justify-between hover:bg-gray-50 transition-colors px-4 -mx-4">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="font-serif text-2xl md:text-3xl mb-1 group-hover:italic transition-all">Scalp & Hair Ritual</h3>
+                    <p class="text-sm text-brand-light font-light flex items-center gap-2">
+                        <span>60 Menit</span> &mdash; <span>Detoks kulit kepala, Masker, Pijat relaksasi</span>
+                    </p>
+                </div>
+                <div class="flex items-center justify-between md:justify-end md:gap-12 w-full md:w-auto">
+                    <span class="font-light text-lg">Rp 200.000</span>
+                    <button onclick="openBooking('Scalp & Hair Ritual')" class="text-xs uppercase tracking-widest border border-brand-black px-6 py-2 hover:bg-brand-black hover:text-white transition-colors duration-300">
+                        Pilih
+                    </button>
+                </div>
+            </div>
+
+            <!-- List Item 3 -->
+            <div class="group border-b border-gray-200 py-8 flex flex-col md:flex-row md:items-center justify-between hover:bg-gray-50 transition-colors px-4 -mx-4">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="font-serif text-2xl md:text-3xl mb-1 group-hover:italic transition-all">Essential Mani & Pedi</h3>
+                    <p class="text-sm text-brand-light font-light flex items-center gap-2">
+                        <span>90 Menit</span> &mdash; <span>Pembersihan kuku, Kutikula, Warna natural</span>
+                    </p>
+                </div>
+                <div class="flex items-center justify-between md:justify-end md:gap-12 w-full md:w-auto">
+                    <span class="font-light text-lg">Rp 250.000</span>
+                    <button onclick="openBooking('Essential Mani & Pedi')" class="text-xs uppercase tracking-widest border border-brand-black px-6 py-2 hover:bg-brand-black hover:text-white transition-colors duration-300">
+                        Pilih
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stylist" class="py-32 bg-brand-gray">
+        <div class="container mx-auto px-6 md:px-12 max-w-7xl">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-5xl font-serif font-light mb-4">Para Artisan</h2>
+                <p class="text-brand-darkgray font-light max-w-md mx-auto">Dedikasi pada detail dan seni keterampilan.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
+                <!-- Artisan 1 -->
+                <div class="group flex flex-col items-center">
+                    <div class="w-full aspect-[3/4] overflow-hidden mb-6 bg-white">
+                        <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&q=80&w=600" alt="Baskara" class="w-full h-full object-cover img-hover-color transform group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <h4 class="font-serif text-xl">Baskara</h4>
+                    <p class="text-xs text-brand-light uppercase tracking-widest mt-2">Senior Barber</p>
+                </div>
+                
+                <!-- Artisan 2 -->
+                <div class="group flex flex-col items-center">
+                    <div class="w-full aspect-[3/4] overflow-hidden mb-6 bg-white">
+                        <img src="https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&q=80&w=600" alt="Sarah" class="w-full h-full object-cover img-hover-color transform group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <h4 class="font-serif text-xl">Sarah</h4>
+                    <p class="text-xs text-brand-light uppercase tracking-widest mt-2">Hair Stylist</p>
+                </div>
+
+                <!-- Artisan 3 -->
+                <div class="group flex flex-col items-center">
+                    <div class="w-full aspect-[3/4] overflow-hidden mb-6 bg-white">
+                        <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&q=80&w=600" alt="Maya" class="w-full h-full object-cover img-hover-color transform group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <h4 class="font-serif text-xl">Maya</h4>
+                    <p class="text-xs text-brand-light uppercase tracking-widest mt-2">Nail Expert</p>
+                </div>
+
+                <!-- Artisan 4 -->
+                <div class="group flex flex-col items-center">
+                    <div class="w-full aspect-[3/4] overflow-hidden mb-6 bg-white">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Rina" class="w-full h-full object-cover img-hover-color transform group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <h4 class="font-serif text-xl">Rina</h4>
+                    <p class="text-xs text-brand-light uppercase tracking-widest mt-2">Therapist</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="lookbook" class="py-32 px-6 md:px-12 max-w-7xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-serif font-light mb-16 text-center">Arsip Karya</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Row 1 -->
+            <div class="md:col-span-2 group overflow-hidden bg-brand-gray h-64 md:h-96 relative">
+                <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&q=80&w=1200" alt="Fade Cut" class="w-full h-full object-cover img-hover-color transform scale-105 group-hover:scale-100 transition-all duration-700">
+            </div>
+            <div class="group overflow-hidden bg-brand-gray h-64 md:h-96 relative">
+                <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059c98b?auto=format&fit=crop&q=80&w=600" alt="Nails" class="w-full h-full object-cover img-hover-color transform scale-105 group-hover:scale-100 transition-all duration-700">
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="group overflow-hidden bg-brand-gray h-64 md:h-96 relative">
+                <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&q=80&w=600" alt="Spa" class="w-full h-full object-cover img-hover-color transform scale-105 group-hover:scale-100 transition-all duration-700">
+            </div>
+            <div class="md:col-span-2 group overflow-hidden bg-brand-gray h-64 md:h-96 relative">
+                <img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&q=80&w=1200" alt="Coloring" class="w-full h-full object-cover img-hover-color transform scale-105 group-hover:scale-100 transition-all duration-700">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 bg-brand-black text-white px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-xs tracking-[0.3em] text-brand-darkgray uppercase mb-16">Ulasan Suasana</h2>
+            
+            <!-- Simple single review for minimalism, or could be a fader -->
+            <div class="mb-12">
+                <p class="font-serif text-3xl md:text-5xl leading-tight md:leading-tight font-light italic mb-8">
+                    "Kesederhanaan interiornya langsung membuat pikiran tenang. Potongan rambut rapi, pelayanan efisien tanpa basa-basi berlebih. Estetika yang fungsional."
+                </p>
+                <div class="flex flex-col items-center justify-center">
+                    <span class="uppercase tracking-widest text-xs font-medium">— Dimas Pratama</span>
+                    <span class="text-brand-darkgray text-xs mt-2">Signature Cut & Style</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-gray-200">
+        <div class="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <a href="#" class="text-2xl font-serif tracking-widest uppercase block mb-2">Luxe.</a>
+                <p class="text-xs text-brand-light uppercase tracking-widest">Minimalist Grooming Space</p>
+            </div>
+            <div class="flex space-x-8 text-sm font-light">
+                <a href="#" class="hover:text-brand-light transition">Instagram</a>
+                <a href="#" class="hover:text-brand-light transition">Tiktok</a>
+                <a href="#" class="hover:text-brand-light transition">WhatsApp</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="drawer-backdrop" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-500" onclick="toggleDrawer()"></div>
+    
+    <div id="booking-drawer" class="fixed top-0 right-0 h-full w-full md:w-[450px] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-500 flex flex-col">
+        
+        <div class="flex justify-between items-center p-8 border-b border-gray-100">
+            <h3 class="text-2xl font-serif font-light">Reservasi</h3>
+            <button onclick="toggleDrawer()" class="text-brand-light hover:text-brand-black transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div id="form-error" class="hidden mb-8 p-4 border border-red-200 text-red-600 text-sm font-light">
+                Mohon lengkapi seluruh rincian untuk melanjutkan reservasi.
+            </div>
+
+            <form id="booking-form" onsubmit="handleBooking(event)" class="space-y-10">
+                
+                <!-- Treatment -->
+                <div class="flex flex-col">
+                    <label class="text-xs uppercase tracking-widest text-brand-light mb-2">Pilih Layanan</label>
+                    <select id="service-select" class="minimal-input text-lg font-serif">
+                        <option value="" disabled selected>Pilih dari menu...</option>
+                        <option value="Signature Cut & Style">Signature Cut & Style</option>
+                        <option value="Scalp & Hair Ritual">Scalp & Hair Ritual</option>
+                        <option value="Essential Mani & Pedi">Essential Mani & Pedi</option>
+                        <option value="Custom Minimalist">Custom / Konsultasi</option>
+                    </select>
+                </div>
+
+                <!-- Stylist -->
+                <div class="flex flex-col">
+                    <label class="text-xs uppercase tracking-widest text-brand-light mb-2">Pilih Artisan</label>
+                    <select id="stylist-select" class="minimal-input text-lg font-serif">
+                        <option value="" disabled selected>Pilih spesialis...</option>
+                        <option value="Baskara (Senior Barber)">Baskara</option>
+                        <option value="Sarah (Hair Stylist)">Sarah</option>
+                        <option value="Maya (Nail Expert)">Maya</option>
+                        <option value="Rina (Therapist)">Rina</option>
+                        <option value="Siapa Saja">Tersedia</option>
+                    </select>
+                </div>
+
+                <!-- Date & Time -->
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="flex flex-col">
+                        <label class="text-xs uppercase tracking-widest text-brand-light mb-2">Tanggal</label>
+                        <input type="date" id="booking-date" class="minimal-input font-light" required>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs uppercase tracking-widest text-brand-light mb-2">Waktu</label>
+                        <input type="time" id="booking-time" class="minimal-input font-light" required>
+                    </div>
+                </div>
+
+                <div class="pt-8">
+                    <button type="submit" class="w-full bg-brand-black text-white py-4 uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors flex items-center justify-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        Kirim via WhatsApp
+                    </button>
+                    <p class="text-xs text-center text-brand-light mt-4 font-light">
+                        Anda akan diarahkan ke asisten digital kami.
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('booking-date');
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Drawer Logic
+        const drawer = document.getElementById('booking-drawer');
+        const backdrop = document.getElementById('drawer-backdrop');
+        const formError = document.getElementById('form-error');
+        const serviceSelect = document.getElementById('service-select');
+
+        let isDrawerOpen = false;
+
+        function toggleDrawer() {
+            isDrawerOpen = !isDrawerOpen;
+            
+            if (isDrawerOpen) {
+                formError.classList.add('hidden');
+                backdrop.classList.remove('hidden');
+                // slight delay for transition effect on backdrop
+                setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+                drawer.classList.remove('translate-x-full');
+            } else {
+                backdrop.classList.add('opacity-0');
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => backdrop.classList.add('hidden'), 500);
+            }
+        }
+
+        function openBooking(serviceName) {
+            if(serviceName) {
+                serviceSelect.value = serviceName;
+            }
+            toggleDrawer();
+        }
+
+        // WhatsApp Submission
+        function handleBooking(e) {
+            e.preventDefault();
+            
+            const service = document.getElementById('service-select').value;
+            const stylist = document.getElementById('stylist-select').value;
+            const date = document.getElementById('booking-date').value;
+            const time = document.getElementById('booking-time').value;
+
+            if (!service || !stylist || !date || !time) {
+                formError.classList.remove('hidden');
+                return;
+            }
+
+            formError.classList.add('hidden');
+
+            const waNumber = "6281234567890";
+            const message = `Halo Luxe,\n\nSaya ingin mengamankan jadwal reservasi:\n\n` + 
+                            `Layanan: ${service}\n` +
+                            `Artisan: ${stylist}\n` +
+                            `Jadwal: ${date}, pukul ${time}\n\n` +
+                            `Mohon konfirmasi ketersediaannya. Terima kasih.`;
+
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${waNumber}?text=${encodedMessage}`, '_blank');
+            
+            toggleDrawer();
+            document.getElementById('booking-form').reset();
+        }
+    </script>
+</body>
+</html>

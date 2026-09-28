@@ -17,7 +17,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Klinik',
+    category: 'Restaurant',
     phone: '',
     city: '',
     mapsUrl: '',
@@ -162,7 +162,53 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   };
 
-  const categories = ['Klinik', 'Cafe', 'Resto', 'Salon / Barbershop', 'Retail', 'Jasa Lainnya'];
+  const categoryGroups = [
+    {
+      label: 'F&B (Food & Beverage)',
+      options: [
+        'Restaurant',
+        'Cafe & Coffee Shop',
+        'Bakery & Dessert Shop',
+        'Fast Food Restaurant',
+        'Bubble Tea Shop / Juice Shop',
+        'Bar & Pub'
+      ]
+    },
+    {
+      label: 'Grooming (Beauty & Personal Care)',
+      options: [
+        'Beauty Salon',
+        'Hair Salon & Barbershop',
+        'Nail Salon',
+        'Day Spa & Massage Spa',
+        'Skin Care Clinic',
+        'Make-up Artist'
+      ]
+    },
+    {
+      label: 'Retail (Shopping / Toko Fisik)',
+      options: [
+        'Supermarket & Grocery Store',
+        'Convenience Store',
+        'Clothing Store & Boutique',
+        'Electronics Store',
+        'Shoe Store',
+        'Pet Store',
+        'Hardware Store'
+      ]
+    },
+    {
+      label: 'Service (Jasa)',
+      options: [
+        'Laundry Service & Dry Cleaner',
+        'Car Repair & Maintenance',
+        'Cleaning Service',
+        'Tailor (Penjahit)',
+        'Travel Agency',
+        'Real Estate Agency'
+      ]
+    }
+  ];
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
@@ -228,8 +274,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="w-full bg-[#14141A] border border-[#262633] rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-[#00b894] focus:ring-1 focus:ring-[#00b894] transition-all appearance-none"
                   >
-                    {categories.map(c => (
-                      <option key={c} value={c}>{c}</option>
+                    {categoryGroups.map(group => (
+                      <optgroup key={group.label} label={group.label} className="bg-[#0B0B0E] text-[#00b894] font-bold">
+                        {group.options.map(option => (
+                          <option key={option} value={option} className="text-white font-normal bg-[#14141A]">{option}</option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
                   <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumière Beauty & Spa</title>
+    
+    <!-- Tailwind CSS v4 Browser Build -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    <!-- Google Fonts for Elegant Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style type="text/tailwindcss">
+        @theme {
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Poppins', sans-serif;
+            --color-nude-50: #faf7f5;
+            --color-nude-100: #f5ebe6;
+            --color-nude-200: #eeded4;
+            --color-nude-800: #5c4d47;
+            --color-nude-900: #4a3c37;
+        }
+        body { font-family: var(--font-sans); background-color: var(--color-nude-50); color: var(--color-nude-900); }
+        h1, h2, h3, h4, h5, h6, .font-serif { font-family: var(--font-serif); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-white/80 backdrop-blur-md border-b border-nude-200 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-serif text-2xl font-semibold tracking-wider text-nude-900">Lumière.</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#lookbook" class="text-sm font-medium text-nude-800 hover:text-rose-500 transition">Lookbook</a>
+                    <a href="#reviews" class="text-sm font-medium text-nude-800 hover:text-rose-500 transition">Reviews</a>
+                    <a href="#treatments" class="text-sm font-medium text-nude-800 hover:text-rose-500 transition">Treatments</a>
+                    <a href="#stylists" class="text-sm font-medium text-nude-800 hover:text-rose-500 transition">Stylists</a>
+                    <button onclick="openModal()" class="px-5 py-2.5 bg-nude-900 text-white text-sm font-medium rounded-none hover:bg-rose-900 transition-colors shadow-sm">
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Aesthetic Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Cozy interior vibe -->
+            <img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Salon Interior" class="w-full h-full object-cover object-center opacity-80">
+            <div class="absolute inset-0 bg-gradient-to-r from-nude-100/90 to-nude-50/60"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+            <span class="text-rose-800 tracking-[0.2em] text-xs font-semibold uppercase mb-4 block">Artistry & Relaxation</span>
+            <h1 class="font-serif text-5xl md:text-7xl font-semibold text-nude-900 mb-6 leading-tight">
+                Temukan Versi <br/><span class="italic text-rose-900">Tercantik</span> Dirimu.
+            </h1>
+            <p class="text-nude-800 text-lg md:text-xl mb-10 font-light max-w-2xl mx-auto">
+                Ruang rehat sejenak dari hiruk-pikuk. Kami memadukan seni tata rias, perawatan rambut, dan relaksasi paripurna dalam satu harmoni.
+            </p>
+            <a href="#lookbook" class="inline-flex items-center justify-center px-8 py-4 border border-nude-900 text-nude-900 hover:bg-nude-900 hover:text-white transition-all duration-300 font-medium">
+                Eksplorasi Karya Kami
+            </a>
+        </div>
+    </header>
+
+    <!-- 2. Lookbook Portfolio -->
+    <section id="lookbook" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-nude-900 mb-4">The Lookbook</h2>
+                <p class="text-nude-800 font-light">Sentuhan ajaib dari para ahli kami. Dari pewarnaan rambut hingga nail art.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="group relative overflow-hidden h-96">
+                    <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80" alt="Hair Color" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-serif text-xl tracking-wide">Balayage Elegance</span>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-96">
+                    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059e98b?auto=format&fit=crop&w=800&q=80" alt="Nail Art" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-serif text-xl tracking-wide">Premium Nail Art</span>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-96">
+                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=800&q=80" alt="Hair Spa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-serif text-xl tracking-wide">Relaxing Hair Spa</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Social Proof (Review Suasana) -->
+    <section id="reviews" class="py-24 bg-nude-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-serif text-4xl text-nude-900 mb-16">Cerita Mereka</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-white p-8 shadow-sm">
+                    <div class="flex justify-center text-rose-500 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-nude-800 italic mb-6">"Vibe interiornya sangat menenangkan, wangi aromaterapinya langsung bikin rileks. Hasil coloring rambut dari Kak Sarah sangat luar biasa, nggak merusak rambut sama sekali!"</p>
+                    <h4 class="font-serif font-semibold text-nude-900">- Amanda R.</h4>
+                </div>
+                <!-- Review 2 -->
+                <div class="bg-white p-8 shadow-sm">
+                    <div class="flex justify-center text-rose-500 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-nude-800 italic mb-6">"Nyaman banget sampai hampir ketiduran pas Hair Spa. Terapisnya sangat sopan dan pijatannya pas. Pulang dari sini berasa jadi orang baru yang fresh."</p>
+                    <h4 class="font-serif font-semibold text-nude-900">- Jessica T.</h4>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-white p-8 shadow-sm">
+                    <div class="flex justify-center text-rose-500 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-nude-800 italic mb-6">"Nail art paling detail yang pernah aku coba. Ambience salonnya bikin betah berlama-lama. Definitely my go-to salon from now on!"</p>
+                    <h4 class="font-serif font-semibold text-nude-900">- Bella S.</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Treatment Catalog -->
+    <section id="treatments" class="py-24 bg-nude-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-nude-900 mb-4">Menu Perawatan</h2>
+                <p class="text-nude-800 font-light">Pilih layanan yang Anda butuhkan, kami sediakan waktu khusus untuk Anda.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white border border-nude-200 p-6 hover:shadow-md transition-shadow group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-serif text-2xl text-nude-900">Signature Hair Spa</h3>
+                            <span class="text-xs bg-nude-100 text-nude-800 px-2 py-1 flex items-center gap-1">
+                                ⏱ 60 Menit
+                            </span>
+                        </div>
+                        <p class="text-sm text-nude-800 mb-4">Perawatan kulit kepala dengan pijatan relaksasi menggunakan serum premium untuk rambut rontok dan lepek.</p>
+                    </div>
+                    <button onclick="openModal('Signature Hair Spa')" class="w-full mt-4 py-3 border border-nude-900 text-nude-900 group-hover:bg-nude-900 group-hover:text-white transition-colors">
+                        Reservasi
+                    </button>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white border border-nude-200 p-6 hover:shadow-md transition-shadow group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-serif text-2xl text-nude-900">Balayage & Color</h3>
+                            <span class="text-xs bg-nude-100 text-nude-800 px-2 py-1 flex items-center gap-1">
+                                ⏱ 180 Menit
+                            </span>
+                        </div>
+                        <p class="text-sm text-nude-800 mb-4">Pewarnaan rambut artistik tanpa merusak folikel. Termasuk vitamin perlindungan warna.</p>
+                    </div>
+                    <button onclick="openModal('Balayage & Color')" class="w-full mt-4 py-3 border border-nude-900 text-nude-900 group-hover:bg-nude-900 group-hover:text-white transition-colors">
+                        Reservasi
+                    </button>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white border border-nude-200 p-6 hover:shadow-md transition-shadow group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-serif text-2xl text-nude-900">Premium Nail Art</h3>
+                            <span class="text-xs bg-nude-100 text-nude-800 px-2 py-1 flex items-center gap-1">
+                                ⏱ 90 Menit
+                            </span>
+                        </div>
+                        <p class="text-sm text-nude-800 mb-4">Manicure, pedicure, dan nail art desain kustom dengan gel polish tahan lama berkualitas tinggi.</p>
+                    </div>
+                    <button onclick="openModal('Premium Nail Art')" class="w-full mt-4 py-3 border border-nude-900 text-nude-900 group-hover:bg-nude-900 group-hover:text-white transition-colors">
+                        Reservasi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Katalog Kapster / Stylist -->
+    <section id="stylists" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-nude-900 mb-4">The Artisans</h2>
+                <p class="text-nude-800 font-light">Para ahli di balik mahakarya kecantikan Anda.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
+                <!-- Stylist 1 -->
+                <div>
+                    <img src="https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&w=400&q=80" alt="Sarah" class="w-48 h-48 rounded-full object-cover mx-auto mb-6 shadow-lg grayscale hover:grayscale-0 transition-all duration-500">
+                    <h3 class="font-serif text-2xl text-nude-900">Sarah</h3>
+                    <p class="text-rose-800 text-sm font-medium tracking-wide uppercase mt-1">Creative Color Director</p>
+                </div>
+                <!-- Stylist 2 -->
+                <div>
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80" alt="Elena" class="w-48 h-48 rounded-full object-cover mx-auto mb-6 shadow-lg grayscale hover:grayscale-0 transition-all duration-500">
+                    <h3 class="font-serif text-2xl text-nude-900">Elena</h3>
+                    <p class="text-rose-800 text-sm font-medium tracking-wide uppercase mt-1">Nail Artist Expert</p>
+                </div>
+                <!-- Stylist 3 -->
+                <div>
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Dina" class="w-48 h-48 rounded-full object-cover mx-auto mb-6 shadow-lg grayscale hover:grayscale-0 transition-all duration-500">
+                    <h3 class="font-serif text-2xl text-nude-900">Dina</h3>
+                    <p class="text-rose-800 text-sm font-medium tracking-wide uppercase mt-1">Senior Hair Therapist</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-nude-900 text-nude-100 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-serif text-3xl mb-4">Lumière.</h2>
+            <p class="text-sm text-nude-200 font-light mb-8">Elegansi dalam setiap sentuhan.</p>
+            <p class="text-xs text-nude-200/60">© 2026 Lumière Beauty & Spa. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 6. Treatment Booking Modal (Konversi) -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-nude-50 p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-serif text-2xl text-nude-900">Reservasi Jadwal</h3>
+                <button onclick="closeModal()" class="text-nude-800 hover:text-rose-600 text-2xl leading-none">&times;</button>
+            </div>
+            
+            <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-5">
+                <div>
+                    <label class="block text-sm text-nude-800 mb-1">Pilih Treatment</label>
+                    <select id="treatmentSelect" required class="w-full border border-nude-200 bg-white p-3 text-sm focus:outline-none focus:border-nude-900">
+                        <option value="">-- Pilih Treatment --</option>
+                        <option value="Signature Hair Spa">Signature Hair Spa (60 Min)</option>
+                        <option value="Balayage & Color">Balayage & Color (180 Min)</option>
+                        <option value="Premium Nail Art">Premium Nail Art (90 Min)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-nude-800 mb-1">Pilih Stylist / Kapster Favorit</label>
+                    <select id="stylistSelect" required class="w-full border border-nude-200 bg-white p-3 text-sm focus:outline-none focus:border-nude-900">
+                        <option value="">-- Pilih Kapster --</option>
+                        <option value="Sarah">Sarah (Creative Color Director)</option>
+                        <option value="Elena">Elena (Nail Artist Expert)</option>
+                        <option value="Dina">Dina (Senior Hair Therapist)</option>
+                        <option value="Siapa saja yang tersedia">Siapa saja yang tersedia</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-nude-800 mb-1">Tanggal</label>
+                        <input type="date" id="dateSelect" required class="w-full border border-nude-200 bg-white p-3 text-sm focus:outline-none focus:border-nude-900">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-nude-800 mb-1">Jam Kedatangan</label>
+                        <input type="time" id="timeSelect" required class="w-full border border-nude-200 bg-white p-3 text-sm focus:outline-none focus:border-nude-900">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full mt-6 bg-nude-900 text-white py-3.5 text-sm font-medium hover:bg-rose-900 transition-colors flex items-center justify-center gap-2">
+                    Lanjut ke WhatsApp Kasir
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Membuka modal dan otomatis memilih treatment jika diklik dari card
+        function openModal(treatmentName) {
+            document.getElementById('bookingModal').classList.remove('hidden');
+            
+            if(treatmentName) {
+                const treatmentSelect = document.getElementById('treatmentSelect');
+                treatmentSelect.value = treatmentName;
+            }
+        }
+
+        // Menutup Modal
+        function closeModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        // Logic Redirect ke WhatsApp
+        function submitBooking(event) {
+            event.preventDefault();
+            
+            const treatment = document.getElementById('treatmentSelect').value;
+            const stylist = document.getElementById('stylistSelect').value;
+            const date = document.getElementById('dateSelect').value;
+            const time = document.getElementById('timeSelect').value;
+            
+            // Format Pesan
+            const text = `Halo Admin Lumière, saya ingin mengamankan slot reservasi dengan detail berikut:%0A%0A`
+                       + `✨ *Treatment*: ${treatment}%0A`
+                       + `👩‍🎨 *Kapster/Stylist*: ${stylist}%0A`
+                       + `📅 *Tanggal*: ${date}%0A`
+                       + `⏰ *Jam*: ${time}%0A%0A`
+                       + `Mohon konfirmasi ketersediaan slotnya ya. Terima kasih!`;
+            
+            // Ganti nomor ini dengan nomor WhatsApp Kasir yang valid (Gunakan format 62)
+            const waNumber = "6281234567890";
+            const waUrl = `https://wa.me/${waNumber}?text=${text}`;
+            
+            // Membuka WhatsApp di tab baru
+            window.open(waUrl, '_blank');
+            
+            // Tutup Modal setelah submit
+            closeModal();
+        }
+    </script>
+</body>
+</html>

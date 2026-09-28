@@ -55,6 +55,7 @@ export interface BusinessDemo {
   address: string;
   googleMapsUrl: string;
   hours: string;
+  isOpen?: boolean;
   openTime?: string; // Format "HH:MM", e.g., "08:00"
   closeTime?: string; // Format "HH:MM", e.g., "22:00"
   waNumber: string; // format internasional tanpa tanda +, contoh: 628123456789

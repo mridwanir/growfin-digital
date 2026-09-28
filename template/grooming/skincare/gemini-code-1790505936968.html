@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraSkin Aesthetic & Wellness Clinic</title>
+  
+  <!-- Google Fonts: Cormorant Garamond (Editorial Luxury) & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #383431;
+    }
+    .font-serif {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-[#E2C7B8] selection:text-[#2A2624]">
+
+  <!-- TOP BAR & NAVBAR -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-[#FAF7F2]/85 backdrop-blur-md border-b border-[#E8E1D9] transition-all">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="text-2xl md:text-3xl font-serif tracking-widest uppercase font-semibold text-[#2C2724]">
+        Aura<span class="text-[#A37B63] italic">Skin</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wider text-[#5A524D]">
+        <a href="#vibe" class="hover:text-[#A37B63] transition-colors">THE VIBE</a>
+        <a href="#treatments" class="hover:text-[#A37B63] transition-colors">TREATMENTS</a>
+        <a href="#therapists" class="hover:text-[#A37B63] transition-colors">OUR ARTISTS</a>
+        <a href="#lookbook" class="hover:text-[#A37B63] transition-colors">LOOKBOOK</a>
+        <a href="#reviews" class="hover:text-[#A37B63] transition-colors">REVIEWS</a>
+      </nav>
+
+      <button onclick="openModal()" class="px-6 py-2.5 bg-[#2C2724] text-[#FAF7F2] rounded-full text-xs uppercase tracking-widest hover:bg-[#A37B63] transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer">
+        Book Appointment
+      </button>
+    </div>
+  </header>
+
+  <main class="pt-20">
+
+    <!-- 1. HERO SECTION (AESTHETIC VIBE & RELAXATION) -->
+    <section id="vibe" class="relative min-h-[90vh] flex items-center px-6 overflow-hidden">
+      <!-- Background Decorative Blur -->
+      <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#E8D4C8] rounded-full filter blur-3xl opacity-60"></div>
+      <div class="absolute bottom-10 right-0 w-[500px] h-[500px] bg-[#D4C3B3] rounded-full filter blur-3xl opacity-40"></div>
+
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 py-12">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EFE9E2] border border-[#DDD3C7] text-xs uppercase tracking-widest text-[#7D6353]">
+            <i class="fa-solid fa-sparkles text-[10px]"></i> Sanctuary of Restorative Beauty
+          </div>
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-serif font-light text-[#231F1D] leading-[1.15]">
+            Seni Merawat Diri, <br>
+            <span class="italic font-normal text-[#A37B63]">Ketenteraman Jiwa.</span>
+          </h1>
+          <p class="text-base sm:text-lg text-[#6B625B] max-w-xl font-light leading-relaxed">
+            Kombinasi terapi klinis tingkat lanjut dengan relaksasi sensoris menyeluruh. Nikmati sentuhan intim para terapis ahli kami di ruang perawatan beraroma botanikal.
+          </p>
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <button onclick="openModal()" class="px-8 py-4 bg-[#8E6A54] hover:bg-[#785743] text-white text-xs uppercase tracking-widest rounded-full transition-all duration-300 shadow-lg shadow-[#8E6A54]/20 cursor-pointer">
+              Reservasi Sesi Sekarang
+            </button>
+            <a href="#lookbook" class="px-8 py-4 border border-[#B3A497] hover:border-[#2C2724] text-[#3A332F] text-xs uppercase tracking-widest rounded-full transition-all duration-300">
+              Jelajahi Lookbook
+            </a>
+          </div>
+
+          <!-- Mini Perks -->
+          <div class="grid grid-cols-3 gap-4 pt-8 border-t border-[#E8E1D9] text-xs text-[#7A6F68]">
+            <div>
+              <p class="font-serif text-2xl text-[#231F1D] font-bold">100%</p>
+              <span>Cruelty-free & Medical Grade</span>
+            </div>
+            <div>
+              <p class="font-serif text-2xl text-[#231F1D] font-bold">Private</p>
+              <span>Suites Room Perawatan</span>
+            </div>
+            <div>
+              <p class="font-serif text-2xl text-[#231F1D] font-bold">Certified</p>
+              <span>Senior Aesthetician</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white/60">
+              <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop" 
+                   alt="Spa and Clinic Vibe" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700">
+            </div>
+            <!-- Floating Badge -->
+            <div class="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-[#ECE5DD] max-w-xs flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-[#F4EDE5] text-[#A37B63] flex items-center justify-center shrink-0">
+                <i class="fa-regular fa-clock text-xl"></i>
+              </div>
+              <div>
+                <p class="text-xs uppercase tracking-widest text-[#96867B]">Waktu Berkualitas</p>
+                <p class="text-sm font-medium text-[#231F1D]">Pengalaman tanpa tergesa-gesa</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TREATMENT CATALOG (WITH DURATION) -->
+    <section id="treatments" class="py-24 px-6 bg-[#F5EFEB]/60 border-y border-[#ECE5DD]">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <p class="text-xs uppercase tracking-widest text-[#A37B63] font-semibold mb-2">Pilihan Perawatan Terkurasi</p>
+          <h2 class="text-3xl md:text-5xl font-serif text-[#2C2724]">Layanan Perawatan & Terapi</h2>
+          <p class="text-sm text-[#736962] mt-3 font-light">Setiap sesi dialokasikan secara presisi agar Anda mendapatkan perhatian total tanpa terburu-buru.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <!-- Treatment Item 1 -->
+          <div class="bg-[#FAF7F2] rounded-3xl p-7 border border-[#E9DFD5] hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs text-[#8B7C72] mb-4">
+                <span class="flex items-center gap-1.5 bg-[#EEE5DC] px-3 py-1 rounded-full font-medium">
+                  <i class="fa-regular fa-clock text-[#A37B63]"></i> 75 Menit
+                </span>
+                <span class="font-serif text-lg font-semibold text-[#2C2724]">Rp 450.000</span>
+              </div>
+              <h3 class="text-xl font-serif font-bold text-[#2C2724] mb-2 group-hover:text-[#A37B63] transition-colors">
+                Hydra-Glow Signature Facial
+              </h3>
+              <p class="text-xs leading-relaxed text-[#6E645E]">
+                Pembersihan mendalam pore vacuum, infus serum hyaluronic botanikal, serta terapi LED light untuk hasil kulit bercahaya seketika.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-[#EEE5DC] flex items-center justify-between">
+              <span class="text-[11px] text-[#A6978C] uppercase tracking-wider">Face Treatment</span>
+              <button onclick="openModalWithPrefill('Hydra-Glow Signature Facial')" class="text-xs font-semibold text-[#8E6A54] hover:text-[#5E4334] inline-flex items-center gap-1.5 cursor-pointer">
+                Pilih Treatment <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Treatment Item 2 -->
+          <div class="bg-[#FAF7F2] rounded-3xl p-7 border border-[#E9DFD5] hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs text-[#8B7C72] mb-4">
+                <span class="flex items-center gap-1.5 bg-[#EEE5DC] px-3 py-1 rounded-full font-medium">
+                  <i class="fa-regular fa-clock text-[#A37B63]"></i> 90 Menit
+                </span>
+                <span class="font-serif text-lg font-semibold text-[#2C2724]">Rp 650.000</span>
+              </div>
+              <h3 class="text-xl font-serif font-bold text-[#2C2724] mb-2 group-hover:text-[#A37B63] transition-colors">
+                Aroma-Sculpting Face & Neck Spa
+              </h3>
+              <p class="text-xs leading-relaxed text-[#6E645E]">
+                Pijatan kontur wajah tradisional menggunakan rose quartz roller & essential oil khusus untuk relaksasi otot leher, bahu, dan drainase limfatik.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-[#EEE5DC] flex items-center justify-between">
+              <span class="text-[11px] text-[#A6978C] uppercase tracking-wider">Relaxation & Lifting</span>
+              <button onclick="openModalWithPrefill('Aroma-Sculpting Face & Neck Spa')" class="text-xs font-semibold text-[#8E6A54] hover:text-[#5E4334] inline-flex items-center gap-1.5 cursor-pointer">
+                Pilih Treatment <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Treatment Item 3 -->
+          <div class="bg-[#FAF7F2] rounded-3xl p-7 border border-[#E9DFD5] hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between text-xs text-[#8B7C72] mb-4">
+                <span class="flex items-center gap-1.5 bg-[#EEE5DC] px-3 py-1 rounded-full font-medium">
+                  <i class="fa-regular fa-clock text-[#A37B63]"></i> 60 Menit
+                </span>
+                <span class="font-serif text-lg font-semibold text-[#2C2724]">Rp 520.000</span>
+              </div>
+              <h3 class="text-xl font-serif font-bold text-[#2C2724] mb-2 group-hover:text-[#A37B63] transition-colors">
+                Gentle Peeling & Collagen Boost
+              </h3>
+              <p class="text-xs leading-relaxed text-[#6E645E]">
+                Eksfoliasi lembut untuk regenerasi sel kulit mati yang kusam, dipadukan dengan masker kolagen murni untuk elastisitas kulit kenyal.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-[#EEE5DC] flex items-center justify-between">
+              <span class="text-[11px] text-[#A6978C] uppercase tracking-wider">Anti-Aging</span>
+              <button onclick="openModalWithPrefill('Gentle Peeling & Collagen Boost')" class="text-xs font-semibold text-[#8E6A54] hover:text-[#5E4334] inline-flex items-center gap-1.5 cursor-pointer">
+                Pilih Treatment <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. KATALOG KAPSTER / TERAPIS / AESTHETICIAN (ARTISTIC & SKILLED) -->
+    <section id="therapists" class="py-24 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-widest text-[#A37B63] font-semibold mb-2">Sentuhan yang Berseni</p>
+            <h2 class="text-3xl md:text-5xl font-serif text-[#2C2724]">Pilih Terapis / Aesthetician Anda</h2>
+          </div>
+          <p class="text-sm text-[#736962] font-light max-w-sm">
+            Kecocokan sentuhan dan teknik relaksasi sangat personal. Anda berhak menentukan tangan ahli mana yang menemani waktu istirahat Anda.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Therapist Card 1 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-[#E9DFD5] group hover:shadow-xl transition-all duration-300">
+            <div class="h-80 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1594824813586-7876a4dfac09?q=80&w=800&auto=format&fit=crop" 
+                   alt="Senior Aesthetician" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#7B5B47] text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                Senior Aesthetician
+              </span>
+            </div>
+            <div class="p-6">
+              <h3 class="font-serif text-2xl text-[#2C2724]">Natasya Kinan</h3>
+              <p class="text-xs text-[#9E8E83] mb-4">Pengalaman 8+ Tahun • Spesialis Deep Cleansing & Gua Sha</p>
+              <p class="text-xs text-[#6B615A] leading-relaxed mb-6 font-light">
+                "Setiap kulit memiliki irama sendiri. Sentuhan terarah dan ritme yang lembut adalah kunci pemulihan sejati."
+              </p>
+              <button onclick="openModalWithPrefill('', 'Natasya Kinan')" class="w-full py-3 border border-[#C5B3A5] rounded-full text-xs font-semibold uppercase tracking-wider text-[#4E413A] hover:bg-[#8E6A54] hover:text-white hover:border-[#8E6A54] transition-all cursor-pointer">
+                Pilih Terapis Ini
+              </button>
+            </div>
+          </div>
+
+          <!-- Therapist Card 2 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-[#E9DFD5] group hover:shadow-xl transition-all duration-300">
+            <div class="h-80 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" 
+                   alt="Lymphatic & Massage Specialist" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#7B5B47] text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                Master Sculptor
+              </span>
+            </div>
+            <div class="p-6">
+              <h3 class="font-serif text-2xl text-[#2C2724]">Arini Wulandari</h3>
+              <p class="text-xs text-[#9E8E83] mb-4">Pengalaman 6 Tahun • Spesialis Lymphatic Face Massage</p>
+              <p class="text-xs text-[#6B615A] leading-relaxed mb-6 font-light">
+                "Menggabungkan teknik akupresur wajah oriental untuk meredakan ketegangan rahang dan mata lelah."
+              </p>
+              <button onclick="openModalWithPrefill('', 'Arini Wulandari')" class="w-full py-3 border border-[#C5B3A5] rounded-full text-xs font-semibold uppercase tracking-wider text-[#4E413A] hover:bg-[#8E6A54] hover:text-white hover:border-[#8E6A54] transition-all cursor-pointer">
+                Pilih Terapis Ini
+              </button>
+            </div>
+          </div>
+
+          <!-- Therapist Card 3 -->
+          <div class="bg-white rounded-3xl overflow-hidden border border-[#E9DFD5] group hover:shadow-xl transition-all duration-300">
+            <div class="h-80 overflow-hidden relative">
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop" 
+                   alt="Sensitive Skin Expert" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#7B5B47] text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                Skin Barrier Expert
+              </span>
+            </div>
+            <div class="p-6">
+              <h3 class="font-serif text-2xl text-[#2C2724]">Clara Melati</h3>
+              <p class="text-xs text-[#9E8E83] mb-4">Pengalaman 5 Tahun • Spesialis Kulit Sensitif & Acne Repair</p>
+              <p class="text-xs text-[#6B615A] leading-relaxed mb-6 font-light">
+                "Fokus utama saya adalah menenangkan inflamasi dan membangun kembali kekuatan pertahanan kulit Anda."
+              </p>
+              <button onclick="openModalWithPrefill('', 'Clara Melati')" class="w-full py-3 border border-[#C5B3A5] rounded-full text-xs font-semibold uppercase tracking-wider text-[#4E413A] hover:bg-[#8E6A54] hover:text-white hover:border-[#8E6A54] transition-all cursor-pointer">
+                Pilih Terapis Ini
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. LOOKBOOK PORTOFOLIO GALLERY -->
+    <section id="lookbook" class="py-24 px-6 bg-[#2C2724] text-[#FAF7F2]">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-xl mx-auto mb-16">
+          <p class="text-xs uppercase tracking-widest text-[#D6B5A1] font-semibold mb-2">Artistic Gallery</p>
+          <h2 class="text-3xl md:text-5xl font-serif">Lookbook & Suasana Studio</h2>
+          <p class="text-sm text-[#BDB2A9] mt-3 font-light">
+            Eksplorasi estetika hasil perawatan, kenyamanan suite privat, dan detail pengerjaan higienis kami.
+          </p>
+        </div>
+
+        <!-- Masonry / Dynamic Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div class="relative overflow-hidden rounded-2xl group aspect-[3/4]">
+            <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop" 
+                 alt="Glow Skin Result" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
+              <p class="text-xs font-medium tracking-wide">Glass Skin Moisture Ritual</p>
+            </div>
+          </div>
+
+          <div class="relative overflow-hidden rounded-2xl group aspect-[3/4] md:translate-y-6">
+            <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=800&auto=format&fit=crop" 
+                 alt="Aromatic Ambience" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
+              <p class="text-xs font-medium tracking-wide">Warm Towel & Essential Scents</p>
+            </div>
+          </div>
+
+          <div class="relative overflow-hidden rounded-2xl group aspect-[3/4]">
+            <img src="https://images.unsplash.com/photo-1512290900672-1f02f43b3558?q=80&w=800&auto=format&fit=crop" 
+                 alt="Facial Massage Gua Sha" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
+              <p class="text-xs font-medium tracking-wide">Rose Quartz Sculpting Method</p>
+            </div>
+          </div>
+
+          <div class="relative overflow-hidden rounded-2xl group aspect-[3/4] md:translate-y-6">
+            <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=800&auto=format&fit=crop" 
+                 alt="Relaxed Client" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
+              <p class="text-xs font-medium tracking-wide">Pure Relaxation Sanctuary</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SOCIAL PROOF (REVIEW SUASANA & HASIL) -->
+    <section id="reviews" class="py-24 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-xl mx-auto mb-16">
+          <p class="text-xs uppercase tracking-widest text-[#A37B63] font-semibold mb-2">Suara Pelanggan Kami</p>
+          <h2 class="text-3xl md:text-5xl font-serif text-[#2C2724]">Ketenangan & Hasil Nyata</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div class="p-8 rounded-3xl bg-[#F5EFEB] border border-[#E9DFD5] relative flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="text-[#A37B63] text-sm flex gap-1">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="font-serif italic text-lg text-[#3E3834] leading-relaxed">
+                "Pijatan wajah dari Kak Natasya benar-benar menghilangkan migrain dan lelah kerja. Ruangannya privat, wangi teh melati, serasa lupa beban hidup."
+              </p>
+            </div>
+            <div class="pt-6 border-t border-[#E2D5C8] mt-6">
+              <p class="font-semibold text-sm text-[#2C2724]">Valeria Michelle</p>
+              <p class="text-xs text-[#82756D]">Hydra-Glow Facial (Regular Client)</p>
+            </div>
+          </div>
+
+          <div class="p-8 rounded-3xl bg-[#F5EFEB] border border-[#E9DFD5] relative flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="text-[#A37B63] text-sm flex gap-1">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="font-serif italic text-lg text-[#3E3834] leading-relaxed">
+                "Sangat suka konsep reservasi langsung pilih terapis. Tidak perlu cemas ganti-ganti tangan yang belum tentu pas tekanannya. Arini luar biasa!"
+              </p>
+            </div>
+            <div class="pt-6 border-t border-[#E2D5C8] mt-6">
+              <p class="font-semibold text-sm text-[#2C2724]">Sabrina Hartono</p>
+              <p class="text-xs text-[#82756D]">Face & Neck Sculpting</p>
+            </div>
+          </div>
+
+          <div class="p-8 rounded-3xl bg-[#F5EFEB] border border-[#E9DFD5] relative flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="text-[#A37B63] text-sm flex gap-1">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="font-serif italic text-lg text-[#3E3834] leading-relaxed">
+                "Kulit saya gampang merah, tapi Clara paham sekali treatment gentle apa yang pas. Bangun tidur besoknya kulit rasanya super kenyal & glowing."
+              </p>
+            </div>
+            <div class="pt-6 border-t border-[#E2D5C8] mt-6">
+              <p class="font-semibold text-sm text-[#2C2724]">Dian Sastrodimulyo</p>
+              <p class="text-xs text-[#82756D]">Collagen Boost Therapy</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION BANNER -->
+    <section class="py-20 px-6 bg-[#EBE2D7]">
+      <div class="max-w-4xl mx-auto text-center space-y-6">
+        <h2 class="text-3xl md:text-5xl font-serif text-[#2C2724]">Amankan Slot Relaksasi Anda</h2>
+        <p class="text-sm md:text-base text-[#6E645D] font-light max-w-xl mx-auto">
+          Slot harian kami batasi secara ketat demi menjaga keheningan & kenyamanan privat setiap tamu.
+        </p>
+        <button onclick="openModal()" class="px-10 py-4 bg-[#2C2724] hover:bg-[#8E6A54] text-[#FAF7F2] text-xs uppercase tracking-widest rounded-full transition-all duration-300 shadow-xl cursor-pointer">
+          Mulai Reservasi Treatment
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#24201E] text-[#C9BEB6] py-14 px-6 text-sm">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-[#3B3532] pb-10">
+      <div class="space-y-3">
+        <span class="text-2xl font-serif uppercase tracking-widest text-[#FAF7F2]">AuraSkin</span>
+        <p class="text-xs text-[#9B8F87] leading-relaxed">Klinik estetika & wellness bernuansa tenang dengan layanan berorientasi kepuasan personal.</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] mb-3">Lokasi Sanctuary</h4>
+        <p class="text-xs text-[#9B8F87] leading-relaxed">Jl. Senopati No. 42B, Kebayoran Baru, Jakarta Selatan</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] mb-3">Jam Operasional</h4>
+        <p class="text-xs text-[#9B8F87] leading-relaxed">Selasa - Minggu: 10:00 - 20:00 WIB<br>(Senin Tutup untuk Sterilisasi)</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] mb-3">Kontak Langsung</h4>
+        <p class="text-xs text-[#9B8F87] leading-relaxed">WhatsApp: +62 812-3456-7890<br>Instagram: @auraskin.sanctuary</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row justify-between text-xs text-[#7A6F68] gap-4">
+      <p>© 2026 AuraSkin Aesthetic Clinic. Hak Cipta Dilindungi.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:underline">Kebijakan Privasi</a>
+        <a href="#" class="hover:underline">Syarat & Ketentuan Booking</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 6. TREATMENT BOOKING MODAL (DENGAN REDIRECT KE WA KASIR) -->
+  <div id="bookingModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+    <div class="bg-[#FAF7F2] border border-[#E0D5C9] rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button onclick="closeModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#EFE9E2] text-[#5C524C] hover:bg-[#8E6A54] hover:text-white flex items-center justify-center transition-colors cursor-pointer">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <div class="mb-6">
+        <p class="text-xs uppercase tracking-widest text-[#A37B63] font-semibold">Reservasi Instan</p>
+        <h3 class="text-2xl font-serif text-[#2C2724] mt-1">Pilih Treatment & Terapis Favorit</h3>
+        <p class="text-xs text-[#7B716A] mt-1">Slot kursi akan langsung diverifikasi oleh kasir kami via WhatsApp.</p>
+      </div>
+
+      <!-- Booking Form -->
+      <form id="reservationForm" onsubmit="handleBookingSubmit(event)" class="space-y-4 text-xs">
+        
+        <!-- Input Nama -->
+        <div>
+          <label class="block font-medium text-[#463D37] mb-1">Nama Lengkap</label>
+          <input type="text" id="custName" required placeholder="Contoh: Rania Pramesti"
+                 class="w-full px-4 py-3 rounded-xl border border-[#D9CEBF] bg-white focus:outline-none focus:border-[#8E6A54] transition-all">
+        </div>
+
+        <!-- Pilihan Treatment -->
+        <div>
+          <label class="block font-medium text-[#463D37] mb-1">Pilih Menu Treatment</label>
+          <select id="custTreatment" required class="w-full px-4 py-3 rounded-xl border border-[#D9CEBF] bg-white focus:outline-none focus:border-[#8E6A54] transition-all cursor-pointer">
+            <option value="" disabled selected>-- Pilih Layanan Perawatan --</option>
+            <option value="Hydra-Glow Signature Facial (75 Menit)">Hydra-Glow Signature Facial (75 Menit - Rp 450k)</option>
+            <option value="Aroma-Sculpting Face & Neck Spa (90 Menit)">Aroma-Sculpting Face & Neck Spa (90 Menit - Rp 650k)</option>
+            <option value="Gentle Peeling & Collagen Boost (60 Menit)">Gentle Peeling & Collagen Boost (60 Menit - Rp 520k)</option>
+          </select>
+        </div>
+
+        <!-- Pilihan Terapis / Aesthetician -->
+        <div>
+          <label class="block font-medium text-[#463D37] mb-1">Pilih Kapster / Terapis Spesifik</label>
+          <select id="custTherapist" required class="w-full px-4 py-3 rounded-xl border border-[#D9CEBF] bg-white focus:outline-none focus:border-[#8E6A54] transition-all cursor-pointer">
+            <option value="" disabled selected>-- Pilih Terapis --</option>
+            <option value="Natasya Kinan (Senior Aesthetician)">Natasya Kinan (Senior Aesthetician)</option>
+            <option value="Arini Wulandari (Master Sculptor)">Arini Wulandari (Master Sculptor)</option>
+            <option value="Clara Melati (Skin Barrier Expert)">Clara Melati (Skin Barrier Expert)</option>
+            <option value="Siapa Saja yang Tersedia">Rekomendasi Terbaik (Siapa Saja)</option>
+          </select>
+        </div>
+
+        <!-- Tanggal & Jam Kedatangan -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-medium text-[#463D37] mb-1">Tanggal Rencana</label>
+            <input type="date" id="custDate" required class="w-full px-4 py-3 rounded-xl border border-[#D9CEBF] bg-white focus:outline-none focus:border-[#8E6A54] transition-all">
+          </div>
+          <div>
+            <label class="block font-medium text-[#463D37] mb-1">Jam Kedatangan</label>
+            <select id="custTime" required class="w-full px-4 py-3 rounded-xl border border-[#D9CEBF] bg-white focus:outline-none focus:border-[#8E6A54] transition-all cursor-pointer">
+              <option value="10:30 WIB">10:30 WIB</option>
+              <option value="12:00 WIB">12:00 WIB</option>
+              <option value="14:00 WIB">14:00 WIB</option>
+              <option value="16:00 WIB">16:00 WIB</option>
+              <option value="18:00 WIB">18:00 WIB</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Catatan Khusus -->
+        <div>
+          <label class="block font-medium text-[#463D37] mb-1">Catatan Tambahan (Opsional)</label>
+          <textarea id="custNotes" rows="2" placeholder="Contoh: Kulit sedang ada jerawat aktif / alergi wewangian tertentu"
+                    class="w-full px-4 py-2.5 rounded-xl border border-[#D9CEBF] bg-white focus:outline-none focus:border-[#8E6A54] transition-all"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-4 bg-[#8E6A54] hover:bg-[#745440] text-white font-medium uppercase tracking-widest rounded-xl transition-all duration-300 shadow-lg shadow-[#8E6A54]/25 flex items-center justify-center gap-2 cursor-pointer mt-4">
+          <i class="fa-brands fa-whatsapp text-base"></i> Kunci Slot via WhatsApp Kasir
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT MODAL & REDIRECT FLOW -->
+  <script>
+    // Nomor WhatsApp Kasir Klinik (Ganti dengan nomor WhatsApp klinik yang aktif)
+    const CLINIC_WA_NUMBER = "6281234567890";
+
+    const modal = document.getElementById('bookingModal');
+
+    function openModal() {
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Prefill modal saat user klik tombol di card treatment atau stylist
+    function openModalWithPrefill(treatmentName = '', therapistName = '') {
+      openModal();
+      
+      if (treatmentName) {
+        const treatmentSelect = document.getElementById('custTreatment');
+        for (let i = 0; i < treatmentSelect.options.length; i++) {
+          if (treatmentSelect.options[i].text.includes(treatmentName)) {
+            treatmentSelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+
+      if (therapistName) {
+        const therapistSelect = document.getElementById('custTherapist');
+        for (let i = 0; i < therapistSelect.options.length; i++) {
+          if (therapistSelect.options[i].text.includes(therapistName)) {
+            therapistSelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+    }
+
+    // Tutup modal jika klik di luar area dialog
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Handle Form Submit & Redirect ke WhatsApp Kasir
+    function handleBookingSubmit(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('custName').value;
+      const treatment = document.getElementById('custTreatment').value;
+      const therapist = document.getElementById('custTherapist').value;
+      const date = document.getElementById('custDate').value;
+      const time = document.getElementById('custTime').value;
+      const notes = document.getElementById('custNotes').value || "-";
+
+      // Susun pesan WhatsApp yang rapi dan profesional
+      const message = `Halo Kasir AuraSkin Clinic, saya ingin reservasi slot treatment:%0A%0A` +
+        `• *Nama:* ${name}%0A` +
+        `• *Layanan:* ${treatment}%0A` +
+        `• *Pilihan Terapis:* ${therapist}%0A` +
+        `• *Jadwal Kedatangan:* ${date} (${time})%0A` +
+        `• *Catatan:* ${notes}%0A%0A` +
+        `Mohon konfirmasi ketersediaan slot kursi dan terapis tersebut. Terima kasih!`;
+
+      // Redirect ke WhatsApp
+      const waUrl = `https://wa.me/${CLINIC_WA_NUMBER}?text=${message}`;
+      window.open(waUrl, '_blank');
+
+      closeModal();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,12 +1,12 @@
 import { BusinessDemo } from '@/lib/types';
-import { ClinicDemoClient } from '@/components/demo/clinic-demo-client';
-import { CafeDemoClient } from '@/components/demo/cafe-demo-client';
+import { ServiceDemoClient } from '@/components/demo/service-demo-client';
+import { FnbDemoClient } from '@/components/demo/fnb-demo-client';
 import { RetailDemoClient } from '@/components/demo/retail-demo-client';
 import { GroomingDemoClient } from '@/components/demo/grooming-demo-client';
 import { getMockData } from '@/lib/mock-data';
 import { supabase } from '@/lib/supabase';
-import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider';
 import { resolveTemplateType } from '@/lib/template-resolver';
+import { DemoEditorWrapper } from '@/components/demo/editor/DemoEditorWrapper';
 import type { Metadata } from 'next';
 
 interface DemoPageProps {
@@ -144,22 +144,15 @@ export default async function DemoPage({ params }: DemoPageProps) {
     };
   }
 
-  // Route to the appropriate template
-  let demoComponent;
-  if (templateType === 'fnb') {
-    demoComponent = <CafeDemoClient client={genericClient} />;
-  } else if (templateType === 'service') {
-    demoComponent = <ClinicDemoClient client={genericClient} />;
-  } else if (templateType === 'grooming') {
-    demoComponent = <GroomingDemoClient client={genericClient} />;
-  } else {
-    // Fallback / Retail Template
-    demoComponent = <RetailDemoClient client={genericClient} />;
-  }
+  // Route to the appropriate template via Editor Wrapper
+  const layoutVariant = dbData.layout_id === 'modern-default' ? 'classic' : dbData.layout_id;
 
   return (
-    <DynamicThemeProvider themeColor={genericClient.themeColor}>
-      {demoComponent}
-    </DynamicThemeProvider>
+    <DemoEditorWrapper
+      initialClient={genericClient}
+      initialLayout={layoutVariant}
+      templateType={templateType}
+      slug={slug}
+    />
   );
 }

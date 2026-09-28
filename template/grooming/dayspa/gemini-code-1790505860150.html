@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUMINA Sanctuary — Day Spa & Massage Therapy</title>
+  
+  <!-- Google Fonts: Cormorant Garamond (Editorial Luxury) & Plus Jakarta Sans (Clean Modern) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Phosphor Icons untuk elemen UI elegan -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Tailwind CSS v4 CDN Browser Kit -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --color-spa-bg: #FAF7F2;
+      --color-spa-surface: #F3ECE2;
+      --color-spa-card: #FFFFFF;
+      --color-spa-primary: #8C6A53;
+      --color-spa-dark: #2B2623;
+      --color-spa-accent: #B2886A;
+      --color-spa-sage: #959F89;
+    }
+  </style>
+</head>
+<body class="bg-spa-bg text-spa-dark font-sans antialiased selection:bg-spa-accent selection:text-white">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-spa-bg/85 backdrop-blur-md border-b border-spa-surface/70 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="flex flex-col">
+        <span class="font-serif text-2xl tracking-[0.2em] font-medium uppercase text-spa-dark">Lumina</span>
+        <span class="text-[9px] uppercase tracking-[0.3em] text-spa-accent -mt-1 font-medium">Sanctuary Spa</span>
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-10 text-xs uppercase tracking-widest font-medium text-spa-dark/80">
+        <a href="#about" class="hover:text-spa-primary transition-colors">Filosofi</a>
+        <a href="#treatments" class="hover:text-spa-primary transition-colors">Menu Treatment</a>
+        <a href="#therapists" class="hover:text-spa-primary transition-colors">Master Terapis</a>
+        <a href="#lookbook" class="hover:text-spa-primary transition-colors">Atmosphere</a>
+        <a href="#reviews" class="hover:text-spa-primary transition-colors">Cerita Klien</a>
+      </nav>
+
+      <button onclick="openBookingModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-spa-primary hover:bg-spa-dark text-white text-xs uppercase tracking-wider font-semibold transition-all duration-300 shadow-sm hover:shadow-md">
+        <span>Reservasi</span>
+        <i class="ph ph-arrow-up-right text-sm"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    <!-- HERO SECTION -->
+    <section id="about" class="relative min-h-[92vh] flex items-center justify-center overflow-hidden px-6 py-20">
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2000&q=80" 
+             alt="Spa Ambience" 
+             class="w-full h-full object-cover object-center brightness-[0.88] filter contrast-105">
+        <div class="absolute inset-0 bg-gradient-to-r from-spa-dark/75 via-spa-dark/45 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-white">
+        <div class="lg:col-span-8 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs tracking-widest uppercase">
+            <span class="w-2 h-2 rounded-full bg-spa-accent animate-pulse"></span>
+            Aesthetic Holistic Well-being
+          </div>
+          <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.1] tracking-tight">
+            Kembalikan Ketenangan Jiwa & Harmoni Tubuh.
+          </h1>
+          <p class="text-white/80 max-w-xl text-base sm:text-lg font-light leading-relaxed">
+            Perpaduan teknik pijat ritual kuno Nusantara, sentuhan aromaterapi murni organik, serta terapis profesional bersertifikasi untuk regenerasi raga seutuhnya.
+          </p>
+          <div class="pt-4 flex flex-wrap items-center gap-4">
+            <button onclick="openBookingModal()" class="px-8 py-4 bg-spa-accent hover:bg-white hover:text-spa-dark text-white rounded-full text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 shadow-lg">
+              Amankan Sesi Anda
+            </button>
+            <a href="#treatments" class="px-7 py-4 border border-white/40 hover:bg-white/15 rounded-full text-xs font-medium tracking-[0.18em] uppercase transition-all duration-300">
+              Lihat Menu Spa
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 hidden lg:block">
+          <div class="p-6 rounded-3xl bg-spa-bg/15 backdrop-blur-xl border border-white/20 text-white space-y-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-spa-accent/30 flex items-center justify-center text-2xl border border-spa-accent/40">
+                <i class="ph ph-drop"></i>
+              </div>
+              <div>
+                <h4 class="font-serif text-lg font-medium">100% Essential Elixirs</h4>
+                <p class="text-xs text-white/70">Cold-pressed lavender & sandalwood oil</p>
+              </div>
+            </div>
+            <div class="h-[1px] bg-white/15"></div>
+            <div class="flex justify-between items-center text-xs tracking-wider uppercase text-white/80">
+              <span>Slot Hari Ini:</span>
+              <span class="text-spa-accent font-semibold px-2 py-0.5 rounded bg-spa-dark/40">Sisa 3 Jam Saja</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHT STATS -->
+    <section class="border-y border-spa-surface bg-spa-surface/30 py-8 px-6">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div>
+          <span class="block font-serif text-3xl md:text-4xl text-spa-primary">12+</span>
+          <span class="text-xs uppercase tracking-widest text-spa-dark/60 mt-1 block">Terapis Ahli</span>
+        </div>
+        <div>
+          <span class="block font-serif text-3xl md:text-4xl text-spa-primary">100%</span>
+          <span class="text-xs uppercase tracking-widest text-spa-dark/60 mt-1 block">Bahan Organik</span>
+        </div>
+        <div>
+          <span class="block font-serif text-3xl md:text-4xl text-spa-primary">4.9 / 5.0</span>
+          <span class="text-xs uppercase tracking-widest text-spa-dark/60 mt-1 block">Kepuasan Tamu</span>
+        </div>
+        <div>
+          <span class="block font-serif text-3xl md:text-4xl text-spa-primary">Private</span>
+          <span class="text-xs uppercase tracking-widest text-spa-dark/60 mt-1 block">Suites Room</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TREATMENT CATALOG (WITH DURATION) -->
+    <section id="treatments" class="py-24 px-6 max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+        <span class="text-xs tracking-[0.25em] text-spa-accent font-semibold uppercase">Layanan Eksklusif</span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-normal">Kurasi Perawatan & Durasi</h2>
+        <p class="text-sm sm:text-base text-spa-dark/70 font-light">Setiap ritual dirancang presisi dengan alokasi waktu ideal demi kenyamanan tanpa terburu-buru.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Treatment Card 1 -->
+        <div class="bg-spa-card rounded-2xl p-7 border border-spa-surface shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:shadow-xl hover:border-spa-accent/40 transition-all duration-300 group">
+          <div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-spa-primary bg-spa-surface/70 px-3 py-1 rounded-full">
+                <i class="ph ph-clock"></i> 90 Menit
+              </span>
+              <span class="font-serif text-xl font-semibold text-spa-dark">IDR 420K</span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium group-hover:text-spa-primary transition-colors">Aromatherapy Deep Tissue</h3>
+            <p class="text-xs sm:text-sm text-spa-dark/70 mt-3 leading-relaxed">
+              Teknik penekanan serat otot dalam menggunakan minyak cedarwood & chamomile untuk melepaskan simpul ketegangan kronis di bahu dan punggung.
+            </p>
+          </div>
+          <div class="pt-6 mt-6 border-t border-spa-surface/60 flex items-center justify-between">
+            <span class="text-xs text-spa-dark/50 italic">Termasuk foot bath ritual</span>
+            <button onclick="selectTreatmentAndOpenModal('Aromatherapy Deep Tissue (90 Menit)')" class="text-xs uppercase tracking-widest font-semibold text-spa-primary hover:text-spa-dark inline-flex items-center gap-1">
+              Pilih Layanan <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Treatment Card 2 -->
+        <div class="bg-spa-card rounded-2xl p-7 border border-spa-surface shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:shadow-xl hover:border-spa-accent/40 transition-all duration-300 group">
+          <div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-spa-primary bg-spa-surface/70 px-3 py-1 rounded-full">
+                <i class="ph ph-clock"></i> 120 Menit
+              </span>
+              <span class="font-serif text-xl font-semibold text-spa-dark">IDR 550K</span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium group-hover:text-spa-primary transition-colors">Warm Herbal Stone Ritual</h3>
+            <p class="text-xs sm:text-sm text-spa-dark/70 mt-3 leading-relaxed">
+              Kombinasi batu basal vulkanik hangat dan ramuan herbal nusantara. Melancarkan sirkulasi peredaran darah serta menghadirkan ketenangan tidur yang mendalam.
+            </p>
+          </div>
+          <div class="pt-6 mt-6 border-t border-spa-surface/60 flex items-center justify-between">
+            <span class="text-xs text-spa-dark/50 italic">Termasuk herbal tea soothing</span>
+            <button onclick="selectTreatmentAndOpenModal('Warm Herbal Stone Ritual (120 Menit)')" class="text-xs uppercase tracking-widest font-semibold text-spa-primary hover:text-spa-dark inline-flex items-center gap-1">
+              Pilih Layanan <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Treatment Card 3 -->
+        <div class="bg-spa-card rounded-2xl p-7 border border-spa-surface shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:shadow-xl hover:border-spa-accent/40 transition-all duration-300 group">
+          <div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-spa-primary bg-spa-surface/70 px-3 py-1 rounded-full">
+                <i class="ph ph-clock"></i> 60 Menit
+              </span>
+              <span class="font-serif text-xl font-semibold text-spa-dark">IDR 350K</span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium group-hover:text-spa-primary transition-colors">Botanical Hair & Scalp Spa</h3>
+            <p class="text-xs sm:text-sm text-spa-dark/70 mt-3 leading-relaxed">
+              Detoksifikasi kulit kepala dengan ekstrak rosemary, pijatan akupresur leher, dan hair mask organik untuk kilau rambut sehat nan bervolume.
+            </p>
+          </div>
+          <div class="pt-6 mt-6 border-t border-spa-surface/60 flex items-center justify-between">
+            <span class="text-xs text-spa-dark/50 italic">Termasuk blow dry lembut</span>
+            <button onclick="selectTreatmentAndOpenModal('Botanical Hair & Scalp Spa (60 Menit)')" class="text-xs uppercase tracking-widest font-semibold text-spa-primary hover:text-spa-dark inline-flex items-center gap-1">
+              Pilih Layanan <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Treatment Card 4 -->
+        <div class="bg-spa-card rounded-2xl p-7 border border-spa-surface shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:shadow-xl hover:border-spa-accent/40 transition-all duration-300 group">
+          <div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-spa-primary bg-spa-surface/70 px-3 py-1 rounded-full">
+                <i class="ph ph-clock"></i> 75 Menit
+              </span>
+              <span class="font-serif text-xl font-semibold text-spa-dark">IDR 380K</span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium group-hover:text-spa-primary transition-colors">Rose Quartz Facial Glow</h3>
+            <p class="text-xs sm:text-sm text-spa-dark/70 mt-3 leading-relaxed">
+              Perawatan wajah holistik dengan gua sha kristal rose quartz murni, serum hyaluronic acid organik, dan masker collagen untuk peremajaan instan.
+            </p>
+          </div>
+          <div class="pt-6 mt-6 border-t border-spa-surface/60 flex items-center justify-between">
+            <span class="text-xs text-spa-dark/50 italic">Termasuk lymphatic drainage</span>
+            <button onclick="selectTreatmentAndOpenModal('Rose Quartz Facial Glow (75 Menit)')" class="text-xs uppercase tracking-widest font-semibold text-spa-primary hover:text-spa-dark inline-flex items-center gap-1">
+              Pilih Layanan <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Treatment Card 5 -->
+        <div class="bg-spa-card rounded-2xl p-7 border border-spa-surface shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:shadow-xl hover:border-spa-accent/40 transition-all duration-300 group">
+          <div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-spa-primary bg-spa-surface/70 px-3 py-1 rounded-full">
+                <i class="ph ph-clock"></i> 90 Menit
+              </span>
+              <span class="font-serif text-xl font-semibold text-spa-dark">IDR 460K</span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium group-hover:text-spa-primary transition-colors">Balinese Boreh Body Polish</h3>
+            <p class="text-xs sm:text-sm text-spa-dark/70 mt-3 leading-relaxed">
+              Lulur eksfoliasi rempah cengkeh dan jahe hangat untuk mengangkat sel kulit mati, diikuti mandi rendam kelopak mawar yang menutrisi kulit.
+            </p>
+          </div>
+          <div class="pt-6 mt-6 border-t border-spa-surface/60 flex items-center justify-between">
+            <span class="text-xs text-spa-dark/50 italic">Mandi bunga beraroma</span>
+            <button onclick="selectTreatmentAndOpenModal('Balinese Boreh Body Polish (90 Menit)')" class="text-xs uppercase tracking-widest font-semibold text-spa-primary hover:text-spa-dark inline-flex items-center gap-1">
+              Pilih Layanan <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Treatment Card 6 -->
+        <div class="bg-spa-card rounded-2xl p-7 border border-spa-surface shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] flex flex-col justify-between hover:shadow-xl hover:border-spa-accent/40 transition-all duration-300 group">
+          <div>
+            <div class="flex justify-between items-start gap-4 mb-4">
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-spa-primary bg-spa-surface/70 px-3 py-1 rounded-full">
+                <i class="ph ph-clock"></i> 60 Menit
+              </span>
+              <span class="font-serif text-xl font-semibold text-spa-dark">IDR 290K</span>
+            </div>
+            <h3 class="font-serif text-2xl font-medium group-hover:text-spa-primary transition-colors">Signature Reflexology Sanctuary</h3>
+            <p class="text-xs sm:text-sm text-spa-dark/70 mt-3 leading-relaxed">
+              Stimulasi titik zona refleksi telapak kaki hingga betis untuk meregangkan otot kaku pasca perjalanan, disempurnakan dengan hot compression.
+            </p>
+          </div>
+          <div class="pt-6 mt-6 border-t border-spa-surface/60 flex items-center justify-between">
+            <span class="text-xs text-spa-dark/50 italic">Cocok untuk mobilitas tinggi</span>
+            <button onclick="selectTreatmentAndOpenModal('Signature Reflexology Sanctuary (60 Menit)')" class="text-xs uppercase tracking-widest font-semibold text-spa-primary hover:text-spa-dark inline-flex items-center gap-1">
+              Pilih Layanan <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KATALOG TERAPIS / STYLIST -->
+    <section id="therapists" class="py-24 bg-spa-surface/45 border-y border-spa-surface">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <span class="text-xs tracking-[0.25em] text-spa-accent font-semibold uppercase">The Healing Hands</span>
+            <h2 class="font-serif text-4xl sm:text-5xl font-normal mt-2">Pilih Terapis Personal Anda</h2>
+          </div>
+          <p class="text-sm text-spa-dark/70 max-w-md font-light">
+            Koneksi dan sentuhan terapis bersifat sangat personal. Pilih praktisi yang paling sesuai dengan kebutuhan energi dan preferensi pijatan Anda.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Therapist 1 -->
+          <div class="bg-spa-card rounded-3xl overflow-hidden border border-spa-surface/80 group">
+            <div class="relative h-80 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80" 
+                   alt="Saraswati Dewi" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <div class="absolute top-4 left-4 bg-spa-dark/70 backdrop-blur-md text-white text-[11px] uppercase tracking-wider px-3 py-1 rounded-full">
+                8+ Tahun Pengalaman
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex justify-between items-baseline mb-2">
+                <h3 class="font-serif text-2xl font-medium">Saraswati Dewi</h3>
+                <span class="text-xs text-spa-accent font-semibold tracking-wider uppercase">Senior Healer</span>
+              </div>
+              <p class="text-xs text-spa-dark/65 mb-4">
+                Spesialisasi pada teknik pijat deep tissue dan akupresur punggung. Cocok untuk Anda yang menyukai tekanan tegas dan terukur.
+              </p>
+              <div class="flex items-center justify-between pt-4 border-t border-spa-surface">
+                <span class="text-xs text-spa-sage font-medium flex items-center gap-1">
+                  <i class="ph-fill ph-sparkle"></i> Signature Deep Tension
+                </span>
+                <button onclick="selectTherapistAndOpenModal('Saraswati Dewi (Senior Healer)')" class="text-xs font-semibold uppercase tracking-wider hover:text-spa-primary underline underline-offset-4">
+                  Pilih Saraswati
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Therapist 2 -->
+          <div class="bg-spa-card rounded-3xl overflow-hidden border border-spa-surface/80 group">
+            <div class="relative h-80 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" 
+                   alt="Anindya Putri" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <div class="absolute top-4 left-4 bg-spa-dark/70 backdrop-blur-md text-white text-[11px] uppercase tracking-wider px-3 py-1 rounded-full">
+                6+ Tahun Pengalaman
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex justify-between items-baseline mb-2">
+                <h3 class="font-serif text-2xl font-medium">Anindya Putri</h3>
+                <span class="text-xs text-spa-accent font-semibold tracking-wider uppercase">Aromatherapist Specialist</span>
+              </div>
+              <p class="text-xs text-spa-dark/65 mb-4">
+                Pakar perpaduan essential oil dan stimulasi lymphatic drainage. Dikenal dengan sentuhan lembut menenangkan untuk mengatasi insomnia & kelelahan mental.
+              </p>
+              <div class="flex items-center justify-between pt-4 border-t border-spa-surface">
+                <span class="text-xs text-spa-sage font-medium flex items-center gap-1">
+                  <i class="ph-fill ph-sparkle"></i> Calming Flow Touch
+                </span>
+                <button onclick="selectTherapistAndOpenModal('Anindya Putri (Aromatherapist)')" class="text-xs font-semibold uppercase tracking-wider hover:text-spa-primary underline underline-offset-4">
+                  Pilih Anindya
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Therapist 3 -->
+          <div class="bg-spa-card rounded-3xl overflow-hidden border border-spa-surface/80 group">
+            <div class="relative h-80 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=800&q=80" 
+                   alt="Maya Renata" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <div class="absolute top-4 left-4 bg-spa-dark/70 backdrop-blur-md text-white text-[11px] uppercase tracking-wider px-3 py-1 rounded-full">
+                10+ Tahun Pengalaman
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex justify-between items-baseline mb-2">
+                <h3 class="font-serif text-2xl font-medium">Maya Renata</h3>
+                <span class="text-xs text-spa-accent font-semibold tracking-wider uppercase">Master Facialist & Spa</span>
+              </div>
+              <p class="text-xs text-spa-dark/65 mb-4">
+                Sertifikasi internasional dalam facial lifting gua sha dan botanical scalp therapy. Mampu merevitalisasi kesegaran wajah secara alami.
+              </p>
+              <div class="flex items-center justify-between pt-4 border-t border-spa-surface">
+                <span class="text-xs text-spa-sage font-medium flex items-center gap-1">
+                  <i class="ph-fill ph-sparkle"></i> Holistic Glow Master
+                </span>
+                <button onclick="selectTherapistAndOpenModal('Maya Renata (Master Facialist)')" class="text-xs font-semibold uppercase tracking-wider hover:text-spa-primary underline underline-offset-4">
+                  Pilih Maya
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOOKBOOK PORTOFOLIO / SUASANA -->
+    <section id="lookbook" class="py-24 px-6 max-w-7xl mx-auto">
+      <div class="text-center max-w-xl mx-auto mb-16 space-y-3">
+        <span class="text-xs tracking-[0.25em] text-spa-accent font-semibold uppercase">Visual Atmosphere</span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-normal">Lookbook Sanctuary</h2>
+        <p class="text-sm text-spa-dark/70 font-light">Eksplorasi sudut ruang yang dirancang khusus untuk memanjakan kelima panca indra Anda.</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 auto-rows-[220px]">
+        <!-- Gallery Item 1 -->
+        <div class="relative rounded-2xl overflow-hidden group col-span-2 row-span-2">
+          <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80" 
+               alt="Private Suite" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-spa-dark/80 via-transparent to-transparent opacity-90"></div>
+          <div class="absolute bottom-6 left-6 text-white">
+            <span class="text-[10px] tracking-widest uppercase text-spa-accent font-semibold">Private Couple Suite</span>
+            <p class="font-serif text-2xl">Bilik Pijat dengan Bathtub Kayu Cedar</p>
+          </div>
+        </div>
+
+        <!-- Gallery Item 2 -->
+        <div class="relative rounded-2xl overflow-hidden group">
+          <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=600&q=80" 
+               alt="Aromatherapy Bottles" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-spa-dark/20 group-hover:bg-spa-dark/40 transition-colors"></div>
+        </div>
+
+        <!-- Gallery Item 3 -->
+        <div class="relative rounded-2xl overflow-hidden group">
+          <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80" 
+               alt="Relaxation Lounge" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-spa-dark/20 group-hover:bg-spa-dark/40 transition-colors"></div>
+        </div>
+
+        <!-- Gallery Item 4 -->
+        <div class="relative rounded-2xl overflow-hidden group col-span-2">
+          <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80" 
+               alt="Herbal Compress" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-spa-dark/70 to-transparent"></div>
+          <div class="absolute bottom-4 left-6 text-white">
+            <p class="font-serif text-lg">Pojok Teh Herbal & Relaksasi Pasca Treatment</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL PROOF / REVIEWS -->
+    <section id="reviews" class="py-24 bg-spa-surface/30 border-t border-spa-surface">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-xl mx-auto mb-16 space-y-3">
+          <span class="text-xs tracking-[0.25em] text-spa-accent font-semibold uppercase">Ulasan Pengunjung</span>
+          <h2 class="font-serif text-4xl sm:text-5xl font-normal">Ketenangan yang Mereka Rasakan</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Review 1 -->
+          <div class="bg-spa-card p-8 rounded-3xl border border-spa-surface relative">
+            <div class="flex text-amber-500 mb-4 gap-1">
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+            </div>
+            <p class="text-sm text-spa-dark/80 italic leading-relaxed mb-6 font-light">
+              "Ambiensnya luar biasa hening dan wangi sandelwood-nya langsung bikin tenang saat melangkah masuk. Terapis Saraswati paham betul titik pundak saya yang tegang akibat lembur. Pulang dengan tubuh super ringan!"
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-spa-surface flex items-center justify-center font-serif font-semibold text-spa-primary">
+                CA
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold">Clarissa Amanda</h4>
+                <span class="text-[11px] text-spa-dark/50">Treatment: Aromatherapy Deep Tissue</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="bg-spa-card p-8 rounded-3xl border border-spa-surface relative">
+            <div class="flex text-amber-500 mb-4 gap-1">
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+            </div>
+            <p class="text-sm text-spa-dark/80 italic leading-relaxed mb-6 font-light">
+              "Bukan sekadar pijat biasa, tapi ritual perawatan yang sangat estetik. Herbal bath-nya sangat privat dan bersih. Terapis Anindya sangat perhatian menanyakan suhu minyak dan tekanan pijat."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-spa-surface flex items-center justify-center font-serif font-semibold text-spa-primary">
+                MW
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold">Michael Wijaya</h4>
+                <span class="text-[11px] text-spa-dark/50">Treatment: Warm Herbal Stone</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="bg-spa-card p-8 rounded-3xl border border-spa-surface relative">
+            <div class="flex text-amber-500 mb-4 gap-1">
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+              <i class="ph-fill ph-star"></i>
+            </div>
+            <p class="text-sm text-spa-dark/80 italic leading-relaxed mb-6 font-light">
+              "Facial glow-nya dengan Maya tidak membuat kulit merah sama sekali. Wajah terasa kenyal dan glowing natural. Ruangannya privat dengan alunan musik meditatif yang bikin tertidur pulas."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-spa-surface flex items-center justify-center font-serif font-semibold text-spa-primary">
+                NS
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold">Nadia Siregar</h4>
+                <span class="text-[11px] text-spa-dark/50">Treatment: Rose Quartz Facial</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANNER CTA -->
+    <section class="py-20 px-6 bg-spa-primary text-white text-center">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="font-serif text-3xl sm:text-5xl font-light">Berikan Raga Anda Istirahat yang Pantas</h2>
+        <p class="text-white/80 text-sm sm:text-base font-light">
+          Slot harian kami batasi secara ketat untuk menjamin ketenangan privat dan sterilisasi ruangan optimal untuk setiap tamu.
+        </p>
+        <div class="pt-2">
+          <button onclick="openBookingModal()" class="px-8 py-4 bg-white text-spa-dark hover:bg-spa-dark hover:text-white rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300">
+            Jadwalkan Waktu Relaksasi
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-spa-dark text-white/70 py-16 px-6 border-t border-white/10 text-xs">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div class="space-y-3">
+        <span class="font-serif text-2xl tracking-[0.2em] font-medium uppercase text-white">Lumina</span>
+        <p class="leading-relaxed">Suaka relaksasi estetik untuk merevitalisasi pikiran, tubuh, dan jiwa melalui sentuhan penuh kesadaran.</p>
+      </div>
+      <div>
+        <h5 class="text-white font-medium uppercase tracking-wider mb-3">Lokasi Sanctuary</h5>
+        <p class="leading-relaxed">Jl. Senopati No. 88, Kebayoran Baru<br>Jakarta Selatan 12190</p>
+      </div>
+      <div>
+        <h5 class="text-white font-medium uppercase tracking-wider mb-3">Jam Operasional</h5>
+        <p class="leading-relaxed">Setiap Hari: 09.00 - 21.00 WIB<br>(Sesi Reservasi Terakhir: 19.30 WIB)</p>
+      </div>
+      <div>
+        <h5 class="text-white font-medium uppercase tracking-wider mb-3">Kontak Reservasi</h5>
+        <p class="leading-relaxed">WhatsApp: +62 812-3456-7890<br>Instagram: @lumina.sanctuary</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/10 text-center text-white/40">
+      &copy; 2026 Lumina Sanctuary Spa. Crafted for peace and aesthetic living.
+    </div>
+  </footer>
+
+  <!-- TREATMENT BOOKING MODAL -->
+  <div id="bookingModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div class="bg-spa-card w-full max-w-lg rounded-3xl shadow-2xl border border-spa-surface overflow-hidden transform transition-all">
+      <!-- Modal Header -->
+      <div class="px-6 py-5 border-b border-spa-surface flex items-center justify-between bg-spa-surface/30">
+        <div>
+          <h3 class="font-serif text-2xl font-semibold text-spa-dark">Reservasi Sesi</h3>
+          <p class="text-xs text-spa-dark/60">Pilih treatment, terapis, dan waktu kedatangan.</p>
+        </div>
+        <button onclick="closeBookingModal()" class="w-8 h-8 rounded-full bg-spa-surface hover:bg-spa-accent hover:text-white flex items-center justify-center transition-colors">
+          <i class="ph ph-x text-base"></i>
+        </button>
+      </div>
+
+      <!-- Booking Form -->
+      <form id="spaBookingForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block uppercase tracking-wider font-semibold text-spa-dark/80 mb-1.5">Nama Lengkap</label>
+          <input type="text" id="custName" required placeholder="Contoh: Sarah Natasha" 
+                 class="w-full px-4 py-3 rounded-xl border border-spa-surface focus:outline-none focus:border-spa-accent bg-spa-bg/40 text-spa-dark text-sm">
+        </div>
+
+        <div>
+          <label class="block uppercase tracking-wider font-semibold text-spa-dark/80 mb-1.5">Pilihan Treatment (Durasi)</label>
+          <select id="custTreatment" required 
+                  class="w-full px-4 py-3 rounded-xl border border-spa-surface focus:outline-none focus:border-spa-accent bg-spa-bg/40 text-spa-dark text-sm">
+            <option value="">-- Pilih Layanan Perawatan --</option>
+            <option value="Aromatherapy Deep Tissue (90 Menit)">Aromatherapy Deep Tissue (90 Menit) - IDR 420K</option>
+            <option value="Warm Herbal Stone Ritual (120 Menit)">Warm Herbal Stone Ritual (120 Menit) - IDR 550K</option>
+            <option value="Botanical Hair & Scalp Spa (60 Menit)">Botanical Hair & Scalp Spa (60 Menit) - IDR 350K</option>
+            <option value="Rose Quartz Facial Glow (75 Menit)">Rose Quartz Facial Glow (75 Menit) - IDR 380K</option>
+            <option value="Balinese Boreh Body Polish (90 Menit)">Balinese Boreh Body Polish (90 Menit) - IDR 460K</option>
+            <option value="Signature Reflexology Sanctuary (60 Menit)">Signature Reflexology Sanctuary (60 Menit) - IDR 290K</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block uppercase tracking-wider font-semibold text-spa-dark/80 mb-1.5">Pilih Terapis Personal</label>
+          <select id="custTherapist" required 
+                  class="w-full px-4 py-3 rounded-xl border border-spa-surface focus:outline-none focus:border-spa-accent bg-spa-bg/40 text-spa-dark text-sm">
+            <option value="">-- Pilih Terapis Favorit --</option>
+            <option value="Saraswati Dewi (Senior Healer)">Saraswati Dewi (Senior Healer — Tekanan Kuat & Deep Tissue)</option>
+            <option value="Anindya Putri (Aromatherapist)">Anindya Putri (Aromatherapist Specialist — Ritme Menenangkan)</option>
+            <option value="Maya Renata (Master Facialist)">Maya Renata (Master Facialist & Scalp Specialist)</option>
+            <option value="Siapa Saja yang Tersedia">Rekomendasi Terbaik Spa (Terapis Mana Saja)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block uppercase tracking-wider font-semibold text-spa-dark/80 mb-1.5">Tanggal</label>
+            <input type="date" id="custDate" required 
+                   class="w-full px-4 py-3 rounded-xl border border-spa-surface focus:outline-none focus:border-spa-accent bg-spa-bg/40 text-spa-dark text-sm">
+          </div>
+          <div>
+            <label class="block uppercase tracking-wider font-semibold text-spa-dark/80 mb-1.5">Waktu / Slot Jam</label>
+            <select id="custTime" required 
+                    class="w-full px-4 py-3 rounded-xl border border-spa-surface focus:outline-none focus:border-spa-accent bg-spa-bg/40 text-spa-dark text-sm">
+              <option value="">Pilih Jam</option>
+              <option value="10:00 WIB">10:00 WIB</option>
+              <option value="12:00 WIB">12:00 WIB</option>
+              <option value="14:00 WIB">14:00 WIB</option>
+              <option value="16:00 WIB">16:00 WIB</option>
+              <option value="18:30 WIB">18:30 WIB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-4">
+          <button type="submit" class="w-full py-4 rounded-xl bg-spa-primary hover:bg-spa-dark text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 transition-colors shadow-md">
+            <i class="ph-fill ph-whatsapp-logo text-lg text-emerald-300"></i>
+            <span>Konfirmasi Slot via WhatsApp Kasir</span>
+          </button>
+          <p class="text-[11px] text-center text-spa-dark/50 mt-2">
+            Anda akan dialihkan ke WhatsApp kasir untuk verifikasi ketersediaan kamar.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: USER FLOW & INTERAKSI WHATSAPP -->
+  <script>
+    const modal = document.getElementById('bookingModal');
+    const custTreatmentSelect = document.getElementById('custTreatment');
+    const custTherapistSelect = document.getElementById('custTherapist');
+    const custDateInput = document.getElementById('custDate');
+
+    // Set minimal tanggal ke hari ini
+    const today = new Date().toISOString().split('T')[0];
+    if (custDateInput) {
+      custDateInput.min = today;
+    }
+
+    function openBookingModal() {
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeBookingModal() {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // Alur: Klik pada treatment card -> auto-select treatment di form
+    function selectTreatmentAndOpenModal(treatmentName) {
+      openBookingModal();
+      for (let i = 0; i < custTreatmentSelect.options.length; i++) {
+        if (custTreatmentSelect.options[i].value.includes(treatmentName) || treatmentName.includes(custTreatmentSelect.options[i].value)) {
+          custTreatmentSelect.selectedIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Alur: Klik pada profil terapis -> auto-select terapis di form
+    function selectTherapistAndOpenModal(therapistName) {
+      openBookingModal();
+      for (let i = 0; i < custTherapistSelect.options.length; i++) {
+        if (custTherapistSelect.options[i].value.includes(therapistName) || therapistName.includes(custTherapistSelect.options[i].value)) {
+          custTherapistSelect.selectedIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Tutup modal jika user klik di luar kotak
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        closeBookingModal();
+      }
+    }
+
+    // Submit form -> Format Pesan WA -> Redirect Kasir
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('custName').value;
+      const treatment = custTreatmentSelect.value;
+      const therapist = custTherapistSelect.value;
+      const date = document.getElementById('custDate').value;
+      const time = document.getElementById('custTime').value;
+
+      // Nomor WhatsApp Kasir/Front Desk Spa (format internasional tanpa '+')
+      const whatsappNumber = "6281234567890";
+
+      // Template pesan sopan & estetis
+      const textMessage = `Halo Lumina Sanctuary Spa,%0A%0ASaya ingin konfirmasi ketersediaan slot reservasi:%0A%0A` +
+        `• *Nama Tamu:* ${name}%0A` +
+        `• *Treatment:* ${treatment}%0A` +
+        `• *Pilihan Terapis:* ${therapist}%0A` +
+        `• *Tanggal:* ${date}%0A` +
+        `• *Jam Sesi:* ${time}%0A%0A` +
+        `Mohon info apakah slot room & terapis pada jam tersebut masih aman? Terima kasih banyak.`;
+
+      // Redirect ke WhatsApp
+      window.open(`https://wa.me/${whatsappNumber}?text=${textMessage}`, '_blank');
+      
+      closeBookingModal();
+    }
+  </script>
+</body>
+</html>

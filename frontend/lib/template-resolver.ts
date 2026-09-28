@@ -3,19 +3,23 @@ export type TemplateType = 'fnb' | 'service' | 'retail' | 'grooming';
 // Dictionaries of keywords for each template archetype
 const KEYWORDS = {
   fnb: [
-    'cafe', 'resto', 'warung', 'kopi', 'coffee', 'kuliner', 'makan', 'minum', 'bakso', 'soto', 'sate', 'mie'
+    'cafe', 'resto', 'warung', 'kopi', 'coffee', 'kuliner', 'makan', 'minum', 'bakso', 'soto', 'sate', 'mie',
+    'restaurant', 'bakery', 'fast food', 'bar', 'pub', 'bubble tea', 'juice'
   ],
   service: [
     'klinik', 'dokter', 'gigi', 'bidan', 'bengkel', 
-    'reparasi', 'servis', 'service', 'cuci mobil', 'laundry'
+    'reparasi', 'servis', 'service', 'cuci mobil', 'laundry',
+    'cleaning', 'tailor', 'penjahit', 'travel', 'real estate', 'agency'
   ],
   grooming: [
-    'kecantikan', 'salon', 'spa', 'cukur', 'barber', 'pijat', 'massage', 'terapi'
+    'kecantikan', 'salon', 'spa', 'cukur', 'barber', 'pijat', 'massage', 'terapi',
+    'beauty', 'hair', 'nail', 'skin care', 'make-up', 'artist'
   ],
   retail: [
     'toko', 'roti', 'baju', 'pakaian', 'sepatu', 'tas', 'supermarket', 'minimarket', 'grosir', 
     'elektronik', 'gadget', 'handphone', 'komputer', 'optik', 'kacamata', 'kosmetik', 'skincare',
-    'aprotek', 'obat', 'material', 'bangunan', 'buku', 'alat tulis', 'mainan', 'pet shop'
+    'aprotek', 'obat', 'material', 'bangunan', 'buku', 'alat tulis', 'mainan', 'pet shop',
+    'convenience', 'clothing', 'boutique', 'shoe', 'hardware'
   ]
 };
 
@@ -51,7 +55,7 @@ export function resolveTemplateType(category: string | undefined | null): Templa
 
 /**
  * A helper to dynamically resolve terminology based on a service category.
- * Used inside the 'service' template (ClinicDemoClient) to adapt words.
+ * Used inside the 'service' template (ServiceDemoClient) to adapt words.
  */
 export function resolveServiceTerminology(category: string | undefined | null) {
   const normalizedCategory = (category || '').toLowerCase();
@@ -76,7 +80,7 @@ export function resolveServiceTerminology(category: string | undefined | null) {
     };
   }
 
-  // Default Medical / Clinic terminology
+  // Default Medical / Service terminology
   return {
     staffTitle: 'Dokter',
     customerTitle: 'Pasien',

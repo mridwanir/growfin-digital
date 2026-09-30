@@ -7,13 +7,13 @@ export function Footer() {
   return (
     <footer className="bg-white text-slate-800 pt-16 pb-12 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-        
+
         <div className="grid gap-8 lg:grid-cols-12">
-          
+
           <div className="lg:col-span-5 space-y-4">
             <Link href="/" className="flex items-center gap-2 group cursor-pointer">
-                <img src="/image/landing/growfin-logo-icon.png" alt="Growfin Logo" className="w-10 h-10 object-contain" />
-                <span className="text-dark font-extrabold tracking-tight text-2xl">Growfin</span>
+              <img src="/image/landing/growfin-logo-icon.png" alt="Growfin Logo" className="w-10 h-10 object-contain" />
+              <span className="text-dark font-extrabold tracking-tight text-2xl">Growfin</span>
             </Link>
 
             <p className="text-xs text-slate-500 leading-relaxed font-medium max-w-sm mt-4">
@@ -52,7 +52,7 @@ export function Footer() {
               <ul className="space-y-2 text-slate-500 font-medium">
                 <li>WA: +62 896-6807-8854</li>
                 <li>Web: growfin.my.id</li>
-                <li>Email: hello@growfin.my.id</li>
+                <li>Email: growfin.id@gmail.com</li>
                 <li>Operasional: 08:00 - 20:00 WIB</li>
               </ul>
             </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { siteConfig } from '@/lib/site-config';
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -43,7 +44,7 @@ export function FAQ() {
               Masih ada yang mau diobrolin? Jangan ragu buat kontak tim support kita. Santai aja, kita siap bantu jelasin setiap detailnya.
             </p>
             <div className="pt-2 flex justify-center lg:justify-start">
-              <a href="https://wa.me/6289630352370" target="_blank" className="inline-flex items-center justify-center px-8 py-3.5 bg-emerald hover:bg-emerald-light text-white text-sm font-extrabold rounded-full shadow-lg transition-all active:scale-95">
+              <a href={`https://wa.me/${siteConfig.contact.whatsappNumber}?text=Halo%20Growfin,%20saya%20Ingin%20Konsultasi.`} target="_blank" className="inline-flex items-center justify-center px-8 py-3.5 bg-emerald hover:bg-emerald-light text-white text-sm font-extrabold rounded-full shadow-lg transition-all active:scale-95">
                 Tanya Tim Support
               </a>
             </div>

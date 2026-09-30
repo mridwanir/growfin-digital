@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { OnboardingModal } from './onboarding-modal';
+import { siteConfig } from '@/lib/site-config';
 
 export function ZigZag() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,7 +18,7 @@ export function ZigZag() {
                             <p className="text-slate-500 font-medium mb-8 leading-relaxed">
                                 Nggak usah pusing mikirin server, coding, atau error. Tim Growfin udah nyiapin infrastruktur yang rapi dan canggih biar kamu tinggal terima beres dan fokus naikin omset.
                             </p>
-                            <a href="https://wa.me/6289630352370" target="_blank" className="inline-flex items-center justify-center px-8 py-3.5 bg-emerald hover:bg-emerald-light text-white text-sm font-extrabold rounded-full shadow-lg transition-all active:scale-95">
+                            <a href={`https://wa.me/${siteConfig.contact.whatsappNumber}?text=Halo%20Growfin,%20saya%20Ingin%20Konsultasi.`} target="_blank" className="inline-flex items-center justify-center px-8 py-3.5 bg-emerald hover:bg-emerald-light text-white text-sm font-extrabold rounded-full shadow-lg transition-all active:scale-95">
                                 Konsultasi Gratis
                             </a>
                         </div>

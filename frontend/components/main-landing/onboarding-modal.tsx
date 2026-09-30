@@ -52,7 +52,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'generate' | 'find') => {
-    const val = e.target.value.replace(/\D/g, '');
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.startsWith('0')) {
+      val = '62' + val.substring(1);
+    }
     if (val.length <= 15) {
       if (field === 'generate') {
         setFormData({ ...formData, phone: val });
@@ -157,34 +160,34 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   const categoryGroups = [
     {
-      label: 'F&B (Food & Beverage)',
+      label: 'F&B (Makanan & Minuman)',
       options: [
-        'Restaurant',
-        'Cafe & Coffee Shop',
-        'Bakery & Dessert Shop',
-        'Fast Food Restaurant',
-        'Bubble Tea Shop / Juice Shop',
+        { value: 'Restaurant', label: 'Restoran' },
+        { value: 'Cafe & Coffee Shop', label: 'Kafe & Kedai Kopi' },
+        { value: 'Bakery & Dessert Shop', label: 'Toko Roti & Makanan Penutup' },
+        { value: 'Fast Food Restaurant', label: 'Restoran Cepat Saji' },
+        { value: 'Bubble Tea Shop / Juice Shop', label: 'Toko Boba / Jus' },
       ]
     },
     {
-      label: 'Grooming (Beauty & Personal Care)',
+      label: 'Grooming (Kecantikan & Perawatan Pribadi)',
       options: [
-        'Beauty Salon',
-        'Hair Salon & Barbershop',
-        'Nail Salon',
-        'Day Spa & Massage Spa',
-        'Skin Care Clinic',
-        'Make-up Artist'
+        { value: 'Beauty Salon', label: 'Salon Kecantikan' },
+        { value: 'Hair Salon & Barbershop', label: 'Salon Rambut & Barbershop' },
+        { value: 'Nail Salon', label: 'Salon Kuku' },
+        { value: 'Day Spa & Massage Spa', label: 'Spa & Pijat' },
+        { value: 'Skin Care Clinic', label: 'Klinik Perawatan Kulit' },
+        { value: 'Make-up Artist', label: 'Penata Rias (MUA)' }
       ]
     },
     {
-      label: 'Retail (Shopping / Toko Fisik)',
+      label: 'Retail (Pusat Belanja / Toko Fisik)',
       options: [
-        'Supermarket & Grocery Store',
-        'Convenience Store',
-        'Clothing Store & Boutique',
-        'Electronics Store',
-        'Shoe Store',
+        { value: 'Supermarket & Grocery Store', label: 'Supermarket & Toko Kelontong' },
+        { value: 'Convenience Store', label: 'Minimarket' },
+        { value: 'Clothing Store & Boutique', label: 'Toko Pakaian & Butik' },
+        { value: 'Electronics Store', label: 'Toko Elektronik' },
+        { value: 'Shoe Store', label: 'Toko Sepatu' },
       ]
     }
   ];
@@ -235,7 +238,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     {categoryGroups.map(group => (
                       <optgroup key={group.label} label={group.label}>
                         {group.options.map(option => (
-                          <option key={option} value={option}>{option}</option>
+                          <option key={option.value} value={option.value}>{option.label}</option>
                         ))}
                       </optgroup>
                     ))}

@@ -16,9 +16,12 @@ export const config = {
 export default function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
-  const hostname = req.headers
+  let hostname = req.headers
     .get('host')!
     .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id'}`);
+
+  // Strip port for local testing (e.g., growfin.my.id:3000 -> growfin.my.id)
+  hostname = hostname.split(':')[0];
 
   const path = url.pathname;
 
@@ -28,7 +31,7 @@ export default function middleware(req: NextRequest) {
 
   // 1. Handle Subdomains & Custom Domains (e.g. kopisenja.growfin.my.id or www.kopisenja.com)
   if (
-    hostname !== 'localhost:3000' &&
+    hostname !== 'localhost' &&
     hostname !== process.env.NEXT_PUBLIC_ROOT_DOMAIN &&
     hostname !== `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
   ) {

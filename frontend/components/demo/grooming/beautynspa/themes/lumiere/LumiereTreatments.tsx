@@ -1,7 +1,7 @@
-import { useBeautynspaDemo } from '../../core/BeautynspaContext';
+import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext';
 
 export function LumiereTreatments() {
-  const { client, setIsBookingModalOpen } = useBeautynspaDemo();
+  const { client, setIsBookingModalOpen } = useGroomingDemo();
 
   const treatments = (client.menu && client.menu.length > 0) ? client.menu : [
     { id: '1', name: 'Signature Hair Spa', price: '250000', duration: 60, desc: 'Perawatan kulit kepala dengan pijatan relaksasi menggunakan serum premium untuk rambut rontok dan lepek.' },
@@ -38,7 +38,7 @@ export function LumiereTreatments() {
                           <p className="text-sm text-[#5c4d47] mb-4 line-clamp-3">{service.desc}</p>
                           <p className="font-medium text-[#4a3c37] mb-4">{formatIDR(service.price)}</p>
                       </div>
-                      <button onClick={() => setIsBookingModalOpen(true)} className="w-full mt-4 py-3 border border-[#4a3c37] text-[#4a3c37] group-hover:bg-[#4a3c37] group-hover:text-white transition-colors">
+                      <button onClick={() => setIsBookingModalOpen(true)} className="w-full mt-4 py-3 border border-brand-primary text-[#4a3c37] group-hover:bg-brand-primary group-hover:text-white transition-colors">
                           Reservasi
                       </button>
                   </div>

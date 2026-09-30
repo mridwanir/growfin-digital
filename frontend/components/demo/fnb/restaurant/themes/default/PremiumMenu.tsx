@@ -16,7 +16,7 @@ export function PremiumMenu() {
   const { client, setSelectedProductForCustomization, setIsCustomizationModalOpen } = useFnbDemo();
   const [activeCategory, setActiveCategory] = useState<string>('All Menu');
 
-  const categories = ['All Menu', ...Array.from(new Set(client.menu.map(p => p.category).filter(Boolean)))];
+  const categories = ['All Menu', ...Array.from(new Set(client.menu.map(p => p.category).filter(c => c && c !== 'All Menu')))];
   const filteredMenu = activeCategory === 'All Menu'
     ? client.menu
     : client.menu.filter(p => p.category === activeCategory);
@@ -58,7 +58,7 @@ export function PremiumMenu() {
                     onClick={() => handleSelectProduct(item)}
                     className="flex gap-4 p-4 rounded-xl hover:bg-slate-900 border border-transparent hover:border-slate-800 transition-colors cursor-pointer group"
                   >
-                    <img src={FNB_MENU_IMAGES[idx % FNB_MENU_IMAGES.length]} alt={item.name} className="w-24 h-24 rounded-lg object-cover shadow-md" />
+                    <img src={item.imageUrl || FNB_MENU_IMAGES[idx % FNB_MENU_IMAGES.length]} alt={item.name} className="w-24 h-24 rounded-lg object-cover shadow-md" />
                     <div className="flex-1 flex flex-col justify-center">
                         <div className="flex justify-between items-start mb-1">
                             <h4 className="text-white font-semibold group-hover:text-brand-primary transition-colors">{item.name}</h4>

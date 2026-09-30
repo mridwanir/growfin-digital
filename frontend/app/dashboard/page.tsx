@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { Store, Globe, ArrowRight, Activity, CalendarDays } from 'lucide-react';
+import { CreateWebsiteButton } from '@/components/dashboard/CreateWebsiteButton';
 
 export default async function DashboardOverview() {
   const supabase = await createClient();
@@ -64,11 +65,9 @@ export default async function DashboardOverview() {
       <div className="bg-[#14141A] border border-[#262633] rounded-2xl overflow-hidden">
         <div className="p-6 border-b border-[#262633] flex items-center justify-between">
           <h3 className="text-xl font-bold text-white">Daftar Website Bisnis</h3>
-          <Link href="/" className="px-4 py-2 bg-[#00b894] text-[#14141A] font-bold rounded-lg hover:bg-[#00e0b8] transition-colors text-sm">
-            + Buat Website Baru
-          </Link>
+          <CreateWebsiteButton />
         </div>
-        
+
         {(!businesses || businesses.length === 0) ? (
           <div className="p-12 text-center">
             <Store className="w-12 h-12 text-[#262633] mx-auto mb-4" />
@@ -96,15 +95,15 @@ export default async function DashboardOverview() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Link 
-                    href={`/demo/${biz.slug}`} 
+                  <Link
+                    href={`https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id'}/${biz.slug}`}
                     target="_blank"
                     className="px-4 py-2 border border-[#262633] text-white font-bold rounded-lg hover:bg-[#262633] transition-colors text-sm"
                   >
                     Lihat Web
                   </Link>
-                  <Link 
-                    href={`/dashboard/settings?id=${biz.id}`} 
+                  <Link
+                    href={`/demo/${biz.slug}`}
                     className="px-4 py-2 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors text-sm flex items-center gap-2"
                   >
                     Kelola <ArrowRight className="w-4 h-4" />

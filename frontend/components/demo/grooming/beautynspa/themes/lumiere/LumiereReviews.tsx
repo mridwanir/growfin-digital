@@ -1,7 +1,7 @@
-import { useBeautynspaDemo } from '../../core/BeautynspaContext';
+import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext';
 
 export function LumiereReviews() {
-  const { client } = useBeautynspaDemo();
+  const { client } = useGroomingDemo();
 
   const reviews = (client.reviews && client.reviews.length > 0) ? client.reviews : [
     { text: "Vibe interiornya sangat menenangkan, wangi aromaterapinya langsung bikin rileks. Hasil coloring rambut dari Kak Sarah sangat luar biasa, nggak merusak rambut sama sekali!", authorName: "Amanda R." },
@@ -26,7 +26,7 @@ export function LumiereReviews() {
             </div>
             
             <div className="mt-12">
-                <a href={client.googleMapsUrl || '#'} target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 border border-[#4a3c37] text-[#4a3c37] hover:bg-[#4a3c37] hover:text-white transition-all duration-300 font-medium">
+                <a href={client.googleMapsUrl || '#'} target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition-all duration-300 font-medium">
                     Baca Semua Ulasan di Google Maps
                 </a>
             </div>

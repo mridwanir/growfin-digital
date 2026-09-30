@@ -22,7 +22,7 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
     return typeof val === 'number' ? `Rp ${val.toLocaleString('id-ID')}` : val;
   };
 
-  const menuImageUrl = CAFE_MENU_IMAGES[index % CAFE_MENU_IMAGES.length];
+  const menuImageUrl = item.imageUrl || CAFE_MENU_IMAGES[index % CAFE_MENU_IMAGES.length];
 
   return (
     <div
@@ -64,7 +64,7 @@ export function FnbServiceList() {
 
   const { ref: headerRef, isVisible: isHeaderVisible } = useScrollReveal(0.1);
 
-  const categories = ['Semua', ...Array.from(new Set(client.menu.map(p => p.category).filter(Boolean)))];
+  const categories = ['Semua', ...Array.from(new Set(client.menu.map(p => p.category).filter(c => c && c !== 'Semua')))];
   const filteredProducts = activeCategory === 'Semua'
     ? client.menu
     : client.menu.filter(p => p.category === activeCategory);

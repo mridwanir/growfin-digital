@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Artisan Pantry - Gourmet Grocery & Farm Produce</title>
+  
+  <!-- Tailwind CSS v4 Browser Script -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-serif-display {
+      font-family: 'Playfair Display', serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#FBF9F5] text-zinc-800 antialiased selection:bg-[#2D4739] selection:text-amber-100">
+
+  <!-- ================= TOP TICKER BAR ================= -->
+  <div class="bg-[#21352A] text-amber-100/90 text-xs py-2 px-4 border-b border-amber-900/30">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-amber-400"></span>
+        <span class="font-medium tracking-wide">Panen Subuh: Pengiriman kurir cold-storage langsung dari kebun jam 08:00 - 17:00</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px] font-semibold tracking-wider text-amber-200">
+        <span><i data-lucide="clock" class="inline w-3 h-3 mr-1"></i>Slot Hari Ini Tersedia</span>
+        <span>•</span>
+        <span>Garansi Kesegaran 100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= STICKY HEADER ================= -->
+  <header class="sticky top-0 z-40 bg-[#FBF9F5]/90 backdrop-blur-md border-b border-zinc-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-[#2D4739] text-amber-300 flex items-center justify-center shadow-lg shadow-[#2D4739]/20">
+          <i data-lucide="sprout" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-zinc-900 block leading-tight">ARTISAN<span class="text-[#2D4739] font-normal">PANTRY</span></span>
+          <span class="text-[10px] tracking-widest uppercase font-semibold text-zinc-400">Farm-to-Door Market</span>
+        </div>
+      </a>
+
+      <!-- Center Nav Links -->
+      <nav class="hidden lg:flex items-center gap-9 text-xs font-bold tracking-widest uppercase text-zinc-600">
+        <a href="#lookbook" class="hover:text-[#2D4739] transition">Lookbook Resep</a>
+        <a href="#katalog" class="hover:text-[#2D4739] transition">Katalog Segar</a>
+        <a href="#testimoni" class="hover:text-[#2D4739] transition">Ulasan Pembeli</a>
+      </nav>
+
+      <!-- Cart Trigger Button -->
+      <button onclick="toggleCart(true)" class="group flex items-center gap-3 bg-white hover:bg-zinc-100 border border-zinc-200 px-4 py-2 rounded-2xl shadow-xs transition">
+        <div class="relative">
+          <i data-lucide="shopping-basket" class="w-5 h-5 text-[#2D4739] group-hover:scale-110 transition"></i>
+          <span id="cart-badge" class="absolute -top-2 -right-2 bg-amber-600 text-white text-[10px] font-extrabold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-white">0</span>
+        </div>
+        <div class="text-left hidden sm:block">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 leading-tight">Keranjang</span>
+          <span class="block text-xs font-bold text-zinc-900 leading-tight" id="cart-navbar-total">Rp 0</span>
+        </div>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ================= 1. PROMOTIONAL HERO (BENTO-STYLE GRID) ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-14">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      
+      <!-- Bento 1: Main Banner (Large) -->
+      <div class="lg:col-span-8 relative rounded-3xl overflow-hidden bg-[#2D4739] text-white p-8 sm:p-12 flex flex-col justify-between min-h-[460px] shadow-xl shadow-stone-900/10">
+        <img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=1200&q=80" 
+             alt="Organic Produce" 
+             class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30">
+        
+        <div class="relative z-10 space-y-4 max-w-xl">
+          <div class="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-300/30 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Panen Musim Ini
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-serif-display font-semibold tracking-normal leading-tight text-amber-50">
+            Kelezatan Alami, Bersih Tanpa Kompromi.
+          </h1>
+          <p class="text-sm sm:text-base text-zinc-200 font-light leading-relaxed">
+            Kurasi bahan pangan premium langsung dari mitra tani terakreditasi hidroponik & peternakan organik bebas antibiotik.
+          </p>
+        </div>
+
+        <div class="relative z-10 pt-8 flex flex-wrap items-center gap-4">
+          <a href="#katalog" class="px-6 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold text-xs tracking-wider uppercase transition shadow-md">
+            Mulai Belanja
+          </a>
+          <a href="#lookbook" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs tracking-wider uppercase backdrop-blur-md border border-white/20 transition">
+            Lihat Inspirasi Dapur
+          </a>
+        </div>
+      </div>
+
+      <!-- Bento 2 & 3: Flash Sale Flash Card & Trust Metric -->
+      <div class="lg:col-span-4 flex flex-col gap-5">
+        
+        <!-- Flash Sale Card -->
+        <div class="rounded-3xl bg-amber-100/70 border border-amber-200/80 p-6 sm:p-7 flex flex-col justify-between flex-1 relative overflow-hidden">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-300/60 px-2.5 py-0.5 rounded-md">Flash Sale</span>
+              <span class="text-xs font-mono font-bold text-amber-800 bg-white/80 px-2 py-0.5 rounded-full border border-amber-200">
+                04 : 22 : 18
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-zinc-900">Diskon Panen 35% Untuk Buah & Daging</h3>
+            <p class="text-xs text-zinc-600 leading-relaxed">Stok terbatas setiap hari. Disiapkan dalam kemasan vakum bersegel pendingin.</p>
+          </div>
+          <div class="pt-4 flex items-center justify-between">
+            <span class="text-xs font-bold text-[#2D4739]">Promo Berakhir Hari Ini</span>
+            <a href="#katalog" class="w-9 h-9 rounded-xl bg-[#2D4739] text-white flex items-center justify-center hover:bg-zinc-800 transition">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Cold Chain Guarantee -->
+        <div class="rounded-3xl bg-white border border-zinc-200/80 p-6 flex items-center gap-4 shadow-xs">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
+            <i data-lucide="truck" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider">Garansi Rantai Dingin</h4>
+            <p class="text-xs text-zinc-500 mt-0.5">Dikirim menggunakan ice-pack & thermal bag higienis sampai depan pintu Anda.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 2. LOOKBOOK KOLEKSI (INSPIRASI RESEP GOURMET) ================= -->
+  <section id="lookbook" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-zinc-200">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <span class="text-[11px] font-extrabold uppercase tracking-widest text-[#2D4739]">Kurasi Kuliner & Dapur</span>
+        <h2 class="text-3xl font-serif-display font-bold text-zinc-900 mt-1">Lookbook Menu Segar Sepekan</h2>
+      </div>
+      <p class="text-xs sm:text-sm text-zinc-500 max-w-sm">Temukan inspirasi padu padan bahan segar untuk sajian rumah ala chef berbintang.</p>
+    </div>
+
+    <!-- Editorial Staggered Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+      
+      <!-- Lookbook Card 1 (Large 7 Cols) -->
+      <div class="md:col-span-7 group rounded-3xl overflow-hidden bg-white border border-zinc-200/80 shadow-xs flex flex-col justify-between hover:shadow-lg transition duration-300">
+        <div class="relative aspect-[16/10] overflow-hidden bg-zinc-100">
+          <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1000&q=80" 
+               alt="Gourmet Bowl" 
+               class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+          <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-zinc-800">
+            Menu 01 • Clean Living
+          </span>
+        </div>
+        <div class="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-serif-display font-bold text-zinc-900">Hydroponic Green Goddess Bowl</h3>
+            <p class="text-xs text-zinc-500 mt-1">Paduan selada romaine renyah, mentimun jepang, alpukat hass, dan dressing herba.</p>
+          </div>
+          <button onclick="openModalById(1)" class="shrink-0 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-[#2D4739] text-white text-xs font-bold tracking-wider uppercase transition">
+            Detail Produk
+          </button>
+        </div>
+      </div>
+
+      <!-- Lookbook Card 2 (5 Cols) -->
+      <div class="md:col-span-5 group rounded-3xl overflow-hidden bg-white border border-zinc-200/80 shadow-xs flex flex-col justify-between hover:shadow-lg transition duration-300">
+        <div class="relative aspect-[16/10] md:aspect-auto md:h-64 overflow-hidden bg-zinc-100">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" 
+               alt="Steak Grill" 
+               class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+          <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-zinc-800">
+            Menu 02 • Chef Choice
+          </span>
+        </div>
+        <div class="p-6 flex flex-col justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-serif-display font-bold text-zinc-900">Garlic Butter Ribeye & Herb Roast</h3>
+            <p class="text-xs text-zinc-500 mt-1">Daging meltique lembut dipadu baby rosemary dan mentega artisan.</p>
+          </div>
+          <button onclick="openModalById(2)" class="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-[#2D4739] text-white text-xs font-bold tracking-wider uppercase transition text-center">
+            Detail Produk
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 3. PRODUCT GRID (KATALOG VISUAL - TALL CARDS) ================= -->
+  <section id="katalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+      <div>
+        <span class="text-[11px] font-extrabold uppercase tracking-widest text-[#2D4739]">Etalase Pangan</span>
+        <h2 class="text-3xl font-serif-display font-bold text-zinc-900 mt-1">Katalog Produk Pilihan Hari Ini</h2>
+      </div>
+      <!-- Filter Badges UI -->
+      <div class="flex flex-wrap gap-2 text-xs font-semibold">
+        <span class="px-3 py-1.5 rounded-full bg-[#2D4739] text-white">Semua Bahan</span>
+        <span class="px-3 py-1.5 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400 cursor-pointer">Sayur Daun</span>
+        <span class="px-3 py-1.5 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400 cursor-pointer">Daging Segar</span>
+        <span class="px-3 py-1.5 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400 cursor-pointer">Buah Musiman</span>
+      </div>
+    </div>
+
+    <!-- Product Tall Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5" id="product-container">
+      <!-- Dynamic Products injected via JS -->
+    </div>
+  </section>
+
+  <!-- ================= 4. TESTIMONIALS (TOKO TERPERCAYA) ================= -->
+  <section id="testimoni" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 border-t border-zinc-200">
+    <div class="max-w-xl mx-auto text-center mb-10">
+      <span class="text-[11px] font-extrabold uppercase tracking-widest text-[#2D4739]">Kepuasan Pelanggan</span>
+      <h2 class="text-3xl font-serif-display font-bold text-zinc-900 mt-1">Ulasan Dapur Pelanggan Kami</h2>
+      <p class="text-xs text-zinc-500 mt-2">Dengarkan pengalaman memasak dengan bahan segar berkualitas kurasi kami.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Review 1 -->
+      <div class="bg-white p-7 rounded-3xl border border-zinc-200/90 shadow-xs flex flex-col justify-between">
+        <div class="space-y-3">
+          <div class="flex text-amber-500 gap-1">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed italic">
+            "Kualitas selada dan tomat cerinya luar biasa segar, teksturnya crunchy dan manis alami. Sangat cocok buat meal prep salad mingguan keluarga kami."
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-zinc-100 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-emerald-100 text-[#2D4739] font-bold text-xs flex items-center justify-center">
+            AM
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-900">Anindya Maheswari</h4>
+            <p class="text-[10px] text-zinc-400">Verified Buyer • Dago, Bandung</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review 2 -->
+      <div class="bg-white p-7 rounded-3xl border border-zinc-200/90 shadow-xs flex flex-col justify-between">
+        <div class="space-y-3">
+          <div class="flex text-amber-500 gap-1">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed italic">
+            "Sistem checkout langsung ke WhatsApp sangat cepat dan rekapnya rapi. Pengiriman tiba dengan ice pack yang masih dingin beku, daging wagyu tetap segar."
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-zinc-100 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-amber-100 text-amber-900 font-bold text-xs flex items-center justify-center">
+            RH
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-900">Reza Hendrawan</h4>
+            <p class="text-[10px] text-zinc-400">Verified Buyer • Kemang, Jaksel</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review 3 -->
+      <div class="bg-white p-7 rounded-3xl border border-zinc-200/90 shadow-xs flex flex-col justify-between">
+        <div class="space-y-3">
+          <div class="flex text-amber-500 gap-1">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed italic">
+            "Alpukat hass menteganya pas dibelah tidak ada yang cacat atau berurat. Jarang supermarket online bisa menjaga konsistensi mutu sebagus ini."
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-zinc-100 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-teal-100 text-teal-900 font-bold text-xs flex items-center justify-center">
+            MW
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-900">dr. Maya Wulandari</h4>
+            <p class="text-[10px] text-zinc-400">Verified Buyer • BSD City</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 5. QUICK VIEW MODAL (DETAIL & SKU & GALLERY) ================= -->
+  <div id="quickview-modal" class="fixed inset-0 z-50 hidden bg-zinc-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto no-scrollbar shadow-2xl relative">
+      
+      <!-- Close button -->
+      <button onclick="closeModal()" class="absolute top-5 right-5 z-20 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-600 transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div class="grid md:grid-cols-12 gap-8 p-6 sm:p-10">
+        
+        <!-- Left: Image Gallery (5 Cols) -->
+        <div class="md:col-span-5 space-y-3">
+          <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-100 border border-zinc-200">
+            <img id="modal-main-img" src="" alt="Detail Produk" class="w-full h-full object-cover">
+          </div>
+          <div class="grid grid-cols-3 gap-2" id="modal-thumbs">
+            <!-- Thumbs dynamically injected -->
+          </div>
+        </div>
+
+        <!-- Right: Information & SKU (7 Cols) -->
+        <div class="md:col-span-7 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span id="modal-category" class="text-[10px] font-bold text-[#2D4739] bg-emerald-50 px-2.5 py-0.5 rounded-md uppercase tracking-wider"></span>
+                <span class="text-[11px] text-zinc-400">SKU: <strong id="modal-sku-code" class="text-zinc-700"></strong></span>
+              </div>
+              <h3 id="modal-title" class="text-2xl font-serif-display font-bold text-zinc-900"></h3>
+              <p id="modal-price" class="text-2xl font-extrabold text-[#2D4739] mt-2"></p>
+            </div>
+
+            <!-- Description -->
+            <p id="modal-description" class="text-xs text-zinc-600 leading-relaxed"></p>
+
+            <!-- Specification List -->
+            <div class="bg-zinc-50 p-4 rounded-2xl border border-zinc-200/70">
+              <h5 class="text-xs font-bold text-zinc-900 uppercase tracking-wider mb-2">Spesifikasi Kualitas:</h5>
+              <ul class="space-y-1.5 text-xs text-zinc-600" id="modal-spec-list"></ul>
+            </div>
+
+            <!-- SKU Variants Selector -->
+            <div>
+              <label class="block text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Pilih Porsi / Ukuran Kemasan:</label>
+              <div class="flex flex-wrap gap-2" id="modal-variants">
+                <!-- Variant buttons injected -->
+              </div>
+            </div>
+
+            <!-- Qty Counter -->
+            <div class="flex items-center gap-4 pt-1">
+              <span class="text-xs font-bold text-zinc-700 uppercase">Jumlah:</span>
+              <div class="inline-flex items-center border border-zinc-200 rounded-xl bg-white p-1">
+                <button onclick="changeModalQty(-1)" class="w-7 h-7 rounded-lg bg-zinc-100 flex items-center justify-center font-bold text-zinc-700 hover:bg-zinc-200">-</button>
+                <span id="modal-qty" class="w-10 text-center font-bold text-xs text-zinc-900">1</span>
+                <button onclick="changeModalQty(1)" class="w-7 h-7 rounded-lg bg-zinc-100 flex items-center justify-center font-bold text-zinc-700 hover:bg-zinc-200">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add to Cart CTA -->
+          <div class="pt-6 mt-6 border-t border-zinc-100">
+            <button onclick="addModalItemToCart()" class="w-full py-3.5 px-6 rounded-xl bg-[#2D4739] hover:bg-[#21352A] text-amber-200 font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-[#2D4739]/20">
+              <i data-lucide="plus" class="w-4 h-4"></i> Masukkan ke Keranjang
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 6. CART DRAWER & LOGISTIC FORM ================= -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div onclick="toggleCart(false)" class="absolute inset-0 bg-zinc-950/60 backdrop-blur-xs transition-opacity"></div>
+    
+    <!-- Drawer Panel -->
+    <div class="absolute inset-y-0 right-0 max-w-full flex pl-8">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
+        
+        <!-- Cart Top Header -->
+        <div class="p-6 border-b border-zinc-200 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-[#2D4739] text-amber-300 flex items-center justify-center">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+            </div>
+            <h2 class="text-base font-bold text-zinc-900">Keranjang Belanja</h2>
+          </div>
+          <button onclick="toggleCart(false)" class="p-2 text-zinc-400 hover:text-zinc-700">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar" id="cart-items-container">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Checkout & Logistics Section -->
+        <div class="p-6 border-t border-zinc-200 bg-[#FBF9F5] space-y-4">
+          
+          <div class="space-y-2">
+            <span class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider block">Informasi Pengiriman</span>
+            <input type="text" id="cust-name" placeholder="Nama Penerima" class="w-full px-3.5 py-2 bg-white border border-zinc-200 rounded-xl text-xs focus:ring-1 focus:ring-[#2D4739] focus:outline-none">
+            <textarea id="cust-address" rows="2" placeholder="Alamat Rinci & Nomor Rumah" class="w-full px-3.5 py-2 bg-white border border-zinc-200 rounded-xl text-xs focus:ring-1 focus:ring-[#2D4739] focus:outline-none"></textarea>
+            <input type="text" id="cust-notes" placeholder="Catatan Kurir (misal: Titip pos satpam)" class="w-full px-3.5 py-2 bg-white border border-zinc-200 rounded-xl text-xs focus:ring-1 focus:ring-[#2D4739] focus:outline-none">
+          </div>
+
+          <!-- Total Calculation Summary -->
+          <div class="pt-2 border-t border-zinc-200 space-y-1 text-xs">
+            <div class="flex justify-between text-zinc-500">
+              <span>Subtotal Produk</span>
+              <span id="cart-subtotal">Rp 0</span>
+            </div>
+            <div class="flex justify-between text-zinc-500">
+              <span>Kurir Cold-Pack</span>
+              <span class="text-emerald-700 font-semibold" id="cart-shipping">Termasuk (Gratis)</span>
+            </div>
+            <div class="flex justify-between text-base font-extrabold text-zinc-900 pt-2 border-t border-zinc-200">
+              <span>Total Akhir</span>
+              <span class="text-[#2D4739]" id="cart-final-total">Rp 0</span>
+            </div>
+          </div>
+
+          <!-- Conversion Button: WhatsApp Checkout -->
+          <button onclick="processWhatsAppCheckout()" class="w-full py-3.5 px-4 rounded-xl bg-[#2D4739] hover:bg-[#1E3025] text-amber-200 font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#2D4739]/30 transition flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            Kirim Order ke WhatsApp Toko
+          </button>
+          
+          <p class="text-[10px] text-center text-zinc-400">Order akan diproses oleh tim panen kami seketika chat terkirim.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-zinc-200 bg-white py-10 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+      <p>© 2026 The Artisan Pantry. Hak cipta dilindungi.</p>
+      <div class="flex gap-6">
+        <a href="#katalog" class="hover:text-zinc-800">Katalog</a>
+        <a href="#lookbook" class="hover:text-zinc-800">Lookbook</a>
+        <a href="#testimoni" class="hover:text-zinc-800">Testimoni</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT APP LOGIC ================= -->
+  <script>
+    // WhatsApp Target Phone Number
+    const WA_ADMIN_NUMBER = "6281234567890";
+
+    // Katalog Data Produk
+    const products = [
+      {
+        id: 1,
+        title: "Selada Romaine Kebun Lembang",
+        category: "Sayuran Hidroponik",
+        basePrice: 17000,
+        sku: "AP-ROM-01",
+        images: [
+          "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1506484381205-f7945653044d?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Ditanam tanpa pestisida dengan air mata air pegunungan dingin. Karakter daun sangat renyah, segar bertahan hingga 7 hari di kulkas.",
+        specs: [
+          "Nutrisi: Tinggi Serat & Asam Folat",
+          "Kondisi: Segar dipetik subuh hari",
+          "Kemasan: Sealed Paper Bag ramah lingkungan"
+        ],
+        variants: [
+          { name: "Pack 250 Gram", priceFactor: 1 },
+          { name: "Pack 500 Gram (+Rp 14.000)", priceFactor: 1.82 },
+          { name: "Bundle 1 Kg (+Rp 42.000)", priceFactor: 3.47 }
+        ]
+      },
+      {
+        id: 2,
+        title: "Prime Ribeye Steak Cut",
+        category: "Daging Organik",
+        basePrice: 72000,
+        sku: "AP-RBY-02",
+        images: [
+          "https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Potongan daging ribeye sapi pilihan marbling MB4+. Tekstur sangat empuk alami tanpa injeksi pengempuk buatan.",
+        specs: [
+          "Potongan: Ketebalan 2 cm Butcher Cut",
+          "Penyimpanan: Vacuum Sealed Deep-Freeze",
+          "Sertifikat: 100% Halal Terverifikasi"
+        ],
+        variants: [
+          { name: "Single Cut 200g", priceFactor: 1 },
+          { name: "Duo Pack 400g (+Rp 65.000)", priceFactor: 1.9 },
+          { name: "Family Pack 1 Kg (+Rp 250.000)", priceFactor: 4.47 }
+        ]
+      },
+      {
+        id: 3,
+        title: "Tomat Ceri Merah Manis",
+        category: "Buah & Sayur",
+        basePrice: 19500,
+        sku: "AP-TOM-03",
+        images: [
+          "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1546470427-227c7369a9b7?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Tomat ceri merah ranum organik yang memiliki tingkat kemanisan seimbang untuk camilan sehat dan garnish.",
+        specs: [
+          "Standar: Grade A Export Quality",
+          "Kemasan: Kotak Mika berpori sirkulasi",
+          "Panen: Langsung dari greenhouse Ciwidey"
+        ],
+        variants: [
+          { name: "Kotak 250g", priceFactor: 1 },
+          { name: "Kotak 500g (+Rp 17.000)", priceFactor: 1.87 }
+        ]
+      },
+      {
+        id: 4,
+        title: "Alpukat Mentega Super Hass",
+        category: "Buah Pilihan",
+        basePrice: 39000,
+        sku: "AP-AVO-04",
+        images: [
+          "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1601039641847-7857b994d704?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1519162584292-56dfc9eb5db4?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Alpukat dengan daging pulen warna kuning mentega padat. Garansi bebas rasa getir dan tidak berulat.",
+        specs: [
+          "Ukuran: Rata-rata 320g - 360g per butir",
+          "Garansi: Penggantian produk jika rusak/busuk"
+        ],
+        variants: [
+          { name: "Paket 2 Pcs", priceFactor: 1 },
+          { name: "Paket 4 Pcs (+Rp 35.000)", priceFactor: 1.9 },
+          { name: "Peti Kayu 1 Kg (+Rp 80.000)", priceFactor: 3.05 }
+        ]
+      }
+    ];
+
+    // State
+    let cart = [];
+    let activeModalProduct = null;
+    let selectedVariantIndex = 0;
+    let modalQuantity = 1;
+
+    function rupiah(val) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+    }
+
+    // Render Tall Product Cards
+    function renderProductGrid() {
+      const container = document.getElementById('product-container');
+      container.innerHTML = products.map(p => `
+        <div class="group bg-white rounded-3xl border border-zinc-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+          <div class="relative aspect-[3/4] overflow-hidden bg-zinc-100 cursor-pointer" onclick="openModalById(${p.id})">
+            <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+              <span class="w-full py-2 bg-white/95 backdrop-blur-md rounded-xl text-center text-xs font-bold text-zinc-900 shadow-sm">
+                Lihat Spesifikasi
+              </span>
+            </div>
+            <span class="absolute top-3 left-3 bg-[#FBF9F5]/90 backdrop-blur-xs text-[10px] font-bold px-2.5 py-1 rounded-lg text-zinc-700">
+              ${p.category}
+            </span>
+          </div>
+
+          <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between">
+            <div>
+              <h3 onclick="openModalById(${p.id})" class="text-sm sm:text-base font-bold text-zinc-900 hover:text-[#2D4739] cursor-pointer line-clamp-1 transition">
+                ${p.title}
+              </h3>
+              <p class="text-[11px] text-zinc-400 mt-0.5">${p.variants[0].name}</p>
+              <div class="text-base sm:text-lg font-extrabold text-[#2D4739] mt-2">
+                ${rupiah(p.basePrice)}
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center gap-2">
+              <button onclick="openModalById(${p.id})" class="flex-1 py-2 px-2 rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50 text-xs font-semibold transition text-center">
+                Detail
+              </button>
+              <button onclick="quickAddToCart(${p.id})" class="py-2 px-3 rounded-xl bg-[#2D4739] hover:bg-[#1E3025] text-amber-200 text-xs font-bold shadow-xs transition flex items-center justify-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Beli
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // Modal Quick View Control
+    function openModalById(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+      activeModalProduct = prod;
+      selectedVariantIndex = 0;
+      modalQuantity = 1;
+
+      document.getElementById('modal-title').innerText = prod.title;
+      document.getElementById('modal-category').innerText = prod.category;
+      document.getElementById('modal-sku-code').innerText = prod.sku;
+      document.getElementById('modal-description').innerText = prod.desc;
+      document.getElementById('modal-qty').innerText = modalQuantity;
+      
+      const mainImg = document.getElementById('modal-main-img');
+      mainImg.src = prod.images[0];
+
+      const thumbsContainer = document.getElementById('modal-thumbs');
+      thumbsContainer.innerHTML = prod.images.map((imgUrl) => `
+        <div onclick="setModalMainImg('${imgUrl}')" class="aspect-square rounded-xl overflow-hidden border border-zinc-200 cursor-pointer hover:opacity-80">
+          <img src="${imgUrl}" class="w-full h-full object-cover">
+        </div>
+      `).join('');
+
+      const specList = document.getElementById('modal-spec-list');
+      specList.innerHTML = prod.specs.map(s => `
+        <li class="flex items-center gap-2">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+          <span>${s}</span>
+        </li>
+      `).join('');
+
+      renderModalVariants();
+      updateModalPrice();
+
+      document.getElementById('quickview-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function setModalMainImg(src) {
+      document.getElementById('modal-main-img').src = src;
+    }
+
+    function renderModalVariants() {
+      const container = document.getElementById('modal-variants');
+      container.innerHTML = activeModalProduct.variants.map((v, idx) => {
+        const isSelected = idx === selectedVariantIndex;
+        return `
+          <button onclick="selectVariant(${idx})" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition ${
+            isSelected 
+              ? 'border-[#2D4739] bg-[#2D4739] text-amber-200 shadow-xs' 
+              : 'border-zinc-200 text-zinc-600 hover:border-zinc-400 bg-white'
+          }">
+            ${v.name}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectVariant(index) {
+      selectedVariantIndex = index;
+      renderModalVariants();
+      updateModalPrice();
+    }
+
+    function updateModalPrice() {
+      const variant = activeModalProduct.variants[selectedVariantIndex];
+      const singlePrice = Math.round(activeModalProduct.basePrice * variant.priceFactor);
+      document.getElementById('modal-price').innerText = rupiah(singlePrice);
+    }
+
+    function changeModalQty(amt) {
+      modalQuantity = Math.max(1, modalQuantity + amt);
+      document.getElementById('modal-qty').innerText = modalQuantity;
+    }
+
+    function closeModal() {
+      document.getElementById('quickview-modal').classList.add('hidden');
+    }
+
+    // Slide-over Cart Handling
+    function toggleCart(open) {
+      const drawer = document.getElementById('cart-drawer');
+      if (open) {
+        drawer.classList.remove('hidden');
+        renderCart();
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    function addModalItemToCart() {
+      const variant = activeModalProduct.variants[selectedVariantIndex];
+      const itemPrice = Math.round(activeModalProduct.basePrice * variant.priceFactor);
+
+      addToCartCore(activeModalProduct.id, activeModalProduct.title, variant.name, itemPrice, modalQuantity, activeModalProduct.images[0]);
+      closeModal();
+      toggleCart(true);
+    }
+
+    function quickAddToCart(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+      addToCartCore(prod.id, prod.title, prod.variants[0].name, prod.basePrice, 1, prod.images[0]);
+      toggleCart(true);
+    }
+
+    function addToCartCore(id, title, variantName, price, qty, img) {
+      const key = `${id}-${variantName}`;
+      const existing = cart.find(c => c.key === key);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ key, id, title, variantName, price, qty, img });
+      }
+      updateCartState();
+    }
+
+    function updateQty(key, delta) {
+      const item = cart.find(c => c.key === key);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(c => c.key !== key);
+      }
+      updateCartState();
+      renderCart();
+    }
+
+    function updateCartState() {
+      const totalCount = cart.reduce((acc, c) => acc + c.qty, 0);
+      const totalPrice = cart.reduce((acc, c) => acc + (c.price * c.qty), 0);
+
+      document.getElementById('cart-badge').innerText = totalCount;
+      document.getElementById('cart-navbar-total').innerText = rupiah(totalPrice);
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-container');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const finalTotalEl = document.getElementById('cart-final-total');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-zinc-400 text-center space-y-2">
+            <i data-lucide="package-open" class="w-12 h-12 stroke-[1.5]"></i>
+            <p class="text-sm font-medium">Keranjang masih kosong</p>
+            <button onclick="toggleCart(false)" class="text-xs text-[#2D4739] font-bold underline">Mulai Eksplorasi Pangan</button>
+          </div>
+        `;
+        subtotalEl.innerText = "Rp 0";
+        finalTotalEl.innerText = "Rp 0";
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = cart.map(item => `
+        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white border border-zinc-200">
+          <img src="${item.img}" class="w-14 h-16 rounded-xl object-cover border border-zinc-100">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-zinc-900 truncate">${item.title}</h4>
+            <p class="text-[10px] text-zinc-400">${item.variantName}</p>
+            <p class="text-xs font-bold text-[#2D4739] mt-1">${rupiah(item.price)}</p>
+          </div>
+          <div class="flex items-center border border-zinc-200 rounded-lg bg-zinc-50 p-1">
+            <button onclick="updateQty('${item.key}', -1)" class="w-5 h-5 rounded bg-white text-xs font-bold text-zinc-700 hover:bg-zinc-100 flex items-center justify-center">-</button>
+            <span class="w-6 text-center text-xs font-bold text-zinc-800">${item.qty}</span>
+            <button onclick="updateQty('${item.key}', 1)" class="w-5 h-5 rounded bg-white text-xs font-bold text-zinc-700 hover:bg-zinc-100 flex items-center justify-center">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      const total = cart.reduce((acc, c) => acc + (c.price * c.qty), 0);
+      subtotalEl.innerText = rupiah(total);
+      finalTotalEl.innerText = rupiah(total);
+      lucide.createIcons();
+    }
+
+    // Checkout via WhatsApp Format
+    function processWhatsAppCheckout() {
+      if (cart.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+      }
+
+      const name = document.getElementById('cust-name').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const notes = document.getElementById('cust-notes').value.trim();
+
+      if (!name || !address) {
+        alert("Mohon masukkan Nama Penerima dan Alamat Lengkap pengiriman.");
+        return;
+      }
+
+      const total = cart.reduce((acc, c) => acc + (c.price * c.qty), 0);
+
+      let text = `*PESANAN BARU - THE ARTISAN PANTRY*\n`;
+      text += `Halo Team Pantry, saya ingin mengonfirmasi pesanan bahan segar berikut:\n\n`;
+      
+      text += `*DAFTAR ITEM:*\n`;
+      cart.forEach((item, index) => {
+        text += `${index + 1}. ${item.title} [${item.variantName}]\n`;
+        text += `   Jumlah: ${item.qty} x ${rupiah(item.price)} = ${rupiah(item.qty * item.price)}\n`;
+      });
+
+      text += `\n*TOTAL TAGIHAN:* ${rupiah(total)}\n`;
+      text += `------------------------------------\n`;
+      text += `*LOGISTIK PENERIMA:*\n`;
+      text += `👤 *Penerima:* ${name}\n`;
+      text += `🏠 *Alamat Pengiriman:* ${address}\n`;
+      text += `📌 *Catatan Kurir:* ${notes || '-'}\n\n`;
+      text += `Mohon instruksi pembayaran & slot jadwal panen/kirim. Terima kasih!`;
+
+      const encodedUrl = `https://wa.me/${WA_ADMIN_NUMBER}?text=${encodeURIComponent(text)}`;
+      window.open(encodedUrl, '_blank');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderProductGrid();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Hair Studio | Premium Women's Hair Salon</title>
+    
+    <!-- Tailwind CSS v4 Browser Build -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    <!-- Google Fonts for Chic & Elegant Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style type="text/tailwindcss">
+        @theme {
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            --color-blush-50: #fdf8f9;
+            --color-blush-100: #fceef1;
+            --color-blush-300: #f4b8c6;
+            --color-blush-500: #e87b99;
+            --color-blush-700: #be2e57;
+            --color-charcoal-800: #4a4a4a;
+            --color-charcoal-900: #222222;
+        }
+        body { font-family: var(--font-sans); background-color: var(--color-blush-50); color: var(--color-charcoal-900); }
+        h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
+    </style>
+</head>
+<body class="antialiased selection:bg-blush-300 selection:text-charcoal-900">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-blush-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-serif text-3xl font-semibold tracking-wide text-charcoal-900">Aura<span class="text-blush-500">.</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center text-sm font-medium tracking-wide">
+                    <a href="#lookbook" class="text-charcoal-800 hover:text-blush-700 transition-colors">Lookbook</a>
+                    <a href="#reviews" class="text-charcoal-800 hover:text-blush-700 transition-colors">Testimoni</a>
+                    <a href="#treatments" class="text-charcoal-800 hover:text-blush-700 transition-colors">Services</a>
+                    <a href="#stylists" class="text-charcoal-800 hover:text-blush-700 transition-colors">Stylists</a>
+                    <button onclick="openModal()" class="px-6 py-2.5 bg-charcoal-900 text-white rounded-full hover:bg-blush-700 transition-colors shadow-md">
+                        Book a Chair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Aesthetic Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0 bg-white">
+            <!-- Bright, modern hair salon vibe -->
+            <img src="https://images.unsplash.com/photo-1521590832167-7bfcfaa6362f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Bright Salon Interior" class="w-full h-full object-cover object-center opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-r from-blush-50/90 to-white/50"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+            <span class="text-blush-700 tracking-[0.25em] text-xs font-semibold uppercase mb-4 block">Premium Hair Studio</span>
+            <h1 class="font-serif text-5xl md:text-7xl font-semibold text-charcoal-900 mb-6 leading-tight">
+                Pancarkan <br/><span class="italic text-blush-700">Pesona</span> Mahkotamu.
+            </h1>
+            <p class="text-charcoal-800 text-lg md:text-xl mb-10 font-light max-w-2xl mx-auto leading-relaxed">
+                Di Aura Hair Studio, kami percaya bahwa setiap helai rambut memiliki ceritanya sendiri. Percayakan rambut Anda pada para ahli kami untuk kilau dan gaya yang tak terlupakan.
+            </p>
+            <a href="#lookbook" class="inline-flex items-center justify-center px-8 py-3.5 bg-blush-100 text-blush-700 border border-blush-300 rounded-full hover:bg-blush-700 hover:text-white transition-all duration-300 font-medium">
+                Lihat Portofolio Kami
+            </a>
+        </div>
+    </header>
+
+    <!-- 2. Lookbook Portfolio -->
+    <section id="lookbook" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-charcoal-900 mb-4">Galeri Gaya</h2>
+                <p class="text-charcoal-800 font-light text-sm tracking-wide">Transformasi rambut sempurna untuk setiap kepribadian.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Foto Gaya Rambut 1 -->
+                <div class="group relative overflow-hidden h-[450px] rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1595476108010-b4d1f10a5122?auto=format&fit=crop&w=800&q=80" alt="Balayage" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
+                        <div>
+                            <h3 class="text-white font-serif text-2xl mb-1">Ash Blonde Balayage</h3>
+                            <p class="text-blush-100 text-sm font-light">By Valerie</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Foto Gaya Rambut 2 -->
+                <div class="group relative overflow-hidden h-[450px] rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=80" alt="Volume Blowout" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
+                        <div>
+                            <h3 class="text-white font-serif text-2xl mb-1">Volume Blowout</h3>
+                            <p class="text-blush-100 text-sm font-light">By Jessica</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Foto Gaya Rambut 3 -->
+                <div class="group relative overflow-hidden h-[450px] rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1600951662432-849eb35cb101?auto=format&fit=crop&w=800&q=80" alt="Sleek Bob" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
+                        <div>
+                            <h3 class="text-white font-serif text-2xl mb-1">Glass Hair Keratin</h3>
+                            <p class="text-blush-100 text-sm font-light">By Nadia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Social Proof (Review Suasana & Hasil) -->
+    <section id="reviews" class="py-24 bg-blush-100/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-serif text-4xl text-charcoal-900 mb-16">Bicara Tentang Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-blush-100 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full shadow-sm text-blush-500 text-sm">★★★★★</div>
+                    <p class="text-charcoal-800 italic mb-6 mt-4 font-light text-sm leading-relaxed">"Sumpah, balayage di sini hasilnya blending sempurna! Rambutku nggak kering sama sekali walau di-bleach, karena mereka pakai produk Olaplex. Vibe salonnya juga estetik banget buat foto-foto."</p>
+                    <h4 class="font-serif font-semibold text-charcoal-900 text-lg">Natasha W.</h4>
+                </div>
+                <!-- Review 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-blush-100 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full shadow-sm text-blush-500 text-sm">★★★★★</div>
+                    <p class="text-charcoal-800 italic mb-6 mt-4 font-light text-sm leading-relaxed">"Servisnya luar biasa. Cuci rambutnya kayak lagi dipijat di spa, super relaxing. Kak Jessica ngerti banget model rambut yang cocok sama bentuk mukaku. Sangat worth the price!"</p>
+                    <h4 class="font-serif font-semibold text-charcoal-900 text-lg">Gisella A.</h4>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-blush-100 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full shadow-sm text-blush-500 text-sm">★★★★★</div>
+                    <p class="text-charcoal-800 italic mb-6 mt-4 font-light text-sm leading-relaxed">"Treatment Keratin di sini benar-benar magic. Rambutku yang awalnya singa sekarang jadi halus dan jatuh banget. Nggak nyesel percayain rambutku di Aura Hair Studio."</p>
+                    <h4 class="font-serif font-semibold text-charcoal-900 text-lg">Kania R.</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Treatment Catalog -->
+    <section id="treatments" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-charcoal-900 mb-4">Layanan Eksklusif</h2>
+                <p class="text-charcoal-800 font-light text-sm">Pilih treatment untuk memanjakan diri Anda hari ini.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-blush-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between border border-blush-100">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-serif text-2xl text-charcoal-900">Signature Balayage</h3>
+                            <span class="text-xs bg-white text-blush-700 px-3 py-1.5 rounded-full font-medium shadow-sm">
+                                ⏱ 180 Min
+                            </span>
+                        </div>
+                        <p class="text-sm text-charcoal-800 mb-6 font-light leading-relaxed">Teknik pewarnaan dimensi bebas tanpa foil, menciptakan gradasi warna natural bak ciuman matahari. Termasuk Olaplex treatment & Toner.</p>
+                    </div>
+                    <button onclick="openModal('Signature Balayage')" class="w-full mt-4 py-3 bg-white text-charcoal-900 border border-blush-300 rounded-full group-hover:bg-charcoal-900 group-hover:text-white transition-colors text-sm font-medium">
+                        Reservasi Seat
+                    </button>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-blush-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between border border-blush-100">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-serif text-2xl text-charcoal-900">Keratin Smoothing</h3>
+                            <span class="text-xs bg-white text-blush-700 px-3 py-1.5 rounded-full font-medium shadow-sm">
+                                ⏱ 150 Min
+                            </span>
+                        </div>
+                        <p class="text-sm text-charcoal-800 mb-6 font-light leading-relaxed">Ucapkan selamat tinggal pada rambut mengembang (frizz). Perawatan protein yang menutrisi hingga ke korteks, menjadikan rambut lurus, lembut, dan mudah diatur.</p>
+                    </div>
+                    <button onclick="openModal('Keratin Smoothing')" class="w-full mt-4 py-3 bg-white text-charcoal-900 border border-blush-300 rounded-full group-hover:bg-charcoal-900 group-hover:text-white transition-colors text-sm font-medium">
+                        Reservasi Seat
+                    </button>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-blush-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between border border-blush-100">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-serif text-2xl text-charcoal-900">Luxury Wash & Blowout</h3>
+                            <span class="text-xs bg-white text-blush-700 px-3 py-1.5 rounded-full font-medium shadow-sm">
+                                ⏱ 60 Min
+                            </span>
+                        </div>
+                        <p class="text-sm text-charcoal-800 mb-6 font-light leading-relaxed">Cuci rambut relaksasi dengan pijatan kepala, dilanjutkan styling blowout bervolume ala selebriti menggunakan produk perlindungan panas premium.</p>
+                    </div>
+                    <button onclick="openModal('Luxury Wash & Blowout')" class="w-full mt-4 py-3 bg-white text-charcoal-900 border border-blush-300 rounded-full group-hover:bg-charcoal-900 group-hover:text-white transition-colors text-sm font-medium">
+                        Reservasi Seat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Katalog Stylist -->
+    <section id="stylists" class="py-24 bg-blush-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl text-charcoal-900 mb-4">Meet The Artists</h2>
+                <p class="text-charcoal-800 font-light text-sm">Penata rambut wanita terbaik, siap merawat mahkota Anda.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
+                <!-- Stylist 1 -->
+                <div class="group">
+                    <div class="relative w-56 h-56 mx-auto mb-6">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80" alt="Valerie" class="w-full h-full rounded-full object-cover shadow-lg border-4 border-white group-hover:border-blush-300 transition-colors duration-300">
+                    </div>
+                    <h3 class="font-serif text-2xl text-charcoal-900">Valerie</h3>
+                    <p class="text-blush-700 text-xs font-semibold tracking-wider uppercase mt-2">Master Colorist</p>
+                </div>
+                <!-- Stylist 2 -->
+                <div class="group">
+                    <div class="relative w-56 h-56 mx-auto mb-6">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Jessica" class="w-full h-full rounded-full object-cover shadow-lg border-4 border-white group-hover:border-blush-300 transition-colors duration-300">
+                    </div>
+                    <h3 class="font-serif text-2xl text-charcoal-900">Jessica</h3>
+                    <p class="text-blush-700 text-xs font-semibold tracking-wider uppercase mt-2">Styling & Blowout Director</p>
+                </div>
+                <!-- Stylist 3 -->
+                <div class="group">
+                    <div class="relative w-56 h-56 mx-auto mb-6">
+                        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80" alt="Nadia" class="w-full h-full rounded-full object-cover shadow-lg border-4 border-white group-hover:border-blush-300 transition-colors duration-300">
+                    </div>
+                    <h3 class="font-serif text-2xl text-charcoal-900">Nadia</h3>
+                    <p class="text-blush-700 text-xs font-semibold tracking-wider uppercase mt-2">Keratin & Texture Expert</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-charcoal-900 text-white py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-serif text-3xl mb-4">Aura<span class="text-blush-500">.</span></h2>
+            <p class="text-sm text-white/70 font-light mb-8 max-w-md mx-auto">Mendefinisikan ulang kecantikan wanita melalui karya seni tata rambut.</p>
+            <p class="text-xs text-white/40">© 2026 Aura Hair Studio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 6. Treatment Booking Modal (Konversi) -->
+    <div id="bookingModal" class="fixed inset-0 z-50 hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-charcoal-900/40 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-serif text-2xl text-charcoal-900">Amankan Seat Anda</h3>
+                <button onclick="closeModal()" class="text-charcoal-800 hover:text-blush-700 text-2xl leading-none">&times;</button>
+            </div>
+            
+            <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-charcoal-800 mb-1.5 uppercase tracking-wide">Pilih Treatment</label>
+                    <select id="treatmentSelect" required class="w-full border border-blush-200 bg-blush-50/50 rounded-xl p-3 text-sm focus:outline-none focus:border-blush-500 focus:ring-1 focus:ring-blush-500 transition-shadow">
+                        <option value="">-- Treatment Pilihan --</option>
+                        <option value="Signature Balayage">Signature Balayage (180 Min)</option>
+                        <option value="Keratin Smoothing">Keratin Smoothing (150 Min)</option>
+                        <option value="Luxury Wash & Blowout">Luxury Wash & Blowout (60 Min)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-charcoal-800 mb-1.5 uppercase tracking-wide">Pilih Stylist</label>
+                    <select id="stylistSelect" required class="w-full border border-blush-200 bg-blush-50/50 rounded-xl p-3 text-sm focus:outline-none focus:border-blush-500 focus:ring-1 focus:ring-blush-500 transition-shadow">
+                        <option value="">-- Penata Rambut --</option>
+                        <option value="Valerie">Valerie (Master Colorist)</option>
+                        <option value="Jessica">Jessica (Styling Director)</option>
+                        <option value="Nadia">Nadia (Keratin Expert)</option>
+                        <option value="Siapa saja yang tersedia">Rekomendasikan untuk saya</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-800 mb-1.5 uppercase tracking-wide">Tanggal</label>
+                        <input type="date" id="dateSelect" required class="w-full border border-blush-200 bg-blush-50/50 rounded-xl p-3 text-sm focus:outline-none focus:border-blush-500 focus:ring-1 focus:ring-blush-500 transition-shadow">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-800 mb-1.5 uppercase tracking-wide">Jam</label>
+                        <input type="time" id="timeSelect" required class="w-full border border-blush-200 bg-blush-50/50 rounded-xl p-3 text-sm focus:outline-none focus:border-blush-500 focus:ring-1 focus:ring-blush-500 transition-shadow">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full mt-8 bg-charcoal-900 text-white rounded-full py-3.5 text-sm font-medium hover:bg-blush-700 transition-colors shadow-md flex items-center justify-center gap-2">
+                    Lanjut Reservasi via WhatsApp
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Trigger Modal Booking
+        function openModal(treatmentName) {
+            document.getElementById('bookingModal').classList.remove('hidden');
+            
+            // Auto select treatment if button clicked from specific service card
+            if(treatmentName) {
+                const treatmentSelect = document.getElementById('treatmentSelect');
+                treatmentSelect.value = treatmentName;
+            }
+        }
+
+        // Close Modal Booking
+        function closeModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        // Logic Redirect WhatsApp
+        function submitBooking(event) {
+            event.preventDefault();
+            
+            const treatment = document.getElementById('treatmentSelect').value;
+            const stylist = document.getElementById('stylistSelect').value;
+            const date = document.getElementById('dateSelect').value;
+            const time = document.getElementById('timeSelect').value;
+            
+            // Format pesan ramah untuk admin
+            const text = `Halo Admin Aura Studio, saya ingin reservasi untuk mempercantik rambut dengan detail berikut:%0A%0A`
+                       + `💇‍♀️ *Treatment*: ${treatment}%0A`
+                       + `✨ *Stylist*: ${stylist}%0A`
+                       + `📅 *Tanggal*: ${date}%0A`
+                       + `⏰ *Jam*: ${time}%0A%0A`
+                       + `Apakah slot ini masih tersedia? Terima kasih! 🌸`;
+            
+            // Nomor WhatsApp Salon (Format 62)
+            const waNumber = "6281234567890";
+            const waUrl = `https://wa.me/${waNumber}?text=${text}`;
+            
+            // Membuka tab WhatsApp
+            window.open(waUrl, '_blank');
+            closeModal();
+        }
+    </script>
+</body>
+</html>

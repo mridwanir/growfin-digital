@@ -1,7 +1,7 @@
-import { useBeautynspaDemo } from '../../core/BeautynspaContext';
+import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext';
 
 export function LumiereStylists() {
-  const { client } = useBeautynspaDemo();
+  const { client } = useGroomingDemo();
 
   const stylists = (client.practitioners && client.practitioners.length > 0) ? client.practitioners : [
     { id: '1', name: 'Sarah', role: 'Creative Color Director', photoUrl: 'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&w=400&q=80' },
@@ -23,7 +23,7 @@ export function LumiereStylists() {
               <img src={stylist.photoUrl || `/image/grooming/beautynspa/adam-winger-WDmvpGs2060-unsplash.jpg`} alt={stylist.name} className="w-48 h-48 rounded-full object-cover mx-auto mb-6 shadow-lg grayscale hover:grayscale-0 transition-all duration-500"
                 onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&w=400&q=80" }} />
               <h3 className="font-serif-lumiere text-2xl text-[#4a3c37]">{stylist.name}</h3>
-              <p className="text-rose-800 text-sm font-medium tracking-wide uppercase mt-1">{stylist.role || 'Professional'}</p>
+              <p className="text-brand-primary text-sm font-medium tracking-wide uppercase mt-1">{stylist.role || 'Professional'}</p>
             </div>
           ))}
         </div>

@@ -6,10 +6,10 @@ import { LayoutDashboard, Store, Palette, Globe, LogOut } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 
 const menuItems = [
-  { name: 'Ringkasan', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Toko & Bisnis', href: '/dashboard/settings', icon: Store },
-  { name: 'Tampilan & Tema', href: '/dashboard/theme', icon: Palette },
-  { name: 'Domain Kustom', href: '/dashboard/domain', icon: Globe },
+  { name: 'Ringkasan', href: '/dashboard', icon: LayoutDashboard, comingSoon: false },
+  { name: 'Toko & Bisnis', href: '#', icon: Store, comingSoon: true },
+  { name: 'Tampilan & Tema', href: '#', icon: Palette, comingSoon: true },
+  { name: 'Domain Kustom', href: '#', icon: Globe, comingSoon: true },
 ];
 
 export function DashboardSidebar() {
@@ -36,15 +36,26 @@ export function DashboardSidebar() {
           return (
             <Link 
               key={item.name} 
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-semibold text-sm ${
+              href={item.comingSoon ? '#' : item.href}
+              onClick={(e) => {
+                if (item.comingSoon) {
+                  e.preventDefault();
+                  alert('Fitur ini sedang dalam tahap penyempurnaan (Coming Soon) ✨ Kami sedang menyiapkan sesuatu yang luar biasa untuk Anda!');
+                }
+              }}
+              className={`flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-semibold text-sm ${
                 isActive 
                   ? 'bg-[#00b894]/10 text-[#00b894]' 
                   : 'text-[#8E8EA0] hover:bg-[#14141A] hover:text-white'
-              }`}
+              } ${item.comingSoon ? 'opacity-75 cursor-not-allowed' : ''}`}
             >
-              <Icon className="w-5 h-5" />
-              {item.name}
+              <div className="flex items-center gap-3">
+                <Icon className="w-5 h-5" />
+                {item.name}
+              </div>
+              {item.comingSoon && (
+                <span className="text-[10px] bg-[#262633] text-white px-2 py-0.5 rounded-full uppercase tracking-widest font-bold">Soon</span>
+              )}
             </Link>
           );
         })}

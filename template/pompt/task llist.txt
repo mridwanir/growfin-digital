@@ -1,0 +1,41 @@
+Ini adalah pertanyaan yang sangat strategis. Kunci agar kita tidak perlu bongkar-pasang arsitektur di masa depan adalah dengan **mengunci aturan bisnis (*Business Rules*) dan arsitektur *Routing* (*Tenant/User*) sebelum kita membuat fitur-fitur pengelolaannya (Dashboard)**.
+
+Berdasarkan posisi proyek kita saat ini, berikut adalah urutan prioritas implementasi yang paling terstruktur, aman, dan masuk akal:
+
+### Prioritas 1: Selesaikan "Nyawa" Utama (Minimal 1 Tema Default per Kategori)
+*Mengapa ini nomor 1? Karena *core value* dari aplikasi Anda adalah AI Generator. Jika ada *user* yang mengisi bisnis "Klinik Kecantikan" di Landing Page namun webnya gagal di-*generate* karena kita belum membuat tema default untuk Grooming/Service, *user journey* akan terputus.*
+- **Langkah:** Terapkan standar arsitektur modular yang sudah kita buat di Retail/FNB ke lini bisnis **Grooming** dan **Service**.
+- **Target:** Setiap lini bisnis memiliki minimal 1 `DefaultLayout` dengan komponen universalnya masing-masing.
+
+### Prioritas 2: Sinkronisasi Paket Harga (Landing Page ➔ Checkout)
+*Mengapa ini nomor 2? Karena ini akan menentukan struktur *database* langganan (Subscription) kita.*
+- **Langkah:** Pastikan paket (Basic, Pro, Premium) di *landing page* memiliki variabel batasan (*limits*) yang jelas di kodenya. Misalnya: Paket Basic hanya bisa upload 5 menu, Pro bisa 10 menu. 
+- **Target:** Saat *checkout*, sistem sudah mencatat *user* ini berlangganan paket apa dan limitasinya seperti apa.
+
+### Prioritas 3: Arsitektur URL & *Routing* untuk *Tenant* (Penting!)
+*Menjawab pertanyaan Anda: "Bagaimana kita mengatur URL jika sudah dibayar?"*
+Ini harus diputuskan **sebelum** membuat Dashboard, agar logika pengambilan data (*data fetching*) tidak dibongkar ulang. 
+- **Rekomendasi Arsitektur URL:** Jangan gunakan `/user/slug` atau `/demo/slug` untuk web yang sudah dibeli. Web publik harus terlihat profesional.
+  - **Tahap Awal:** Gunakan rute *root* dinamis seperti `domainanda.com/[slug]` (contoh: `growfin.id/kopisenja`).
+  - **Tahap Lanjut (*Best Practice* SaaS):** Gunakan *Subdomain* dengan *Next.js Middleware* (contoh: `kopisenja.growfin.id`). Jika mereka beli fitur premium, mereka bisa mengaitkan ke *Custom Domain* (`www.kopisenja.com`).
+- **Target:** URL `/demo/[slug]` **hanya** murni untuk *preview* sementara (sebelum bayar). Begitu dibayar, status datanya berubah menjadi *published* dan bisa diakses di *subdomain*/*slug* resmi mereka.
+
+### Prioritas 4: Client Dashboard (Sistem CMS & Batasan Upload)
+*Mengapa ini nomor 4? Setelah URL dan Paket Harga selesai, kita tahu fitur apa yang harus dimunculkan di Dashboard *user*.*
+- **Langkah:** Membangun *Dashboard* untuk *user* (bukan admin).
+- **Fitur Upload:** Untuk memfasilitasi *upload* gambar (10 menu, 3 hero, 5 lookbook), kita harus mengintegrasikan *Cloud Storage* (seperti Supabase Storage, AWS S3, atau Vercel Blob). Di *dashboard* inilah kode pembatasan (*rate limiting*) akan dipasang berdasarkan paket langganan mereka (Prioritas 2).
+- **Target:** *User* bisa mandiri mengganti foto, teks, dan tema dari *dashboard* yang akan langsung tercermin di URL publik mereka.
+
+### Prioritas 5: Super-Admin Dashboard
+*Mengapa ini terakhir? Karena Admin hanya mengawasi.*
+- **Langkah:** Membuat *dashboard* internal untuk Anda (Growfin).
+- **Target:** Melihat siapa saja yang *checkout*, mengatur/memvalidasi pembayaran, dan melihat statistik *demo* yang di-*generate* AI.
+
+---
+- perbaikan getting image di semua template
+- fix bug dibuku
+
+**Kesimpulan Tindakan Selanjutnya:**
+Jika Anda setuju dengan peta jalan ini, langkah teknis kita yang paling mendesak sekarang adalah **Prioritas 1**: Menyelesaikan fondasi struktur untuk tema **Grooming** dan **Service** agar seluruh kategori bisnis aman. Setelah itu, kita langsung masuk ke sinkronisasi Harga dan Skema URL Publik.
+
+Bagaimana menurut Anda? Apakah peta jalan ini masuk akal dan ingin kita mulai eksekusi Prioritas 1 sekarang?

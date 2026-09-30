@@ -3,7 +3,7 @@ import { ArrowDown, ChevronDown } from 'lucide-react';
 
 export function PremiumHeader() {
   const { client, isOpenNow } = useFnbDemo();
-  const heroImage = '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
+  const heroImage = client.heroImage || '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
 
   return (
     <header className="relative w-full h-screen flex items-center justify-center overflow-hidden">

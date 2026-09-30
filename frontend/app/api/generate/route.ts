@@ -30,12 +30,12 @@ function normalizePhone(phone: string): string {
 function mapPrimaryTypeToCategory(primaryType: string, userCategory: string): string {
   const type = primaryType.toLowerCase();
 
-  const fnbTypes = ['restaurant', 'cafe', 'coffee_shop', 'bakery', 'bar', 'fast_food_restaurant', 'meal_takeaway', 'ice_cream_shop'];
+  const fnbTypes = ['restaurant', 'cafe', 'coffee_shop', 'bakery', 'fast_food_restaurant', 'meal_takeaway', 'ice_cream_shop'];
   const groomingTypes = ['beauty_salon', 'barber_shop', 'spa', 'hair_care', 'massage_spa', 'nail_salon'];
   const retailTypes = ['pet_store', 'florist', 'clothing_store', 'electronics_store', 'supermarket', 'convenience_store', 'hardware_store', 'store'];
   const serviceTypes = ['medical_clinic', 'dentist', 'doctor', 'hospital', 'veterinary_care', 'pharmacy', 'laundry', 'car_repair', 'travel_agency', 'real_estate_agency'];
 
-  const fnbCategories = ['Restaurant', 'Cafe & Coffee Shop', 'Bakery & Dessert Shop', 'Fast Food Restaurant', 'Bubble Tea Shop / Juice Shop', 'Bar & Pub'];
+  const fnbCategories = ['Restaurant', 'Cafe & Coffee Shop', 'Bakery & Dessert Shop', 'Fast Food Restaurant', 'Bubble Tea Shop / Juice Shop'];
   const groomingCategories = ['Beauty Salon', 'Hair Salon & Barbershop', 'Nail Salon', 'Day Spa & Massage Spa', 'Skin Care Clinic', 'Make-up Artist'];
   const retailCategories = ['Supermarket & Grocery Store', 'Convenience Store', 'Clothing Store & Boutique', 'Electronics Store', 'Shoe Store', 'Pet Store', 'Hardware Store'];
   const serviceCategories = ['Laundry Service & Dry Cleaner', 'Car Repair & Maintenance', 'Cleaning Service', 'Tailor (Penjahit)', 'Travel Agency', 'Real Estate Agency'];
@@ -297,11 +297,30 @@ export async function POST(request: Request) {
     // Determine correct default layout
     const templateType = resolveTemplateType(adjustedCategory);
     let defaultLayoutId = 'retail-clothing-default';
+    
     if (templateType === 'fnb') {
       if (adjustedCategory.toLowerCase().includes('restaurant')) defaultLayoutId = 'fnb-restaurant-default';
       else defaultLayoutId = 'fnb-cafe-default';
     } else if (templateType === 'grooming') {
-      defaultLayoutId = 'grooming-beautynspa-default';
+      const isNailSpa = adjustedCategory.toLowerCase().includes('nail');
+      if (isNailSpa) {
+        defaultLayoutId = 'grooming-nailspa-default';
+      } else {
+        defaultLayoutId = 'grooming-beautynspa-default';
+      }
+    } else if (templateType === 'retail') {
+      const cat = adjustedCategory.toLowerCase();
+      const isGroceries = cat.includes('supermarket') || cat.includes('convenience') || cat.includes('grosir') || cat.includes('minimarket');
+      const isElectronic = cat.includes('electronic') || cat.includes('gadget') || cat.includes('computer');
+      
+      if (isGroceries) {
+        defaultLayoutId = 'retail-groceries-default';
+      } else if (isElectronic) {
+        defaultLayoutId = 'retail-electronic-default';
+      } else {
+        // Includes shoe store, clothing store, etc
+        defaultLayoutId = 'retail-clothing-default';
+      }
     }
 
     // 6. Simpan ke Supabase beserta metadata
@@ -316,6 +335,7 @@ export async function POST(request: Request) {
           city,
           maps_url: mapsUrl,
           metadata: metadata,
+          draft_metadata: metadata,
           scraping_status: 'completed',
           layout_id: defaultLayoutId
         }

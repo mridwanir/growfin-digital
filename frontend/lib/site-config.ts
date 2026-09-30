@@ -1,3 +1,57 @@
+export type PackageTier = 'free_trial' | 'instan' | 'pro-basic' | 'pro-advanced' | 'enterprise';
+
+export interface PackageLimits {
+  maxProducts: number;
+  maxCategories: number;
+  customDomain: boolean;
+  paymentGateway: boolean;
+  bookingSystem: boolean;
+  aiRegenerations: number;
+}
+
+export const PACKAGE_LIMITS: Record<PackageTier, PackageLimits> = {
+  'free_trial': {
+    maxProducts: 7,
+    maxCategories: 5,
+    customDomain: false,
+    paymentGateway: false,
+    bookingSystem: false,
+    aiRegenerations: 3,
+  },
+  'instan': {
+    maxProducts: 10,
+    maxCategories: 5,
+    customDomain: false,
+    paymentGateway: false,
+    bookingSystem: false,
+    aiRegenerations: 10,
+  },
+  'pro-basic': {
+    maxProducts: 100,
+    maxCategories: 20,
+    customDomain: true,
+    paymentGateway: false,
+    bookingSystem: false,
+    aiRegenerations: 50,
+  },
+  'pro-advanced': {
+    maxProducts: 200,
+    maxCategories: 50,
+    customDomain: true,
+    paymentGateway: true,
+    bookingSystem: true,
+    aiRegenerations: 100,
+  },
+  'enterprise': {
+    maxProducts: 1000,
+    maxCategories: 100,
+    customDomain: true,
+    paymentGateway: true,
+    bookingSystem: true,
+    aiRegenerations: 500,
+  }
+};
+
 export const siteConfig = {
   contact: {
     whatsappNumber: "6289630352370",
@@ -20,6 +74,7 @@ export const siteConfig = {
       descEn: "Fastest solution. Website live from a template in 24 hours.",
       descId: "Solusi tercepat. Website live dari template dalam 24 jam.",
       price: "Rp 299rb",
+      priceNumeric: 299000,
       periodEn: "One-time setup",
       periodId: "Sekali bayar (One-time setup)",
       featuresEn: [
@@ -48,6 +103,7 @@ export const siteConfig = {
       descEn: "Custom domain and unique design for stronger branding.",
       descId: "Custom domain dan desain unik untuk branding yang lebih kuat.",
       price: "Rp 999rb",
+      priceNumeric: 999000,
       periodEn: "One-time setup",
       periodId: "Sekali bayar (One-time setup)",
       featuresEn: [
@@ -78,6 +134,7 @@ export const siteConfig = {
       descEn: "Automated operational systems (booking, payment gateways, catalogs).",
       descId: "Sistem operasional otomatis (booking, payment gateway, katalog).",
       price: "Rp 2,49 Jt",
+      priceNumeric: 2490000,
       periodEn: "One-time setup",
       periodId: "Sekali bayar (One-time setup)",
       featuresEn: [
@@ -109,6 +166,7 @@ export const siteConfig = {
       descId: "Sistem kustom yang dibangun dari nol (from scratch) untuk kebutuhan kompleks.",
       priceEn: "Starts at 15M+",
       priceId: "Mulai 15 Jt+",
+      priceNumeric: 15000000,
       periodEn: "Project based",
       periodId: "Project based",
       featuresEn: [

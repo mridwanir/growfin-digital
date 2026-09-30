@@ -14,7 +14,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [mode, setMode] = useState<'generate' | 'find'>('generate');
   const [step, setStep] = useState<'form' | 'loading' | 'existing' | 'confirmation'>('form');
   const [realName, setRealName] = useState('');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     category: 'Restaurant',
@@ -88,7 +88,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       });
 
       const data = await res.json();
-      
+
       if (data.needsConfirmation) {
         setRealName(data.realName);
         setStep('confirmation');
@@ -143,7 +143,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       });
 
       const data = await res.json();
-      
+
       if (data.success && data.slug) {
         setStep('existing');
         setTimeout(() => {
@@ -171,7 +171,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         'Bakery & Dessert Shop',
         'Fast Food Restaurant',
         'Bubble Tea Shop / Juice Shop',
-        'Bar & Pub'
       ]
     },
     {
@@ -193,30 +192,30 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         'Clothing Store & Boutique',
         'Electronics Store',
         'Shoe Store',
-        'Pet Store',
-        'Hardware Store'
-      ]
-    },
-    {
-      label: 'Service (Jasa)',
-      options: [
-        'Laundry Service & Dry Cleaner',
-        'Car Repair & Maintenance',
-        'Cleaning Service',
-        'Tailor (Penjahit)',
-        'Travel Agency',
-        'Real Estate Agency'
+        // 'Pet Store',
+        // 'Hardware Store'
       ]
     }
+    // {
+    //   label: 'Service (Jasa)',
+    //   options: [
+    //     'Laundry Service & Dry Cleaner',
+    //     'Car Repair & Maintenance',
+    //     'Cleaning Service',
+    //     'Tailor (Penjahit)',
+    //     'Travel Agency',
+    //     'Real Estate Agency'
+    //   ]
+    // }
   ];
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
       <div className="relative w-full max-w-lg bg-[#0B0B0E] border border-[#262633] rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,184,148,0.15)] animate-in zoom-in-95 duration-300">
-        
+
         {/* Close Button - Hide when loading/existing */}
         {step === 'form' && (
-          <button 
+          <button
             onClick={() => {
               onClose();
               setTimeout(() => { setStep('form'); setMode('generate'); setErrorMsg(''); }, 300);
@@ -246,7 +245,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             )}
 
             <form onSubmit={handleSubmitGenerate} className="space-y-4">
-              
+
               {/* Nama Bisnis */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#8E8EA0] uppercase tracking-wider">Nama Bisnis</label>
@@ -355,7 +354,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             </form>
 
             <div className="mt-6 text-center">
-              <button 
+              <button
                 onClick={() => { setMode('find'); setErrorMsg(''); }}
                 className="text-[#8E8EA0] hover:text-[#00e0b8] text-xs font-semibold transition-colors"
               >
@@ -412,7 +411,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             </form>
 
             <div className="mt-6 text-center">
-              <button 
+              <button
                 onClick={() => { setMode('generate'); setErrorMsg(''); }}
                 className="text-[#8E8EA0] hover:text-[#00e0b8] text-xs font-semibold transition-colors"
               >
@@ -434,7 +433,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               <h3 className="text-xl font-black text-white">AI Sedang Bekerja...</h3>
               <p className="text-sm text-[#8E8EA0]">Memproses data bisnis dan menyusun layout template Anda.</p>
             </div>
-            
+
             <div className="w-full max-w-xs h-2 bg-[#262633] rounded-full overflow-hidden mt-4">
               <div className="h-full bg-gradient-to-r from-[#00b894] to-[#00e0b8] animate-progress w-full origin-left"></div>
             </div>
@@ -467,21 +466,21 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             <div className="space-y-4">
               <h3 className="text-xl font-black text-white">Konfirmasi Data Bisnis</h3>
               <p className="text-sm text-[#8E8EA0] leading-relaxed">
-                Kami mendeteksi nama bisnis di link Google Maps tersebut adalah: <br/>
+                Kami mendeteksi nama bisnis di link Google Maps tersebut adalah: <br />
                 <span className="text-lg font-bold text-yellow-400 block mt-2 mb-1">{realName}</span>
                 (Sedangkan Anda menginput: <span className="font-semibold text-white">{formData.name}</span>).
               </p>
               <p className="text-sm text-[#8E8EA0]">Apakah Anda ingin tetap melanjutkan proses generasi menggunakan data asli dari Google Maps tersebut?</p>
             </div>
-            
+
             <div className="flex w-full gap-3 pt-4">
-              <button 
+              <button
                 onClick={() => { setStep('form'); }}
                 className="flex-1 py-3 px-4 bg-[#14141A] border border-[#262633] hover:bg-[#262633] text-white text-sm font-semibold rounded-xl transition-colors"
               >
                 Batal / Ubah Link
               </button>
-              <button 
+              <button
                 onClick={() => handleSubmitGenerate(undefined, true)}
                 className="flex-1 py-3 px-4 bg-yellow-500 hover:bg-yellow-400 text-[#14141A] text-sm font-black rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] active:scale-[0.98]"
               >

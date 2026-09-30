@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHER — Clean Minimalist Tech & Audio</title>
+
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Google Fonts: Inter Display / Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#FAFAFA] text-zinc-800 antialiased selection:bg-zinc-900 selection:text-white">
+
+  <!-- ================= TOP NOTICE BAR ================= -->
+  <div class="bg-zinc-900 text-zinc-300 text-xs py-2 px-4 text-center font-medium tracking-wide">
+    Gratis Ongkir Seluruh Indonesia & Asuransi Penuh Pengiriman untuk Pembelian Hari Ini.
+  </div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-zinc-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-zinc-950">
+        <span class="w-8 h-8 rounded-lg bg-zinc-950 text-white flex items-center justify-center font-black text-sm">
+          Æ
+        </span>
+        AETHER<span class="text-zinc-400 font-normal">STUDIO</span>
+      </a>
+
+      <!-- Minimal Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-9 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+        <a href="#katalog" class="hover:text-zinc-950 transition-colors">Katalog Produk</a>
+        <a href="#lookbook" class="hover:text-zinc-950 transition-colors">Setup & Lookbook</a>
+        <a href="#reviews" class="hover:text-zinc-950 transition-colors">Ulasan Pembeli</a>
+        <a href="#layanan" class="hover:text-zinc-950 transition-colors">Garansi & Servis</a>
+      </nav>
+
+      <!-- Cart Button Pill -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleCart(true)" class="flex items-center gap-2 px-4 py-2.5 rounded-full bg-zinc-100 hover:bg-zinc-200 border border-zinc-200/70 transition-all text-xs font-semibold text-zinc-900">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span>Keranjang</span>
+          <span id="cart-badge" class="bg-zinc-950 text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PROMOTIONAL HERO (EDITORIAL SPLIT LAYOUT) ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      
+      <!-- Main Billboard Banner (8 Cols) -->
+      <div class="lg:col-span-8 bg-zinc-100 rounded-3xl p-8 sm:p-14 border border-zinc-200/80 flex flex-col justify-between relative overflow-hidden">
+        <div class="relative z-10 max-w-xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-zinc-200 text-zinc-900 text-[11px] font-bold tracking-wider uppercase">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Koleksi Terbaru Musim Ini
+          </div>
+          <h1 class="text-4xl sm:text-5xl font-extrabold text-zinc-950 tracking-tight leading-[1.15]">
+            Presisi Desain.<br>Performa Audio & Komputasi Tanpa Celah.
+          </h1>
+          <p class="text-zinc-500 text-sm sm:text-base leading-relaxed">
+            Menghadirkan lini perangkat keras minimalis dengan material aluminium anodized dan tuning akustik kelas studio profesional.
+          </p>
+          <div class="pt-4 flex flex-wrap items-center gap-3">
+            <a href="#katalog" class="px-6 py-3 bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-sm">
+              Lihat Seluruh Produk
+            </a>
+            <a href="#lookbook" class="px-6 py-3 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 text-xs font-bold uppercase tracking-wider rounded-xl transition-all">
+              Jelajahi Inspirasi Setup
+            </a>
+          </div>
+        </div>
+
+        <!-- Ambient Product Image inside Banner -->
+        <div class="mt-8 lg:mt-0 lg:absolute lg:right-[-40px] lg:bottom-[-20px] lg:w-96 rounded-2xl overflow-hidden shadow-2xl border border-white">
+          <img 
+            src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop" 
+            alt="Minimalist Headphone" 
+            class="w-full h-72 lg:h-96 object-cover"
+          />
+        </div>
+      </div>
+
+      <!-- Promo Spotlight Card (4 Cols) -->
+      <div class="lg:col-span-4 bg-white rounded-3xl p-8 border border-zinc-200/80 flex flex-col justify-between shadow-sm">
+        <div>
+          <div class="flex items-center justify-between text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
+            <span>Penawaran Terbatas</span>
+            <span class="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded">-35% OFF</span>
+          </div>
+
+          <div class="aspect-square rounded-2xl bg-zinc-50 border border-zinc-100 overflow-hidden mb-6 flex items-center justify-center p-4">
+            <img 
+              src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=800&auto=format&fit=crop" 
+              alt="Apex 75 Minimal" 
+              class="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+
+          <h3 class="text-lg font-bold text-zinc-950">Aether Mech 75 Low-Profile</h3>
+          <p class="text-xs text-zinc-500 mt-1">Gasket Mount 75% • CNC Aluminum Top Case</p>
+        </div>
+
+        <div class="pt-6 border-t border-zinc-100 mt-6 flex items-center justify-between">
+          <div>
+            <span class="text-xs text-zinc-400 line-through">Rp 2.200.000</span>
+            <div class="text-xl font-bold text-zinc-950">Rp 1.850.000</div>
+          </div>
+          <button onclick="openModal(1)" class="p-3 bg-zinc-100 hover:bg-zinc-950 hover:text-white text-zinc-900 rounded-xl transition-colors">
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PRODUCT CATALOG (CLEAN GRID) ================= -->
+  <section id="katalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 pb-4 border-b border-zinc-200">
+      <div>
+        <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest">Katalog Terkurasi</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-950 mt-1">Perangkat Keras Pilihan</h2>
+      </div>
+      <p class="text-xs text-zinc-500 mt-2 sm:mt-0 font-medium">
+        Menampilkan 3 Perangkat Unggulan • Bergaransi 24 Bulan
+      </p>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Generated via JS -->
+    </div>
+  </section>
+
+  <!-- ================= LOOKBOOK (HOTSPOT WORKSPACE SETUP) ================= -->
+  <section id="lookbook" class="bg-zinc-100/70 border-y border-zinc-200 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-xl mb-12">
+        <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest">Inspirasi Tata Ruang</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-950 mt-1">Eksplorasi Setup & Sinergi Alat</h2>
+        <p class="text-xs sm:text-sm text-zinc-500 mt-2">
+          Ketuk pin bernomor pada foto di bawah ini untuk melihat detail produk yang digunakan pada workstation ini.
+        </p>
+      </div>
+
+      <!-- Workspace Hero with Interactive Pins -->
+      <div class="relative rounded-3xl overflow-hidden border border-zinc-200 shadow-sm bg-white">
+        <img 
+          src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?q=80&w=1600&auto=format&fit=crop" 
+          alt="Clean Minimalist Desk Setup" 
+          class="w-full h-[480px] sm:h-[580px] object-cover"
+        />
+
+        <!-- Pin 1: Studio Pro (Audio) -->
+        <div class="absolute top-[28%] left-[22%] sm:left-[24%] group">
+          <button onclick="openModal(0)" class="w-9 h-9 rounded-full bg-white text-zinc-950 shadow-xl flex items-center justify-center font-bold text-xs hover:scale-110 transition-transform border border-zinc-200">
+            01
+          </button>
+          <div class="absolute bottom-11 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-zinc-200 shadow-xl hidden group-hover:block w-48 text-left z-20">
+            <p class="text-[10px] uppercase font-bold text-zinc-400">Headphone</p>
+            <p class="text-xs font-bold text-zinc-950">Aether Studio Pro ANC</p>
+            <p class="text-[11px] font-semibold text-zinc-800">Rp 2.499.000</p>
+          </div>
+        </div>
+
+        <!-- Pin 2: Apex Mech (Keyboard) -->
+        <div class="absolute top-[65%] left-[45%] sm:left-[48%] group">
+          <button onclick="openModal(1)" class="w-9 h-9 rounded-full bg-white text-zinc-950 shadow-xl flex items-center justify-center font-bold text-xs hover:scale-110 transition-transform border border-zinc-200">
+            02
+          </button>
+          <div class="absolute bottom-11 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-zinc-200 shadow-xl hidden group-hover:block w-48 text-left z-20">
+            <p class="text-[10px] uppercase font-bold text-zinc-400">Keyboard</p>
+            <p class="text-xs font-bold text-zinc-950">Aether Mech 75 Low-Profile</p>
+            <p class="text-[11px] font-semibold text-zinc-800">Rp 1.850.000</p>
+          </div>
+        </div>
+
+        <!-- Pin 3: Smartwatch (Wearable on stand) -->
+        <div class="absolute top-[52%] right-[18%] sm:right-[22%] group">
+          <button onclick="openModal(2)" class="w-9 h-9 rounded-full bg-white text-zinc-950 shadow-xl flex items-center justify-center font-bold text-xs hover:scale-110 transition-transform border border-zinc-200">
+            03
+          </button>
+          <div class="absolute bottom-11 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-zinc-200 shadow-xl hidden group-hover:block w-48 text-left z-20">
+            <p class="text-[10px] uppercase font-bold text-zinc-400">Wearable</p>
+            <p class="text-xs font-bold text-zinc-950">Aether Chrono GPS Ultra</p>
+            <p class="text-[11px] font-semibold text-zinc-800">Rp 3.199.000</p>
+          </div>
+        </div>
+
+        <!-- Bottom overlay tag -->
+        <div class="absolute bottom-6 left-6 right-6 sm:right-auto bg-white/90 backdrop-blur-sm px-5 py-3 rounded-2xl border border-zinc-200/80 text-xs text-zinc-600 shadow-sm">
+          <strong>Workstation Scandinavian:</strong> Dirancang hening, lapang, dan minim kabel untuk fokus optimal.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= TOKO TERPERCAYA (REVIEWS) ================= -->
+  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="text-center max-w-xl mx-auto mb-14">
+      <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest">Testimoni Nyata</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-950 mt-1">Dipercaya Kreator & Profesional</h2>
+      <p class="text-xs sm:text-sm text-zinc-500 mt-2">
+        Tingkat kepuasan 99.4% terhadap kualitas barang, garansi resmi distributor, dan proteksi kemasan kayu.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Review 1 -->
+      <div class="bg-white p-7 rounded-2xl border border-zinc-200 flex flex-col justify-between shadow-xs">
+        <div>
+          <div class="flex text-zinc-900 gap-1 mb-4">
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+            "Material finishing headphone-nya sangat berkelas, bantalan telinganya nyaman dipakai 8 jam non-stop saat editing video. Pengiriman kurir instan sampai tepat waktu."
+          </p>
+        </div>
+        <div class="pt-6 border-t border-zinc-100 mt-6 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center font-bold text-xs text-zinc-800">
+            AR
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-950">Aris Ramadhan</h4>
+            <p class="text-[11px] text-zinc-400">Product Designer • Jakarta</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review 2 -->
+      <div class="bg-white p-7 rounded-2xl border border-zinc-200 flex flex-col justify-between shadow-xs">
+        <div>
+          <div class="flex text-zinc-900 gap-1 mb-4">
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+            "Paling suka dengan proses order via WhatsApp-nya. Tidak perlu isi formulir akun berbelit, tinggal pilih barang, isi alamat pengiriman, dan admin langsung memproses resi."
+          </p>
+        </div>
+        <div class="pt-6 border-t border-zinc-100 mt-6 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center font-bold text-xs text-zinc-800">
+            SL
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-950">Sherly Levina</h4>
+            <p class="text-[11px] text-zinc-400">Software Engineer • Bandung</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review 3 -->
+      <div class="bg-white p-7 rounded-2xl border border-zinc-200 flex flex-col justify-between shadow-xs">
+        <div>
+          <div class="flex text-zinc-900 gap-1 mb-4">
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+            "Packaging sangat rapi dengan lapisan kardus ganda dan segel resmi. Garansi langsung otomatis terdaftar begitu dicek lewat serial number."
+          </p>
+        </div>
+        <div class="pt-6 border-t border-zinc-100 mt-6 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center font-bold text-xs text-zinc-800">
+            MT
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-zinc-950">M. Taufiq</h4>
+            <p class="text-[11px] text-zinc-400">Arsitek • Surabaya</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PRODUCT QUICK VIEW MODAL ================= -->
+  <div id="quick-view-modal" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs transition-opacity" onclick="closeModal()"></div>
+
+    <div class="fixed inset-0 z-10 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div class="relative w-full max-w-4xl bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-2xl my-6">
+        
+        <!-- Close Button -->
+        <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-500 hover:text-zinc-950 transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 max-h-[85vh] overflow-y-auto no-scrollbar">
+          
+          <!-- Image Gallery Left -->
+          <div class="p-6 sm:p-8 bg-zinc-50 flex flex-col justify-between gap-4 border-b md:border-b-0 md:border-r border-zinc-200">
+            <div class="aspect-square rounded-2xl bg-white border border-zinc-200/80 overflow-hidden p-2 flex items-center justify-center">
+              <img id="modal-main-img" src="" alt="Detail Produk" class="w-full h-full object-cover rounded-xl">
+            </div>
+            <!-- Thumbnails -->
+            <div class="grid grid-cols-3 gap-3" id="modal-thumbnails">
+              <!-- JS rendered -->
+            </div>
+          </div>
+
+          <!-- Product Details Right -->
+          <div class="p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div class="space-y-5">
+              <div>
+                <span id="modal-category" class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Kategori</span>
+                <h3 id="modal-title" class="text-2xl font-extrabold text-zinc-950 mt-1">Nama Produk</h3>
+                <div class="flex items-baseline gap-3 mt-2">
+                  <span id="modal-price" class="text-2xl font-bold text-zinc-950">Rp 0</span>
+                  <span id="modal-strike-price" class="text-xs line-through text-zinc-400">Rp 0</span>
+                </div>
+              </div>
+
+              <!-- SKU: Colors -->
+              <div>
+                <label class="block text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Pilihan Warna</label>
+                <div class="flex flex-wrap gap-2" id="modal-color-options"></div>
+              </div>
+
+              <!-- SKU: Variants -->
+              <div>
+                <label class="block text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Varian / Tipe</label>
+                <div class="flex flex-wrap gap-2" id="modal-variant-options"></div>
+              </div>
+
+              <!-- Detailed Spec Sheet -->
+              <div class="pt-4 border-t border-zinc-100">
+                <h4 class="text-[11px] font-bold text-zinc-950 uppercase tracking-wider mb-2">Spesifikasi Lengkap</h4>
+                <ul id="modal-specs" class="space-y-1.5 text-xs text-zinc-500"></ul>
+              </div>
+            </div>
+
+            <!-- Add to Cart CTA -->
+            <div class="pt-4 border-t border-zinc-100">
+              <button id="modal-add-cart-btn" class="w-full py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i> Masukkan ke Keranjang
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= E-COMMERCE CART & LOGISTIC DRAWER ================= -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs transition-opacity" onclick="toggleCart(false)"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex">
+      <div class="w-screen max-w-md bg-white border-l border-zinc-200 shadow-2xl flex flex-col justify-between">
+        
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-zinc-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <h2 class="text-base font-bold text-zinc-950">Keranjang Belanja</h2>
+          </div>
+          <button onclick="toggleCart(false)" class="w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-500 transition-colors">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Drawer Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          
+          <!-- Selected Items List -->
+          <div>
+            <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-3">Item yang Dipilih</h3>
+            <div id="cart-items-container" class="space-y-3">
+              <p id="empty-cart-msg" class="text-xs text-zinc-400 py-10 text-center">Keranjang Anda masih kosong.</p>
+            </div>
+          </div>
+
+          <!-- Logistic Form (Shown when items exist) -->
+          <div id="logistic-section" class="pt-6 border-t border-zinc-200 hidden">
+            <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-900 mb-3 flex items-center gap-1.5">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-zinc-600"></i> Informasi Tujuan Pengiriman
+            </h3>
+
+            <form id="checkout-form" class="space-y-3" onsubmit="handleCheckout(event)">
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-600 mb-1">Nama Lengkap</label>
+                <input type="text" id="cust-name" required placeholder="Contoh: Rian Pratama" class="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 rounded-xl px-3 py-2 text-xs text-zinc-900 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-600 mb-1">Nomor WhatsApp</label>
+                <input type="tel" id="cust-phone" required placeholder="Contoh: 081234567890" class="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 rounded-xl px-3 py-2 text-xs text-zinc-900 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-600 mb-1">Alamat Pengiriman & Kode Pos</label>
+                <textarea id="cust-address" rows="2" required placeholder="Jl. Anggrek No. 12, Kel. Menteng, Jakarta Pusat 10310" class="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 rounded-xl px-3 py-2 text-xs text-zinc-900 focus:outline-none resize-none"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-600 mb-1">Catatan Tambahan (Opsional)</label>
+                <input type="text" id="cust-notes" placeholder="Tinggalkan di pos sekuriti / hubungi sebelum tiba" class="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 rounded-xl px-3 py-2 text-xs text-zinc-900 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-600 mb-1">Pilihan Layanan Ekspedisi</label>
+                <select id="shipping-method" class="w-full bg-zinc-50 border border-zinc-200 focus:border-zinc-900 rounded-xl px-3 py-2 text-xs text-zinc-900 focus:outline-none">
+                  <option value="JNE YES / SiCepat Next Day (Gratis Promo)">Next-Day Delivery Express (Gratis Promo)</option>
+                  <option value="Same Day Instant Courier (Grab/Gojek)">Same-Day Instant Courier (Khusus Area Kota)</option>
+                  <option value="Kargo Kayu Terproteksi Asuransi Penuh">Packing Kayu + Asuransi Penuh (Luar Pulau)</option>
+                </select>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Drawer Footer Summary & WhatsApp Button -->
+        <div class="p-6 bg-zinc-50 border-t border-zinc-200 space-y-4">
+          <div class="space-y-1.5 text-xs">
+            <div class="flex justify-between text-zinc-500">
+              <span>Subtotal Produk</span>
+              <span id="summary-subtotal" class="font-bold text-zinc-900">Rp 0</span>
+            </div>
+            <div class="flex justify-between text-zinc-500">
+              <span>Ongkir & Asuransi</span>
+              <span class="text-emerald-600 font-semibold">Gratis Hari Ini</span>
+            </div>
+            <div class="flex justify-between text-sm font-extrabold text-zinc-950 pt-2 border-t border-zinc-200">
+              <span>Total Pesanan</span>
+              <span id="summary-total">Rp 0</span>
+            </div>
+          </div>
+
+          <button 
+            type="button" 
+            onclick="document.getElementById('checkout-form').requestSubmit()" 
+            id="btn-checkout"
+            disabled
+            class="w-full py-3.5 bg-zinc-950 hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
+            <i data-lucide="message-square" class="w-4 h-4"></i> Checkout via WhatsApp
+          </button>
+          
+          <p class="text-[10px] text-center text-zinc-400">
+            Ringkasan data logistik & keranjang akan otomatis diformat ke chat admin WhatsApp resmi.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white border-t border-zinc-200 py-12 text-zinc-400 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2 text-zinc-950 font-bold">
+        <span class="w-6 h-6 rounded bg-zinc-950 text-white flex items-center justify-center font-bold text-[11px]">Æ</span>
+        AETHER STUDIO INDONESIA
+      </div>
+      <p>© 2026 Aether Studio. Desain Minimalis & Jaminan Garansi Resmi 24 Bulan.</p>
+      <div class="flex gap-6 text-zinc-500">
+        <a href="#" class="hover:text-zinc-950">Pusat Bantuan</a>
+        <a href="#" class="hover:text-zinc-950">Kebijakan Privasi</a>
+        <a href="#" class="hover:text-zinc-950">Tracking Resi</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // DATA MASTER
+    const products = [
+      {
+        id: 1,
+        title: "Aether Studio Pro ANC Wireless",
+        category: "Acoustics & Sound",
+        price: 2499000,
+        strikePrice: 3899000,
+        badge: "Official Choice",
+        images: [
+          "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=800&auto=format&fit=crop"
+        ],
+        colors: ["Pure Arctic White", "Graphite Slate", "Sandstone Beige"],
+        variants: ["Standard Edition", "Travel Case Set"],
+        specs: [
+          "45mm Custom Neodymium Driver",
+          "Hybrid Active Noise Cancellation 48dB",
+          "Baterai hingga 60 Jam Pemakaian",
+          "Multipoint Bluetooth 5.4 & Codec LDAC",
+          "Struktur Ergonomis Berat 245 gram"
+        ]
+      },
+      {
+        id: 2,
+        title: "Aether Mech 75 Low-Profile",
+        category: "Input Tools",
+        price: 1850000,
+        strikePrice: 2200000,
+        badge: "Limited Drop",
+        images: [
+          "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=800&auto=format&fit=crop"
+        ],
+        colors: ["Anodized Silver", "Matte Charcoal"],
+        variants: ["Linear Silent Red", "Tactile Clear Switch"],
+        specs: [
+          "CNC Anodized Aluminum Top Case",
+          "Tri-Mode Connection: Wireless 2.4G / BT / USB-C",
+          "PBT Dye-Sub Keycaps (Tahan Minyak & Aus)",
+          "Baterai 4000mAh Siap Pakai 4 Minggu",
+          "Hot-Swappable 5-Pin Switch Socket"
+        ]
+      },
+      {
+        id: 3,
+        title: "Aether Chrono GPS Ultra",
+        category: "Wearable Hardware",
+        price: 3199000,
+        strikePrice: 3999000,
+        badge: "Titanium Edition",
+        images: [
+          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800&auto=format&fit=crop"
+        ],
+        colors: ["Titanium Raw Silver", "Obsidian Black"],
+        variants: ["44mm Case", "47mm Case (+Sapphire Glass)"],
+        specs: [
+          "1.43” Always-On AMOLED Sapphire Display",
+          "Dual-Frequency L1+L5 GPS Presisi Tinggi",
+          "Ketahanan Air 5 ATM / 50 Meter",
+          "Monitoring HRV, SpO2 & VO2Max 24/7",
+          "Daya Baterai 14 Hari Mode Normal"
+        ]
+      }
+    ];
+
+    let cart = [];
+    let currentSelectedProduct = null;
+    let selectedColor = "";
+    let selectedVariant = "";
+
+    // 1. RENDER PRODUCT CATALOG
+    function renderProductGrid() {
+      const container = document.getElementById("product-list");
+      container.innerHTML = products.map((prod, index) => {
+        return `
+          <div class="bg-white rounded-3xl border border-zinc-200 p-6 flex flex-col justify-between hover:border-zinc-400 hover:shadow-lg transition-all duration-300">
+            <div>
+              <div class="relative aspect-square rounded-2xl bg-zinc-50 border border-zinc-100 overflow-hidden mb-5 cursor-pointer" onclick="openModal(${index})">
+                <img 
+                  src="${prod.images[0]}" 
+                  alt="${prod.title}" 
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+                <span class="absolute top-3 left-3 bg-white text-zinc-900 border border-zinc-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+                  ${prod.badge}
+                </span>
+              </div>
+
+              <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">${prod.category}</span>
+              <h3 class="text-base font-bold text-zinc-950 mt-1 line-clamp-1">${prod.title}</h3>
+              <p class="text-xs text-zinc-500 mt-1.5 line-clamp-2">${prod.specs[0]} • ${prod.specs[1]}</p>
+            </div>
+
+            <div class="pt-5 border-t border-zinc-100 mt-6 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] text-zinc-400 line-through">Rp ${prod.strikePrice.toLocaleString('id-ID')}</span>
+                <div class="text-lg font-bold text-zinc-950">Rp ${prod.price.toLocaleString('id-ID')}</div>
+              </div>
+              <button 
+                onclick="openModal(${index})" 
+                class="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-950 hover:text-white text-zinc-900 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+              >
+                Detail
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    // 2. QUICK VIEW MODAL
+    function openModal(index) {
+      const prod = products[index];
+      currentSelectedProduct = prod;
+      selectedColor = prod.colors[0];
+      selectedVariant = prod.variants[0];
+
+      document.getElementById("modal-category").innerText = prod.category;
+      document.getElementById("modal-title").innerText = prod.title;
+      document.getElementById("modal-price").innerText = `Rp ${prod.price.toLocaleString('id-ID')}`;
+      document.getElementById("modal-strike-price").innerText = `Rp ${prod.strikePrice.toLocaleString('id-ID')}`;
+      
+      const mainImg = document.getElementById("modal-main-img");
+      mainImg.src = prod.images[0];
+
+      // Thumbnails
+      const thumbs = document.getElementById("modal-thumbnails");
+      thumbs.innerHTML = prod.images.map((imgUrl) => `
+        <button onclick="setModalImage('${imgUrl}')" class="aspect-square rounded-xl overflow-hidden border border-zinc-200 focus:border-zinc-950">
+          <img src="${imgUrl}" class="w-full h-full object-cover">
+        </button>
+      `).join('');
+
+      // Colors
+      const colorContainer = document.getElementById("modal-color-options");
+      colorContainer.innerHTML = prod.colors.map((c, i) => `
+        <button 
+          onclick="setColorOption('${c}', this)" 
+          class="px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-all ${i === 0 ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 text-zinc-600 hover:border-zinc-300'}"
+        >
+          ${c}
+        </button>
+      `).join('');
+
+      // Variants
+      const variantContainer = document.getElementById("modal-variant-options");
+      variantContainer.innerHTML = prod.variants.map((v, i) => `
+        <button 
+          onclick="setVariantOption('${v}', this)" 
+          class="px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-all ${i === 0 ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 text-zinc-600 hover:border-zinc-300'}"
+        >
+          ${v}
+        </button>
+      `).join('');
+
+      // Specs
+      const specList = document.getElementById("modal-specs");
+      specList.innerHTML = prod.specs.map(s => `
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>
+          <span>${s}</span>
+        </li>
+      `).join('');
+
+      // Add to Cart Action
+      document.getElementById("modal-add-cart-btn").onclick = function() {
+        addToCart(prod, selectedColor, selectedVariant);
+        closeModal();
+        toggleCart(true);
+      };
+
+      document.getElementById("quick-view-modal").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function setModalImage(url) {
+      document.getElementById("modal-main-img").src = url;
+    }
+
+    function setColorOption(color, element) {
+      selectedColor = color;
+      const btns = element.parentElement.querySelectorAll('button');
+      btns.forEach(b => b.className = "px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-all border-zinc-200 text-zinc-600 hover:border-zinc-300");
+      element.className = "px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-all border-zinc-950 bg-zinc-950 text-white";
+    }
+
+    function setVariantOption(variant, element) {
+      selectedVariant = variant;
+      const btns = element.parentElement.querySelectorAll('button');
+      btns.forEach(b => b.className = "px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-all border-zinc-200 text-zinc-600 hover:border-zinc-300");
+      element.className = "px-3.5 py-1.5 rounded-lg border text-xs font-semibold transition-all border-zinc-950 bg-zinc-950 text-white";
+    }
+
+    function closeModal() {
+      document.getElementById("quick-view-modal").classList.add("hidden");
+    }
+
+    // 3. CART SYSTEM
+    function toggleCart(open) {
+      const drawer = document.getElementById("cart-drawer");
+      if (open) {
+        drawer.classList.remove("hidden");
+      } else {
+        drawer.classList.add("hidden");
+      }
+    }
+
+    function addToCart(product, color, variant) {
+      const existIndex = cart.findIndex(item => 
+        item.id === product.id && item.color === color && item.variant === variant
+      );
+
+      if (existIndex > -1) {
+        cart[existIndex].qty += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.images[0],
+          color: color,
+          variant: variant,
+          qty: 1
+        });
+      }
+      updateCartUI();
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const container = document.getElementById("cart-items-container");
+      const badge = document.getElementById("cart-badge");
+      const logistic = document.getElementById("logistic-section");
+      const checkoutBtn = document.getElementById("btn-checkout");
+
+      const totalItems = cart.reduce((acc, curr) => acc + curr.qty, 0);
+      const subtotal = cart.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
+
+      badge.innerText = totalItems;
+
+      if (totalItems > 0) {
+        logistic.classList.remove("hidden");
+        checkoutBtn.removeAttribute("disabled");
+      } else {
+        logistic.classList.add("hidden");
+        checkoutBtn.setAttribute("disabled", "true");
+      }
+
+      if (cart.length === 0) {
+        container.innerHTML = `<p id="empty-cart-msg" class="text-xs text-zinc-400 py-10 text-center">Keranjang Anda masih kosong.</p>`;
+      } else {
+        container.innerHTML = cart.map((item, idx) => `
+          <div class="flex items-center gap-3 p-3 bg-zinc-50 rounded-xl border border-zinc-200">
+            <img src="${item.image}" alt="${item.title}" class="w-14 h-14 object-cover rounded-lg shrink-0 border border-zinc-200">
+            <div class="flex-1 min-w-0">
+              <h4 class="text-xs font-bold text-zinc-950 truncate">${item.title}</h4>
+              <p class="text-xs font-semibold text-zinc-800">Rp ${item.price.toLocaleString('id-ID')}</p>
+              <p class="text-[10px] text-zinc-400 truncate">${item.color} • ${item.variant}</p>
+            </div>
+            
+            <div class="flex items-center gap-1.5 bg-white border border-zinc-200 rounded-lg p-1">
+              <button onclick="changeQty(${idx}, -1)" class="w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-zinc-950">-</button>
+              <span class="text-xs font-bold text-zinc-950 px-1">${item.qty}</span>
+              <button onclick="changeQty(${idx}, 1)" class="w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-zinc-950">+</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById("summary-subtotal").innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+      document.getElementById("summary-total").innerText = `Rp ${subtotal.toLocaleString('id-ID')}`;
+
+      lucide.createIcons();
+    }
+
+    // 4. CHECKOUT WA REDIRECT
+    function handleCheckout(event) {
+      event.preventDefault();
+
+      if (cart.length === 0) return;
+
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+      const notes = document.getElementById("cust-notes").value.trim() || "-";
+      const courier = document.getElementById("shipping-method").value;
+      const subtotal = cart.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
+
+      // Nomor Admin WhatsApp
+      const adminWhatsApp = "6281234567890";
+
+      let message = `*ORDER BARU - AETHER STUDIO STORE*\n`;
+      message += `--------------------------------------------------\n`;
+      cart.forEach((item, i) => {
+        message += `${i + 1}. *${item.title}*\n`;
+        message += `   • Opsi: ${item.color} | ${item.variant}\n`;
+        message += `   • Qty: ${item.qty} x Rp ${item.price.toLocaleString('id-ID')}\n`;
+        message += `   • Sub: Rp ${(item.qty * item.price).toLocaleString('id-ID')}\n\n`;
+      });
+      message += `--------------------------------------------------\n`;
+      message += `*Total Tagihan:* Rp ${subtotal.toLocaleString('id-ID')}\n\n`;
+      message += `*DATA TUJUAN PENGIRIMAN:*\n`;
+      message += `• *Penerima:* ${name}\n`;
+      message += `• *No. WhatsApp:* ${phone}\n`;
+      message += `• *Alamat:* ${address}\n`;
+      message += `• *Kurir:* ${courier}\n`;
+      message += `• *Catatan:* ${notes}\n\n`;
+      message += `Mohon konfirmasi pesanan dan instruksi pembayaran resminya. Terima kasih!`;
+
+      const encoded = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(message)}`;
+      window.open(encoded, '_blank');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProductGrid();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

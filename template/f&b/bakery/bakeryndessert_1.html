@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L'Atelier Pâtisserie & Artisan Bakery</title>
+  
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-serif-title {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Hide scrollbar for gallery thumb */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF7F2] text-[#332A24] antialiased selection:bg-[#E29578] selection:text-white">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-[#3D251E] text-[#FAF7F2] text-xs py-2 px-4 text-center font-medium tracking-wide flex justify-center items-center gap-2">
+    <span>🥐 Promo Weekend: Free Ongkir Instant s/d 10km dengan minimum order Rp 250k</span>
+    <span class="hidden md:inline">| Kode: <strong>SWEETFREESHIP</strong></span>
+  </div>
+
+  <!-- NAVIGATION -->
+  <header class="sticky top-0 z-40 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#E8DFD8] transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2">
+        <span class="w-10 h-10 rounded-full bg-[#E29578]/20 flex items-center justify-center text-[#99583D]">
+          <i class="fa-solid fa-cake-candles text-xl"></i>
+        </span>
+        <div>
+          <span class="font-serif-title text-2xl font-bold tracking-tight text-[#3D251E] block leading-none">L'Atelier</span>
+          <span class="text-[10px] tracking-[0.2em] uppercase text-[#99583D] font-semibold">Artisan Pâtisserie</span>
+        </div>
+      </a>
+
+      <!-- Menu Navigation -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
+        <a href="#katalog" class="text-[#3D251E] hover:text-[#E29578] transition-colors">Etalase Kue</a>
+        <a href="#lookbook" class="text-[#3D251E] hover:text-[#E29578] transition-colors">Lookbook & Pairing</a>
+        <a href="#ulasan" class="text-[#3D251E] hover:text-[#E29578] transition-colors">Ulasan Pecinta Manis</a>
+        <a href="#logistik-info" class="text-[#3D251E] hover:text-[#E29578] transition-colors">Pengiriman Kurir</a>
+      </nav>
+
+      <!-- Cart Button -->
+      <button onclick="toggleCartDrawer(true)" class="relative p-3 rounded-full hover:bg-[#E8DFD8]/60 transition-colors focus:outline-none">
+        <i class="fa-solid fa-bag-shopping text-xl text-[#3D251E]"></i>
+        <span id="cart-counter" class="absolute top-1 right-1 w-5 h-5 bg-[#C94A29] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-sm">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. PROMOTIONAL HERO (Flash Sale / Signature Collection) -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-[#F5EBE1] to-[#E3D5CA] py-16 md:py-24 border-b border-[#E8DFD8]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E29578]/25 text-[#99472E] text-xs font-semibold tracking-wider uppercase">
+              <i class="fa-solid fa-sparkles"></i> Seasonal Release • Fresh Baked Daily
+            </div>
+            <h1 class="font-serif-title text-4xl sm:text-5xl lg:text-6xl text-[#3D251E] font-bold leading-tight">
+              Kelezatan Murni dari <span class="italic font-normal text-[#C94A29]">French Butter</span> & Cokelat Belgia.
+            </h1>
+            <p class="text-base sm:text-lg text-[#614E45] max-w-xl leading-relaxed">
+              Dibuat segar setiap subuh tanpa bahan pengawet. Nikmati kue tart bertekstur lembut, croissant renyah berlapis, dan dessert elegan untuk momen istimewa Anda.
+            </p>
+            
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <a href="#katalog" class="px-8 py-4 bg-[#3D251E] text-white font-medium rounded-full shadow-lg hover:bg-[#52332A] transition transform active:scale-95">
+                Beli Sekarang (Order Hari Ini)
+              </a>
+              <a href="#lookbook" class="px-6 py-4 border border-[#3D251E]/40 text-[#3D251E] font-medium rounded-full hover:bg-white/60 transition">
+                Lihat Inspirasi Meja Pesta
+              </a>
+            </div>
+
+            <!-- Mini features badge -->
+            <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[#D7C9BF]">
+              <div>
+                <p class="text-xs uppercase text-[#7D6B62] font-semibold">100% Halal</p>
+                <p class="text-sm font-bold text-[#3D251E]">Bahan Premium</p>
+              </div>
+              <div>
+                <p class="text-xs uppercase text-[#7D6B62] font-semibold">Pengiriman</p>
+                <p class="text-sm font-bold text-[#3D251E]">Instant Aman Box Es</p>
+              </div>
+              <div>
+                <p class="text-xs uppercase text-[#7D6B62] font-semibold">Custom Card</p>
+                <p class="text-sm font-bold text-[#3D251E]">Free Lilin & Kartu</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Image with Flash Badge -->
+          <div class="lg:col-span-5 relative">
+            <div class="relative mx-auto max-w-md lg:max-w-none">
+              <div class="relative aspect-square rounded-3xl overflow-hidden shadow-2xl ring-8 ring-white/60">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1000&q=80" alt="Signature Strawberry Shortcake" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+                
+                <div class="absolute top-4 right-4 bg-[#C94A29] text-white text-xs font-bold px-3 py-2 rounded-xl shadow-md flex items-center gap-1">
+                  <i class="fa-solid fa-fire"></i> TERLARIS HARI INI
+                </div>
+
+                <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-[#FAF7F2]">
+                  <p class="text-xs text-[#99583D] font-bold tracking-wider uppercase">Signature Cake</p>
+                  <div class="flex justify-between items-baseline mt-1">
+                    <h3 class="font-serif-title font-bold text-[#3D251E] text-lg">Chantilly Strawberry Supreme</h3>
+                    <span class="text-[#C94A29] font-bold">Rp 320.000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PRODUCT GRID (IMAGE-CENTRIC CATALOG) -->
+    <section id="katalog" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <span class="text-xs uppercase tracking-widest text-[#99583D] font-bold">Visual Storefront</span>
+          <h2 class="font-serif-title text-3xl sm:text-4xl text-[#3D251E] font-bold mt-1">Etalase Pilihan Chef</h2>
+          <p class="text-[#7A6B63] text-sm mt-1">Pilih sajian segar yang siap meluncur ke depan pintu rumah Anda.</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex gap-2">
+          <span class="inline-flex items-center gap-2 bg-[#EFE8DF] px-4 py-2 rounded-full text-xs font-semibold text-[#3D251E]">
+            <i class="fa-solid fa-circle-check text-[#4B7C59]"></i> Semua Varian Siap Kirim Hari Ini
+          </span>
+        </div>
+      </div>
+
+      <!-- Grid Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="product-container">
+        <!-- Rendered via JS for Clean Data Binding -->
+      </div>
+    </section>
+
+    <!-- 3. LOOKBOOK & PAIRING INSPIRATION (INSPIRASI MEJA PESTA / TREN KONSUMSI) -->
+    <section id="lookbook" class="py-20 bg-[#F4EDE4] border-y border-[#E5DACF]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs uppercase tracking-widest text-[#99583D] font-bold">Lookbook & Inspirasi Penyajian</span>
+          <h2 class="font-serif-title text-3xl sm:text-4xl text-[#3D251E] font-bold mt-2">Momen Manis di Meja Anda</h2>
+          <p class="text-[#6D5D55] text-sm mt-2">Ide padu-padan pastry untuk tea party intim, perayaan ulang tahun estetik, hingga *hampers gift* mewah.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Lookbook 1 -->
+          <div class="group relative rounded-3xl overflow-hidden shadow-md bg-white">
+            <div class="aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80" alt="Afternoon Tea Lookbook" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="p-6">
+              <span class="text-xs uppercase tracking-wider text-[#99583D] font-bold">Weekend Gathering</span>
+              <h3 class="font-serif-title text-xl font-bold text-[#3D251E] mt-1">High Tea Set & Viennoiserie</h3>
+              <p class="text-sm text-[#73635B] mt-2">Padukan Butter Croissant renyah dengan Artisan Earl Grey Tea untuk santap sore elegan bersama sahabat.</p>
+            </div>
+          </div>
+
+          <!-- Lookbook 2 -->
+          <div class="group relative rounded-3xl overflow-hidden shadow-md bg-white">
+            <div class="aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80" alt="Birthday Lookbook" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="p-6">
+              <span class="text-xs uppercase tracking-wider text-[#99583D] font-bold">Intimate Celebration</span>
+              <h3 class="font-serif-title text-xl font-bold text-[#3D251E] mt-1">Minimalist Korean Cake Style</h3>
+              <p class="text-sm text-[#73635B] mt-2">Pilihan tepat untuk ulang tahun estetik. Dekorasi bunga mawar segar dan lilin ulir warna pastel.</p>
+            </div>
+          </div>
+
+          <!-- Lookbook 3 -->
+          <div class="group relative rounded-3xl overflow-hidden shadow-md bg-white">
+            <div class="aspect-[4/5] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1557082673-e99242b8ceeb?auto=format&fit=crop&w=800&q=80" alt="Corporate Gifting" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="p-6">
+              <span class="text-xs uppercase tracking-wider text-[#99583D] font-bold">Artisan Box Gifts</span>
+              <h3 class="font-serif-title text-xl font-bold text-[#3D251E] mt-1">French Macaron & Eclair Giftset</h3>
+              <p class="text-sm text-[#73635B] mt-2">Paket bingkisan mewah dengan pita satin premium. Hadiah sempurna untuk klien bisnis atau keluarga terkasih.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TOKO TERPERCAYA (CUSTOMER REVIEWS & LOGISTICS GUARANTEE) -->
+    <section id="ulasan" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <div class="inline-flex items-center gap-1 text-amber-500 mb-2">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <span class="text-[#3D251E] font-bold text-sm ml-2">4.9/5 dari 1.800+ Pemesanan</span>
+        </div>
+        <h2 class="font-serif-title text-3xl sm:text-4xl text-[#3D251E] font-bold">Kisah Manis Pelanggan Kami</h2>
+        <p class="text-[#73635B] text-sm mt-1">Keamanan kue saat transit dan rasa premium adalah komitmen mutlak kami.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Review 1 -->
+        <div class="bg-white p-7 rounded-3xl border border-[#E9DFD5] shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex text-[#E29578] gap-1 text-xs mb-3">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="text-sm text-[#4E3F37] leading-relaxed italic">
+              "Pesan cake ultah H-1 via instant courier, sampai ke BSD dalam keadaan super mulus! Box-nya kokoh ada ice gel pack di dalamnya, kuenya nggak lumer sama sekali."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-6 mt-6 border-t border-[#F5EFE9]">
+            <div class="w-10 h-10 rounded-full bg-[#E29578]/30 flex items-center justify-center font-bold text-[#99472E]">AN</div>
+            <div>
+              <h4 class="text-sm font-bold text-[#3D251E]">Anindya Pramesti</h4>
+              <p class="text-[11px] text-zinc-500">Pemberian Ultah Ibu • Verified Buyer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="bg-white p-7 rounded-3xl border border-[#E9DFD5] shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex text-[#E29578] gap-1 text-xs mb-3">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="text-sm text-[#4E3F37] leading-relaxed italic">
+              "Koleksi Basque Cheesecake mereka adalah yang terbaik di kota ini. Manisnya pas, rasa cream cheese-nya mewah dan lumer di mulut. Tamu kantor semuanya ketagihan."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-6 mt-6 border-t border-[#F5EFE9]">
+            <div class="w-10 h-10 rounded-full bg-[#D7C9BF] flex items-center justify-center font-bold text-[#3D251E]">RW</div>
+            <div>
+              <h4 class="text-sm font-bold text-[#3D251E]">Reza Wicaksono</h4>
+              <p class="text-[11px] text-zinc-500">Corporate Catering • Verified Buyer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="bg-white p-7 rounded-3xl border border-[#E9DFD5] shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex text-[#E29578] gap-1 text-xs mb-3">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="text-sm text-[#4E3F37] leading-relaxed italic">
+              "Admin responsif sekali saat kirim rekap WhatsApp. Saya minta request kartu ucapan kaligrafi ditulis rapi banget. Detail pelayanannya bintang lima!"
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-6 mt-6 border-t border-[#F5EFE9]">
+            <div class="w-10 h-10 rounded-full bg-[#E29578]/30 flex items-center justify-center font-bold text-[#99472E]">CL</div>
+            <div>
+              <h4 class="text-sm font-bold text-[#3D251E]">Clarissa Leonita</h4>
+              <p class="text-[11px] text-zinc-500">Anniversary Gift • Verified Buyer</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Trust Badges -->
+      <div id="logistik-info" class="mt-14 p-8 bg-white rounded-3xl border border-[#E9DFD5] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+        <div>
+          <i class="fa-solid fa-truck-fast text-2xl text-[#99472E] mb-2"></i>
+          <h4 class="text-sm font-bold text-[#3D251E]">Kurir Khusus Kue / Mobil</h4>
+          <p class="text-xs text-[#7A6B63] mt-1">Opsi kurir roda 4 terlindung guncangan untuk cake bertingkat.</p>
+        </div>
+        <div>
+          <i class="fa-solid fa-snowflake text-2xl text-[#99472E] mb-2"></i>
+          <h4 class="text-sm font-bold text-[#3D251E]">Free Thermal Bag & Ice Gel</h4>
+          <p class="text-xs text-[#7A6B63] mt-1">Suhu dingin terjaga hingga 3 jam di perjalanan jalanan.</p>
+        </div>
+        <div>
+          <i class="fa-solid fa-shield-heart text-2xl text-[#99472E] mb-2"></i>
+          <h4 class="text-sm font-bold text-[#3D251E]">Garansi Tiba Sempurna</h4>
+          <p class="text-xs text-[#7A6B63] mt-1">Kue rusak di perjalanan langsung diganti baru.</p>
+        </div>
+        <div>
+          <i class="fa-solid fa-clock-rotate-left text-2xl text-[#99472E] mb-2"></i>
+          <h4 class="text-sm font-bold text-[#3D251E]">Same-Day & Slot Terjadwal</h4>
+          <p class="text-xs text-[#7A6B63] mt-1">Tentukan jam tiba untuk kejutan acara spesial.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#3D251E] text-[#E8DFD8] py-14 border-t border-[#543830]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div class="md:col-span-2 space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-[#E29578]">
+              <i class="fa-solid fa-cake-candles"></i>
+            </span>
+            <span class="font-serif-title text-2xl font-bold tracking-tight text-white">L'Atelier Pâtisserie</span>
+          </div>
+          <p class="text-sm text-[#C8B8AE] max-w-sm">
+            Menghadirkan seni hidangan penutup klasik Prancis dan pastry modern dengan bahan berkualitas dari penjuru dunia.
+          </p>
+          <div class="flex gap-4 text-lg text-[#E29578] pt-2">
+            <a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="#" class="hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Jam Operasional Dapur</h4>
+          <ul class="text-xs space-y-2 text-[#C8B8AE]">
+            <li>Senin - Jumat: 07.30 - 20.00 WIB</li>
+            <li>Sabtu - Minggu: 07.00 - 21.00 WIB</li>
+            <li class="pt-2 text-white font-semibold">Pengiriman Kue: 09.00 - 18.00 WIB</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Lokasi Dapur Utama</h4>
+          <p class="text-xs text-[#C8B8AE] leading-relaxed">
+            Jl. Senopati Raya No. 44B, Kebayoran Baru, Jakarta Selatan. 12190
+          </p>
+          <p class="text-xs text-[#C8B8AE] mt-3">
+            Hotline: <strong class="text-white">+62 812-3456-7890</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-10 mt-10 border-t border-[#543830] text-center text-xs text-[#9E8B81]">
+        &copy; 2026 L'Atelier Pâtisserie. All rights reserved. E-Commerce Checkout Experience.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================== -->
+  <!-- MODAL: PRODUCT QUICK VIEW (MULTI-IMAGE & SKU CONFIGURATOR) -->
+  <!-- ========================================================== -->
+  <div id="quick-view-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm transition-opacity">
+    <div class="min-h-screen px-4 text-center flex items-center justify-center py-6 sm:p-0">
+      
+      <!-- Overlay Backdrop -->
+      <div class="fixed inset-0" onclick="closeQuickView()"></div>
+
+      <!-- Modal Card -->
+      <div class="relative bg-[#FAF7F2] rounded-3xl max-w-4xl w-full mx-auto shadow-2xl overflow-hidden text-left z-10 border border-[#E9DFD5] transition-all">
+        
+        <!-- Close Button -->
+        <button onclick="closeQuickView()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-[#3D251E] flex items-center justify-center shadow-md transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          
+          <!-- Image Gallery Column -->
+          <div class="p-6 bg-[#F4EDE4] flex flex-col justify-between">
+            <div class="rounded-2xl overflow-hidden aspect-square shadow-sm bg-white border border-[#E5DACF]">
+              <img id="modal-main-img" src="" alt="Main Image" class="w-full h-full object-cover transition duration-300">
+            </div>
+
+            <!-- Thumbnails -->
+            <div class="flex gap-3 mt-4 overflow-x-auto pb-1 no-scrollbar" id="modal-thumbs">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Product Details & Specs Column -->
+          <div class="p-6 md:p-8 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+            <div>
+              <span id="modal-category" class="text-xs font-bold tracking-widest uppercase text-[#99583D]">Kategori</span>
+              <h2 id="modal-title" class="font-serif-title text-2xl md:text-3xl font-bold text-[#3D251E] mt-1">Nama Produk</h2>
+              <div class="text-2xl font-bold text-[#C94A29] mt-2" id="modal-price">Rp 0</div>
+
+              <!-- SKU Options: Size / Diameter -->
+              <div class="mt-6">
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#3D251E] mb-2">
+                  1. Pilih Ukuran / Porsi: <span id="selected-size-label" class="text-[#99472E] font-semibold"></span>
+                </label>
+                <div class="grid grid-cols-3 gap-2" id="sku-size-container">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- SKU Options: Candle / Topping Add-ons -->
+              <div class="mt-5">
+                <label class="block text-xs font-bold uppercase tracking-wider text-[#3D251E] mb-2">
+                  2. Pilihan Lilin / Aksesoris:
+                </label>
+                <select id="sku-addon" class="w-full bg-white border border-[#D9C8BC] rounded-xl px-3 py-2 text-sm text-[#3D251E] focus:ring-2 focus:ring-[#99583D] focus:outline-none">
+                  <option value="Lilin Batang Standar (Gratis)">Lilin Batang Standar (Gratis)</option>
+                  <option value="Lilin Ulir Gold Pastel (+Rp 15.000)">Lilin Ulir Gold Pastel (+Rp 15.000)</option>
+                  <option value="Lilin Angka (+Rp 10.000)">Lilin Angka (+Rp 10.000)</option>
+                  <option value="Tanpa Lilin">Tanpa Lilin</option>
+                </select>
+              </div>
+
+              <!-- Long Specs Accordion / Description -->
+              <div class="mt-6 pt-5 border-t border-[#E8DFD8] space-y-3">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-[#3D251E]">Deskripsi & Spesifikasi Bahan:</h4>
+                <p id="modal-desc" class="text-xs leading-relaxed text-[#6E5D54]">
+                  Detail deskripsi produk...
+                </p>
+                <div class="bg-[#F0E6DB] p-3 rounded-xl text-xs space-y-1">
+                  <p><strong>Alergen:</strong> <span id="modal-allergens">Mengandung Dairy, Gluten, Telur.</span></p>
+                  <p><strong>Daya Tahan:</strong> 3 Hari di suhu kulkas (chiller).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Add to Cart -->
+            <div class="pt-6 mt-6 border-t border-[#E8DFD8] flex items-center gap-3">
+              <div class="flex items-center border border-[#D9C8BC] rounded-xl bg-white overflow-hidden">
+                <button onclick="adjustModalQty(-1)" class="px-3 py-2 text-[#3D251E] hover:bg-[#F4EDE4]">-</button>
+                <span id="modal-qty" class="px-3 py-2 text-xs font-bold w-8 text-center">1</span>
+                <button onclick="adjustModalQty(1)" class="px-3 py-2 text-[#3D251E] hover:bg-[#F4EDE4]">+</button>
+              </div>
+              <button onclick="addCurrentProductToCart()" class="flex-1 bg-[#3D251E] hover:bg-[#52332A] text-white py-3 px-6 rounded-xl font-medium text-sm flex items-center justify-center gap-2 shadow-md transition transform active:scale-98">
+                <i class="fa-solid fa-cart-plus"></i> Tambahkan ke Keranjang
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- SLIDE-OVER DRAWER: CART & LOGISTICS CHECKOUT (STEP TO WA)  -->
+  <!-- ========================================================== -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity" onclick="toggleCartDrawer(false)"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-[#FAF7F2] shadow-2xl flex flex-col justify-between border-l border-[#E5DACF]">
+        
+        <!-- Cart Header -->
+        <div class="p-6 border-b border-[#E8DFD8] flex items-center justify-between bg-white">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bag-shopping text-[#99583D]"></i>
+            <h2 class="font-serif-title text-xl font-bold text-[#3D251E]">Tas Belanja Anda</h2>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="text-[#7A6B63] hover:text-[#3D251E] p-2">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Cart Body (Items + Logistics Form) -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          
+          <!-- Item List Container -->
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#99583D] mb-3">Item Dipesan</h3>
+            <div id="cart-items-container" class="space-y-4">
+              <!-- Injected by JS -->
+            </div>
+            
+            <!-- Empty state -->
+            <div id="cart-empty" class="text-center py-10 hidden">
+              <i class="fa-solid fa-cookie-bite text-4xl text-[#D9C8BC] mb-3"></i>
+              <p class="text-sm text-[#73635B]">Tas belanja Anda masih kosong.</p>
+              <button onclick="toggleCartDrawer(false)" class="mt-3 text-xs font-bold text-[#99472E] underline">Mulai Eksplorasi Menu</button>
+            </div>
+          </div>
+
+          <!-- Checkout & Logistics Section (Hanya tampil jika ada isi) -->
+          <div id="checkout-logistics-section" class="border-t border-[#E8DFD8] pt-6 space-y-4">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-[#99472E]"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#3D251E]">Data Logistik & Pengiriman</h3>
+            </div>
+
+            <!-- Form Logistik -->
+            <form id="logistics-form" class="space-y-3 text-xs">
+              <div>
+                <label class="block font-semibold text-[#4E3F37] mb-1">Nama Penerima *</label>
+                <input type="text" id="cust-name" required placeholder="Contoh: Sarah Amanda" class="w-full bg-white border border-[#D9C8BC] rounded-xl p-2.5 text-[#3D251E] focus:ring-1 focus:ring-[#99583D] focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block font-semibold text-[#4E3F37] mb-1">Nomor WhatsApp *</label>
+                <input type="tel" id="cust-phone" required placeholder="0812XXXXXXXX" class="w-full bg-white border border-[#D9C8BC] rounded-xl p-2.5 text-[#3D251E] focus:ring-1 focus:ring-[#99583D] focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block font-semibold text-[#4E3F37] mb-1">Alamat Lengkap Pengiriman (Titik Antar) *</label>
+                <textarea id="cust-address" rows="2" required placeholder="Nama jalan, nomor rumah, RT/RW, cluster, atau patokan driver..." class="w-full bg-white border border-[#D9C8BC] rounded-xl p-2.5 text-[#3D251E] focus:ring-1 focus:ring-[#99583D] focus:outline-none"></textarea>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block font-semibold text-[#4E3F37] mb-1">Metode Antar</label>
+                  <select id="cust-courier" class="w-full bg-white border border-[#D9C8BC] rounded-xl p-2 text-[#3D251E] focus:outline-none">
+                    <option value="Instant Motor (Ice Pack)">Instant Motor (Ice Bag)</option>
+                    <option value="Mobil Kue AC (Aman Guncangan)">Mobil Kue AC (Cake Safe)</option>
+                    <option value="Self Pick-Up di Toko">Self Pick-Up di Outlet</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-semibold text-[#4E3F37] mb-1">Jam Tiba Diinginkan</label>
+                  <input type="text" id="cust-time" placeholder="Misal: Pkl 14.00 WIB" class="w-full bg-white border border-[#D9C8BC] rounded-xl p-2 text-[#3D251E] focus:outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-semibold text-[#4E3F37] mb-1">Catatan Tambahan / Ucapan Kartu</label>
+                <input type="text" id="cust-notes" placeholder="Tulis ucapan ultah atau instruksi titip satpam..." class="w-full bg-white border border-[#D9C8BC] rounded-xl p-2.5 text-[#3D251E] focus:outline-none">
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Cart Footer & Price Breakdown -->
+        <div id="cart-footer" class="p-6 bg-white border-t border-[#E8DFD8] space-y-4">
+          <div class="space-y-1.5 text-xs text-[#6E5D54]">
+            <div class="flex justify-between">
+              <span>Subtotal Produk</span>
+              <span id="summary-subtotal" class="font-bold text-[#3D251E]">Rp 0</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Kemasan Aman & Dry Ice Box</span>
+              <span class="text-emerald-700 font-semibold">GRATIS</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-[#3D251E] pt-2 border-t border-[#F0E6DB]">
+              <span>Total Estimasi</span>
+              <span id="summary-total" class="text-[#C94A29]">Rp 0</span>
+            </div>
+          </div>
+
+          <button onclick="handleCheckoutWhatsApp()" class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition transform active:scale-98">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Konfirmasi Order via WhatsApp</span>
+          </button>
+          
+          <p class="text-[10px] text-center text-[#99877E]">
+            *Ongkir kurir instant akan dikalkulasi sesuai titik GPS saat admin WhatsApp memvalidasi pesanan Anda.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-[#3D251E] text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-20 opacity-0 transition duration-300 pointer-events-none">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toast-message" class="text-xs font-semibold">Produk berhasil ditambahkan!</span>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- JAVASCRIPT APPLICATION LOGIC                              -->
+  <!-- ========================================================== -->
+  <script>
+    // DATA KATALOG PRODUK BAKERY & DESSERT
+    const products = [
+      {
+        id: 1,
+        title: "Chantilly Strawberry Supreme",
+        category: "Artisan Whole Cake",
+        basePrice: 320000,
+        images: [
+          "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Sponge vanilla lembut Jepang dengan lapisan fresh cream vanilla bean Madagaskar dan potongan buah stroberi Ciwidey pilihan yang manis-segar. Sangat ringan dan tidak enek.",
+        allergens: "Susu Sapi, Telur, Gluten Terigu.",
+        skuSizes: [
+          { name: "Diameter 15cm (4-6 Porsi)", priceDelta: 0 },
+          { name: "Diameter 20cm (8-12 Porsi)", priceDelta: 130000 },
+          { name: "Slice Individual Box", priceDelta: -265000 }
+        ]
+      },
+      {
+        id: 2,
+        title: "Valrhona Dark Chocolate Ganache",
+        category: "Artisan Whole Cake",
+        basePrice: 360000,
+        images: [
+          "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Dibuat dari cokelat murni Valrhona 70% asal Prancis. Memiliki perpaduan rasa pahit yang elegan, manis legit, dan tekstur ganache sutra yang meleleh pada gigitan pertama.",
+        allergens: "Cokelat Pekat, Dairy, Mentega Prancis.",
+        skuSizes: [
+          { name: "Diameter 16cm (6 Porsi)", priceDelta: 0 },
+          { name: "Diameter 22cm (12-16 Porsi)", priceDelta: 160000 }
+        ]
+      },
+      {
+        id: 3,
+        title: "San Sebastián Burnt Cheesecake",
+        category: "Cheesecake",
+        basePrice: 285000,
+        images: [
+          "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1524351199678-941a58a3df50?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Kue keju khas Basque dengan permukaan karamel kecokelatan yang harum serta bagian tengah yang lumer (creamy molten center). Menggunakan Australian cream cheese premium.",
+        allergens: "Cream Cheese, Heavy Cream, Telur.",
+        skuSizes: [
+          { name: "Diameter 15cm", priceDelta: 0 },
+          { name: "Diameter 20cm", priceDelta: 120000 }
+        ]
+      },
+      {
+        id: 4,
+        title: "French Butter Croissant & Pain Au Chocolat (Box of 4)",
+        category: "Artisan Viennoiserie",
+        basePrice: 135000,
+        images: [
+          "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Pastry berlapis dengan butter Elle & Vire berkualitas tinggi. Kulit luar renyah keemasan dan sarang lebah (honeycomb) bagian dalam yang lembut dan kaya mentega.",
+        allergens: "Gluten, Mentega Prancis, Susu.",
+        skuSizes: [
+          { name: "Box Isi 4 Pcs", priceDelta: 0 },
+          { name: "Box Isi 8 Pcs (Party Size)", priceDelta: 110000 }
+        ]
+      },
+      {
+        id: 5,
+        title: "Parisian Rainbow Macarons (Gift Set 12 Pcs)",
+        category: "Petite Dessert",
+        basePrice: 210000,
+        images: [
+          "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1570476922354-81227cdbb76c?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Macaron renyah dengan tepung almond California murni. Pilihan rasa: Salted Caramel, Matcha Kyoto, Pistachio, Raspberry Rose, dan Dark Truffle.",
+        allergens: "Kacang Almond, Putih Telur, Susu.",
+        skuSizes: [
+          { name: "Box 12 Pcs (Assorted)", priceDelta: 0 },
+          { name: "Box 24 Pcs (Luxury Box)", priceDelta: 180000 }
+        ]
+      },
+      {
+        id: 6,
+        title: "Sicilian Pistachio & Berry Tart",
+        category: "Fresh Tart",
+        basePrice: 260000,
+        images: [
+          "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Kulit tart sablee mentega renyah diisi krim frangipane pistachio Sisilia dan dilapisi selai raspberry buatan tangan serta buah berry segar bertabur.",
+        allergens: "Kacang Pistachio, Tepung Gandum, Dairy.",
+        skuSizes: [
+          { name: "Ukuran Medium 16cm", priceDelta: 0 },
+          { name: "Ukuran Large 22cm", priceDelta: 110000 }
+        ]
+      }
+    ];
+
+    // STATE MANAGEMENT
+    let cart = [];
+    let currentSelectedProduct = null;
+    let selectedSkuIndex = 0;
+    let modalQuantity = 1;
+
+    // FORMAT CURRENCY HELPER
+    function formatRupiah(number) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+    }
+
+    // 1. RENDER PRODUCT GRID
+    function renderProductGrid() {
+      const container = document.getElementById('product-container');
+      container.innerHTML = products.map(product => `
+        <div class="group bg-white rounded-3xl overflow-hidden border border-[#EBE3DC] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+          <div class="relative aspect-square overflow-hidden bg-[#F2EDE8]">
+            <img src="${product.images[0]}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full text-[#99583D]">
+              ${product.category}
+            </span>
+            <button onclick="openQuickView(${product.id})" class="absolute bottom-4 right-4 bg-white hover:bg-[#3D251E] hover:text-white text-[#3D251E] w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition duration-200">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </button>
+          </div>
+          
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-serif-title font-bold text-lg text-[#3D251E] group-hover:text-[#99472E] transition-colors">${product.title}</h3>
+              <p class="text-xs text-[#7A6B63] mt-2 line-clamp-2">${product.desc}</p>
+            </div>
+
+            <div class="pt-5 mt-5 border-t border-[#F2EDE8] flex items-center justify-between">
+              <div>
+                <span class="text-[11px] text-[#9E8B81] block">Mulai dari</span>
+                <span class="text-[#C94A29] font-bold text-base">${formatRupiah(product.basePrice)}</span>
+              </div>
+              <button onclick="openQuickView(${product.id})" class="px-4 py-2 rounded-xl bg-[#FAF7F2] text-[#3D251E] hover:bg-[#3D251E] hover:text-white text-xs font-semibold border border-[#E3D7CD] transition">
+                Pilih Varian
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 2. QUICK VIEW MODAL FUNCTIONS
+    function openQuickView(productId) {
+      currentSelectedProduct = products.find(p => p.id === productId);
+      if (!currentSelectedProduct) return;
+
+      selectedSkuIndex = 0;
+      modalQuantity = 1;
+      document.getElementById('modal-qty').innerText = modalQuantity;
+
+      // Set Info
+      document.getElementById('modal-category').innerText = currentSelectedProduct.category;
+      document.getElementById('modal-title').innerText = currentSelectedProduct.title;
+      document.getElementById('modal-desc').innerText = currentSelectedProduct.desc;
+      document.getElementById('modal-allergens').innerText = currentSelectedProduct.allergens;
+
+      // Gallery Images
+      const mainImg = document.getElementById('modal-main-img');
+      mainImg.src = currentSelectedProduct.images[0];
+
+      const thumbsContainer = document.getElementById('modal-thumbs');
+      thumbsContainer.innerHTML = currentSelectedProduct.images.map((img, idx) => `
+        <button onclick="setModalMainImage('${img}')" class="w-16 h-16 rounded-xl overflow-hidden border-2 border-transparent hover:border-[#99583D] shrink-0 focus:outline-none transition">
+          <img src="${img}" class="w-full h-full object-cover">
+        </button>
+      `).join('');
+
+      // SKU Sizes Options
+      renderSkuOptions();
+
+      // Show Modal
+      document.getElementById('quick-view-modal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function setModalMainImage(url) {
+      document.getElementById('modal-main-img').src = url;
+    }
+
+    function renderSkuOptions() {
+      const container = document.getElementById('sku-size-container');
+      container.innerHTML = currentSelectedProduct.skuSizes.map((sku, index) => {
+        const isSelected = index === selectedSkuIndex;
+        return `
+          <button type="button" onclick="selectSku(${index})" class="p-2.5 rounded-xl border text-xs font-semibold text-center transition ${isSelected ? 'border-[#3D251E] bg-[#3D251E] text-white shadow-sm' : 'border-[#D9C8BC] bg-white text-[#3D251E] hover:bg-[#F7EFE9]'}">
+            ${sku.name}
+          </button>
+        `;
+      }).join('');
+
+      const activeSku = currentSelectedProduct.skuSizes[selectedSkuIndex];
+      document.getElementById('selected-size-label').innerText = activeSku.name;
+      const currentPrice = currentSelectedProduct.basePrice + activeSku.priceDelta;
+      document.getElementById('modal-price').innerText = formatRupiah(currentPrice);
+    }
+
+    function selectSku(index) {
+      selectedSkuIndex = index;
+      renderSkuOptions();
+    }
+
+    function adjustModalQty(change) {
+      if (modalQuantity + change >= 1) {
+        modalQuantity += change;
+        document.getElementById('modal-qty').innerText = modalQuantity;
+      }
+    }
+
+    function closeQuickView() {
+      document.getElementById('quick-view-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // 3. CART SYSTEM (ADD / REMOVE / ADJUST QTY)
+    function addCurrentProductToCart() {
+      if (!currentSelectedProduct) return;
+
+      const activeSku = currentSelectedProduct.skuSizes[selectedSkuIndex];
+      const addonOption = document.getElementById('sku-addon').value;
+      const calculatedPrice = currentSelectedProduct.basePrice + activeSku.priceDelta;
+
+      // Unique Cart SKU Key
+      const cartKey = `${currentSelectedProduct.id}-${activeSku.name}-${addonOption}`;
+      const existingItem = cart.find(item => item.cartKey === cartKey);
+
+      if (existingItem) {
+        existingItem.quantity += modalQuantity;
+      } else {
+        cart.push({
+          cartKey: cartKey,
+          id: currentSelectedProduct.id,
+          title: currentSelectedProduct.title,
+          image: currentSelectedProduct.images[0],
+          sku: activeSku.name,
+          addon: addonOption,
+          unitPrice: calculatedPrice,
+          quantity: modalQuantity
+        });
+      }
+
+      closeQuickView();
+      updateCartUI();
+      showToast(`${currentSelectedProduct.title} ditambahkan ke tas!`);
+    }
+
+    function updateCartUI() {
+      // Counter Badge
+      const totalCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+      document.getElementById('cart-counter').innerText = totalCount;
+
+      const container = document.getElementById('cart-items-container');
+      const emptyState = document.getElementById('cart-empty');
+      const logisticsSection = document.getElementById('checkout-logistics-section');
+      const footerSection = document.getElementById('cart-footer');
+
+      if (cart.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        logisticsSection.classList.add('hidden');
+        footerSection.classList.add('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      logisticsSection.classList.remove('hidden');
+      footerSection.classList.remove('hidden');
+
+      // Populate Items
+      container.innerHTML = cart.map((item, index) => `
+        <div class="flex gap-3 bg-white p-3 rounded-2xl border border-[#EBE3DC]">
+          <img src="${item.image}" alt="${item.title}" class="w-16 h-16 rounded-xl object-cover shrink-0">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-[#3D251E] truncate">${item.title}</h4>
+            <p class="text-[11px] text-[#99583D] font-medium">${item.sku}</p>
+            <p class="text-[10px] text-zinc-500 truncate">${item.addon}</p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs font-bold text-[#C94A29]">${formatRupiah(item.unitPrice * item.quantity)}</span>
+              
+              <!-- Qty adjust -->
+              <div class="flex items-center border border-[#D9C8BC] rounded-lg bg-[#FAF7F2]">
+                <button onclick="changeCartItemQty(${index}, -1)" class="px-2 py-0.5 text-xs text-[#3D251E]">-</button>
+                <span class="px-2 py-0.5 text-xs font-semibold">${item.quantity}</span>
+                <button onclick="changeCartItemQty(${index}, 1)" class="px-2 py-0.5 text-xs text-[#3D251E]">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Subtotals
+      const subtotal = cart.reduce((acc, item) => acc + (item.unitPrice * item.quantity), 0);
+      document.getElementById('summary-subtotal').innerText = formatRupiah(subtotal);
+      document.getElementById('summary-total').innerText = formatRupiah(subtotal);
+    }
+
+    function changeCartItemQty(index, change) {
+      if (cart[index]) {
+        cart[index].quantity += change;
+        if (cart[index].quantity <= 0) {
+          cart.splice(index, 1);
+        }
+        updateCartUI();
+      }
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cart-drawer');
+      if (open) {
+        drawer.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      } else {
+        drawer.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    // 4. CHECKOUT VIA WHATSAPP (LOGISTICS + REKAP ORDER)
+    function handleCheckoutWhatsApp() {
+      if (cart.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+      }
+
+      // Input logistik
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const courier = document.getElementById('cust-courier').value;
+      const arrivalTime = document.getElementById('cust-time').value.trim() || 'Secepatnya (Same Day)';
+      const notes = document.getElementById('cust-notes').value.trim() || '-';
+
+      // Simple Validation
+      if (!name || !phone || !address) {
+        alert("Mohon lengkapi Nama, Nomor WhatsApp, dan Alamat Lengkap untuk keperluan pengiriman kue.");
+        return;
+      }
+
+      // Susun Item Rekap
+      let itemsText = "";
+      let totalBelanja = 0;
+
+      cart.forEach((item, idx) => {
+        const itemTotal = item.unitPrice * item.quantity;
+        totalBelanja += itemTotal;
+        itemsText += `${idx + 1}. *${item.title}*\n   - Ukuran: ${item.sku}\n   - Request: ${item.addon}\n   - Qty: ${item.quantity}x @ ${formatRupiah(item.unitPrice)}\n   - Subtotal: ${formatRupiah(itemTotal)}\n\n`;
+      });
+
+      // WA Target (Contoh: Admin Pâtisserie)
+      const adminWhatsApp = "6281234567890"; // Ganti nomor resmi Anda
+
+      const waMessage = 
+`Halo *L'Atelier Pâtisserie*, saya ingin melakukan pemesanan kue:
+
+🛍️ *REKAP PESANAN:*
+${itemsText}💰 *TOTAL KUE:* ${formatRupiah(totalBelanja)}
+*(Belum termasuk ongkir kurir khusus)*
+
+📍 *DATA PENGIRIMAN & LOGISTIK:*
+• *Nama Penerima:* ${name}
+• *No. HP/WA:* ${phone}
+• *Alamat Pengantaran:* ${address}
+• *Pilihan Pengiriman:* ${courier}
+• *Estimasi Jam Tiba:* ${arrivalTime}
+• *Catatan/Kartu Ucapan:* ${notes}
+
+Mohon cek ketersediaan slot kurir & total beserta ongkos kirimnya ya. Terima kasih!`;
+
+      // Redirect ke API WhatsApp
+      const encodedMsg = encodeURIComponent(waMessage);
+      const waUrl = `https://api.whatsapp.com/send?phone=${adminWhatsApp}&text=${encodedMsg}`;
+      
+      window.open(waUrl, '_blank');
+    }
+
+    // 5. TOAST NOTIFICATION HELPER
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').innerText = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Inisialisasi saat load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProductGrid();
+      updateCartUI();
+    });
+  </script>
+</body>
+</html>

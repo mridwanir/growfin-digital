@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nusantara Bistro & Artisan Coffee</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-serif-title {
+      font-family: 'Playfair Display', serif;
+    }
+    /* Hide scrollbar for category pills */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased selection:bg-amber-500 selection:text-white pb-28">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-stone-900/90 backdrop-blur-md border-b border-stone-800 text-stone-100">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="p-2 bg-amber-500 rounded-xl text-stone-950 font-black">
+          <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+        </span>
+        <div>
+          <span class="font-serif-title font-bold text-lg md:text-xl tracking-wide text-amber-100">Bistro Rasa</span>
+          <span class="text-[10px] block text-stone-400 -mt-1 tracking-widest uppercase">Artisan Dine & Coffee</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-stone-300">
+        <a href="#menu" class="hover:text-amber-400 transition">Menu Pilihan</a>
+        <a href="#lookbook" class="hover:text-amber-400 transition">Galeri Suasana</a>
+        <a href="#reviews" class="hover:text-amber-400 transition">Ulasan</a>
+        <a href="#contact" class="hover:text-amber-400 transition">Kontak Admin</a>
+      </nav>
+
+      <!-- Cart Button trigger top nav -->
+      <button onclick="openCartModal()" class="relative flex items-center gap-2 bg-stone-800 hover:bg-stone-700 px-3.5 py-2 rounded-full border border-stone-700 text-sm transition">
+        <i data-lucide="shopping-bag" class="w-4 h-4 text-amber-400"></i>
+        <span class="hidden sm:inline font-medium">Pesanan</span>
+        <span id="nav-cart-badge" class="bg-amber-500 text-stone-950 text-xs font-bold px-1.5 py-0.5 rounded-full min-w-5 text-center">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION DINAMIS ================= -->
+  <section class="relative min-h-[85vh] flex items-center justify-center bg-stone-950 text-white overflow-hidden">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1800&q=80" 
+           alt="Restaurant Ambiance" 
+           class="w-full h-full object-cover opacity-35 scale-105 transition-transform duration-1000 ease-out" />
+      <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/60 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center py-20">
+      <!-- Status Real-Time Toko -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-stone-900/80 border border-stone-700/80 backdrop-blur-md mb-6 shadow-lg shadow-black/40">
+        <span class="relative flex h-3 w-3">
+          <span id="status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span id="status-dot" class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        </span>
+        <span id="status-text" class="text-xs md:text-sm font-semibold text-stone-200">
+          Buka Sekarang &bull; 10:00 - 22:00 WIB
+        </span>
+      </div>
+
+      <h1 class="font-serif-title text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-stone-100 leading-tight">
+        Kelezatan Autentik, <br><span class="italic text-amber-400 font-normal">Sentuhan Modern.</span>
+      </h1>
+      <p class="mt-5 text-stone-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+        Nikmati pengalaman bersantap istimewa dengan racikan bahan lokal terbaik atau pesan cepat langsung dari meja Anda.
+      </p>
+
+      <!-- Toggle Flow Model Bisnis (Dine In vs Quick Order) -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="#menu" class="flex items-center gap-2 px-6 py-3.5 rounded-full bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold shadow-lg shadow-amber-500/20 transition transform active:scale-95">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          Pesan Cepat (Self-Order)
+        </a>
+        <button onclick="scrollToReservation()" class="flex items-center gap-2 px-6 py-3.5 rounded-full bg-stone-800/90 hover:bg-stone-700 border border-stone-600 text-stone-100 font-semibold backdrop-blur-sm transition">
+          <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
+          Reservasi Meja
+        </button>
+      </div>
+
+      <!-- Quick Feature highlights -->
+      <div class="mt-12 grid grid-cols-3 max-w-lg mx-auto border-t border-stone-800/80 pt-6 text-stone-400 text-xs md:text-sm">
+        <div class="flex flex-col items-center gap-1">
+          <i data-lucide="clock-3" class="w-5 h-5 text-amber-400"></i>
+          <span>Penyajian &le; 15 Mnt</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 border-x border-stone-800">
+          <i data-lucide="coffee" class="w-5 h-5 text-amber-400"></i>
+          <span>100% Arabica</span>
+        </div>
+        <div class="flex flex-col items-center gap-1">
+          <i data-lucide="shield-check" class="w-5 h-5 text-amber-400"></i>
+          <span>Higienis & Halal</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= KATALOG MENU BERKATEGORI ================= -->
+  <section id="menu" class="py-16 md:py-24 max-w-6xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+      <div>
+        <span class="text-amber-600 font-semibold tracking-wider text-xs uppercase">Daftar Pilihan</span>
+        <h2 class="font-serif-title text-3xl md:text-4xl font-bold text-stone-900 mt-1">Eksplorasi Menu Kami</h2>
+      </div>
+      <p class="text-stone-500 text-sm max-w-md mt-2 md:mt-0">
+        Klik item untuk memilih varian suhu, ukuran, dan extra topping lezat favoritmu.
+      </p>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6" id="category-container">
+      <button onclick="filterCategory('all')" data-cat="all" class="cat-pill active-pill px-5 py-2.5 rounded-full text-sm font-semibold transition bg-stone-900 text-stone-100 shadow-sm cursor-pointer whitespace-nowrap">
+        Semua Menu
+      </button>
+      <button onclick="filterCategory('coffee')" data-cat="coffee" class="cat-pill px-5 py-2.5 rounded-full text-sm font-semibold transition bg-stone-200/70 hover:bg-stone-200 text-stone-700 cursor-pointer whitespace-nowrap">
+        ☕ Artisan Coffee
+      </button>
+      <button onclick="filterCategory('mains')" data-cat="mains" class="cat-pill px-5 py-2.5 rounded-full text-sm font-semibold transition bg-stone-200/70 hover:bg-stone-200 text-stone-700 cursor-pointer whitespace-nowrap">
+        🍛 Makanan Utama
+      </button>
+      <button onclick="filterCategory('snacks')" data-cat="snacks" class="cat-pill px-5 py-2.5 rounded-full text-sm font-semibold transition bg-stone-200/70 hover:bg-stone-200 text-stone-700 cursor-pointer whitespace-nowrap">
+        🍟 Snack & Pastry
+      </button>
+    </div>
+
+    <!-- Menu Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="menu-grid">
+      <!-- Menu items di-inject via JS -->
+    </div>
+  </section>
+
+  <!-- ================= GALERI SUASANA (LOOKBOOK) ================= -->
+  <section id="lookbook" class="bg-stone-900 py-20 text-stone-100">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-amber-400 font-semibold tracking-wider text-xs uppercase">Atmosfer & Estetika</span>
+        <h2 class="font-serif-title text-3xl md:text-4xl font-bold mt-1">Galeri Ruang & Rasa</h2>
+        <p class="text-stone-400 text-sm mt-3">Ruang yang dirancang untuk produktivitas kerja santai, obrolan intim, hingga makan malam istimewa.</p>
+      </div>
+
+      <!-- Bento-style Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[180px] md:auto-rows-[220px]">
+        <div class="col-span-2 row-span-2 relative group overflow-hidden rounded-2xl">
+          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" alt="Cafe Corner" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent flex items-end p-5">
+            <span class="text-sm font-medium text-stone-200">Main Hall & Indoor Bar</span>
+          </div>
+        </div>
+        <div class="relative group overflow-hidden rounded-2xl">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80" alt="Brewing" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-stone-950/30 group-hover:bg-transparent transition"></div>
+        </div>
+        <div class="relative group overflow-hidden rounded-2xl">
+          <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80" alt="Coffee Table" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-stone-950/30 group-hover:bg-transparent transition"></div>
+        </div>
+        <div class="col-span-2 relative group overflow-hidden rounded-2xl">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Culinary Plating" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent flex items-end p-5">
+            <span class="text-sm font-medium text-stone-200">Artisan Plating Experience</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SOCIAL PROOF / ULASAN ================= -->
+  <section id="reviews" class="py-16 md:py-24 max-w-6xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+      <div>
+        <span class="text-amber-600 font-semibold tracking-wider text-xs uppercase">Kata Pelanggan</span>
+        <h2 class="font-serif-title text-3xl font-bold text-stone-900 mt-1">Ulasan Terverifikasi</h2>
+      </div>
+      <div class="flex items-center gap-2 mt-3 md:mt-0 text-amber-500 font-bold text-sm">
+        <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+        <span class="text-stone-900 text-base">4.9 / 5.0</span>
+        <span class="text-stone-400 font-normal">dari 450+ ulasan Google</span>
+      </div>
+    </div>
+
+    <!-- Review Slider/Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex text-amber-400 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          </div>
+          <p class="text-stone-700 text-sm leading-relaxed italic">
+            "Kopi Susu Gula Aren-nya pas banget, gak kemanisan. Fitur self-order dari meja lewat web ini sangat praktis, gak butuh nunggu pelayan lama!"
+          </p>
+        </div>
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-stone-100">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" class="w-10 h-10 rounded-full object-cover" alt="User" />
+          <div>
+            <h4 class="font-bold text-xs text-stone-900">Clarissa Putri</h4>
+            <span class="text-[11px] text-stone-400">Dine-in &bull; Kemarin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex text-amber-400 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          </div>
+          <p class="text-stone-700 text-sm leading-relaxed italic">
+            "Bebek Crispy Sambal Matah juaranya. Daging empuk, bumbu meresap. Admin reservasi via WhatsApp sangat responsif pas booking meja ultah."
+          </p>
+        </div>
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-stone-100">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" class="w-10 h-10 rounded-full object-cover" alt="User" />
+          <div>
+            <h4 class="font-bold text-xs text-stone-900">Dimas Anggara</h4>
+            <span class="text-[11px] text-stone-400">Reservasi Meja &bull; 3 hari lalu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex text-amber-400 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+          </div>
+          <p class="text-stone-700 text-sm leading-relaxed italic">
+            "Tempat nyaman buat WFC. Wifi kencang, stopkontak banyak, dan Truffle Fries-nya nagih bgt buat cemilan sore."
+          </p>
+        </div>
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-stone-100">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" class="w-10 h-10 rounded-full object-cover" alt="User" />
+          <div>
+            <h4 class="font-bold text-xs text-stone-900">Nadya Sarah</h4>
+            <span class="text-[11px] text-stone-400">Dine-in &bull; 1 minggu lalu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROFIL ADMIN & SIMULASI RESERVASI ================= -->
+  <section id="contact" class="bg-amber-50/60 border-y border-amber-200/60 py-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="bg-white rounded-3xl p-6 sm:p-10 border border-stone-200 shadow-sm flex flex-col md:flex-row items-center gap-8 justify-between">
+        <div class="flex items-center gap-5">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Admin Reservasi" class="w-20 h-20 rounded-full object-cover border-4 border-amber-100" />
+            <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+          </div>
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold mb-1">
+              Online & Siap Membantu
+            </div>
+            <h3 class="text-lg font-bold text-stone-900">Sarah Anggraini</h3>
+            <p class="text-xs text-stone-500">Concierge & Guest Relations Manager</p>
+            <p class="text-xs text-stone-600 mt-2 italic">"Butuh meja romantis, VIP Room untuk 15 orang, atau catering event?"</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <button onclick="directWaChat('Halo Sarah, saya mau tanya ketersediaan meja VIP hari ini.')" class="px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-sm transition">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            Tanya Sarah via WA
+          </button>
+          <button onclick="scrollToReservationForm()" class="px-5 py-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold text-sm flex items-center justify-center gap-2 transition">
+            <i data-lucide="calendar-check" class="w-4 h-4 text-stone-600"></i>
+            Booking Form
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FLOATING CART TRIGGER ================= -->
+  <div id="floating-cart-bar" class="fixed bottom-6 inset-x-4 max-w-xl mx-auto z-40 hidden transition-all transform duration-300">
+    <div class="bg-stone-900/95 backdrop-blur-md text-white p-3.5 px-5 rounded-2xl shadow-2xl border border-stone-800 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="relative bg-amber-500 text-stone-950 p-2.5 rounded-xl font-bold">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span id="floating-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-stone-900">0</span>
+        </div>
+        <div>
+          <span class="text-xs text-stone-400 block">Total Belanja</span>
+          <span id="floating-total" class="font-bold text-base text-amber-400">Rp 0</span>
+        </div>
+      </div>
+      <button onclick="openCartModal()" class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 px-5 py-2.5 rounded-xl font-bold text-sm transition">
+        Lihat Pesanan
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL KUSTOMISASI PRODUK ================= -->
+  <div id="custom-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-stone-200 flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header with Image -->
+      <div class="relative h-48 sm:h-52 bg-stone-100 flex-shrink-0">
+        <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+        <button onclick="closeCustomModal()" class="absolute top-3 right-3 bg-stone-900/60 hover:bg-stone-900 text-white p-2 rounded-full backdrop-blur-sm transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6">
+        <div>
+          <h3 id="modal-title" class="text-xl font-bold text-stone-900">Nama Produk</h3>
+          <p id="modal-desc" class="text-stone-500 text-xs mt-1 leading-relaxed">Deskripsi menu</p>
+          <span id="modal-base-price" class="text-amber-600 font-bold text-base block mt-2">Rp 0</span>
+        </div>
+
+        <!-- Variant Option (Radio) -->
+        <div id="variant-section" class="border-t border-stone-100 pt-4">
+          <label class="text-xs font-bold text-stone-700 uppercase tracking-wider block mb-2">Pilih Varian (Wajib)</label>
+          <div class="grid grid-cols-2 gap-2" id="variant-options">
+            <!-- Inject variants -->
+          </div>
+        </div>
+
+        <!-- Add-ons Option (Checkbox) -->
+        <div id="addon-section" class="border-t border-stone-100 pt-4">
+          <label class="text-xs font-bold text-stone-700 uppercase tracking-wider block mb-2">Pilihan Tambahan / Extra</label>
+          <div class="space-y-2" id="addon-options">
+            <!-- Inject addons -->
+          </div>
+        </div>
+
+        <!-- Catatan Tambahan -->
+        <div class="border-t border-stone-100 pt-4">
+          <label class="text-xs font-bold text-stone-700 uppercase tracking-wider block mb-1">Catatan Khusus</label>
+          <input type="text" id="item-note" placeholder="Contoh: Less sugar / Sambal dipisah" class="w-full text-xs p-3 bg-stone-50 rounded-xl border border-stone-200 focus:outline-amber-500" />
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-4">
+        <div>
+          <span class="text-[11px] text-stone-400 block font-medium">Subtotal Item</span>
+          <span id="modal-calc-total" class="font-bold text-stone-900 text-lg">Rp 0</span>
+        </div>
+        <button onclick="addItemToCartFromModal()" class="flex-1 bg-stone-900 hover:bg-stone-800 text-amber-400 font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          Tambah ke Keranjang
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL CHECKOUT & CART ================= -->
+  <div id="cart-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-stone-200 flex flex-col max-h-[92vh]">
+      
+      <!-- Cart Header -->
+      <div class="p-5 border-b border-stone-100 flex items-center justify-between bg-stone-900 text-white">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shopping-cart" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="font-bold text-base">Rincian Pesanan</h3>
+        </div>
+        <button onclick="closeCartModal()" class="text-stone-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6">
+        <!-- Order items list -->
+        <div id="cart-items-list" class="divide-y divide-stone-100">
+          <!-- Inject cart items -->
+        </div>
+
+        <!-- Order Type Selector (Dine-in vs Delivery) -->
+        <div class="pt-4 border-t border-stone-100">
+          <label class="text-xs font-bold text-stone-700 uppercase tracking-wider block mb-2">Tipe Pemesanan</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" onclick="setOrderType('dine_in')" id="btn-type-dine" class="py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 border-stone-900 bg-stone-900 text-white">
+              <i data-lucide="utensils" class="w-4 h-4"></i>
+              Dine-In (Di Meja)
+            </button>
+            <button type="button" onclick="setOrderType('delivery')" id="btn-type-delivery" class="py-2.5 px-3 rounded-xl border border-stone-200 bg-stone-50 text-stone-600 text-xs font-bold flex items-center justify-center gap-2">
+              <i data-lucide="truck" class="w-4 h-4"></i>
+              Take Away / Delivery
+            </button>
+          </div>
+        </div>
+
+        <!-- Checkout Form Input -->
+        <div class="space-y-3 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+          <div>
+            <label class="text-xs font-semibold text-stone-600 block mb-1">Nama Pemesan *</label>
+            <input type="text" id="cust-name" placeholder="Nama Anda" class="w-full p-2.5 text-xs bg-white rounded-lg border border-stone-300 focus:outline-amber-500" required>
+          </div>
+
+          <!-- Dynamic Input for Dine-in -->
+          <div id="field-table">
+            <label class="text-xs font-semibold text-stone-600 block mb-1">Nomor Meja *</label>
+            <input type="number" id="cust-table" placeholder="Contoh: Meja 08" class="w-full p-2.5 text-xs bg-white rounded-lg border border-stone-300 focus:outline-amber-500">
+          </div>
+
+          <!-- Dynamic Input for Delivery (Hidden by default) -->
+          <div id="field-address" class="hidden">
+            <label class="text-xs font-semibold text-stone-600 block mb-1">Alamat Pengantaran *</label>
+            <textarea id="cust-address" rows="2" placeholder="Alamat lengkap tujuan..." class="w-full p-2.5 text-xs bg-white rounded-lg border border-stone-300 focus:outline-amber-500"></textarea>
+          </div>
+        </div>
+
+        <!-- Ringkasan Perhitungan -->
+        <div class="space-y-1.5 text-xs text-stone-600">
+          <div class="flex justify-between">
+            <span>Subtotal Produk</span>
+            <span id="cart-summary-subtotal" class="font-medium text-stone-800">Rp 0</span>
+          </div>
+          <div class="flex justify-between">
+            <span>PB1 (Pajak Resto 10%)</span>
+            <span id="cart-summary-tax" class="font-medium text-stone-800">Rp 0</span>
+          </div>
+          <div class="flex justify-between text-sm font-bold text-stone-900 pt-2 border-t border-stone-200">
+            <span>Total Akhir</span>
+            <span id="cart-summary-grand" class="text-amber-600">Rp 0</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Submit Checkout WhatsApp Button -->
+      <div class="p-4 bg-stone-50 border-t border-stone-200">
+        <button onclick="processCheckoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+          Kirim Pesanan ke WhatsApp Kasir
+        </button>
+        <span class="text-[10px] text-stone-400 text-center block mt-2">Pesanan akan diproses otomatis oleh tim kitchen kami.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // DATA MASTER PRODUK RESTAURANT
+    const MENU_DATABASE = [
+      {
+        id: 1,
+        name: "Artisan Aren Latte",
+        category: "coffee",
+        price: 28000,
+        desc: "Espresso ganda dari biji Toraja dipadu susu segar dan sirup gula aren murni.",
+        img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=600&q=80",
+        variants: [
+          { name: "Dingin (Iced)", extra: 0 },
+          { name: "Panas (Hot)", extra: 0 }
+        ],
+        addons: [
+          { name: "Extra Espresso Shot", price: 6000 },
+          { name: "Oat Milk Upgrade", price: 8000 }
+        ]
+      },
+      {
+        id: 2,
+        name: "V60 Single Origin Pour-Over",
+        category: "coffee",
+        price: 34000,
+        desc: "Kopi seduh manual berkarakter fruity, floral, clean aftertaste.",
+        img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80",
+        variants: [
+          { name: "Gayo Honey", extra: 0 },
+          { name: "Kerinci Natural", extra: 3000 }
+        ],
+        addons: [
+          { name: "Ice Cube Terpisah", price: 2000 }
+        ]
+      },
+      {
+        id: 3,
+        name: "Bebek Crispy Sambal Matah",
+        category: "mains",
+        price: 58000,
+        desc: "Bebek ungkep bumbu rempah Bali digoreng renyah, disajikan bersama nasi hangat.",
+        img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+        variants: [
+          { name: "Porsi Reguler", extra: 0 },
+          { name: "Porsi Jumbo (Dada + Paha)", extra: 18000 }
+        ],
+        addons: [
+          { name: "Ekstra Sambal Matah", price: 5000 },
+          { name: "Tahu & Tempe Crispy", price: 7000 }
+        ]
+      },
+      {
+        id: 4,
+        name: "Wagyu Beef Truffle Fried Rice",
+        category: "mains",
+        price: 68000,
+        desc: "Nasi goreng aroma minyak truffle premium dengan potongan daging wagyu meltique.",
+        img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80",
+        variants: [
+          { name: "Tingkat Pedas: Sedang", extra: 0 },
+          { name: "Tingkat Pedas: Pedas Pol", extra: 0 }
+        ],
+        addons: [
+          { name: "Telur Mata Sapi Half-Boiled", price: 6000 },
+          { name: "Ekstra Wagyu 50gr", price: 25000 }
+        ]
+      },
+      {
+        id: 5,
+        name: "Truffle Parmesan Fries",
+        category: "snacks",
+        price: 32000,
+        desc: "Kentang goreng renyah berbalut white truffle oil dan taburan keju parmesan tua.",
+        img: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=600&q=80",
+        variants: [
+          { name: "Original Herbs", extra: 0 },
+          { name: "Spicy Cajun", extra: 2000 }
+        ],
+        addons: [
+          { name: "Saus Keju Melted", price: 6000 },
+          { name: "Mayo Bawang Putih", price: 4000 }
+        ]
+      },
+      {
+        id: 6,
+        name: "Croissant Almond Bakar",
+        category: "snacks",
+        price: 30000,
+        desc: "Pastry renyah berlapis mentega Prancis dengan isian krim frangipane manis.",
+        img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80",
+        variants: [
+          { name: "Hangat (Reheated)", extra: 0 },
+          { name: "Suhu Ruang", extra: 0 }
+        ],
+        addons: [
+          { name: "Vanilla Gelato Scoop", price: 10000 }
+        ]
+      }
+    ];
+
+    // NOMOR ADMIN WHATSAPP RESTAURANT
+    const WHATSAPP_PHONE = "6281234567890"; // Ganti dengan nomor WhatsApp Resto
+
+    // STATE APLIKASI
+    let cart = [];
+    let activeCustomProduct = null;
+    let selectedOrderType = 'dine_in'; // 'dine_in' or 'delivery'
+
+    // Format Rupiah
+    function formatRupiah(number) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+    }
+
+    // RENDER MENU BERDASARKAN KATEGORI
+    function renderMenuItems(category = 'all') {
+      const container = document.getElementById('menu-grid');
+      container.innerHTML = '';
+
+      const filtered = category === 'all' 
+        ? MENU_DATABASE 
+        : MENU_DATABASE.filter(item => item.category === category);
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl overflow-hidden border border-stone-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between group";
+        card.innerHTML = `
+          <div>
+            <div class="relative h-48 overflow-hidden bg-stone-100">
+              <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <span class="absolute top-3 left-3 bg-stone-900/80 backdrop-blur-md text-amber-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                ${item.category}
+              </span>
+            </div>
+            <div class="p-4 sm:p-5">
+              <div class="flex justify-between items-start gap-2">
+                <h3 class="font-bold text-stone-900 text-base group-hover:text-amber-600 transition leading-snug">${item.name}</h3>
+              </div>
+              <p class="text-stone-500 text-xs mt-1.5 line-clamp-2">${item.desc}</p>
+            </div>
+          </div>
+          <div class="p-4 sm:p-5 pt-0 flex items-center justify-between border-t border-stone-100 mt-2">
+            <div>
+              <span class="text-[10px] text-stone-400 block uppercase">Mulai Dari</span>
+              <span class="font-bold text-stone-900 text-sm sm:text-base">${formatRupiah(item.price)}</span>
+            </div>
+            <button onclick="openCustomModal(${item.id})" class="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95 shadow-sm">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              Kustom
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // FILTER PILL BUTTON ACTIVE HANDLER
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        if(btn.dataset.cat === cat) {
+          btn.className = "cat-pill px-5 py-2.5 rounded-full text-sm font-semibold transition bg-stone-900 text-stone-100 shadow-sm cursor-pointer whitespace-nowrap";
+        } else {
+          btn.className = "cat-pill px-5 py-2.5 rounded-full text-sm font-semibold transition bg-stone-200/70 hover:bg-stone-200 text-stone-700 cursor-pointer whitespace-nowrap";
+        }
+      });
+      renderMenuItems(cat);
+    }
+
+    // MODAL KUSTOMISASI LOGIC
+    function openCustomModal(productId) {
+      const product = MENU_DATABASE.find(p => p.id === productId);
+      if(!product) return;
+      activeCustomProduct = product;
+
+      document.getElementById('modal-title').innerText = product.name;
+      document.getElementById('modal-desc').innerText = product.desc;
+      document.getElementById('modal-img').src = product.img;
+      document.getElementById('modal-base-price').innerText = formatRupiah(product.price);
+      document.getElementById('item-note').value = "";
+
+      // Variants
+      const variantContainer = document.getElementById('variant-options');
+      variantContainer.innerHTML = '';
+      product.variants.forEach((v, index) => {
+        const isChecked = index === 0 ? 'checked' : '';
+        const vEl = document.createElement('label');
+        vEl.className = "flex items-center justify-between p-3 rounded-xl border border-stone-200 text-xs font-semibold cursor-pointer hover:border-amber-500 transition has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50/50";
+        vEl.innerHTML = `
+          <div class="flex items-center gap-2">
+            <input type="radio" name="modal_variant" value="${v.name}" data-extra="${v.extra}" ${isChecked} onchange="recalculateModalPrice()" class="text-amber-500 focus:ring-amber-500">
+            <span>${v.name}</span>
+          </div>
+          <span class="text-stone-400 font-normal">${v.extra > 0 ? '+'+formatRupiah(v.extra) : ''}</span>
+        `;
+        variantContainer.appendChild(vEl);
+      });
+
+      // Addons
+      const addonContainer = document.getElementById('addon-options');
+      addonContainer.innerHTML = '';
+      if(product.addons && product.addons.length > 0) {
+        document.getElementById('addon-section').classList.remove('hidden');
+        product.addons.forEach(ad => {
+          const adEl = document.createElement('label');
+          adEl.className = "flex items-center justify-between p-3 rounded-xl border border-stone-200 text-xs font-semibold cursor-pointer hover:border-amber-500 transition has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50/50";
+          adEl.innerHTML = `
+            <div class="flex items-center gap-2">
+              <input type="checkbox" name="modal_addon" value="${ad.name}" data-price="${ad.price}" onchange="recalculateModalPrice()" class="rounded text-amber-500 focus:ring-amber-500">
+              <span>${ad.name}</span>
+            </div>
+            <span class="text-amber-600 font-bold">+${formatRupiah(ad.price)}</span>
+          `;
+          addonContainer.appendChild(adEl);
+        });
+      } else {
+        document.getElementById('addon-section').classList.add('hidden');
+      }
+
+      recalculateModalPrice();
+      document.getElementById('custom-modal').classList.remove('hidden');
+      document.getElementById('custom-modal').classList.add('flex');
+    }
+
+    function closeCustomModal() {
+      document.getElementById('custom-modal').classList.add('hidden');
+      document.getElementById('custom-modal').classList.remove('flex');
+    }
+
+    // HITUNG SUB-TOTAL DI MODAL KUSTOM
+    function recalculateModalPrice() {
+      if(!activeCustomProduct) return;
+      let total = activeCustomProduct.price;
+
+      const checkedVariant = document.querySelector('input[name="modal_variant"]:checked');
+      if(checkedVariant) {
+        total += parseInt(checkedVariant.dataset.extra || 0);
+      }
+
+      const checkedAddons = document.querySelectorAll('input[name="modal_addon"]:checked');
+      checkedAddons.forEach(cb => {
+        total += parseInt(cb.dataset.price || 0);
+      });
+
+      document.getElementById('modal-calc-total').innerText = formatRupiah(total);
+    }
+
+    // TAMBAH KE CART
+    function addItemToCartFromModal() {
+      if(!activeCustomProduct) return;
+
+      const checkedVariant = document.querySelector('input[name="modal_variant"]:checked');
+      const variantName = checkedVariant ? checkedVariant.value : 'Standar';
+      const variantExtra = checkedVariant ? parseInt(checkedVariant.dataset.extra || 0) : 0;
+
+      const checkedAddons = document.querySelectorAll('input[name="modal_addon"]:checked');
+      const selectedAddons = [];
+      let addonsCost = 0;
+      checkedAddons.forEach(cb => {
+        selectedAddons.push(cb.value);
+        addonsCost += parseInt(cb.dataset.price || 0);
+      });
+
+      const note = document.getElementById('item-note').value.trim();
+      const itemPriceUnit = activeCustomProduct.price + variantExtra + addonsCost;
+
+      // Unique Cart key
+      const cartItemKey = `${activeCustomProduct.id}_${variantName}_${selectedAddons.sort().join('-')}_${note}`;
+      
+      const existingItem = cart.find(i => i.key === cartItemKey);
+      if(existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          key: cartItemKey,
+          id: activeCustomProduct.id,
+          name: activeCustomProduct.name,
+          variant: variantName,
+          addons: selectedAddons,
+          note: note,
+          unitPrice: itemPriceUnit,
+          quantity: 1
+        });
+      }
+
+      updateCartBadgeAndFloatingBar();
+      closeCustomModal();
+    }
+
+    // UPDATE FLOATING CART UI
+    function updateCartBadgeAndFloatingBar() {
+      const totalItems = cart.reduce((acc, curr) => acc + curr.quantity, 0);
+      const totalPrice = cart.reduce((acc, curr) => acc + (curr.unitPrice * curr.quantity), 0);
+
+      // Nav Badge
+      document.getElementById('nav-cart-badge').innerText = totalItems;
+      document.getElementById('floating-count').innerText = totalItems;
+      document.getElementById('floating-total').innerText = formatRupiah(totalPrice);
+
+      const floatingBar = document.getElementById('floating-cart-bar');
+      if(totalItems > 0) {
+        floatingBar.classList.remove('hidden');
+      } else {
+        floatingBar.classList.add('hidden');
+        closeCartModal();
+      }
+    }
+
+    // MODAL CHECKOUT & CART
+    function openCartModal() {
+      renderCartItems();
+      document.getElementById('cart-modal').classList.remove('hidden');
+      document.getElementById('cart-modal').classList.add('flex');
+    }
+
+    function closeCartModal() {
+      document.getElementById('cart-modal').classList.add('hidden');
+      document.getElementById('cart-modal').classList.remove('flex');
+    }
+
+    function changeQuantity(cartKey, delta) {
+      const idx = cart.findIndex(i => i.key === cartKey);
+      if(idx > -1) {
+        cart[idx].quantity += delta;
+        if(cart[idx].quantity <= 0) {
+          cart.splice(idx, 1);
+        }
+      }
+      renderCartItems();
+      updateCartBadgeAndFloatingBar();
+    }
+
+    function renderCartItems() {
+      const listContainer = document.getElementById('cart-items-list');
+      listContainer.innerHTML = '';
+
+      if(cart.length === 0) {
+        listContainer.innerHTML = `
+          <div class="py-8 text-center text-stone-400">
+            <i data-lucide="shopping-basket" class="w-10 h-10 mx-auto stroke-1 mb-2"></i>
+            <p class="text-sm">Keranjang masih kosong.</p>
+          </div>
+        `;
+        document.getElementById('cart-summary-subtotal').innerText = formatRupiah(0);
+        document.getElementById('cart-summary-tax').innerText = formatRupiah(0);
+        document.getElementById('cart-summary-grand').innerText = formatRupiah(0);
+        lucide.createIcons();
+        return;
+      }
+
+      let subtotal = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.unitPrice * item.quantity;
+        subtotal += itemTotal;
+
+        const row = document.createElement('div');
+        row.className = "py-3 flex items-start justify-between gap-3";
+        row.innerHTML = `
+          <div class="flex-1">
+            <h4 class="font-bold text-xs text-stone-900 leading-tight">${item.name}</h4>
+            <span class="text-[11px] text-amber-700 block">${item.variant}</span>
+            ${item.addons.length > 0 ? `<span class="text-[10px] text-stone-400 block">+ ${item.addons.join(', ')}</span>` : ''}
+            ${item.note ? `<span class="text-[10px] italic text-stone-500 block">Note: "${item.note}"</span>` : ''}
+            <span class="text-xs font-semibold text-stone-700 block mt-1">${formatRupiah(item.unitPrice)}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="changeQuantity('${item.key}', -1)" class="w-7 h-7 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center font-bold text-sm">-</button>
+            <span class="text-xs font-bold w-4 text-center">${item.quantity}</span>
+            <button onclick="changeQuantity('${item.key}', 1)" class="w-7 h-7 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center font-bold text-sm">+</button>
+          </div>
+        `;
+        listContainer.appendChild(row);
+      });
+
+      const tax = Math.round(subtotal * 0.1);
+      const grandTotal = subtotal + tax;
+
+      document.getElementById('cart-summary-subtotal').innerText = formatRupiah(subtotal);
+      document.getElementById('cart-summary-tax').innerText = formatRupiah(tax);
+      document.getElementById('cart-summary-grand').innerText = formatRupiah(grandTotal);
+      lucide.createIcons();
+    }
+
+    // PILIHAN TIPE ORDER
+    function setOrderType(type) {
+      selectedOrderType = type;
+      const btnDine = document.getElementById('btn-type-dine');
+      const btnDelivery = document.getElementById('btn-type-delivery');
+      const fieldTable = document.getElementById('field-table');
+      const fieldAddress = document.getElementById('field-address');
+
+      if(type === 'dine_in') {
+        btnDine.className = "py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 border-stone-900 bg-stone-900 text-white";
+        btnDelivery.className = "py-2.5 px-3 rounded-xl border border-stone-200 bg-stone-50 text-stone-600 text-xs font-bold flex items-center justify-center gap-2";
+        fieldTable.classList.remove('hidden');
+        fieldAddress.classList.add('hidden');
+      } else {
+        btnDelivery.className = "py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 border-stone-900 bg-stone-900 text-white";
+        btnDine.className = "py-2.5 px-3 rounded-xl border border-stone-200 bg-stone-50 text-stone-600 text-xs font-bold flex items-center justify-center gap-2";
+        fieldAddress.classList.remove('hidden');
+        fieldTable.classList.add('hidden');
+      }
+    }
+
+    // PROSES CHECKOUT VIA WHATSAPP (QUICK COMMERCE REDIRECT)
+    function processCheckoutWhatsApp() {
+      if(cart.length === 0) {
+        alert("Keranjang Anda masih kosong.");
+        return;
+      }
+
+      const name = document.getElementById('cust-name').value.trim();
+      if(!name) {
+        alert("Silakan masukkan nama pemesan.");
+        document.getElementById('cust-name').focus();
+        return;
+      }
+
+      let locationDetail = "";
+      if(selectedOrderType === 'dine_in') {
+        const table = document.getElementById('cust-table').value.trim();
+        if(!table) {
+          alert("Silakan tentukan nomor meja Anda.");
+          document.getElementById('cust-table').focus();
+          return;
+        }
+        locationDetail = `*Meja Dine-in:* No. ${table}`;
+      } else {
+        const address = document.getElementById('cust-address').value.trim();
+        if(!address) {
+          alert("Silakan masukkan alamat pengiriman.");
+          document.getElementById('cust-address').focus();
+          return;
+        }
+        locationDetail = `*Alamat Kirim:* ${address}`;
+      }
+
+      let subtotal = 0;
+      let textItems = "";
+      cart.forEach((i, idx) => {
+        const itemTot = i.unitPrice * i.quantity;
+        subtotal += itemTot;
+        textItems += `${idx+1}. ${i.name} (${i.variant}) x${i.quantity} = ${formatRupiah(itemTot)}\n`;
+        if(i.addons.length > 0) textItems += `   Extra: ${i.addons.join(', ')}\n`;
+        if(i.note) textItems += `   Catatan: ${i.note}\n`;
+      });
+
+      const tax = Math.round(subtotal * 0.1);
+      const grandTotal = subtotal + tax;
+
+      // WhatsApp format template
+      const message = `*HALO BISTRO RASA, PESANAN BARU!* 🍽️\n`
+        + `-----------------------------------\n`
+        + `*Nama Pelanggan:* ${name}\n`
+        + `*Tipe Pesanan:* ${selectedOrderType === 'dine_in' ? 'Dine In' : 'Take Away / Delivery'}\n`
+        + `${locationDetail}\n`
+        + `-----------------------------------\n`
+        + `*Rincian Menu:*\n${textItems}`
+        + `-----------------------------------\n`
+        + `*Subtotal:* ${formatRupiah(subtotal)}\n`
+        + `*PB1 (10%):* ${formatRupiah(tax)}\n`
+        + `*TOTAL AKHIR:* ${formatRupiah(grandTotal)}\n`
+        + `-----------------------------------\n`
+        + `Mohon segera dikonfirmasi dan diproses. Terima kasih!`;
+
+      const encodedURL = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+      window.open(encodedURL, '_blank');
+    }
+
+    // CHAT DIRECT ADMIN SIMULATION
+    function directWaChat(defaultText) {
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(defaultText)}`, '_blank');
+    }
+
+    function scrollToReservation() {
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToReservationForm() {
+      directWaChat('Halo Admin Bistro Rasa, saya ingin reservasi meja untuk acara makan.');
+    }
+
+    // INIT PAGE
+    window.addEventListener('DOMContentLoaded', () => {
+      renderMenuItems('all');
+      lucide.createIcons();
+
+      // Simple Real-Time Business Hours Simulator (10:00 - 22:00)
+      const currentHour = new Date().getHours();
+      const statusText = document.getElementById('status-text');
+      const statusDot = document.getElementById('status-dot');
+      const statusPing = document.getElementById('status-ping');
+
+      if (currentHour >= 10 && currentHour < 22) {
+        statusText.innerHTML = "Buka Sekarang &bull; Siap Menyajikan";
+        statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
+        statusPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75";
+      } else {
+        statusText.innerHTML = "Resto Tutup &bull; Buka Kembali Pukul 10:00 WIB";
+        statusDot.className = "relative inline-flex rounded-full h-3 w-3 bg-rose-500";
+        statusPing.className = "hidden";
+      }
+    });
+  </script>
+</body>
+</html>

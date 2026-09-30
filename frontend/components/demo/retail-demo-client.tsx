@@ -2,6 +2,8 @@
 
 import { BusinessDemo } from '@/lib/types';
 import { ClothingRouter } from './retail/clothing/ClothingRouter';
+import { GroceriesRouter } from './retail/groceries/GroceriesRouter';
+import { ElectronicRouter } from './retail/electronic/ElectronicRouter';
 
 export function RetailDemoClient({ client, themeVariant }: { client: BusinessDemo, themeVariant?: string }) {
   // Pattern: "retail-[category]-[theme]"
@@ -17,16 +19,35 @@ export function RetailDemoClient({ client, themeVariant }: { client: BusinessDem
     // Handling direct "editorial" or "default" layout_ids
     category = 'clothing';
     themeName = themeVariant;
+  } else if (!themeVariant) {
+    const isGroceries = client.category?.toLowerCase().includes('supermarket') || 
+                        client.category?.toLowerCase().includes('convenience') ||
+                        client.category?.toLowerCase().includes('grosir') ||
+                        client.category?.toLowerCase().includes('minimarket');
+    const isElectronic = client.category?.toLowerCase().includes('electronic') || 
+                         client.category?.toLowerCase().includes('gadget') ||
+                         client.category?.toLowerCase().includes('computer');
+                         
+    if (isGroceries) {
+      category = 'groceries';
+      themeName = 'default';
+    } else if (isElectronic) {
+      category = 'electronic';
+      themeName = 'default';
+    }
   }
 
   if (category === 'clothing') {
     return <ClothingRouter client={client} themeName={themeName} />;
   }
   
-  // Future Categories (e.g. grocery)
-  // if (category === 'grocery') {
-  //   return <GroceryRouter client={client} themeName={themeName} />;
-  // }
+  if (category === 'groceries') {
+    return <GroceriesRouter client={client} themeName={themeName} />;
+  }
+  
+  if (category === 'electronic') {
+    return <ElectronicRouter client={client} themeName={themeName} />;
+  }
   
   // Ultimate Fallback
   return <ClothingRouter client={client} themeName="default" />;

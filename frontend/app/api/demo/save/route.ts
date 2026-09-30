@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Instantiate an admin client bypassing RLS
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function POST(request: Request) {
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
   try {
     const body = await request.json();
-    const { slug, clientData, layout_id } = body;
+    const { slug, clientData, layout_id, publish } = body;
 
     if (!slug || !clientData) {
       return NextResponse.json(
@@ -21,10 +19,14 @@ export async function POST(request: Request) {
 
     // Prepare update payload
     const payload: any = {
-      metadata: clientData,
+      draft_metadata: clientData,
       // If layout_id is provided, save it too
       ...(layout_id && { layout_id })
     };
+
+    if (publish) {
+      payload.metadata = clientData;
+    }
 
     const { data, error } = await supabaseAdmin
       .from('business_demos')

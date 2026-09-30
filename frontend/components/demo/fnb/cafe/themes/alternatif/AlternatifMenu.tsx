@@ -15,7 +15,7 @@ export function AlternatifMenu() {
   const { client, setSelectedProductForCustomization, setIsCustomizationModalOpen } = useFnbDemo();
   const [activeCategory, setActiveCategory] = useState<string>('Semua');
 
-  const categories = ['Semua', ...Array.from(new Set(client.menu.map(p => p.category).filter(Boolean)))];
+  const categories = ['Semua', ...Array.from(new Set(client.menu.map(p => p.category).filter(c => c && c !== 'Semua')))];
   const filteredMenu = activeCategory === 'Semua'
     ? client.menu
     : client.menu.filter(p => p.category === activeCategory);
@@ -58,7 +58,7 @@ export function AlternatifMenu() {
                 onClick={() => handleSelectProduct(item)}
                 className="bg-white rounded-3xl p-4 flex gap-4 border border-stone-100 shadow-sm hover:shadow-md cursor-pointer transition-shadow"
               >
-                 <img src={FNB_MENU_IMAGES[idx % FNB_MENU_IMAGES.length]} alt={item.name} className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shrink-0" />
+                 <img src={item.imageUrl || FNB_MENU_IMAGES[idx % FNB_MENU_IMAGES.length]} alt={item.name} className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shrink-0" />
                  <div className="flex-1 flex flex-col justify-center">
                     <h3 className="font-bold text-lg text-stone-900 mb-1">{item.name}</h3>
                     <p className="text-stone-500 text-sm line-clamp-2 mb-3">{item.desc}</p>

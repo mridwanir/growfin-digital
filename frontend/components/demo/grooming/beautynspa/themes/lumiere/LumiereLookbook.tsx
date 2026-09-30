@@ -1,8 +1,8 @@
-import { getGroomingImageUrl } from '../default/GroomingStylistList';
-import { useBeautynspaDemo } from '../../core/BeautynspaContext';
+import { getGroomingImageUrl } from '../default/BeautynspaArtists';
+import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext';
 
 export function LumiereLookbook() {
-  const { client } = useBeautynspaDemo();
+  const { client } = useGroomingDemo();
 
   const lookbooks = (client.lookbook && client.lookbook.length >= 3) ? client.lookbook : [
     { id: '1', name: 'Balayage Elegance', imageUrl: getGroomingImageUrl(0) },

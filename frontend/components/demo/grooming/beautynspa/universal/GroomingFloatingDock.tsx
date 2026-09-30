@@ -1,10 +1,10 @@
 'use client';
 
-import { useBeautynspaDemo } from '../core/BeautynspaContext';
+import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext';
 import { Calendar, Scissors, MapPin } from 'lucide-react';
 
 export function GroomingFloatingDock() {
-  const { client, setIsBookingModalOpen, selectedServices } = useBeautynspaDemo();
+  const { client, setIsBookingModalOpen, selectedServices } = useGroomingDemo();
 
   // If there are selected services, the floating summary bar from ServiceMenu is shown
   // We can hide this dock to prevent overlap, or just let them coexist. 

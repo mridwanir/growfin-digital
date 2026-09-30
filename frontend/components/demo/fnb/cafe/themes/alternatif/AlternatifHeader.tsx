@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function AlternatifHeader() {
   const { client, isOpenNow } = useFnbDemo();
-  const heroImage = '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
+  const heroImage = client.heroImage || '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
 
   return (
     <header className="relative w-full min-h-[90vh] flex flex-col lg:flex-row bg-white">

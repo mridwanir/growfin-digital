@@ -1,13 +1,19 @@
 import { useFnbDemo } from '../../../core/FnbDemoContext';
 
 export function AlternatifGallery() {
-  const images = [
+  const { client } = useFnbDemo();
+
+  const fallbackImages = [
     '/image/fnb/chad-montano-MqT0asuoIcU-unsplash.jpg',
     '/image/fnb/anna-tukhfatullina-food-photographer-stylist-Mzy-OjtCI70-unsplash.jpg',
     '/image/fnb/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg',
     '/image/fnb/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
     '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg'
   ];
+
+  const images = client.lookbook && client.lookbook.length > 0 
+    ? client.lookbook.map(l => l.imageUrl) 
+    : fallbackImages;
 
   return (
     <section id="gallery-section" className="py-20 bg-white px-4 md:px-8">

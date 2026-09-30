@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { BusinessDemo } from '@/lib/types';
 import { ServiceDemoClient } from '@/components/demo/service-demo-client';
 import { FnbDemoClient } from '@/components/demo/fnb-demo-client';
@@ -5,6 +6,7 @@ import { RetailDemoClient } from '@/components/demo/retail-demo-client';
 import { GroomingDemoClient } from '@/components/demo/grooming-demo-client';
 import { getMockData } from '@/lib/mock-data';
 import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 import { resolveTemplateType } from '@/lib/template-resolver';
 import { DemoEditorWrapper } from '@/components/demo/editor/DemoEditorWrapper';
 import type { Metadata } from 'next';
@@ -12,6 +14,8 @@ import type { Metadata } from 'next';
 interface DemoPageProps {
   params: Promise<{ slug: string }>;
 }
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: DemoPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -53,9 +57,21 @@ export default async function DemoPage({ params }: DemoPageProps) {
     );
   }
 
-  // 3. Determine Template Type using Resolver
+  // 3. Auth Guard: Check if demo is claimed
+  if (dbData.user_id) {
+    const supabaseServer = await createClient();
+    const { data: { user } } = await supabaseServer.auth.getUser();
+    
+    if (!user || user.id !== dbData.user_id) {
+      // If unauthorized or not logged in, redirect to public site
+      redirect(`/${slug}`);
+    }
+  }
+
+  // 4. Determine Template Type using Resolver
   const templateType = resolveTemplateType(dbData.category);
-  const isMigratedData = !!dbData.metadata;
+  const metadataSource = dbData.draft_metadata || dbData.metadata;
+  const isMigratedData = !!metadataSource;
   const mock = isMigratedData ? null : getMockData(dbData.category);
 
   // Common data transformation for Service, Retail, and FNB
@@ -70,34 +86,35 @@ export default async function DemoPage({ params }: DemoPageProps) {
       phone: dbData.phone,
       googleMapsUrl: dbData.maps_url,
       waNumber: dbData.phone.replace(/\D/g, ''),
-      rating: dbData.metadata.rating,
-      reviewCount: dbData.metadata.reviewCount,
-      address: dbData.metadata.address,
-      hours: typeof dbData.metadata.hours === 'string'
-        ? dbData.metadata.hours
-        : (dbData.metadata.hours?.text || "Buka Setiap Hari"),
-      openTime: dbData.metadata.openTime || dbData.metadata.hours?.openTime,
-      closeTime: dbData.metadata.closeTime || dbData.metadata.hours?.closeTime,
-      tagline: dbData.metadata.tagline,
-      iconEmoji: dbData.metadata.iconEmoji || '🏢',
-      practitioners: dbData.metadata.practitioners || (dbData.metadata.doctor ? [
+      rating: metadataSource.rating,
+      reviewCount: metadataSource.reviewCount,
+      address: metadataSource.address,
+      hours: typeof metadataSource.hours === 'string'
+        ? metadataSource.hours
+        : (metadataSource.hours?.text || "Buka Setiap Hari"),
+      openTime: metadataSource.openTime || metadataSource.hours?.openTime,
+      closeTime: metadataSource.closeTime || metadataSource.hours?.closeTime,
+      tagline: metadataSource.tagline,
+      iconEmoji: metadataSource.iconEmoji || '🏢',
+      practitioners: metadataSource.practitioners || (metadataSource.doctor ? [
         {
           id: '1',
-          name: dbData.metadata.doctor.name || 'Admin',
-          role: dbData.metadata.doctor.role || 'Staff',
-          avatarEmoji: dbData.metadata.doctor.avatarEmoji || '👨‍💼',
-          avatarUrl: dbData.metadata.doctor.avatarUrl,
+          name: metadataSource.doctor.name || 'Admin',
+          role: metadataSource.doctor.role || 'Staff',
+          avatarEmoji: metadataSource.doctor.avatarEmoji || '👨‍💼',
+          avatarUrl: metadataSource.doctor.avatarUrl,
         }
       ] : [
         { id: '1', name: 'Admin', role: 'Staff', avatarEmoji: '👨‍💼' }
       ]),
-      categories: dbData.metadata.categories || [],
-      menu: dbData.metadata.menu || dbData.metadata.products || [],
-      reviews: dbData.metadata.reviews || [],
-      heroImage: dbData.metadata.heroImage,
-      instagramFeed: dbData.metadata.instagramFeed,
-      fbType: dbData.metadata.fbType,
-      themeColor: dbData.metadata.themeColor || dbData.metadata.theme_color,
+      categories: metadataSource.categories || [],
+      menu: metadataSource.menu || metadataSource.products || [],
+      reviews: metadataSource.reviews || [],
+      heroImage: metadataSource.heroImage,
+      instagramFeed: metadataSource.instagramFeed,
+      fbType: metadataSource.fbType,
+      themeColor: metadataSource.themeColor || metadataSource.theme_color,
+      package_tier: dbData.package_tier,
     };
   } else {
     // Fallback to dynamic AI Generation + Mock Data
@@ -141,6 +158,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
       instagramFeed: mock!.instagramFeed,
       fbType: mock!.fbType,
       themeColor: mock!.themeColor,
+      package_tier: dbData.package_tier,
     };
   }
 

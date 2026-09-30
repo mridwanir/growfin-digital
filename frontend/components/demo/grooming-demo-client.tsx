@@ -2,6 +2,10 @@
 
 import { BusinessDemo } from '@/lib/types';
 import { BeautynspaRouter } from './grooming/beautynspa/BeautynspaRouter';
+import { BarbershopRouter } from './grooming/barbershop/BarbershopRouter';
+import { NailspaRouter } from './grooming/nailspa/NailspaRouter';
+import { GroomingDemoProvider } from './grooming/core/GroomingDemoContext';
+import { GroomingBookingModal } from './grooming/universal/GroomingBookingModal';
 
 export function GroomingDemoClient({ client, themeVariant }: { client: BusinessDemo, themeVariant?: string }) {
   // Pattern: "grooming-[category]-[theme]"
@@ -18,10 +22,16 @@ export function GroomingDemoClient({ client, themeVariant }: { client: BusinessD
     themeName = themeVariant;
   }
 
-  if (category === 'beautynspa') {
-    return <BeautynspaRouter client={client} themeName={themeName} />;
-  }
-  
-  // Ultimate Fallback
-  return <BeautynspaRouter client={client} themeName="default" />;
+  return (
+    <GroomingDemoProvider client={client}>
+      {category === 'barbershop' && <BarbershopRouter client={client} themeName={themeName} />}
+      {category === 'nailspa' && <NailspaRouter client={client} themeName={themeName} />}
+      {category === 'beautynspa' && <BeautynspaRouter client={client} themeName={themeName} />}
+      {/* Fallback */}
+      {category !== 'barbershop' && category !== 'nailspa' && category !== 'beautynspa' && (
+        <BeautynspaRouter client={client} themeName="default" />
+      )}
+      <GroomingBookingModal />
+    </GroomingDemoProvider>
+  );
 }

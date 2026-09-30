@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'WebLaunch — Professional websites for MSMEs',
+  title: 'Growfin Digital | Professional websites for MSMEs',
   description: 'Get a professional, fast-loading official website for your small business, launched in days.',
-  generator: 'WebLaunch',
+  generator: 'Growfin Digital',
   icons: {
     icon: [
       {
@@ -41,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark bg-[#0B0B0E]">
+    <html lang="id" className="dark bg-[#0B0B0E]">
       <body className="antialiased bg-[#0B0B0E] text-[#FFFFFF]">
         <LanguageProvider>
           {children}

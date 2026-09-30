@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Save, Store, MapPin, Phone, ExternalLink } from 'lucide-react';
+import { Save, Store, MapPin, Phone, ExternalLink, Image as ImageIcon, Utensils } from 'lucide-react';
 import Link from 'next/link';
+import { CloudinaryUploader } from '@/components/dashboard/CloudinaryUploader';
+import { MenuManager } from '@/components/dashboard/MenuManager';
 
 export function SettingsForm({ initialData }: { initialData: any }) {
   const router = useRouter();
@@ -13,8 +15,8 @@ export function SettingsForm({ initialData }: { initialData: any }) {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Extract from metadata or fall back to main column
-  const meta = initialData.metadata || {};
+  // Extract from draft_metadata or fall back to main column
+  const meta = initialData.draft_metadata || initialData.metadata || {};
   
   const [formData, setFormData] = useState({
     name: initialData.name || '',
@@ -25,7 +27,23 @@ export function SettingsForm({ initialData }: { initialData: any }) {
     heroTitle: meta.heroTitle || '',
     heroSubtitle: meta.heroSubtitle || '',
     address: meta.address || '',
+    heroImage: meta.heroImage || '',
+    heroImagePublicId: meta.heroImagePublicId || '',
+    menu: meta.menu || meta.products || [],
   });
+
+  const handleHeroImageUpload = async (url: string, publicId: string) => {
+    if (formData.heroImagePublicId) {
+      try {
+        await supabase.functions.invoke('delete-cloudinary-image', {
+          body: { public_id: formData.heroImagePublicId }
+        });
+      } catch (err) {
+        console.error("Failed to delete old image:", err);
+      }
+    }
+    setFormData(prev => ({ ...prev, heroImage: url, heroImagePublicId: publicId }));
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,21 +59,30 @@ export function SettingsForm({ initialData }: { initialData: any }) {
         heroTitle: formData.heroTitle,
         heroSubtitle: formData.heroSubtitle,
         address: formData.address,
+        heroImage: formData.heroImage,
+        heroImagePublicId: formData.heroImagePublicId,
+        menu: formData.menu,
       };
 
-      const { error } = await supabase
-        .from('business_demos')
-        .update({
+      const response = await fetch('/api/dashboard/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: initialData.id,
           name: formData.name,
           phone: formData.phone,
           city: formData.city,
           maps_url: formData.maps_url,
           metadata: updatedMetadata,
-          updated_at: new Date().toISOString()
+          draft_metadata: updatedMetadata
         })
-        .eq('id', initialData.id);
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        throw new Error(result.error || 'Gagal menyimpan perubahan.');
+      }
       
       setSuccessMsg('Perubahan berhasil disimpan! Website Anda kini sudah diperbarui.');
       router.refresh();
@@ -67,7 +94,7 @@ export function SettingsForm({ initialData }: { initialData: any }) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -162,6 +189,27 @@ export function SettingsForm({ initialData }: { initialData: any }) {
             />
           </div>
         </div>
+
+        <div className="pt-4 border-t border-[#262633]">
+           <CloudinaryUploader 
+             currentImageUrl={formData.heroImage}
+             onUploadSuccess={handleHeroImageUpload}
+             label="Hero Image (Banner Utama)"
+           />
+        </div>
+      </section>
+
+      {/* Menu / Catalog Section */}
+      <section className="space-y-4">
+        <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-[#262633] pb-2 mt-8">
+          <Utensils className="w-5 h-5 text-[#00b894]" /> Manajemen Menu & Katalog
+        </h3>
+        
+        <MenuManager 
+          initialMenu={formData.menu}
+          onChange={(newMenu) => setFormData(prev => ({ ...prev, menu: newMenu }))}
+          packageTier={initialData.package_tier || 'free_trial'}
+        />
       </section>
 
       {/* Location Section */}

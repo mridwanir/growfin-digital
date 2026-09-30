@@ -15,7 +15,7 @@ export function FnbHeroScreen() {
     return `https://wa.me/${client.waNumber}?text=Halo%20${encodeURIComponent(client.name)},%20saya%20mau%20reservasi%20meja.`;
   };
 
-  const heroImg = '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
+  const heroImg = client.heroImage || '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
 
   return (
     <header className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center overflow-hidden scroll-mt-20">

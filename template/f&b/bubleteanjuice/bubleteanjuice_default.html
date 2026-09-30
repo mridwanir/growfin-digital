@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOBA & SQUEEZE - Artisan Tea & Fresh Juice Bar</title>
+  
+  <!-- Tailwind CSS CDN v4 -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Font Google: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    /* Hide scrollbar for gallery on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-amber-50/30 text-stone-800 antialiased selection:bg-amber-200 selection:text-amber-900">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-stone-200/60 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="#" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-xl shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            B
+          </div>
+          <div>
+            <span class="text-xl font-extrabold tracking-tight text-stone-900 block leading-none">BOBA &amp; SQUEEZE</span>
+            <span class="text-[10px] tracking-widest text-amber-600 font-semibold uppercase">Artisan Brews</span>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-stone-600">
+          <a href="#katalog" class="hover:text-amber-600 transition-colors">Menu Katalog</a>
+          <a href="#lookbook" class="hover:text-amber-600 transition-colors">Lookbook Tren</a>
+          <a href="#reviews" class="hover:text-amber-600 transition-colors">Ulasan Pembeli</a>
+        </nav>
+      </div>
+
+      <!-- Cart Trigger Button -->
+      <div class="flex items-center gap-4">
+        <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 transition-all cursor-pointer flex items-center gap-2 font-semibold text-sm">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span class="hidden sm:inline">Keranjang</span>
+          <span id="cart-counter-badge" class="absolute -top-1 -right-1 bg-amber-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PROMOTIONAL HERO ================= -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 text-white py-16 sm:py-24">
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-300/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold tracking-wide uppercase">
+            <span class="w-2 h-2 rounded-full bg-amber-300 animate-ping"></span>
+            Flash Sale 40% Off • Weekend Treat
+          </div>
+          <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.15]">
+            Segarnya Buah Asli &amp; Kenyalnya Brown Sugar Boba.
+          </h1>
+          <p class="text-base sm:text-lg text-amber-100 max-w-xl mx-auto lg:mx-0 font-normal">
+            Dibuat dari daun teh pegunungan pilihan, 100% susu murni, dan potongan buah segar tanpa pengawet. Sensasi dingin yang bikin hari Anda lebih ceria!
+          </p>
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#katalog" class="px-8 py-4 rounded-xl bg-white text-stone-900 font-bold hover:bg-stone-100 shadow-xl shadow-stone-900/10 transition-all transform hover:-translate-y-0.5">
+              Pesan Sekarang
+            </a>
+            <a href="#lookbook" class="px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 backdrop-blur-sm transition-all">
+              Jelajahi Lookbook
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative flex justify-center">
+          <div class="relative w-72 sm:w-88 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+            <img src="https://images.unsplash.com/photo-1558857563-b37cf5ef1c3d?auto=format&fit=crop&w=800&q=80" alt="Brown Sugar Boba Milk" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
+              <span class="text-amber-300 text-xs font-bold uppercase tracking-wider">Most Loved</span>
+              <h3 class="text-white text-xl font-bold">Royal Roasted Brown Sugar</h3>
+              <p class="text-stone-300 text-sm">Dimasak perlahan selama 4 jam</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LOOKBOOK KOLEKSI ================= -->
+  <section id="lookbook" class="py-16 sm:py-20 bg-stone-50 border-b border-stone-200/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <div>
+          <span class="text-amber-600 font-bold text-xs uppercase tracking-widest">Inspirasi Momen</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900 mt-1">Lookbook: Sips for Every Mood</h2>
+        </div>
+        <p class="text-stone-500 text-sm max-w-md mt-2 md:mt-0">
+          Temukan paduan racikan terbaik untuk menemani kerja kantoran, santai sore, hingga kumpul bersama sahabat.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm">
+          <img src="https://images.unsplash.com/photo-1541658016709-82535e94bc69?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Work Companion">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-xs font-semibold uppercase text-amber-300">Desk Focus</span>
+            <p class="text-sm font-bold">Matcha Oat Booster</p>
+          </div>
+        </div>
+
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm">
+          <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Sunny Refreshment">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-xs font-semibold uppercase text-amber-300">Sunny Refresh</span>
+            <p class="text-sm font-bold">Sparkling Citrus Detox</p>
+          </div>
+        </div>
+
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm">
+          <img src="https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Afternoon Hangout">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-xs font-semibold uppercase text-amber-300">Sweet Cravings</span>
+            <p class="text-sm font-bold">Boba Cheese Caramel</p>
+          </div>
+        </div>
+
+        <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-sm">
+          <img src="https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Healthy Lifestyle">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-xs font-semibold uppercase text-amber-300">Post Workout</span>
+            <p class="text-sm font-bold">Cold-Pressed Watermelon</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRODUCT GRID (KATALOG VISUAL) ================= -->
+  <section id="katalog" class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10">
+        <div>
+          <span class="text-amber-600 font-bold text-xs uppercase tracking-widest">Katalog Pilihan</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900">Etalase Minuman Segar</h2>
+        </div>
+
+        <!-- Filter Category Tabs -->
+        <div class="inline-flex p-1 bg-stone-200/70 rounded-xl text-xs font-bold text-stone-600">
+          <button class="px-4 py-2 rounded-lg bg-white text-stone-900 shadow-sm cursor-pointer">Semua Menu</button>
+          <button class="px-4 py-2 rounded-lg hover:text-stone-900 cursor-pointer">Boba Series</button>
+          <button class="px-4 py-2 rounded-lg hover:text-stone-900 cursor-pointer">Cold-Pressed Juice</button>
+        </div>
+      </div>
+
+      <!-- Grid Container: Image-Centric Clean Cards -->
+      <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REVIEWS (TOKO TERPERCAYA) ================= -->
+  <section id="reviews" class="py-16 bg-white border-y border-stone-200/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-amber-600 font-bold text-xs uppercase tracking-widest">Kepuasan Pelanggan</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900 mt-1">Dicintai Oleh Lebih Dari 10.000+ Pecinta Minuman Segar</h2>
+        <div class="flex items-center justify-center gap-1 text-amber-500 mt-3">
+          <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+          <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+          <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+          <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+          <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+          <span class="text-stone-800 font-bold text-sm ml-2">4.9 / 5.0 (2,400+ rating)</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/60 shadow-xs space-y-4">
+          <div class="flex items-center gap-1 text-amber-400">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+          </div>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            "Brown sugar boba-nya juara! Tekstur boba kenyal lembut, susunya gurih tidak bikin enek. Pengiriman aman pakai seal anti-bocor dan ice pack khusus."
+          </p>
+          <div class="flex items-center gap-3 pt-2">
+            <div class="w-10 h-10 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center font-bold text-sm">
+              AN
+            </div>
+            <div>
+              <p class="font-bold text-stone-900 text-sm">Anindya Putri</p>
+              <p class="text-xs text-stone-400">Pecinta Boba Regular • Verified Buyer</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/60 shadow-xs space-y-4">
+          <div class="flex items-center gap-1 text-amber-400">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+          </div>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            "Jus semangka &amp; jeruk cold-pressed nya beneran murni tanpa pemanis buatan. Pesan lewat kurir instan 20 menit sampai dan masih dingin nyegerin!"
+          </p>
+          <div class="flex items-center gap-3 pt-2">
+            <div class="w-10 h-10 rounded-full bg-orange-200 text-orange-900 flex items-center justify-center font-bold text-sm">
+              DK
+            </div>
+            <div>
+              <p class="font-bold text-stone-900 text-sm">Dimas Kurnia</p>
+              <p class="text-xs text-stone-400">Health Enthusiast • Verified Buyer</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/60 shadow-xs space-y-4">
+          <div class="flex items-center gap-1 text-amber-400">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+          </div>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            "Sistem checkout WhatsApp-nya ringkas banget. Tinggal atur sugar level &amp; topping di web, langsung kirim rincian ke admin tanpa ribet ngetik manual."
+          </p>
+          <div class="flex items-center gap-3 pt-2">
+            <div class="w-10 h-10 rounded-full bg-emerald-200 text-emerald-900 flex items-center justify-center font-bold text-sm">
+              RA
+            </div>
+            <div>
+              <p class="font-bold text-stone-900 text-sm">Rere Anggraeni</p>
+              <p class="text-xs text-stone-400">Office Worker • Verified Buyer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-stone-900 text-stone-400 py-12 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-black text-base">
+          B
+        </div>
+        <span class="text-white font-bold tracking-tight">BOBA &amp; SQUEEZE INDONESIA</span>
+      </div>
+      <p class="text-stone-500 text-xs">
+        &copy; 2026 BOBA &amp; SQUEEZE. Dibuat dengan cinta untuk para penikmat kesegaran sejati.
+      </p>
+      <div class="flex gap-4">
+        <span class="inline-flex items-center gap-1 text-xs text-stone-400">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> 100% Higienis &amp; Halal
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= QUICK VIEW PRODUCT MODAL ================= -->
+  <div id="quick-view-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-stone-900/60 backdrop-blur-sm transition-opacity">
+    <div class="min-h-full flex items-center justify-center p-4">
+      <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <!-- Close Button -->
+        <button onclick="closeQuickView()" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-stone-100/80 hover:bg-stone-200 text-stone-700 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-0">
+          <!-- Gallery Multi-Image (Col 5) -->
+          <div class="md:col-span-5 bg-stone-100 p-6 flex flex-col justify-between">
+            <div class="relative aspect-square rounded-2xl overflow-hidden shadow-inner bg-white mb-4">
+              <img id="modal-main-img" src="" alt="Detail Drink" class="w-full h-full object-cover">
+            </div>
+            <div id="modal-thumbnails" class="grid grid-cols-3 gap-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Product Details & SKU Customization (Col 7) -->
+          <div class="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div>
+                <span id="modal-category" class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Category</span>
+                <h3 id="modal-title" class="text-2xl font-black text-stone-900 mt-2">Nama Produk Minuman</h3>
+                <p id="modal-price" class="text-xl font-extrabold text-amber-600 mt-1">Rp 28.000</p>
+              </div>
+
+              <!-- Long Specification / Deskripsi Panjang -->
+              <div class="border-t border-b border-stone-200/80 py-3 text-xs sm:text-sm text-stone-600 leading-relaxed">
+                <p id="modal-desc">Deskripsi minuman boba/jus lengkap dengan spesifikasi bahan baku dan manfaat.</p>
+                <div class="mt-2.5 grid grid-cols-2 gap-2 text-stone-500 font-medium">
+                  <div>• Base: <span id="modal-spec-base" class="text-stone-800">Fresh Milk</span></div>
+                  <div>• Shelf Life: <span class="text-stone-800">Maks. 4 Jam (Es)</span></div>
+                </div>
+              </div>
+
+              <!-- SKU Options: Size, Ice, Sugar, Topping -->
+              <form id="sku-form" class="space-y-3.5">
+                <!-- Size -->
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5">Ukuran Gelas (Size)</label>
+                  <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                    <label class="cursor-pointer">
+                      <input type="radio" name="sku-size" value="Regular (500ml)" checked class="peer sr-only">
+                      <div class="p-2.5 text-center rounded-xl border border-stone-200 peer-checked:border-amber-600 peer-checked:bg-amber-50 peer-checked:text-amber-900 transition-all">
+                        Regular (500ml)
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio" name="sku-size" value="Large (700ml) (+Rp 4.000)" class="peer sr-only">
+                      <div class="p-2.5 text-center rounded-xl border border-stone-200 peer-checked:border-amber-600 peer-checked:bg-amber-50 peer-checked:text-amber-900 transition-all">
+                        Large (+Rp 4.000)
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Sugar Level & Ice Level -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Sugar Level</label>
+                    <select id="sku-sugar" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-amber-500">
+                      <option value="Normal Sugar (100%)">Normal (100%)</option>
+                      <option value="Less Sugar (70%)">Less (70%)</option>
+                      <option value="Half Sugar (50%)">Half (50%)</option>
+                      <option value="Zero Sugar (0%)">No Sugar (0%)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Ice Level</label>
+                    <select id="sku-ice" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-amber-500">
+                      <option value="Normal Ice">Normal Ice</option>
+                      <option value="Less Ice">Less Ice</option>
+                      <option value="No Ice">No Ice</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Toppings -->
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Pilihan Topping (+Rp 3.000)</label>
+                  <select id="sku-topping" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-amber-500">
+                    <option value="Tanpa Topping Tambahan">Tanpa Topping Tambahan</option>
+                    <option value="Extra Chewy Boba Pearl">Extra Chewy Boba Pearl (+Rp 3.000)</option>
+                    <option value="Egg Pudding Lembut">Egg Pudding Lembut (+Rp 3.000)</option>
+                    <option value="Grass Jelly Herbal">Grass Jelly Herbal (+Rp 3.000)</option>
+                    <option value="Cheese Foam Creamy">Cheese Foam Creamy (+Rp 3.000)</option>
+                    <option value="Aloe Vera Chunk (Fresh)">Aloe Vera Chunk (+Rp 3.000)</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <!-- Modal Add to Cart Action -->
+            <div class="pt-4 mt-4 border-t border-stone-100 flex items-center gap-3">
+              <button onclick="addToCartFromModal()" class="flex-1 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 transition-colors cursor-pointer">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Masukkan ke Keranjang
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CART & CHECKOUT SLIDE-OVER DRAWER ================= -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div onclick="toggleCartDrawer(false)" class="absolute inset-0 bg-stone-900/50 backdrop-blur-xs transition-opacity"></div>
+
+    <div class="absolute inset-y-0 right-0 max-w-full flex">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        <!-- Header -->
+        <div class="p-6 border-b border-stone-200/80 flex items-center justify-between bg-stone-50">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-amber-600"></i>
+            <h2 class="text-lg font-extrabold text-stone-900">Keranjang &amp; Logistik</h2>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="p-2 rounded-full hover:bg-stone-200 text-stone-500 cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Scrollable Cart Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          <!-- Items List -->
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">Item Dipesan</h3>
+            <div id="cart-items-container" class="space-y-4">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Checkout & Logistic Form -->
+          <div class="border-t border-stone-200 pt-6">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-stone-900 mb-4 flex items-center gap-1.5">
+              <i data-lucide="truck" class="w-4 h-4 text-amber-600"></i> Data Pengiriman (Kurir Instan)
+            </h3>
+
+            <div class="space-y-3.5 text-xs">
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Nama Pemesan *</label>
+                <input type="text" id="cust-name" placeholder="cth: Rian Hidayat" class="w-full p-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500">
+              </div>
+
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Nomor WhatsApp *</label>
+                <input type="tel" id="cust-phone" placeholder="cth: 08123456789" class="w-full p-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500">
+              </div>
+
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Alamat Pengiriman Lengkap *</label>
+                <textarea id="cust-address" rows="2" placeholder="Nama Jalan, No. Rumah, RT/RW, Patokan / Nama Kantor..." class="w-full p-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500 resize-none"></textarea>
+              </div>
+
+              <div>
+                <label class="block font-bold text-stone-700 mb-1">Catatan Pengiriman (Opsional)</label>
+                <input type="text" id="cust-notes" placeholder="cth: Titip di pos satpam / Jangan dibanting" class="w-full p-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer / Total Bill & Direct WA Redirect -->
+        <div class="p-6 border-t border-stone-200/80 bg-stone-50 space-y-3">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-stone-500">Subtotal Minuman</span>
+            <span id="cart-total-price" class="font-extrabold text-stone-900 text-lg">Rp 0</span>
+          </div>
+          <p class="text-[11px] text-stone-400 leading-tight">
+            *Ongkos kirim akan dikonfirmasi admin secara instan berdasarkan jarak kilometer kurir.
+          </p>
+          <button onclick="handleWhatsAppCheckout()" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer">
+            <i data-lucide="message-circle" class="w-5 h-5"></i> Checkout via WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // Inisialisasi Data Produk Minuman Boba & Juice
+    const products = [
+      {
+        id: 1,
+        title: "Signature Brown Sugar Boba",
+        category: "Boba Series",
+        basePrice: 28000,
+        specBase: "Fresh Dairy Milk & Brown Sugar",
+        image: "https://images.unsplash.com/photo-1558857563-b37cf5ef1c3d?auto=format&fit=crop&w=700&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1558857563-b37cf5ef1c3d?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1541658016709-82535e94bc69?auto=format&fit=crop&w=700&q=80"
+        ],
+        description: "Boba tapioka empuk yang direndam dalam karamel gula aren murni selama 4 jam, disiram dengan susu segar dingin dan sentuhan krim gurih di atasnya."
+      },
+      {
+        id: 2,
+        title: "Cold-Pressed Citrus Sunshine",
+        category: "Juice Shop",
+        basePrice: 32000,
+        specBase: "Orange, Lemon & Sunkist 100%",
+        image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=700&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=700&q=80"
+        ],
+        description: "Ekstrak murni jeruk manis, sunkist, dan perasan lemon segar menggunakan metode slow juicing hidrolik. Kaya vitamin C tanpa setetes air atau gula tambahan."
+      },
+      {
+        id: 3,
+        title: "Uji Matcha Boba Latte",
+        category: "Boba Series",
+        basePrice: 30000,
+        specBase: "Authentic Kyoto Matcha",
+        image: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=700&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1541658016709-82535e94bc69?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1558857563-b37cf5ef1c3d?auto=format&fit=crop&w=700&q=80"
+        ],
+        description: "Bubuk matcha premium asli Uji Kyoto dipadukan dengan susu oat gurih dan boba kenyal. Menghasilkan rasa earthy yang seimbang dengan kelembutan manis."
+      },
+      {
+        id: 4,
+        title: "Watermelon Mint Quencher",
+        category: "Juice Shop",
+        basePrice: 26000,
+        specBase: "Fresh Watermelon & Mint Leaves",
+        image: "https://images.unsplash.com/photo-1587883012610-e3df17d41270?auto=format&fit=crop&w=700&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1587883012610-e3df17d41270?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=700&q=80"
+        ],
+        description: "Semangka merah manis dingin dipadukan daun mint asli. Sangat hidrating, menyegarkan tenggorokan di cuaca terik seketika."
+      },
+      {
+        id: 5,
+        title: "Roasted Oolong Milk Tea",
+        category: "Boba Series",
+        basePrice: 27000,
+        specBase: "Roasted Oolong Tea Leaves",
+        image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=700&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1558857563-b37cf5ef1c3d?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=700&q=80"
+        ],
+        description: "Teh Oolong yang dipanggang dengan suhu presisi, menghadirkan aroma smoky harum khas oriental berpadu kelembutan susu creamer segar."
+      },
+      {
+        id: 6,
+        title: "Dragon Fruit Mango Smoothie",
+        category: "Juice Shop",
+        basePrice: 34000,
+        specBase: "Red Dragonfruit & Gedong Mango",
+        image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=700&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1587883012610-e3df17d41270?auto=format&fit=crop&w=700&q=80",
+          "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=700&q=80"
+        ],
+        description: "Paduan tebal kaya serat dari buah naga merah eksotis dan mangga harum manis. Sangat mengenyangkan dan kaya antioksidan alami."
+      }
+    ];
+
+    // State Cart & Active Modal Product
+    let cart = [];
+    let currentModalProduct = null;
+
+    // Helper Format Rupiah
+    function formatRupiah(num) {
+      return 'Rp ' + Number(num).toLocaleString('id-ID');
+    }
+
+    // Render Product Grid
+    function renderProductGrid() {
+      const container = document.getElementById('product-grid');
+      container.innerHTML = products.map(item => `
+        <div class="group bg-white rounded-3xl overflow-hidden border border-stone-200/70 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col">
+          <!-- Image-Centric Ratio -->
+          <div class="relative aspect-[4/5] overflow-hidden bg-stone-100">
+            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute top-4 left-4">
+              <span class="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/90 backdrop-blur-sm text-stone-900 shadow-sm">
+                ${item.category}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Product Info -->
+          <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="font-extrabold text-lg text-stone-900 group-hover:text-amber-600 transition-colors">${item.title}</h3>
+              <p class="text-xs text-stone-500 mt-1 line-clamp-2">${item.description}</p>
+            </div>
+            
+            <div class="flex items-center justify-between pt-2 border-t border-stone-100">
+              <span class="text-base font-extrabold text-stone-900">${formatRupiah(item.basePrice)}</span>
+              <button onclick="openQuickView(${item.id})" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-all shadow-md shadow-amber-500/20 cursor-pointer flex items-center gap-1.5">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i> Detail / SKU
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // Modal Quick View Control
+    function openQuickView(productId) {
+      currentModalProduct = products.find(p => p.id === productId);
+      if (!currentModalProduct) return;
+
+      document.getElementById('modal-title').innerText = currentModalProduct.title;
+      document.getElementById('modal-category').innerText = currentModalProduct.category;
+      document.getElementById('modal-price').innerText = formatRupiah(currentModalProduct.basePrice);
+      document.getElementById('modal-desc').innerText = currentModalProduct.description;
+      document.getElementById('modal-spec-base').innerText = currentModalProduct.specBase;
+      document.getElementById('modal-main-img').src = currentModalProduct.gallery[0];
+
+      // Render Thumbnails
+      const thumbContainer = document.getElementById('modal-thumbnails');
+      thumbContainer.innerHTML = currentModalProduct.gallery.map((imgUrl, i) => `
+        <button type="button" onclick="setMainImage('${imgUrl}')" class="aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-amber-500 focus:border-amber-500 transition-all cursor-pointer">
+          <img src="${imgUrl}" class="w-full h-full object-cover" alt="thumb ${i}">
+        </button>
+      `).join('');
+
+      document.getElementById('quick-view-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function setMainImage(url) {
+      document.getElementById('modal-main-img').src = url;
+    }
+
+    function closeQuickView() {
+      document.getElementById('quick-view-modal').classList.add('hidden');
+    }
+
+    // Add To Cart from Modal (Mengambil SKU Terpilih)
+    function addToCartFromModal() {
+      if (!currentModalProduct) return;
+
+      const sizeOption = document.querySelector('input[name="sku-size"]:checked').value;
+      const sugarOption = document.getElementById('sku-sugar').value;
+      const iceOption = document.getElementById('sku-ice').value;
+      const toppingOption = document.getElementById('sku-topping').value;
+
+      // Kalkulasi Tambahan Harga SKU
+      let itemPrice = currentModalProduct.basePrice;
+      if (sizeOption.includes('Large')) itemPrice += 4000;
+      if (toppingOption !== 'Tanpa Topping Tambahan') itemPrice += 3000;
+
+      const cartItem = {
+        cartId: Date.now(),
+        productId: currentModalProduct.id,
+        title: currentModalProduct.title,
+        image: currentModalProduct.image,
+        unitPrice: itemPrice,
+        qty: 1,
+        sku: {
+          size: sizeOption,
+          sugar: sugarOption,
+          ice: iceOption,
+          topping: toppingOption
+        }
+      };
+
+      cart.push(cartItem);
+      updateCartUI();
+      closeQuickView();
+      toggleCartDrawer(true);
+    }
+
+    // Cart Management
+    function toggleCartDrawer(show) {
+      const drawer = document.getElementById('cart-drawer');
+      if (show) {
+        drawer.classList.remove('hidden');
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    function updateCartUI() {
+      // Counter Badge
+      const totalQty = cart.reduce((acc, curr) => acc + curr.qty, 0);
+      document.getElementById('cart-counter-badge').innerText = totalQty;
+
+      // Render Item List
+      const container = document.getElementById('cart-items-container');
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-stone-400">
+            <i data-lucide="coffee" class="w-10 h-10 mx-auto stroke-1 mb-2"></i>
+            <p class="text-sm">Keranjang Anda masih kosong</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = cart.map(item => `
+          <div class="flex gap-3 p-3 rounded-2xl bg-stone-50 border border-stone-200/60">
+            <img src="${item.image}" alt="${item.title}" class="w-16 h-16 rounded-xl object-cover">
+            <div class="flex-1">
+              <h4 class="text-xs font-bold text-stone-900">${item.title}</h4>
+              <p class="text-[11px] text-stone-500 font-medium">
+                ${item.sku.size} • ${item.sku.sugar} • ${item.sku.ice}
+              </p>
+              <p class="text-[10px] text-amber-700 font-semibold mt-0.5">Top: ${item.sku.topping}</p>
+              
+              <div class="flex items-center justify-between mt-2 pt-1 border-t border-stone-200/60">
+                <span class="text-xs font-extrabold text-stone-900">${formatRupiah(item.unitPrice * item.qty)}</span>
+                
+                <!-- Qty Control -->
+                <div class="flex items-center gap-2 bg-white px-2 py-0.5 rounded-lg border border-stone-200 text-xs">
+                  <button onclick="changeQty(${item.cartId}, -1)" class="text-stone-500 hover:text-stone-900 cursor-pointer font-bold">-</button>
+                  <span class="font-bold w-4 text-center">${item.qty}</span>
+                  <button onclick="changeQty(${item.cartId}, 1)" class="text-stone-500 hover:text-stone-900 cursor-pointer font-bold">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Total Price
+      const totalAmount = cart.reduce((acc, curr) => acc + (curr.unitPrice * curr.qty), 0);
+      document.getElementById('cart-total-price').innerText = formatRupiah(totalAmount);
+
+      lucide.createIcons();
+    }
+
+    function changeQty(cartId, delta) {
+      const idx = cart.findIndex(i => i.cartId === cartId);
+      if (idx !== -1) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) {
+          cart.splice(idx, 1);
+        }
+      }
+      updateCartUI();
+    }
+
+    // Checkout Form -> Direct WhatsApp Redirect
+    function handleWhatsAppCheckout() {
+      if (cart.length === 0) {
+        alert('Keranjang belanja Anda masih kosong!');
+        return;
+      }
+
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const notes = document.getElementById('cust-notes').value.trim() || '-';
+
+      if (!name || !phone || !address) {
+        alert('Mohon lengkapi Nama, No. WhatsApp, dan Alamat Pengiriman!');
+        return;
+      }
+
+      // Admin WA Number (Ganti dengan nomor toko sebenarnya)
+      const adminWhatsApp = "6281234567890"; 
+
+      // Format WhatsApp Message
+      let text = `*PESANAN BARU - BOBA & SQUEEZE*\n`;
+      text += `--------------------------------------\n`;
+      text += `*Data Pengiriman:*\n`;
+      text += `👤 *Nama:* ${name}\n`;
+      text += `📱 *WhatsApp:* ${phone}\n`;
+      text += `📍 *Alamat Lengkap:* ${address}\n`;
+      text += `📝 *Catatan Kurir:* ${notes}\n`;
+      text += `--------------------------------------\n`;
+      text += `*Rincian Menu Minuman:*\n`;
+
+      let total = 0;
+      cart.forEach((item, idx) => {
+        const sub = item.unitPrice * item.qty;
+        total += sub;
+        text += `\n${idx + 1}. *${item.title}* (${item.qty}x)\n`;
+        text += `   • Size: ${item.sku.size}\n`;
+        text += `   • Level: ${item.sku.sugar} / ${item.sku.ice}\n`;
+        text += `   • Topping: ${item.sku.topping}\n`;
+        text += `   • Subtotal: ${formatRupiah(sub)}\n`;
+      });
+
+      text += `--------------------------------------\n`;
+      text += `*TOTAL TAGIHAN:* ${formatRupiah(total)}\n`;
+      text += `*(Belum termasuk ongkir kurir instan)*\n\n`;
+      text += `Halo Admin, tolong total ongkos kirim dan nomor rekening pembayaran ya. Terima kasih!`;
+
+      // Redirect ke WhatsApp
+      const encodedUrl = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(text)}`;
+      window.open(encodedUrl, '_blank');
+    }
+
+    // Inisialisasi awal
+    window.addEventListener('DOMContentLoaded', () => {
+      renderProductGrid();
+      updateCartUI();
+    });
+  </script>
+</body>
+</html>

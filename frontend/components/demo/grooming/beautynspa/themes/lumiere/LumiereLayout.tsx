@@ -9,9 +9,8 @@ import { LumiereReviews } from './LumiereReviews';
 import { LumiereTreatments } from './LumiereTreatments';
 import { LumiereStylists } from './LumiereStylists';
 import { LumiereFooter } from './LumiereFooter';
-import { GroomingBookingModal } from '../../universal/GroomingBookingModal';
 
-export function LumiereLayout({ client }: { client: BusinessDemo }) {
+export function LumiereLayout() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export function LumiereLayout({ client }: { client: BusinessDemo }) {
       <LumiereStylists />
       <LumiereFooter />
       
-      <GroomingBookingModal />
+      
     </div>
   );
 }

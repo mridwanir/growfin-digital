@@ -4,6 +4,9 @@ import { BusinessDemo } from '@/lib/types';
 import { FnbDemoProvider } from './fnb/core/FnbDemoContext';
 import { CafeRouter } from './fnb/cafe/CafeRouter';
 import { RestaurantRouter } from './fnb/restaurant/RestaurantRouter';
+import { BakeryRouter } from './fnb/bakeryndessert/BakeryRouter';
+import { FastfoodRouter } from './fnb/fastfood/FastfoodRouter';
+import { BubbleteaRouter } from './fnb/bubleteanjuice/BubbleteaRouter';
 import { FloatingCart } from './fnb/universal/FloatingCart';
 import { MobileFloatingDock } from './fnb/universal/MobileFloatingDock';
 import { ProductCustomizationModal } from './fnb/universal/ProductCustomizationModal';
@@ -25,6 +28,9 @@ export function FnbDemoClient({ client, themeVariant = 'fnb-cafe-default' }: { c
     <FnbDemoProvider client={client}>
       {category === 'cafe' && <CafeRouter themeName={themeName} />}
       {category === 'restaurant' && <RestaurantRouter themeName={themeName} />}
+      {category === 'bakeryndessert' && <BakeryRouter themeName={themeName} />}
+      {category === 'fastfood' && <FastfoodRouter themeName={themeName} />}
+      {category === 'bubleteanjuice' && <BubbleteaRouter themeName={themeName} />}
       
       {/* Universal Floating Elements & Modals */}
       <FloatingCart />

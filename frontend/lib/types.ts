@@ -1,3 +1,5 @@
+import { PackageTier } from './site-config';
+
 export interface MenuItemVariant {
   name: string;
   options: string[];
@@ -16,6 +18,7 @@ export interface MenuItem {
   tag?: string;
   category?: string;
   imageUrl?: string;
+  imagePublicId?: string;
   duration?: number; // In minutes
   variants?: MenuItemVariant[];
   addons?: MenuItemAddon[];
@@ -42,6 +45,7 @@ export interface LookbookItem {
   id: string;
   name: string;
   imageUrl: string;
+  imagePublicId?: string;
   desc?: string;
 }
 
@@ -67,7 +71,9 @@ export interface BusinessDemo {
   reviews?: ReviewInfo[];
   lookbook?: LookbookItem[];
   heroImage?: string;
+  heroImagePublicId?: string;
   instagramFeed?: string[]; // Array of image URLs for social proof
   fbType?: 'DINE_IN' | 'QUICK_SERVICE' | 'PRE_ORDER'; // Determines order form fields
   themeColor?: string; // Hex color string, e.g. '#10b981'
+  package_tier?: PackageTier; // Track subscription level
 }

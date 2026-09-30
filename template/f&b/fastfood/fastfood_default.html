@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUNCHY CRAVE™ — Premium Fast Food</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS v4 Browser Build -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Alpine.js untuk Flow E-Commerce Interaktif -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-neutral-50 text-neutral-900 antialiased selection:bg-amber-500 selection:text-white"
+      x-data="shopApp()" x-init="initIcons()">
+
+  <!-- ================= TOP NOTIFICATION BAR ================= -->
+  <div class="bg-neutral-950 text-amber-400 text-xs sm:text-sm font-semibold tracking-wide py-2.5 px-4 text-center border-b border-neutral-800 flex items-center justify-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+    🔥 FLASH SALE: Gunakan kupon <span class="text-white underline underline-offset-2">LAPERPOOL</span> untuk Gratis Ongkir Jabodetabek!
+  </div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand -->
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/30 text-white font-extrabold text-xl">
+          C
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-neutral-950 block leading-tight">CRUNCHY<span class="text-amber-600">CRAVE</span></span>
+          <span class="text-[10px] tracking-widest font-semibold uppercase text-neutral-400">Artisan Fast Food</span>
+        </div>
+      </a>
+
+      <!-- Quick Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-neutral-600">
+        <a href="#promo" class="hover:text-amber-600 transition">Flash Promo</a>
+        <a href="#katalog" class="hover:text-amber-600 transition">Katalog Visual</a>
+        <a href="#lookbook" class="hover:text-amber-600 transition">Combobook</a>
+        <a href="#reviews" class="hover:text-amber-600 transition">Ulasan</a>
+      </nav>
+
+      <!-- Cart Button Indicator -->
+      <button @click="isCartOpen = true" 
+              class="relative bg-neutral-900 text-white p-3 rounded-full hover:bg-neutral-800 transition flex items-center justify-center shadow-md cursor-pointer">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span x-show="totalCartCount > 0" 
+              x-text="totalCartCount" 
+              class="absolute -top-1.5 -right-1.5 bg-amber-500 text-neutral-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white ring-1 ring-amber-500">
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= 1. PROMOTIONAL HERO (Flash Sale) ================= -->
+  <section id="promo" class="relative overflow-hidden bg-neutral-950 py-16 lg:py-24 text-white">
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:20px_20px]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider mb-6 border border-amber-500/30">
+          <i data-lucide="zap" class="w-4 h-4"></i> Limited Drop No. #04
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
+          Double Smashed <br><span class="text-amber-500">Truffle Beast</span> Edition.
+        </h1>
+        <p class="text-neutral-400 text-base sm:text-lg mb-8 max-w-lg leading-relaxed">
+          100% Australian Wagyu beef, slow-melted aged cheddar, crisp smoked beef bacon, dan siraman black truffle glaze premium. Disajikan panas dan berair.
+        </p>
+
+        <!-- Flash Timer Badge & CTA -->
+        <div class="flex flex-wrap items-center gap-6">
+          <a href="#katalog" class="bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold px-8 py-4 rounded-xl shadow-lg shadow-amber-500/25 transition duration-200 transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+            Pesan Sekarang <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </a>
+          <div class="flex items-center gap-3 bg-neutral-900 border border-neutral-800 px-4 py-2.5 rounded-xl">
+            <span class="text-xs text-neutral-400 font-medium">Sisa Slot Hari Ini:</span>
+            <span class="text-sm font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Hanya 14 Porsi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual -->
+      <div class="relative">
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-neutral-800 aspect-4/3 group">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80" 
+               alt="Truffle Beast Burger" 
+               class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+          <div class="absolute bottom-4 left-4 right-4 bg-neutral-900/80 backdrop-blur-md p-4 rounded-2xl border border-neutral-700/50 flex justify-between items-center">
+            <div>
+              <p class="text-xs text-neutral-400 font-medium uppercase">Katalog Signature</p>
+              <h4 class="font-bold text-white text-base">Truffle Beast Wagyu</h4>
+            </div>
+            <div class="text-right">
+              <span class="line-through text-xs text-neutral-500">Rp 95.000</span>
+              <p class="text-amber-400 font-extrabold text-lg">Rp 74.000</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. PRODUCT GRID (Katalog Visual) ================= -->
+  <section id="katalog" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <div>
+        <span class="text-amber-600 font-bold text-xs uppercase tracking-widest block mb-2">Curated Menu</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight">Katalog Visual Etalase</h2>
+      </div>
+      <p class="text-neutral-500 text-sm max-w-md mt-2 md:mt-0">
+        Sentuh atau klik kartu untuk membaca spesifikasi bahan baku, gramatur kalori, dan konfigurasi varian SKU.
+      </p>
+    </div>
+
+    <!-- Product Card Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <template x-for="product in products" :key="product.id">
+        <div class="bg-white rounded-3xl border border-neutral-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+          <!-- Big Visual Canvas -->
+          <div class="relative overflow-hidden aspect-4/3 bg-neutral-100 cursor-pointer" @click="openModal(product)">
+            <img :src="product.images[0]" :alt="product.name" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-4 left-4 bg-neutral-900/80 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider" x-text="product.category"></span>
+            <div class="absolute inset-0 bg-neutral-950/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+              <span class="bg-white text-neutral-950 text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition">
+                <i data-lucide="eye" class="w-4 h-4"></i> Quick View Spesifikasi
+              </span>
+            </div>
+          </div>
+
+          <!-- Description Meta -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-1 text-amber-500 text-sm">
+                  <i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i>
+                  <span class="font-bold text-neutral-900" x-text="product.rating"></span>
+                  <span class="text-neutral-400 text-xs font-normal" x-text="`(${product.reviewCount} ulasan)`"></span>
+                </div>
+                <span class="text-xs text-neutral-500 font-semibold" x-text="product.weight"></span>
+              </div>
+
+              <h3 class="text-lg font-bold text-neutral-950 group-hover:text-amber-600 transition" x-text="product.name"></h3>
+              <p class="text-neutral-500 text-xs line-clamp-2 mt-1.5" x-text="product.shortDesc"></p>
+            </div>
+
+            <!-- Price & Action CTA -->
+            <div class="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-neutral-400 block tracking-wider">Harga Mulai</span>
+                <span class="text-lg font-extrabold text-neutral-950" x-text="formatRupiah(product.price)"></span>
+              </div>
+              <button @click="openModal(product)" 
+                      class="bg-amber-500 hover:bg-amber-400 text-neutral-950 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition shadow-sm cursor-pointer">
+                <i data-lucide="sliders" class="w-4 h-4"></i> Konfigurasi
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </section>
+
+  <!-- ================= 3. LOOKBOOK KOLEKSI (Combo Inspiration) ================= -->
+  <section id="lookbook" class="py-20 bg-neutral-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-amber-600 font-bold text-xs uppercase tracking-widest block mb-2">Combobook & Pairing</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight">Inspirasi Padu-Padan Meja Makan</h2>
+        <p class="text-neutral-600 text-sm mt-3">Gaya penyajian makanan dan kombinasi *side-dish* terfavorit untuk pesta kantor, nongkrong, atau movie night santai.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Lookbook 1 -->
+        <div class="group relative rounded-3xl overflow-hidden shadow-md aspect-3/4">
+          <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="The Weekend Box" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+            <span class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-1">Style #01: Weekend Binge</span>
+            <h4 class="text-xl font-bold">Party Platter & Crispy Loaded Fries</h4>
+            <p class="text-neutral-300 text-xs mt-2 line-clamp-2">Ideal untuk 3-4 orang. Kombinasi 2 Burger Signature, 6pcs Korean Wings, dan Truffle Fries Jumbo.</p>
+          </div>
+        </div>
+
+        <!-- Lookbook 2 -->
+        <div class="group relative rounded-3xl overflow-hidden shadow-md aspect-3/4">
+          <img src="https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80" alt="Crispy Fried Combo" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+            <span class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-1">Style #02: Solo Soul Food</span>
+            <h4 class="text-xl font-bold">Nashville Hot Chicken & Fizzy Slush</h4>
+            <p class="text-neutral-300 text-xs mt-2 line-clamp-2">Tingkat kepedasan level 3 dipadukan dengan Lemon Sparkling dingin penyegar dahaga.</p>
+          </div>
+        </div>
+
+        <!-- Lookbook 3 -->
+        <div class="group relative rounded-3xl overflow-hidden shadow-md aspect-3/4">
+          <img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=800&q=80" alt="Dessert & Snacks" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/20 to-transparent p-6 flex flex-col justify-end text-white">
+            <span class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-1">Style #03: Coffee & Snack Break</span>
+            <h4 class="text-xl font-bold">Onion Rings with Garlic Aioli</h4>
+            <p class="text-neutral-300 text-xs mt-2 line-clamp-2">Camilan renyah sore hari pendamping kerjaan dengan saus rempah rahasia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4. REVIEWS (Toko Terpercaya) ================= -->
+  <section id="reviews" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12">
+        <div>
+          <span class="text-amber-600 font-bold text-xs uppercase tracking-widest block mb-2">Social Proof</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-neutral-950 tracking-tight">Kepuasan Pelanggan & Kualitas Suhu</h2>
+        </div>
+        <div class="flex items-center gap-2 mt-4 md:mt-0 text-sm font-semibold text-neutral-600">
+          <span class="flex items-center text-amber-500">
+            <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+            <i data-lucide="star" class="w-5 h-5 fill-amber-500"></i>
+          </span>
+          <span>4.9 / 5.0 dari 1.800+ Pesanan Delivery</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Review 1 -->
+        <div class="p-6 rounded-3xl bg-neutral-50 border border-neutral-200">
+          <div class="flex items-center gap-1 text-amber-500 mb-4">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+          </div>
+          <p class="text-neutral-700 text-sm italic mb-6">"Packaging termal mereka gokil banget! Burger nyampe kantor masih panas beruap dan rotinya nggak bonyok kena uap air. Truffle mayo-nya berasa daging wagyu premium."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold text-sm">RA</div>
+            <div>
+              <p class="font-bold text-neutral-950 text-sm">Raditya Ardiansyah</p>
+              <p class="text-xs text-neutral-400">Verified Buyer • Jakarta Selatan</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="p-6 rounded-3xl bg-neutral-50 border border-neutral-200">
+          <div class="flex items-center gap-1 text-amber-500 mb-4">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+          </div>
+          <p class="text-neutral-700 text-sm italic mb-6">"Nashville Hot Chicken-nya gurih pedas nendang, tingkat pedas level Medium cocok buat yang suka pedas tapi masih bisa dinikmati. Pengiriman via kurir express tepat waktu!"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-500 text-neutral-950 flex items-center justify-center font-bold text-sm">ND</div>
+            <div>
+              <p class="font-bold text-neutral-950 text-sm">Nadia Daniswara</p>
+              <p class="text-xs text-neutral-400">Verified Buyer • Bandung Kota</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="p-6 rounded-3xl bg-neutral-50 border border-neutral-200">
+          <div class="flex items-center gap-1 text-amber-500 mb-4">
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-amber-500"></i>
+          </div>
+          <p class="text-neutral-700 text-sm italic mb-6">"Sistem ordernya ringkas tanpa ribet akun-akun, langsung nyambung ke WA admin dengan detail item dan catatan custom saus lengkap. Rekomended untuk katering kantor."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-neutral-800 text-white flex items-center justify-center font-bold text-sm">FK</div>
+            <div>
+              <p class="font-bold text-neutral-950 text-sm">Fahmi Kurniawan</p>
+              <p class="text-xs text-neutral-400">Verified Buyer • Tangerang</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-neutral-950 text-neutral-400 py-12 border-t border-neutral-800 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-amber-500 text-neutral-950 font-bold flex items-center justify-center">C</div>
+        <span class="text-white font-extrabold tracking-tight">CRUNCHY CRAVE™ KITCHEN</span>
+      </div>
+      <p class="text-neutral-500 text-xs">© 2026 CRUNCHY CRAVE Fast Food Co. Standard HACCP & Halal Certified Kitchens.</p>
+    </div>
+  </footer>
+
+  <!-- ================= POPUP: PRODUCT QUICK VIEW MODAL ================= -->
+  <div x-show="isModalOpen" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-y-auto bg-neutral-950/80 backdrop-blur-sm flex items-center justify-center p-4"
+       style="display: none;">
+       
+    <div @click.away="closeModal()" 
+         class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border border-neutral-200 grid md:grid-cols-2 relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Close Button -->
+      <button @click="closeModal()" class="absolute top-4 right-4 z-20 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 p-2 rounded-full cursor-pointer transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Multi-Image Visual Gallery -->
+      <div class="bg-neutral-100 p-6 flex flex-col justify-between">
+        <div class="rounded-2xl overflow-hidden aspect-square bg-white shadow-inner mb-4">
+          <img :src="selectedProduct?.images[selectedImageIndex]" :alt="selectedProduct?.name" class="w-full h-full object-cover">
+        </div>
+        <div class="flex gap-2">
+          <template x-for="(img, idx) in selectedProduct?.images" :key="idx">
+            <button @click="selectedImageIndex = idx" 
+                    :class="selectedImageIndex === idx ? 'ring-2 ring-amber-500 border-transparent' : 'opacity-60 border-neutral-300'"
+                    class="w-16 h-16 rounded-xl overflow-hidden border cursor-pointer transition">
+              <img :src="img" class="w-full h-full object-cover">
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Specification & SKU Selector -->
+      <div class="p-6 md:p-8 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600" x-text="selectedProduct?.category"></span>
+          <h3 class="text-2xl font-extrabold text-neutral-950 mt-1" x-text="selectedProduct?.name"></h3>
+          
+          <div class="text-2xl font-extrabold text-neutral-950 mt-2" x-text="formatRupiah(calculateCurrentPrice())"></div>
+
+          <!-- Long Specification Detail -->
+          <div class="mt-4 pt-4 border-t border-neutral-100">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Spesifikasi Detail Bahan:</h5>
+            <p class="text-xs text-neutral-600 leading-relaxed" x-text="selectedProduct?.fullSpecs"></p>
+            <div class="grid grid-cols-2 gap-2 mt-3 text-xs bg-neutral-50 p-3 rounded-xl border border-neutral-100">
+              <div><span class="text-neutral-400">Kalori:</span> <strong class="text-neutral-800" x-text="selectedProduct?.nutrition.calories"></strong></div>
+              <div><span class="text-neutral-400">Protein:</span> <strong class="text-neutral-800" x-text="selectedProduct?.nutrition.protein"></strong></div>
+              <div><span class="text-neutral-400">Waktu Masak:</span> <strong class="text-neutral-800">± 12 Menit</strong></div>
+              <div><span class="text-neutral-400">Suhu Saji:</span> <strong class="text-neutral-800">Freshly Grilled 70°C</strong></div>
+            </div>
+          </div>
+
+          <!-- SKU Options: Size / Portion -->
+          <div class="mt-5">
+            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">Pilihan Porsi (Size):</label>
+            <div class="grid grid-cols-2 gap-2">
+              <template x-for="size in selectedProduct?.sizes" :key="size.name">
+                <button type="button" 
+                        @click="selectedSize = size" 
+                        :class="selectedSize?.name === size.name ? 'border-amber-500 bg-amber-50 text-neutral-950 ring-1 ring-amber-500' : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'"
+                        class="p-2.5 rounded-xl border text-xs font-bold text-center transition cursor-pointer">
+                  <span x-text="size.name"></span>
+                  <span class="block text-[10px] text-neutral-400 font-normal" x-text="size.extraPrice > 0 ? `+${formatRupiah(size.extraPrice)}` : 'Standard'"></span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <!-- SKU Options: Spicy Level / Variant -->
+          <div class="mt-4">
+            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">Tingkat Pedas / Saus:</label>
+            <div class="flex flex-wrap gap-2">
+              <template x-for="flavor in selectedProduct?.flavors" :key="flavor">
+                <button type="button" 
+                        @click="selectedFlavor = flavor" 
+                        :class="selectedFlavor === flavor ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'"
+                        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer" 
+                        x-text="flavor">
+                </button>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add To Cart Footer -->
+        <div class="mt-6 pt-4 border-t border-neutral-200 flex items-center gap-3">
+          <div class="flex items-center border border-neutral-300 rounded-xl bg-neutral-50">
+            <button @click="quantity > 1 ? quantity-- : null" class="px-3 py-2 text-neutral-600 hover:text-black font-bold">-</button>
+            <span class="px-2 text-sm font-bold" x-text="quantity"></span>
+            <button @click="quantity++" class="px-3 py-2 text-neutral-600 hover:text-black font-bold">+</button>
+          </div>
+          
+          <button @click="addToCartFromModal()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition">
+            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Masukkan Tas Belanja
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SLIDE-OVER: CART & LOGISTICS CHECKOUT ================= -->
+  <div x-show="isCartOpen" 
+       class="fixed inset-0 z-50 overflow-hidden" 
+       style="display: none;">
+    
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-neutral-950/70 backdrop-blur-sm transition-opacity" 
+         @click="isCartOpen = false"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        <!-- Cart Header -->
+        <div class="p-6 border-b border-neutral-200 flex items-center justify-between bg-neutral-50">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-amber-600"></i>
+            <h3 class="font-extrabold text-neutral-950 text-lg">Keranjang & Logistik</h3>
+          </div>
+          <button @click="isCartOpen = false" class="p-2 text-neutral-400 hover:text-neutral-700 rounded-full hover:bg-neutral-200 cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4">
+          <template x-if="cart.length === 0">
+            <div class="text-center py-16 text-neutral-400">
+              <i data-lucide="package-open" class="w-12 h-12 mx-auto stroke-1 mb-2"></i>
+              <p class="text-sm font-medium">Tas belanja Anda masih kosong.</p>
+              <button @click="isCartOpen = false" class="mt-4 text-xs font-bold text-amber-600 underline">Eksplor Menu</button>
+            </div>
+          </template>
+
+          <template x-for="(item, index) in cart" :key="index">
+            <div class="flex gap-4 p-3 bg-neutral-50 rounded-2xl border border-neutral-100">
+              <img :src="item.image" class="w-16 h-16 object-cover rounded-xl bg-white">
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <h4 class="font-bold text-xs text-neutral-950" x-text="item.name"></h4>
+                  <p class="text-[10px] text-neutral-500 font-medium" x-text="`${item.size} • ${item.flavor}`"></p>
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                  <span class="text-xs font-extrabold text-neutral-950" x-text="formatRupiah(item.price * item.quantity)"></span>
+                  
+                  <!-- Qty Controller -->
+                  <div class="flex items-center border border-neutral-200 rounded-lg bg-white">
+                    <button @click="decrementCartItem(index)" class="px-2 py-0.5 text-xs text-neutral-600 font-bold">-</button>
+                    <span class="px-2 text-xs font-bold" x-text="item.quantity"></span>
+                    <button @click="incrementCartItem(index)" class="px-2 py-0.5 text-xs text-neutral-600 font-bold">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Logistics Checkout Form -->
+        <div x-show="cart.length > 0" class="border-t border-neutral-200 p-6 bg-neutral-50 space-y-4">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-600"></i> Detail Pengiriman Logistik
+          </h4>
+          
+          <div class="space-y-2">
+            <input type="text" x-model="checkoutForm.name" placeholder="Nama Penerima" class="w-full text-xs p-2.5 rounded-xl border border-neutral-300 bg-white focus:outline-none focus:border-amber-500">
+            <textarea x-model="checkoutForm.address" rows="2" placeholder="Alamat Lengkap & Patokan Rumah..." class="w-full text-xs p-2.5 rounded-xl border border-neutral-300 bg-white focus:outline-none focus:border-amber-500"></textarea>
+            <input type="text" x-model="checkoutForm.deliveryNotes" placeholder="Catatan Pengiriman (misal: Jangan Bunyikan Bel / Titip Security)" class="w-full text-xs p-2.5 rounded-xl border border-neutral-300 bg-white focus:outline-none focus:border-amber-500">
+          </div>
+
+          <!-- Total Calculation -->
+          <div class="pt-2 border-t border-neutral-200 space-y-1 text-xs">
+            <div class="flex justify-between text-neutral-500">
+              <span>Subtotal Produk:</span>
+              <span x-text="formatRupiah(calculateSubtotal())"></span>
+            </div>
+            <div class="flex justify-between text-neutral-500">
+              <span>Biaya Kemasan Termal (Hot Pack):</span>
+              <span class="text-green-600 font-medium">GRATIS</span>
+            </div>
+            <div class="flex justify-between text-neutral-950 font-extrabold text-sm pt-1">
+              <span>Estimasi Total:</span>
+              <span class="text-amber-600" x-text="formatRupiah(calculateSubtotal())"></span>
+            </div>
+          </div>
+
+          <!-- Convert / WA Redirect Action -->
+          <button @click="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-xs transition cursor-pointer">
+            <i data-lucide="message-circle" class="w-4 h-4"></i> Checkout via WhatsApp Admin
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT STATE ENGINE ================= -->
+  <script>
+    function shopApp() {
+      return {
+        isModalOpen: false,
+        isCartOpen: false,
+        selectedProduct: null,
+        selectedImageIndex: 0,
+        selectedSize: null,
+        selectedFlavor: '',
+        quantity: 1,
+        
+        // Logistik Form
+        checkoutForm: {
+          name: '',
+          address: '',
+          deliveryNotes: ''
+        },
+
+        // Mock Database Produk Fast Food
+        products: [
+          {
+            id: 1,
+            name: 'Double Truffle Wagyu Smash',
+            category: 'Burgers',
+            rating: '4.9',
+            reviewCount: 382,
+            weight: '320 Grams',
+            price: 74000,
+            shortDesc: 'Dua lapis Australian wagyu beef patty dengan aged cheddar & black truffle glaze.',
+            fullSpecs: '100% Wagyu Beef Chuck & Brisket blend (80/20 ratio), artisanal brioche bun dipanggang mentega Elle & Vire, keju cheddar Inggris 9 bulan, bawang bombay karamelisasi 4 jam, saus Black Summer Truffle.',
+            nutrition: { calories: '680 kkal', protein: '42g' },
+            images: [
+              'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80'
+            ],
+            sizes: [
+              { name: 'Regular Double', extraPrice: 0 },
+              { name: 'Triple Monster', extraPrice: 22000 }
+            ],
+            flavors: ['Original Truffle', 'Extra Spicy Glaze', 'Garlic Melt']
+          },
+          {
+            id: 2,
+            name: 'Nashville Crispy Hot Bird',
+            category: 'Fried Chicken',
+            rating: '4.8',
+            reviewCount: 520,
+            weight: '280 Grams',
+            price: 48000,
+            shortDesc: 'Ayam paha fillet goreng tepung renyah dengan celupan minyak cabai rempah khas Nashville.',
+            fullSpecs: 'Daging paha ayam segar termarinasi buttermilk 24 jam, baluran 11 rempah rahasia, digoreng dengan metode deep pressure frying. Dilengkapi dengan dill pickles dan coleslaw segar.',
+            nutrition: { calories: '540 kkal', protein: '38g' },
+            images: [
+              'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=80'
+            ],
+            sizes: [
+              { name: 'Single Cut', extraPrice: 0 },
+              { name: 'Double Piece Platter', extraPrice: 20000 }
+            ],
+            flavors: ['Mild Herbs', 'Nashville Fiery', 'Ghost Pepper Extreme']
+          },
+          {
+            id: 3,
+            name: 'Loaded Truffle Cheese Fries',
+            category: 'Sides & Fries',
+            rating: '4.9',
+            reviewCount: 290,
+            weight: '220 Grams',
+            price: 36000,
+            shortDesc: 'Kentang goreng Belgia potongan tebal dengan lelehan keju mozarella dan minyak truffle.',
+            fullSpecs: 'Kentang impor varietas Russet Burbank grade AA, digoreng dua tahap untuk kerenyahan maksimal. Disiram white cheddar sauce, daun peterseli kering, dan smoked beef bits.',
+            nutrition: { calories: '420 kkal', protein: '9g' },
+            images: [
+              'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=800&q=80'
+            ],
+            sizes: [
+              { name: 'Medium Box', extraPrice: 0 },
+              { name: 'Sharing Tub', extraPrice: 15000 }
+            ],
+            flavors: ['Garlic Truffle', 'Cheddar Bacon Melt', 'Spicy Seaweed']
+          }
+        ],
+
+        // Keranjang Belanja
+        cart: [],
+
+        get totalCartCount() {
+          return this.cart.reduce((total, item) => total + item.quantity, 0);
+        },
+
+        initIcons() {
+          this.$nextTick(() => {
+            if (window.lucide) {
+              lucide.createIcons();
+            }
+          });
+        },
+
+        formatRupiah(val) {
+          return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
+        },
+
+        openModal(product) {
+          this.selectedProduct = product;
+          this.selectedImageIndex = 0;
+          this.selectedSize = product.sizes[0];
+          this.selectedFlavor = product.flavors[0];
+          this.quantity = 1;
+          this.isModalOpen = true;
+          this.initIcons();
+        },
+
+        closeModal() {
+          this.isModalOpen = false;
+        },
+
+        calculateCurrentPrice() {
+          if (!this.selectedProduct) return 0;
+          return this.selectedProduct.price + (this.selectedSize ? this.selectedSize.extraPrice : 0);
+        },
+
+        addToCartFromModal() {
+          const itemPrice = this.calculateCurrentPrice();
+          const existingItemIndex = this.cart.findIndex(i => 
+            i.id === this.selectedProduct.id && 
+            i.size === this.selectedSize.name && 
+            i.flavor === this.selectedFlavor
+          );
+
+          if (existingItemIndex > -1) {
+            this.cart[existingItemIndex].quantity += this.quantity;
+          } else {
+            this.cart.push({
+              id: this.selectedProduct.id,
+              name: this.selectedProduct.name,
+              price: itemPrice,
+              size: this.selectedSize.name,
+              flavor: this.selectedFlavor,
+              image: this.selectedProduct.images[0],
+              quantity: this.quantity
+            });
+          }
+
+          this.closeModal();
+          this.isCartOpen = true;
+          this.initIcons();
+        },
+
+        incrementCartItem(index) {
+          this.cart[index].quantity++;
+        },
+
+        decrementCartItem(index) {
+          if (this.cart[index].quantity > 1) {
+            this.cart[index].quantity--;
+          } else {
+            this.cart.splice(index, 1);
+          }
+        },
+
+        calculateSubtotal() {
+          return this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        },
+
+        checkoutWhatsApp() {
+          if (!this.checkoutForm.name || !this.checkoutForm.address) {
+            alert('Mohon lengkapi Nama Penerima dan Alamat Lengkap untuk kurir pengiriman.');
+            return;
+          }
+
+          // Nomor WhatsApp Admin Resto
+          const adminPhone = '6281234567890';
+
+          // Format Teks Pemesanan
+          let text = `*ORDER BARU - CRUNCHY CRAVE™*\n`;
+          text += `--------------------------------------\n`;
+          text += `👤 *Penerima:* ${this.checkoutForm.name}\n`;
+          text += `📍 *Alamat:* ${this.checkoutForm.address}\n`;
+          if (this.checkoutForm.deliveryNotes) {
+            text += `📝 *Catatan Pengiriman:* ${this.checkoutForm.deliveryNotes}\n`;
+          }
+          text += `--------------------------------------\n`;
+          text += `*DETAIL ITEM:*\n`;
+
+          this.cart.forEach((item, idx) => {
+            text += `${idx + 1}. ${item.name} (${item.size}, ${item.flavor})\n`;
+            text += `   Qty: ${item.quantity} x ${this.formatRupiah(item.price)} = ${this.formatRupiah(item.price * item.quantity)}\n`;
+          });
+
+          text += `--------------------------------------\n`;
+          text += `*TOTAL TAGIHAN: ${this.formatRupiah(this.calculateSubtotal())}*\n`;
+          text += `*(Packing Termal / Hot-pack: FREE)*\n\n`;
+          text += `Mohon konfirmasi ketersediaan dapur dan estimasi kurir delivery. Terima kasih!`;
+
+          const waUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(text)}`;
+          window.open(waUrl, '_blank');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

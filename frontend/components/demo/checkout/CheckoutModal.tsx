@@ -5,14 +5,24 @@ import { createClient } from '@/utils/supabase/client';
 import { X, Lock, CheckCircle2, ChevronRight, Mail, Key } from 'lucide-react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
+import { siteConfig } from '@/lib/site-config';
 
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
   slug: string;
+  currentTier?: string;
 }
 
-export function CheckoutModal({ isOpen, onClose, slug }: CheckoutModalProps) {
+const TIER_RANK: Record<string, number> = {
+  'free_trial': 0,
+  'instan': 1,
+  'pro-basic': 2,
+  'pro-advanced': 3,
+  'enterprise': 4
+};
+
+export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutModalProps) {
   const router = useRouter();
   const supabase = createClient();
   const [step, setStep] = useState<'auth' | 'payment' | 'success'>('auth');
@@ -26,12 +36,21 @@ export function CheckoutModal({ isOpen, onClose, slug }: CheckoutModalProps) {
   const [authError, setAuthError] = useState('');
 
   // Payment States
-  const packages = [
-    { id: 'basic', name: 'Basic Plan', price: 3000, desc: 'Cocok untuk coba-coba' },
-    { id: 'pro', name: 'Pro Plan', price: 4000, desc: 'Pilihan terpopuler' },
-    { id: 'enterprise', name: 'Enterprise', price: 5000, desc: 'Fitur terlengkap' }
-  ];
-  const [selectedPackage, setSelectedPackage] = useState(packages[0]);
+  const currentRank = TIER_RANK[currentTier || 'free_trial'] || 0;
+
+  const packages = siteConfig.pricing
+    .filter((p) => p.id !== 'enterprise') // Enterprise is custom/project-based
+    .map((p) => ({
+      id: p.id,
+      name: p.titleId,
+      price: p.priceNumeric,
+      desc: p.descId,
+      isDisabled: TIER_RANK[p.id] <= currentRank
+    }));
+  
+  // Set default selected package to the first available upgrade
+  const availableUpgrade = packages.find(p => !p.isDisabled) || packages[packages.length - 1];
+  const [selectedPackage, setSelectedPackage] = useState(availableUpgrade);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   useEffect(() => {
@@ -237,16 +256,19 @@ export function CheckoutModal({ isOpen, onClose, slug }: CheckoutModalProps) {
                   {packages.map((pkg) => (
                     <button
                       key={pkg.id}
+                      disabled={pkg.isDisabled}
                       onClick={() => setSelectedPackage(pkg)}
                       className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all ${
-                        selectedPackage.id === pkg.id 
-                          ? 'border-[#00b894] bg-[#00b894]/10 ring-1 ring-[#00b894]' 
-                          : 'border-[#262633] bg-[#14141A] hover:border-[#8E8EA0]'
+                        pkg.isDisabled 
+                          ? 'border-[#262633] bg-[#0B0B0E] opacity-50 cursor-not-allowed'
+                          : selectedPackage.id === pkg.id 
+                            ? 'border-[#00b894] bg-[#00b894]/10 ring-1 ring-[#00b894]' 
+                            : 'border-[#262633] bg-[#14141A] hover:border-[#8E8EA0]'
                       }`}
                     >
                       <div>
-                        <div className={`font-bold ${selectedPackage.id === pkg.id ? 'text-[#00b894]' : 'text-white'}`}>
-                          {pkg.name}
+                        <div className={`font-bold ${pkg.isDisabled ? 'text-[#8E8EA0]' : selectedPackage.id === pkg.id ? 'text-[#00b894]' : 'text-white'}`}>
+                          {pkg.name} {pkg.isDisabled && '(Paket Saat Ini/Lebih Rendah)'}
                         </div>
                         <div className="text-xs text-[#8E8EA0] mt-1">{pkg.desc}</div>
                       </div>

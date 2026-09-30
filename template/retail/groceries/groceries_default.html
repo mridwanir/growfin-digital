@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KONBINI.CO — Premium Convenience Store</title>
+  
+  <!-- Tailwind CSS Play CDN (v4) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
+  <!-- Google Fonts & Phosphor Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    /* Hide scrollbar for gallery thumbnails */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body class="bg-zinc-50 text-zinc-900 antialiased selection:bg-emerald-500 selection:text-white pb-24 lg:pb-0">
+
+  <!-- ================= TOP ANNOUNCEMENT ================= -->
+  <div class="bg-emerald-600 text-white text-xs font-semibold px-4 py-2 text-center tracking-wide flex items-center justify-center gap-2">
+    <i class="ph-bold ph-lightning text-amber-300"></i>
+    <span>FLASH SALE HARI INI: Gratis Ongkir Instan radius 5 km untuk pesanan minimal Rp 75.000!</span>
+  </div>
+
+  <!-- ================= STICKY HEADER ================= -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-xl shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          K
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-zinc-900 block leading-none">KONBINI<span class="text-emerald-600">.CO</span></span>
+          <span class="text-[10px] text-zinc-400 font-medium tracking-wider uppercase">Fresh Daily • 24/7 Store</span>
+        </div>
+      </a>
+
+      <!-- Navigation links (Desktop) -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
+        <a href="#katalog" class="hover:text-emerald-600 transition-colors">Katalog Produk</a>
+        <a href="#lookbook" class="hover:text-emerald-600 transition-colors">Lookbook Kombini</a>
+        <a href="#reviews" class="hover:text-emerald-600 transition-colors">Ulasan Pembeli</a>
+        <a href="#about" class="hover:text-emerald-600 transition-colors">Keunggulan Toko</a>
+      </nav>
+
+      <!-- Cart Button trigger -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-full bg-zinc-100 hover:bg-emerald-50 text-zinc-800 hover:text-emerald-700 transition flex items-center gap-2 cursor-pointer">
+          <i class="ph-bold ph-shopping-bag text-2xl"></i>
+          <span id="cart-badge" class="absolute -top-1 -right-1 bg-emerald-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+          <span class="hidden sm:inline text-xs font-semibold pr-1">Keranjang</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= 1. PROMOTIONAL HERO ================= -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+    <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-emerald-900 to-zinc-900 text-white shadow-2xl">
+      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-8 sm:p-12 lg:p-16 relative z-10">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full px-3.5 py-1 text-xs font-bold uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            Midnight Craving Season
+          </div>
+          
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
+            Kombini Fresh & Ready-to-Eat, <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-300">Siap Kirim Kilat.</span>
+          </h1>
+
+          <p class="text-zinc-300 text-base sm:text-lg max-w-xl font-normal leading-relaxed">
+            Dari Onigiri Salmon hangat, bento box artisan, matcha cold brew, hingga snack import eksklusif. Rasakan kemudahan belanja ala minimarket Jepang dari rumah.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#katalog" class="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition transform hover:-translate-y-0.5 shadow-lg shadow-emerald-500/20 text-sm">
+              <span>Buka Etalase Produk</span>
+              <i class="ph-bold ph-arrow-down"></i>
+            </a>
+            <a href="#lookbook" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur text-white font-semibold transition text-sm">
+              <i class="ph-bold ph-sparkle text-amber-300"></i>
+              <span>Inspirasi Lookbook</span>
+            </a>
+          </div>
+
+          <!-- Mini USP Badges -->
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 text-xs text-zinc-300">
+            <div>
+              <p class="font-bold text-white text-sm">15-30 Menit</p>
+              <p>Garansi Cepat Sampai</p>
+            </div>
+            <div>
+              <p class="font-bold text-white text-sm">100% Higienis</p>
+              <p>Fresh Food Sealed</p>
+            </div>
+            <div>
+              <p class="font-bold text-white text-sm">Kemasan Termal</p>
+              <p>Makanan Tetap Hangat/Dingin</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-sm rounded-2xl overflow-hidden shadow-2xl border border-white/20 transform rotate-1 hover:rotate-0 transition duration-500">
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" alt="Convenience Store Feast" class="w-full h-80 sm:h-96 object-cover">
+            <div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+              <span class="inline-block bg-amber-400 text-zinc-950 text-[10px] font-black uppercase px-2 py-0.5 rounded">Hot Recommendation</span>
+              <p class="text-sm font-bold text-white mt-1">Spicy Tuna Mayo Onigiri + Hojicha Cold Brew</p>
+              <p class="text-xs text-zinc-300">Hemat 20% khusus paket combo makan siang</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. PRODUCT GRID (KATALOG VISUAL) ================= -->
+  <section id="katalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-zinc-200">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Etalase Toko</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight mt-1">Katalog Produk Pilihan</h2>
+        <p class="text-sm text-zinc-500 mt-1">Format visual besar & bersih untuk kenyamanan inspeksi detail kemasan & bahan.</p>
+      </div>
+
+      <!-- Kategori Filter Tabs -->
+      <div class="flex flex-wrap gap-2 text-xs font-semibold">
+        <button class="px-4 py-2 rounded-full bg-zinc-900 text-white">Semua Item</button>
+        <button class="px-4 py-2 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Ready-to-Eat</button>
+        <button class="px-4 py-2 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Beverage & Brew</button>
+        <button class="px-4 py-2 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition">Snack & Bakery</button>
+      </div>
+    </div>
+
+    <!-- Product Cards Grid -->
+    <div id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Di-render oleh JavaScript di bawah untuk menjaga konsistensi state -->
+    </div>
+  </section>
+
+  <!-- ================= 3. LOOKBOOK KOLEKSI (INSPIRASI TREN GAYA HIDUP) ================= -->
+  <section id="lookbook" class="bg-zinc-100 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Lifestyle Pairing</span>
+        <h2 class="text-3xl font-extrabold text-zinc-900 mt-1">Lookbook: Kombini Moments</h2>
+        <p class="text-zinc-600 text-sm mt-2">Inspirasi padu-padan menu instan estetik dan nikmat untuk menemani aktivitas harian Anda.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Lookbook 1 -->
+        <div class="group relative rounded-2xl overflow-hidden bg-white shadow-sm border border-zinc-200/80">
+          <div class="aspect-[4/5] overflow-hidden bg-zinc-200">
+            <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80" alt="Work from Cafe Mood" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5">
+            <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">01 • Deep Work Session</span>
+            <h3 class="font-bold text-lg text-zinc-900 mt-1">Iced Matcha Latte + Strawberry Sando</h3>
+            <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">Kombinasi kafein lembut dan manis asam roti lapis buah segar untuk fokus kerja tanpa kantuk berlebih.</p>
+            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between text-xs">
+              <span class="font-bold text-zinc-800">Estimasi Kalori: 340 kcal</span>
+              <button onclick="openModal(1)" class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer">Lihat Komposisi <i class="ph-bold ph-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lookbook 2 -->
+        <div class="group relative rounded-2xl overflow-hidden bg-white shadow-sm border border-zinc-200/80">
+          <div class="aspect-[4/5] overflow-hidden bg-zinc-200">
+            <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80" alt="Midnight Supper" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5">
+            <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">02 • Midnight Movie Marathon</span>
+            <h3 class="font-bold text-lg text-zinc-900 mt-1">Spicy Miso Ramen Cup + Ajitsuke Tamago</h3>
+            <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">Kuah ramen kaya rasa berpadu dengan telur marinasi gurih meleleh. Pas untuk teman nonton series favorit.</p>
+            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between text-xs">
+              <span class="font-bold text-zinc-800">Waktu Masak: 3 Menit</span>
+              <button onclick="openModal(2)" class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer">Lihat Komposisi <i class="ph-bold ph-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lookbook 3 -->
+        <div class="group relative rounded-2xl overflow-hidden bg-white shadow-sm border border-zinc-200/80">
+          <div class="aspect-[4/5] overflow-hidden bg-zinc-200">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" alt="Morning Recharge" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5">
+            <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">03 • Morning Commute Fuel</span>
+            <h3 class="font-bold text-lg text-zinc-900 mt-1">Tokyo Chicken Bento + Calamansi Sparkler</h3>
+            <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">Nasi jepang pulen, karage renyah dengan salad segar. Tetap bertenaga mengawali hari yang padat.</p>
+            <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between text-xs">
+              <span class="font-bold text-zinc-800">Disajikan: Hangat Segar</span>
+              <button onclick="openModal(0)" class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer">Lihat Komposisi <i class="ph-bold ph-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4. TOKO TERPERCAYA (REVIEWS) ================= -->
+  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Testimoni & Kepercayaan</span>
+        <h2 class="text-3xl font-extrabold text-zinc-900 mt-1">Ulasan Pelanggan Terverifikasi</h2>
+        <p class="text-sm text-zinc-500 mt-1">98.4% pesanan tiba dalam kondisi prima dan sesuai selera.</p>
+      </div>
+
+      <div class="flex items-center gap-2 bg-emerald-50 text-emerald-800 px-4 py-2 rounded-xl text-sm font-bold border border-emerald-200">
+        <i class="ph-fill ph-star text-amber-500 text-lg"></i>
+        <span>Rating 4.9 / 5.0 (2,400+ Ulasan)</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Review 1 -->
+      <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-1 text-amber-400 mb-3">
+            <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+          </div>
+          <p class="text-sm text-zinc-700 leading-relaxed font-normal">
+            "Packaging onigiri-nya rapi banget! Nori tetap renyah garing karena plastik pemisahnya standar Jepang. Pengiriman cuma 22 menit nyampe ke apartemen!"
+          </p>
+        </div>
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-zinc-100">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+            DA
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-zinc-900">Dimas Anggara</h4>
+            <span class="text-[11px] text-zinc-400">Pembeli Terverifikasi • Jakarta Selatan</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review 2 -->
+      <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-1 text-amber-400 mb-3">
+            <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+          </div>
+          <p class="text-sm text-zinc-700 leading-relaxed font-normal">
+            "Suka banget fitur pilih varian kepedasan sama saus bento-nya langsung di web. Order malam pas lembur, kurirnya sopan dan makanan masih anget."
+          </p>
+        </div>
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-zinc-100">
+          <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">
+            FN
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-zinc-900">Farah Nabila</h4>
+            <span class="text-[11px] text-zinc-400">Pembeli Terverifikasi • Bandung</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review 3 -->
+      <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-1 text-amber-400 mb-3">
+            <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+          </div>
+          <p class="text-sm text-zinc-700 leading-relaxed font-normal">
+            "Matcha cold brew-nya otentik pahit gurihnya pas, bukan gula doang. Check-out otomatis ke WhatsApp admin bikin tracking order jauh lebih gampang."
+          </p>
+        </div>
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-zinc-100">
+          <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+            RK
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-zinc-900">Rizky Kurniawan</h4>
+            <span class="text-[11px] text-zinc-400">Pembeli Terverifikasi • Surabaya</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 5. PRODUCT QUICK VIEW MODAL ================= -->
+  <div id="product-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+
+    <div class="min-h-full flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl z-10 my-8">
+        
+        <!-- Close Button -->
+        <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-zinc-100 text-zinc-600 flex items-center justify-center border border-zinc-200 transition cursor-pointer">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          
+          <!-- Modal: Multi-Image Gallery -->
+          <div class="p-6 bg-zinc-50 border-r border-zinc-100 flex flex-col justify-between">
+            <div>
+              <div class="aspect-square rounded-2xl overflow-hidden bg-white border border-zinc-200 mb-4">
+                <img id="modal-main-img" src="" alt="Detail Produk" class="w-full h-full object-cover">
+              </div>
+              <div id="modal-thumbs" class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                <!-- Gallery Thumbs via JS -->
+              </div>
+            </div>
+            <div class="mt-4 p-3 bg-emerald-50/70 border border-emerald-100 rounded-xl text-[11px] text-emerald-800 flex items-center gap-2">
+              <i class="ph-bold ph-shield-check text-base text-emerald-600"></i>
+              <span>Kemasan teruji higienis & kedap udara standard food-grade.</span>
+            </div>
+          </div>
+
+          <!-- Modal: Spesifikasi Detail & Opsi SKU -->
+          <div class="p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <span id="modal-category" class="text-xs font-bold uppercase text-emerald-600 tracking-wider">Kategori</span>
+              <h3 id="modal-title" class="text-2xl font-extrabold text-zinc-900 mt-1">Nama Produk</h3>
+              <p id="modal-price" class="text-2xl font-black text-emerald-600 mt-2">Rp 0</p>
+              
+              <div class="mt-4">
+                <h4 class="text-xs font-bold uppercase text-zinc-400 tracking-wider mb-1">Deskripsi & Spesifikasi</h4>
+                <p id="modal-desc" class="text-xs text-zinc-600 leading-relaxed max-h-24 overflow-y-auto pr-1">
+                  Deskripsi lengkap spesifikasi komposisi, kalori, tanggal kadaluarsa dan suhu penyimpanan.
+                </p>
+              </div>
+
+              <!-- SKU Selector: Varian / Rasa -->
+              <div class="mt-5">
+                <label class="block text-xs font-bold text-zinc-700 uppercase tracking-wide mb-2">Pilihan Varian / Rasa</label>
+                <div id="modal-variants" class="flex flex-wrap gap-2">
+                  <!-- Variant options via JS -->
+                </div>
+              </div>
+
+              <!-- SKU Selector: Ukuran / Porsi -->
+              <div class="mt-4">
+                <label class="block text-xs font-bold text-zinc-700 uppercase tracking-wide mb-2">Ukuran / Porsi Kemasan</label>
+                <div id="modal-sizes" class="flex flex-wrap gap-2">
+                  <!-- Size options via JS -->
+                </div>
+              </div>
+
+              <!-- Qty Selector -->
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-xs font-bold text-zinc-700 uppercase tracking-wide">Kuantitas</span>
+                <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden">
+                  <button onclick="adjustModalQty(-1)" class="w-8 h-8 flex items-center justify-center bg-zinc-50 hover:bg-zinc-100 text-zinc-700 font-bold">-</button>
+                  <span id="modal-qty" class="w-10 text-center text-sm font-semibold text-zinc-800">1</span>
+                  <button onclick="adjustModalQty(1)" class="w-8 h-8 flex items-center justify-center bg-zinc-50 hover:bg-zinc-100 text-zinc-700 font-bold">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add to Cart CTA -->
+            <div class="mt-8 pt-4 border-t border-zinc-100">
+              <button onclick="addCurrentModalToCart()" class="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                <i class="ph-bold ph-bag-plus text-xl"></i>
+                <span>Tambahkan ke Keranjang</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 6. CART DRAWER & LOGISTICS CHECKOUT ================= -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer(false)"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        
+        <!-- Cart Header -->
+        <div class="p-6 border-b border-zinc-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="ph-bold ph-shopping-cart text-2xl text-emerald-600"></i>
+            <h2 class="text-lg font-extrabold text-zinc-900">Keranjang Belanja</h2>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="p-2 text-zinc-400 hover:text-zinc-600 rounded-lg cursor-pointer">
+            <i class="ph-bold ph-x text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Cart Items List (Scrollable) -->
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+          <!-- Cart items render via JS -->
+        </div>
+
+        <!-- Logistics Checkout Form Section -->
+        <div class="p-6 bg-zinc-50 border-t border-zinc-200 space-y-3">
+          <div class="flex justify-between items-center text-sm font-semibold text-zinc-600">
+            <span>Total Tagihan:</span>
+            <span id="cart-total-price" class="text-xl font-black text-emerald-600">Rp 0</span>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <label class="block text-xs font-bold text-zinc-700 uppercase">Informasi Logistik Pengiriman</label>
+            
+            <input type="text" id="cust-name" placeholder="Nama Penerima" class="w-full px-3.5 py-2 text-xs bg-white border border-zinc-300 rounded-lg focus:outline-emerald-500 focus:ring-1 focus:ring-emerald-500">
+            
+            <input type="tel" id="cust-phone" placeholder="No. WhatsApp / HP" class="w-full px-3.5 py-2 text-xs bg-white border border-zinc-300 rounded-lg focus:outline-emerald-500 focus:ring-1 focus:ring-emerald-500">
+
+            <textarea id="cust-address" rows="2" placeholder="Alamat Lengkap (No Rumah, Blok, RT/RW, Patokan)" class="w-full px-3.5 py-2 text-xs bg-white border border-zinc-300 rounded-lg focus:outline-emerald-500 focus:ring-1 focus:ring-emerald-500"></textarea>
+
+            <input type="text" id="cust-notes" placeholder="Catatan Logistik (Misal: Panaskan makanan, Titip satpam)" class="w-full px-3.5 py-2 text-xs bg-white border border-zinc-300 rounded-lg focus:outline-emerald-500 focus:ring-1 focus:ring-emerald-500">
+          </div>
+
+          <!-- Checkout & WhatsApp Redirection Button -->
+          <button onclick="processWhatsAppCheckout()" class="w-full mt-3 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/20 cursor-pointer text-sm">
+            <i class="ph-bold ph-whatsapp-logo text-xl"></i>
+            <span>Checkout ke WhatsApp Admin</span>
+          </button>
+          <p class="text-[10px] text-center text-zinc-400">Ringkasan order dan format invoice akan disusun otomatis.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MOBILE FIXED BOTTOM BAR ================= -->
+  <div class="fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-zinc-200 p-3 flex items-center justify-between sm:hidden">
+    <div>
+      <span class="text-[11px] text-zinc-400 block font-medium">Total Pesanan:</span>
+      <span id="mobile-bottom-total" class="font-bold text-emerald-600 text-sm">Rp 0</span>
+    </div>
+    <button onclick="toggleCartDrawer(true)" class="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-emerald-600/20 cursor-pointer">
+      <i class="ph-bold ph-shopping-bag"></i>
+      <span>Buka Tas Belanja</span>
+    </button>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer id="about" class="bg-zinc-950 text-white pt-16 pb-12 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-zinc-800">
+        <div class="space-y-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500 text-zinc-950 flex items-center justify-center font-black">K</div>
+            <span class="text-xl font-bold tracking-tight">KONBINI.CO</span>
+          </div>
+          <p class="text-zinc-400 text-xs leading-relaxed">
+            Convenience store generasi baru dengan kurasi makanan siap saji berkualitas, camilan khas Asia, dan sistem pesan-antar kilat.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold tracking-wider uppercase text-zinc-300 mb-4">Jam Operasional</h4>
+          <ul class="text-xs text-zinc-400 space-y-2">
+            <li>Toko Fisik: 24 Jam Non-stop</li>
+            <li>Layanan Pesan Antar: 07:00 - 23:30 WIB</li>
+            <li>Pengiriman Instan & Same Day</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold tracking-wider uppercase text-zinc-300 mb-4">Customer Care</h4>
+          <ul class="text-xs text-zinc-400 space-y-2">
+            <li>WhatsApp Order: +62 812-3456-7890</li>
+            <li>Email: halo@konbini.store</li>
+            <li>Jakarta & Bandung Coverage</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold tracking-wider uppercase text-zinc-300 mb-4">Standar Layanan</h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-400">100% Halal Certified</span>
+            <span class="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-400">Thermal Pouch</span>
+            <span class="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-400">No Minimum Order</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-8 text-center text-xs text-zinc-500">
+        &copy; 2026 KONBINI.CO Convenience Store. Seluruh hak cipta dilindungi.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // Nomor WhatsApp Pengelola Toko (Ganti sesuai keperluan)
+    const WA_PHONE_NUMBER = "6281234567890";
+
+    // DATABASE PRODUK KATALOG
+    const products = [
+      {
+        id: 1,
+        title: "Tokyo Karaage Bento Box",
+        category: "Ready-to-Eat",
+        price: 38000,
+        images: [
+          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Ayam fillet karage berbalut bumbu shoyu jahe renyah, disajikan bersama nasi jepang koshihikari, tamagoyaki manis lembut, dan salad kol segar bersaus wijen sangrai. Sudah termasuk saus pilihan.",
+        variants: ["Original Mayo", "Spicy Nanban", "Teriyaki Glaze"],
+        sizes: ["Regular (300g)", "Large Jumbo (450g)"]
+      },
+      {
+        id: 2,
+        title: "Artisan Strawberry Fruit Sando",
+        category: "Snack & Bakery",
+        price: 26000,
+        images: [
+          "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Sandwich roti susu Jepang (Shokupan) yang sangat empuk, diisi whipped cream vanila segar yang manis ringan dan buah stroberi segar utuh kualitas pilihan.",
+        variants: ["Fresh Strawberry", "Mixed Fruit Berry", "Matcha Cream"],
+        sizes: ["Single Pack (2 pcs)", "Twin Pack (4 pcs)"]
+      },
+      {
+        id: 3,
+        title: "Shizuoka Ceremonial Matcha Cold Brew",
+        category: "Beverage & Brew",
+        price: 24000,
+        images: [
+          "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Diseduh perlahan selama 12 jam dari bubuk teh hijau Shizuoka murni. Rasa umami pekat dengan aftertaste manis alami. Rendah gula dan kaya antioksidan.",
+        variants: ["Oat Milk Blend", "Fresh Milk 100%", "Pure Usucha (No Milk)"],
+        sizes: ["Kemasan Botol 250ml", "Sharing Size 500ml"]
+      },
+      {
+        id: 4,
+        title: "Spicy Salmon Mayo Onigiri",
+        category: "Ready-to-Eat",
+        price: 16500,
+        images: [
+          "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80"
+        ],
+        desc: "Nasi kepal segitiga berbalut rumput laut nori renyah dengan kemasan easy-pull. Isian serpihan salmon panggang melimpah yang dibalut mayo pedas gurih.",
+        variants: ["Spicy Mayo", "Smoked Teriyaki", "Original Furikake"],
+        sizes: ["Standard 110g", "Double Pack (2 pcs)"]
+      }
+    ];
+
+    // STATE KERANJANG
+    let cart = [];
+    let activeModalProduct = null;
+    let selectedVariant = "";
+    let selectedSize = "";
+    let modalQuantity = 1;
+
+    // FORMAT RUPIAH
+    const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+
+    // RENDER PRODUCT GRID
+    function renderProductGrid() {
+      const container = document.getElementById('product-grid-container');
+      container.innerHTML = products.map((item, index) => `
+        <div class="group bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <!-- Large Aspect Ratio Clean Image Container -->
+            <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden cursor-pointer" onclick="openModal(${index})">
+              <img src="${item.images[0]}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-3 left-3 bg-zinc-900/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                ${item.category}
+              </span>
+              <button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-zinc-900 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition transform group-hover:scale-110">
+                <i class="ph-bold ph-eye text-base"></i>
+              </button>
+            </div>
+
+            <div class="p-5">
+              <h3 class="font-extrabold text-base text-zinc-900 group-hover:text-emerald-600 transition-colors line-clamp-1 cursor-pointer" onclick="openModal(${index})">
+                ${item.title}
+              </h3>
+              <p class="text-xs text-zinc-500 mt-1 line-clamp-2 leading-relaxed">
+                ${item.desc}
+              </p>
+            </div>
+          </div>
+
+          <div class="px-5 pb-5 pt-2 flex items-center justify-between border-t border-zinc-100">
+            <div>
+              <span class="text-[10px] uppercase text-zinc-400 font-bold block">Harga Mulai</span>
+              <span class="text-base font-black text-emerald-600">${formatIDR(item.price)}</span>
+            </div>
+            <button onclick="openModal(${index})" class="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer">
+              <i class="ph-bold ph-sliders"></i>
+              <span>Opsi & Beli</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // MODAL HANDLERS
+    function openModal(index) {
+      activeModalProduct = products[index];
+      modalQuantity = 1;
+      selectedVariant = activeModalProduct.variants[0];
+      selectedSize = activeModalProduct.sizes[0];
+
+      document.getElementById('modal-title').innerText = activeModalProduct.title;
+      document.getElementById('modal-category').innerText = activeModalProduct.category;
+      document.getElementById('modal-price').innerText = formatIDR(activeModalProduct.price);
+      document.getElementById('modal-desc').innerText = activeModalProduct.desc;
+      document.getElementById('modal-qty').innerText = modalQuantity;
+      
+      const mainImg = document.getElementById('modal-main-img');
+      mainImg.src = activeModalProduct.images[0];
+
+      // Multi images thumbnails
+      const thumbsContainer = document.getElementById('modal-thumbs');
+      thumbsContainer.innerHTML = activeModalProduct.images.map((img, i) => `
+        <button onclick="changeModalImage('${img}')" class="w-16 h-16 rounded-xl overflow-hidden border-2 border-transparent hover:border-emerald-600 focus:border-emerald-600 transition flex-shrink-0">
+          <img src="${img}" class="w-full h-full object-cover">
+        </button>
+      `).join('');
+
+      renderModalSKUs();
+
+      document.getElementById('product-modal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function changeModalImage(src) {
+      document.getElementById('modal-main-img').src = src;
+    }
+
+    function renderModalSKUs() {
+      // Variants
+      const variantContainer = document.getElementById('modal-variants');
+      variantContainer.innerHTML = activeModalProduct.variants.map(v => `
+        <button onclick="selectVariant('${v}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${selectedVariant === v ? 'border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600' : 'border-zinc-200 text-zinc-600 hover:bg-zinc-50'}">
+          ${v}
+        </button>
+      `).join('');
+
+      // Sizes
+      const sizeContainer = document.getElementById('modal-sizes');
+      sizeContainer.innerHTML = activeModalProduct.sizes.map(s => `
+        <button onclick="selectSize('${s}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${selectedSize === s ? 'border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600' : 'border-zinc-200 text-zinc-600 hover:bg-zinc-50'}">
+          ${s}
+        </button>
+      `).join('');
+    }
+
+    function selectVariant(v) {
+      selectedVariant = v;
+      renderModalSKUs();
+    }
+
+    function selectSize(s) {
+      selectedSize = s;
+      renderModalSKUs();
+    }
+
+    function adjustModalQty(delta) {
+      modalQuantity = Math.max(1, modalQuantity + delta);
+      document.getElementById('modal-qty').innerText = modalQuantity;
+    }
+
+    function closeModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // CART OPERATIONS
+    function addCurrentModalToCart() {
+      if (!activeModalProduct) return;
+
+      const cartItemKey = `${activeModalProduct.id}-${selectedVariant}-${selectedSize}`;
+      const existing = cart.find(item => item.key === cartItemKey);
+
+      if (existing) {
+        existing.qty += modalQuantity;
+      } else {
+        cart.push({
+          key: cartItemKey,
+          id: activeModalProduct.id,
+          title: activeModalProduct.title,
+          price: activeModalProduct.price,
+          variant: selectedVariant,
+          size: selectedSize,
+          image: activeModalProduct.images[0],
+          qty: modalQuantity
+        });
+      }
+
+      closeModal();
+      updateCartUI();
+      toggleCartDrawer(true);
+    }
+
+    function updateCartQty(key, delta) {
+      const item = cart.find(i => i.key === key);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+          cart = cart.filter(i => i.key !== key);
+        }
+      }
+      updateCartUI();
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cart-drawer');
+      if (open) {
+        drawer.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      } else {
+        drawer.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    function updateCartUI() {
+      const badge = document.getElementById('cart-badge');
+      const itemsContainer = document.getElementById('cart-items-container');
+      const totalPriceEl = document.getElementById('cart-total-price');
+      const mobileTotalEl = document.getElementById('mobile-bottom-total');
+
+      const totalItemsCount = cart.reduce((acc, item) => acc + item.qty, 0);
+      const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+      badge.innerText = totalItemsCount;
+      totalPriceEl.innerText = formatIDR(totalAmount);
+      mobileTotalEl.innerText = formatIDR(totalAmount);
+
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-center text-zinc-400">
+            <i class="ph-bold ph-basket text-5xl mb-2 text-zinc-300"></i>
+            <p class="text-sm font-semibold text-zinc-600">Tas belanja Anda masih kosong</p>
+            <p class="text-xs text-zinc-400 mt-1">Pilih menu favorit Anda dari katalog etalase.</p>
+          </div>
+        `;
+        return;
+      }
+
+      itemsContainer.innerHTML = cart.map(item => `
+        <div class="flex items-center gap-3 p-3 bg-zinc-50 rounded-xl border border-zinc-200">
+          <img src="${item.image}" alt="${item.title}" class="w-16 h-16 rounded-lg object-cover bg-white">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-zinc-900 truncate">${item.title}</h4>
+            <span class="text-[10px] text-zinc-500 block">${item.variant} • ${item.size}</span>
+            <span class="text-xs font-black text-emerald-600 mt-1 block">${formatIDR(item.price)}</span>
+          </div>
+          <div class="flex items-center border border-zinc-200 bg-white rounded-lg overflow-hidden">
+            <button onclick="updateCartQty('${item.key}', -1)" class="w-7 h-7 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 font-bold text-xs">-</button>
+            <span class="w-7 text-center text-xs font-bold text-zinc-800">${item.qty}</span>
+            <button onclick="updateCartQty('${item.key}', 1)" class="w-7 h-7 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 font-bold text-xs">+</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // REDIRECT TO WHATSAPP FLOW
+    function processWhatsAppCheckout() {
+      if (cart.length === 0) {
+        alert("Keranjang belanja Anda masih kosong!");
+        return;
+      }
+
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const notes = document.getElementById('cust-notes').value.trim();
+
+      if (!name || !address) {
+        alert("Harap isi Nama Penerima dan Alamat Lengkap untuk kebutuhan logistik pengiriman.");
+        return;
+      }
+
+      const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+      // Generate WhatsApp message format
+      let msg = `*HALO KONBINI.CO - ORDER BARU*%0A`;
+      msg += `============================%0A`;
+      msg += `*DETAIL PENERIMA & LOGISTIK:*%0A`;
+      msg += `👤 Nama: ${encodeURIComponent(name)}%0A`;
+      msg += `📞 No. HP: ${encodeURIComponent(phone || '-')}%0A`;
+      msg += `📍 Alamat: ${encodeURIComponent(address)}%0A`;
+      msg += `📝 Catatan Khusus: ${encodeURIComponent(notes || '-')}%0A`;
+      msg += `============================%0A`;
+      msg += `*RINCIAN ITEM PESANAN:*%0A`;
+
+      cart.forEach((item, idx) => {
+        msg += `${idx + 1}. *${encodeURIComponent(item.title)}*%0A`;
+        msg += `   └ Varian: ${encodeURIComponent(item.variant)} (${encodeURIComponent(item.size)})%0A`;
+        msg += `   └ ${item.qty}x @ ${formatIDR(item.price)} = *${formatIDR(item.price * item.qty)}*%0A`;
+      });
+
+      msg += `============================%0A`;
+      msg += `*TOTAL ESTIMASI: ${formatIDR(totalAmount)}*%0A`;
+      msg += `*(Belum termasuk ongkir kurir instan)*%0A%0A`;
+      msg += `Mohon konfirmasi ketersediaan stok & ongkos kirim ke alamat saya. Terima kasih!`;
+
+      const whatsappURL = `https://wa.me/${WA_PHONE_NUMBER}?text=${msg}`;
+      window.open(whatsappURL, '_blank');
+    }
+
+    // INIT
+    renderProductGrid();
+    updateCartUI();
+  </script>
+</body>
+</html>

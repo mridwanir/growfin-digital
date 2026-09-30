@@ -8,7 +8,7 @@ export function ServiceHeroScreen() {
   const { client, setIsBookingModalOpen } = useServiceDemo();
   const { ref, isVisible } = useScrollReveal(0.1);
 
-  const heroImage = '/image/service/anton-savinov-aQxOYwG_GyI-unsplash.jpg';
+  const heroImage = client.heroImage || '/image/service/anton-savinov-aQxOYwG_GyI-unsplash.jpg';
 
   return (
     <section id="home" className="relative h-screen min-h-[600px] flex items-center justify-center pt-20 -mx-4 sm:mx-0 sm:rounded-[40px] overflow-hidden -mt-8 mb-16">

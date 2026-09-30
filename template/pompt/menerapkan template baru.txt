@@ -1,0 +1,23 @@
+terapkan templating fnb->fastfood menggunakan kode html pada file D:\Project\Growfin Digital\template\f&b\fastfood\fastfood_default.html
+gunakan gambar yang ada di public/image/fnb/fastfood sebagai gambar placeholder. beri nama default untuk templat ini
+
+ikuti tahapan penerapan template berikut:
+### 1. Dekonstruksi & *Scaffolding* (Struktur Folder)
+*   Menganalisis file HTML mentah untuk memecahnya menjadi komponen-komponen React yang modular (seperti `Header`, `Menu/Layanan`, `Galeri`, `Ulasan`, `Kontak`).
+*   Membuat folder tema baru di dalam direktori spesifik *(misal: `frontend/components/demo/kategori/sub-kategori/themes/[nama-tema]`)*.
+
+### 2. Integrasi *State* & Penghapusan *Hardcode* (Agnostik Data)
+*   Menghubungkan komponen dengan *Context Provider* spesifik (seperti `useFnbDemo()` atau `useServiceDemo()`).
+*   Mengganti **semua *copywriting* statis** dengan pemanggilan properti dinamis dari JSON `client` dan `client.metadata` (seperti `client.name`, `client.tagline`, `admin.name`, dll) agar tersinkronisasi murni dengan *Live Editor*.
+*   Mengganti *URL* gambar eksternal (Unsplash) ke aset *placeholder* lokal dengan *logic array modulus* acak yang sudah distandardisasi.
+
+### 3. Injeksi *Theme Engine* (Warna Dinamis)
+*   Menyuntikkan variabel CSS `:root { --brand-primary: ${client.metadata?.themeColor} }` pada file `Layout` utama.
+*   Merombak kode warna statis bawaan HTML (misal: *amber-500*, *blue-600*) menjadi *utility classes* Tailwind bawaan Growfin (`bg-brand-primary`, `text-brand-primary`, `bg-brand-light`) agar perubahan *hex color* di dasbor otomatis merefleksikan warna *layout* secara *real-time*.
+
+### 4. Menghubungkan Komponen Universal
+*   Memastikan fitur-fitur interaktif standar seperti *Floating Cart*, *Checkout Modal*, atau *Customization Modal* sudah dipanggil dan terhubung ke tombol aksi (via `setIsCartModalOpen` dll).
+
+### 5. Registrasi *Router* & *Live Editor*
+*   Menambahkan logika *routing* baru di `[Kategori]Router.tsx` agar nama tema bisa me-render komponen `<[NamaTema]Layout />`.
+*   Mendaftarkan *ID Tema* *(misal: `kategori-subkategori-namatema`)* ke dalam daftar pilihan di file `LiveEditorDrawer.tsx` agar tema tersebut langsung muncul dan bisa diplih oleh *user* di Dasbor.

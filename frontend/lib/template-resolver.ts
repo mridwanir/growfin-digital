@@ -13,11 +13,11 @@ const KEYWORDS = {
   ],
   grooming: [
     'kecantikan', 'salon', 'spa', 'cukur', 'barber', 'pijat', 'massage', 'terapi',
-    'beauty', 'hair', 'nail', 'skin care', 'make-up', 'artist'
+    'beauty', 'hair', 'nail', 'skin care', 'skincare', 'make-up', 'makeup', 'artist', 'klinik kecantikan', 'aesthetic'
   ],
   retail: [
     'toko', 'roti', 'baju', 'pakaian', 'sepatu', 'tas', 'supermarket', 'minimarket', 'grosir', 
-    'elektronik', 'gadget', 'handphone', 'komputer', 'optik', 'kacamata', 'kosmetik', 'skincare',
+    'elektronik', 'gadget', 'handphone', 'komputer', 'optik', 'kacamata', 'kosmetik',
     'aprotek', 'obat', 'material', 'bangunan', 'buku', 'alat tulis', 'mainan', 'pet shop',
     'convenience', 'clothing', 'boutique', 'shoe', 'hardware'
   ]
@@ -33,16 +33,16 @@ export function resolveTemplateType(category: string | undefined | null): Templa
 
   const normalizedCategory = category.toLowerCase().trim();
 
+  for (const keyword of KEYWORDS.grooming) {
+    if (normalizedCategory.includes(keyword)) return 'grooming';
+  }
+
   for (const keyword of KEYWORDS.fnb) {
     if (normalizedCategory.includes(keyword)) return 'fnb';
   }
 
   for (const keyword of KEYWORDS.service) {
     if (normalizedCategory.includes(keyword)) return 'service';
-  }
-  
-  for (const keyword of KEYWORDS.grooming) {
-    if (normalizedCategory.includes(keyword)) return 'grooming';
   }
 
   for (const keyword of KEYWORDS.retail) {

@@ -2,9 +2,11 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { resolveTemplateType } from '@/lib/template-resolver';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Resend } from 'resend';
 
 // 1. Inisialisasi Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Generate a URL-friendly slug from the business name
 function generateSlug(name: string): string {
@@ -59,14 +61,39 @@ function mapPrimaryTypeToCategory(primaryType: string, userCategory: string): st
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, category, phone, city, mapsUrl, force } = body;
+    const { name, category, phone, email, city, mapsUrl, force, turnstileToken } = body;
 
     // Validate required fields
-    if (!name || !category || !phone || !city || !mapsUrl) {
+    if (!name || !category || !phone || !email || !city || !mapsUrl) {
       return NextResponse.json(
-        { error: 'All fields (name, category, phone, city, mapsUrl) are required.' },
+        { error: 'All fields are required.' },
         { status: 400 }
       );
+    }
+
+    if (!turnstileToken) {
+      return NextResponse.json(
+        { error: 'Validasi keamanan gagal. Harap centang Captcha.' },
+        { status: 400 }
+      );
+    }
+
+    // Verify Turnstile
+    const turnstileData = new FormData();
+    turnstileData.append('secret', process.env.TURNSTILE_SECRET_KEY || '');
+    turnstileData.append('response', turnstileToken);
+
+    try {
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        body: turnstileData
+      });
+      const verifyOutcome = await verifyRes.json();
+      if (!verifyOutcome.success) {
+        return NextResponse.json({ error: 'Validasi keamanan (CAPTCHA) gagal.' }, { status: 400 });
+      }
+    } catch (e) {
+      return NextResponse.json({ error: 'Gagal memverifikasi keamanan.' }, { status: 500 });
     }
 
     const normalizedPhone = normalizePhone(phone);
@@ -301,7 +328,7 @@ export async function POST(request: Request) {
     // Determine correct default layout
     const templateType = resolveTemplateType(adjustedCategory);
     let defaultLayoutId = 'retail-clothing-default';
-    
+
     if (templateType === 'fnb') {
       if (adjustedCategory.toLowerCase().includes('restaurant')) defaultLayoutId = 'fnb-restaurant-default';
       else defaultLayoutId = 'fnb-cafe-default';
@@ -316,7 +343,7 @@ export async function POST(request: Request) {
       const cat = adjustedCategory.toLowerCase();
       const isGroceries = cat.includes('supermarket') || cat.includes('convenience') || cat.includes('grosir') || cat.includes('minimarket');
       const isElectronic = cat.includes('electronic') || cat.includes('gadget') || cat.includes('computer');
-      
+
       if (isGroceries) {
         defaultLayoutId = 'retail-groceries-default';
       } else if (isElectronic) {
@@ -338,8 +365,8 @@ export async function POST(request: Request) {
           phone: normalizedPhone,
           city,
           maps_url: mapsUrl,
-          metadata: metadata,
-          draft_metadata: metadata,
+          metadata: { ...metadata, userEmail: email },
+          draft_metadata: { ...metadata, userEmail: email },
           scraping_status: 'completed',
           layout_id: defaultLayoutId
         }
@@ -350,6 +377,32 @@ export async function POST(request: Request) {
     if (error) {
       console.error('Supabase Error:', error);
       return NextResponse.json({ error: 'Gagal menyimpan demo ke database.' }, { status: 500 });
+    }
+
+    // 7. Kirim Email Notifikasi via Resend
+    const previewUrl = `https://growfin.my.id/demo/${slug}`;
+    try {
+      await resend.emails.send({
+        from: 'Growfin <hello@growfin.my.id>', // Make sure domain is verified on Resend
+        to: email,
+        subject: 'Website Bisnis Anda Sudah Siap',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
+            <h2 style="color: #00b894;">Halo Pemilik ${realName}</h2>
+            <p>Sistem kami telah selesai meracik website untuk bisnis <b>${realName}</b>.</p>
+            <p>Silakan klik tombol di bawah ini untuk melihat hasilnya secara live:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${previewUrl}" style="background-color: #00b894; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 8px; display: inline-block;">Lihat Website Saya</a>
+            </div>
+            <p>Atau copy link berikut: <br><a href="${previewUrl}" style="color: #00b894;">${previewUrl}</a></p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+            <p style="font-size: 12px; color: #999;">Email ini dikirim secara otomatis. Jika Anda butuh bantuan, balas email ke growfin.id@gmail.com atau hubungi tim kami.</p>
+          </div>
+        `
+      });
+    } catch (e) {
+      console.error('Failed to send email:', e);
+      // We don't fail the request if email fails, but we can log it.
     }
 
     return NextResponse.json({ success: true, slug: data.slug, isExisting: false });

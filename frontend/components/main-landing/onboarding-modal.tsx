@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Search } from 'lucide-react';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -12,16 +13,18 @@ interface OnboardingModalProps {
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const router = useRouter();
   const [mode, setMode] = useState<'generate' | 'find'>('generate');
-  const [step, setStep] = useState<'form' | 'loading' | 'existing' | 'confirmation'>('form');
+  const [step, setStep] = useState<'form' | 'loading' | 'existing' | 'confirmation' | 'emailSent'>('form');
   const [realName, setRealName] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
     category: 'Restaurant',
     phone: '',
+    email: '',
     city: '',
     mapsUrl: '',
-    force: false
+    force: false,
+    turnstileToken: ''
   });
 
   const [findPhone, setFindPhone] = useState('');
@@ -75,6 +78,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return;
     }
 
+    if (!formData.turnstileToken) {
+      setErrorMsg('Mohon centang verifikasi keamanan (CAPTCHA).');
+      return;
+    }
+
     setStep('loading');
 
     try {
@@ -94,20 +102,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       }
 
       if (data.success && data.slug) {
-        if (data.isExisting) {
-          setStep('existing');
-          setTimeout(() => {
-            router.push(`/demo/${data.slug}`);
-            onClose();
-            setStep('form');
-          }, 3000);
-        } else {
-          setTimeout(() => {
-            router.push(`/demo/${data.slug}`);
-            onClose();
-            setStep('form');
-          }, 3000);
-        }
+        setStep('emailSent');
       } else {
         setErrorMsg(data.error || 'Gagal membuat template.');
         setStep('form');
@@ -202,7 +197,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       }}></div>
       <div className="relative bg-white rounded-[2rem] p-8 max-w-md w-full border-4 border-emerald-soft shadow-2xl animate-pop-up z-10 overflow-hidden">
         <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-soft blob-shape opacity-50"></div>
-        
+
         {step === 'form' && (
           <button
             onClick={() => {
@@ -216,7 +211,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         )}
 
         <div className="relative z-10">
-          
+
           {step === 'form' && mode === 'generate' && (
             <>
               <h3 className="text-2xl font-extrabold text-dark mb-1">Ceritakan Bisnis Anda</h3>
@@ -248,10 +243,16 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   <input type="tel" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Nomor WhatsApp (Cth: 628...)" required value={formData.phone} onChange={(e) => handlePhoneChange(e, 'generate')} />
                 </div>
                 <div>
+                  <input type="email" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Alamat Email (Untuk kirim hasil website)" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                </div>
+                <div>
                   <input type="text" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Kota" required value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
                 </div>
                 <div>
                   <input type="url" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Link Google Maps" required value={formData.mapsUrl} onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })} />
+                </div>
+                <div className="flex justify-center pt-2">
+                  <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} onSuccess={(token) => setFormData({ ...formData, turnstileToken: token })} />
                 </div>
                 <div className="pt-4">
                   <button type="submit" className="w-full py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-[0_10px_20px_rgba(0,184,148,0.2)] hover:shadow-[0_15px_25px_rgba(0,184,148,0.3)] transition-all active:scale-95">
@@ -308,7 +309,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               </div>
               <div className="space-y-2">
                 <h3 className="text-xl font-extrabold text-dark">Membangun Website Anda...</h3>
-                <p className="text-sm text-slate-500 font-medium">Sistem sedang meracik tampilan terbaik untuk bisnis Anda.</p>
+                <p className="text-sm text-slate-500 font-medium">Sistem sedang meracik tampilan terbaik untuk bisnis Anda. hasilnya akan dikirim ke {formData.email}</p>
               </div>
               <div className="w-full max-w-xs bg-slate-100 rounded-full h-2.5 mt-4 overflow-hidden relative">
                 <div className="bg-emerald h-2.5 rounded-full animate-[progress_3s_ease-in-out_infinite]" style={{ width: '100%', transformOrigin: 'left' }}></div>
@@ -363,6 +364,25 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   Ya, Lanjutkan
                 </button>
               </div>
+            </div>
+          )}
+
+          {step === 'emailSent' && (
+            <div className="py-12 flex flex-col items-center justify-center text-center space-y-6 animate-in zoom-in duration-300">
+              <div className="relative">
+                <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-500 rounded-full flex items-center justify-center relative z-10 shadow-lg">
+                  <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-xl font-extrabold text-dark">Cek Email Anda!</h3>
+                <p className="text-sm text-slate-500 font-medium">Link website berhasil dibuat dan telah dikirim ke <span className="font-bold text-dark">{formData.email}</span>.</p>
+                <p className="text-xs text-slate-400">Silakan periksa kotak masuk atau folder spam Anda.</p>
+              </div>
+              <button onClick={() => { onClose(); setTimeout(() => { setStep('form'); setMode('generate'); setFormData({ ...formData, turnstileToken: '' }); }, 300); }} className="w-full py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-lg transition-all active:scale-95 mt-4">
+                Selesai
+              </button>
             </div>
           )}
 

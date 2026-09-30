@@ -2,52 +2,26 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { language } = useLanguage();
 
   const faqItems = [
     {
-      q: {
-        en: 'How fast can my business website go live using the templates?',
-        id: 'Seberapa cepat website bisnis saya bisa live menggunakan template?'
-      },
-      a: {
-        en: 'With our Instant Template package, your business website can be customized and fully live on the internet within 24 hours. It is the fastest way to digitize your business.',
-        id: 'Dengan paket Template Instan kami, website bisnis Anda dapat disesuaikan dan sepenuhnya live di internet dalam waktu 24 jam. Ini adalah cara tercepat untuk mendigitalkan bisnis Anda.'
-      }
+      q: 'Seberapa cepat website bisnis saya bisa live?',
+      a: 'Sangat cepat! Dengan sistem kami, setelah Anda mengisi form singkat, website akan langsung diproses dan siap online maksimal dalam 24 jam.'
     },
     {
-      q: {
-        en: 'Do I need any technical or coding skills to use your service?',
-        id: 'Apakah saya memerlukan keahlian teknis atau coding untuk menggunakan layanan Anda?'
-      },
-      a: {
-        en: 'Not at all! We handle all the technical heavy lifting, from cloud hosting to domain setup. You just provide us with your business details, and we deliver a ready-to-use product.',
-        id: 'Sama sekali tidak! Kami menangani semua hal teknis yang rumit, mulai dari cloud hosting hingga pengaturan domain. Anda hanya perlu memberikan detail bisnis Anda, dan kami memberikan produk siap pakai.'
-      }
+      q: 'Apakah saya perlu paham coding atau teknis IT?',
+      a: 'Nggak perlu sama sekali. Tim Growfin yang akan urus semua hal teknis yang rumit seperti server, domain, hingga keamanan. Anda tinggal pakai dashboard yang kami sediakan untuk update menu, harga, atau galeri dengan sangat mudah.'
     },
     {
-      q: {
-        en: 'Can I add custom features to my template later as my business grows?',
-        id: 'Bisakah saya menambahkan fitur kustom ke template saya nanti seiring berkembangnya bisnis saya?'
-      },
-      a: {
-        en: 'Absolutely! That is the beauty of our platform. You can start with our affordable Instant Template, and upgrade to our Pro Custom plan anytime to add specific features like booking systems or payment gateways.',
-        id: 'Tentu saja! Itulah keunggulan platform kami. Anda dapat mulai dengan Template Instan kami yang terjangkau, dan meningkatkan ke paket Pro Custom kapan saja untuk menambahkan fitur spesifik seperti sistem pemesanan atau gateway pembayaran.'
-      }
+      q: 'Bisa nggak kalau nanti nambah fitur custom kayak booking otomatis?',
+      a: 'Bisa banget! Platform Growfin dirancang fleksibel. Anda bisa mulai dari paket Instan dulu, dan kalau bisnis makin besar, tinggal upgrade untuk menambahkan fitur custom spesifik yang bisnis Anda butuhkan.'
     },
     {
-      q: {
-        en: 'Are there any hidden monthly fees for the Instant Template?',
-        id: 'Apakah ada biaya bulanan tersembunyi untuk Template Instan?'
-      },
-      a: {
-        en: 'No hidden fees. Our Instant Template is a one-time setup fee. You only need to cover your standard yearly domain renewal costs, making it highly affordable for growing businesses.',
-        id: 'Tidak ada biaya tersembunyi. Template Instan kami adalah biaya pengaturan satu kali. Anda hanya perlu menanggung biaya pembaruan domain tahunan standar Anda, menjadikannya sangat terjangkau untuk bisnis yang sedang berkembang.'
-      }
+      q: 'Apakah ada biaya bulanan yang tiba-tiba ditagih?',
+      a: 'Sistem harga kami sangat transparan, cukup bayar biaya setup di awal (untuk paket instan/pro). Sisanya Anda hanya perlu membayar biaya perpanjangan domain standar tahunan, tanpa ada biaya langganan bulanan yang memberatkan.'
     },
   ];
 
@@ -56,61 +30,40 @@ export function FAQ() {
   };
 
   return (
-    <section id="faq" className="py-24 bg-[#0B0B0E] border-t border-[#262633]">
+    <section id="faq" className="py-24 bg-soft border-t border-slate-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* Asymmetric 2-column layout */}
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           
-          {/* Kolom Kiri (Anchor & Direct Support) */}
           <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-6 text-center lg:text-left">
-            <h2 className="text-4xl md:text-5xl font-black text-[#FFFFFF] tracking-tight leading-tight">
-              {language === 'en' ? 'Frequently Asked Questions' : 'Pertanyaan yang Sering Diajukan'}
+            <h2 className="text-3xl md:text-4xl font-extrabold text-dark tracking-tight leading-tight">
+              Sering Ditanyakan
             </h2>
-            <p className="text-base text-[#8E8EA0] font-medium max-w-md mx-auto lg:mx-0">
-              {language === 'en' 
-                ? 'Have another question? Please contact our team! We are here to help you understand every technical detail.'
-                : 'Punya pertanyaan lain? Silakan hubungi tim kami! Kami di sini untuk membantu Anda memahami setiap detail teknis.'}
+            <p className="text-base text-slate-500 font-medium max-w-md mx-auto lg:mx-0">
+              Masih ada yang mau diobrolin? Jangan ragu buat kontak tim support kita. Santai aja, kita siap bantu jelasin setiap detailnya.
             </p>
             <div className="pt-2 flex justify-center lg:justify-start">
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center px-8 py-3.5 bg-[#00b894] hover:bg-[#00e0b8] text-[#FFFFFF] text-sm font-bold rounded-full shadow-[0_0_20px_rgba(112,66,244,0.3)] transition-all active:scale-95"
-              >
-                Contact Our Team
+              <a href="https://wa.me/6289630352370" target="_blank" className="inline-flex items-center justify-center px-8 py-3.5 bg-emerald hover:bg-emerald-light text-white text-sm font-extrabold rounded-full shadow-lg transition-all active:scale-95">
+                Tanya Tim Support
               </a>
             </div>
           </div>
 
-          {/* Kolom Kanan (Accordion Component) */}
           <div className="lg:col-span-7 space-y-4">
             {faqItems.map((item, idx) => {
               const isOpen = openIndex === idx;
               return (
-                <div
-                  key={idx}
-                  className={`rounded-2xl bg-[#14141A] border ${isOpen ? 'border-[#00b894]/50' : 'border-[#262633]'} overflow-hidden transition-all duration-300 shadow-sm`}
-                >
-                  <button
-                    onClick={() => toggleFAQ(idx)}
-                    className="w-full flex items-center justify-between p-6 text-left"
-                  >
-                    <span className="pr-6 text-base font-semibold text-[#FFFFFF]">
-                      {item.q[language]}
-                    </span>
-                    <span className={`shrink-0 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${isOpen ? 'bg-[#00b894]/20 text-[#00e0b8]' : 'bg-[#262633] text-[#FFFFFF]'}`}>
-                      {isOpen ? (
-                        <ChevronUp className="w-4 h-4 stroke-[3]" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4 stroke-[3]" />
-                      )}
+                <div key={idx} className={`rounded-2xl bg-white border ${isOpen ? 'border-emerald/50 shadow-md' : 'border-slate-200'} overflow-hidden transition-all duration-300`}>
+                  <button onClick={() => toggleFAQ(idx)} className="w-full flex items-center justify-between p-6 text-left">
+                    <span className="pr-6 text-base font-bold text-dark">{item.q}</span>
+                    <span className={`shrink-0 flex h-8 w-8 items-center justify-center rounded-full transition-colors ${isOpen ? 'bg-emerald-soft text-emerald' : 'bg-slate-100 text-slate-400'}`}>
+                      {isOpen ? <ChevronUp className="w-4 h-4 stroke-[3]" /> : <ChevronDown className="w-4 h-4 stroke-[3]" />}
                     </span>
                   </button>
 
-                  {/* Paragraf Jawaban: Regular font, light gray, loose line height */}
                   {isOpen && (
-                    <div className="px-6 pb-6 text-sm text-[#8E8EA0] leading-loose font-normal border-t border-[#262633] pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                      {item.a[language]}
+                    <div className="px-6 pb-6 text-sm text-slate-500 leading-loose font-medium border-t border-slate-100 pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                      {item.a}
                     </div>
                   )}
                 </div>

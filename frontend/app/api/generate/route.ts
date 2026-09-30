@@ -230,14 +230,18 @@ export async function POST(request: Request) {
     // 4. Proses Ulasan (Maksimal 3 ulasan teratas)
     let reviewsText = "";
     if (place.reviews && place.reviews.length > 0) {
-      reviewsText = "Data Ulasan Asli dari Pelanggan:\n";
-      place.reviews.slice(0, 3).forEach((rev: any, idx: number) => {
-        const author = rev.authorAttribution?.displayName || "Anonim";
-        const rtg = rev.rating || 5;
-        const text = rev.text?.text || "";
-        const time = rev.relativePublishTimeDescription || "";
-        reviewsText += `${idx + 1}. [${rtg}⭐] ${author} (${time}): "${text}"\n`;
-      });
+      // Filter hanya rating 4 dan 5
+      const goodReviews = place.reviews.filter((rev: any) => (rev.rating || 5) >= 4);
+      if (goodReviews.length > 0) {
+        reviewsText = "Data Ulasan Asli dari Pelanggan:\n";
+        goodReviews.slice(0, 3).forEach((rev: any, idx: number) => {
+          const author = rev.authorAttribution?.displayName || "Anonim";
+          const rtg = rev.rating || 5;
+          const text = rev.text?.text || "";
+          const time = rev.relativePublishTimeDescription || "";
+          reviewsText += `${idx + 1}. [${rtg}⭐] ${author} (${time}): "${text}"\n`;
+        });
+      }
     }
 
     // (photosText ditiadakan)

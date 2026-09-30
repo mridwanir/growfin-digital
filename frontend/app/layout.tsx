@@ -34,6 +34,13 @@ export const viewport: Viewport = {
 }
 
 import { LanguageProvider } from '@/lib/language-context';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+
+const plusJakarta = Plus_Jakarta_Sans({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-plus-jakarta',
+});
 
 export default function RootLayout({
   children,
@@ -41,8 +48,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" className="dark bg-[#0B0B0E]">
-      <body className="antialiased bg-[#0B0B0E] text-[#FFFFFF]">
+    <html lang="id" className={`light bg-white ${plusJakarta.variable}`}>
+      <body className="antialiased bg-white text-slate-800 font-sans">
         <LanguageProvider>
           {children}
           {process.env.NODE_ENV === 'production' && <Analytics />}

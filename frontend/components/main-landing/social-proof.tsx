@@ -1,44 +1,36 @@
 'use client';
-import { useLanguage } from '@/lib/language-context';
 
 export function SocialProof() {
-  const { language } = useLanguage();
+  const logos = Array.from({ length: 13 }, (_, i) => `/image/landing/company/fake-company (${i + 1}).png`);
 
   return (
-    <section className="bg-[#0B0B0E] py-8 sm:py-12 relative z-10 border-t border-[#262633]">
-      <div className="container px-4 md:px-6 mx-auto">
-        <div className="flex flex-col items-center justify-center space-y-6">
-          {/* Context Label */}
-          <p className="text-center text-[11px] font-semibold text-[#8E8EA0] uppercase tracking-widest">
-            {language === 'en' ? 'Trusted by industry leaders' : 'Dipercaya oleh pemimpin industri'}
-          </p>
-          
-          {/* Logo Bar */}
-          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
-            <img 
-              src="/image/client/prov-jabar.png" 
-              alt="Provinsi Jawa Barat" 
-              className="h-12 md:h-14 object-contain brightness-0 invert opacity-50 transition-all duration-300 hover:opacity-100" 
-            />
-            <img 
-              src="/image/client/bapenda.png" 
-              alt="Bapenda" 
-              className="h-10 md:h-12 object-contain brightness-0 invert opacity-50 transition-all duration-300 hover:opacity-100" 
-            />
-            <img 
-              src="/image/client/sknc.png" 
-              alt="SKNC" 
-              className="h-8 md:h-10 object-contain brightness-0 invert opacity-50 transition-all duration-300 hover:opacity-100" 
-            />
-            <img 
-              src="/image/client/kostkita.png" 
-              alt="KostKita" 
-              className="h-7 md:h-9 object-contain brightness-0 invert opacity-50 transition-all duration-300 hover:opacity-100" 
-            />
-          </div>
+    <section className="bg-white py-8 sm:py-12 relative z-10 border-b border-slate-100 overflow-hidden">
+      <div className="container px-4 md:px-6 mx-auto mb-6">
+        <p className="text-center text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+          Dipercaya oleh UMKM dan instansi pemimpin industri
+        </p>
+      </div>
+
+      <div className="relative flex overflow-hidden w-full group py-4">
+        <div className="flex w-max animate-marquee space-x-12 px-6 items-center">
+          {logos.concat(logos).map((logo, idx) => (
+            <img key={idx} src={logo} alt={`Client Logo ${idx}`} className="h-8 sm:h-10 object-contain grayscale opacity-40 transition-all duration-300 hover:grayscale-0 hover:opacity-100 shrink-0" />
+          ))}
         </div>
       </div>
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+        .group:hover .animate-marquee {
+          animation-play-state: paused;
+        }
+      `}} />
     </section>
   );
 }
-

@@ -16,9 +16,11 @@ export const config = {
 export default function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
+  const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id';
+  
   let hostname = req.headers
     .get('host')!
-    .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id'}`);
+    .replace('.localhost:3000', `.${rootDomain}`);
 
   // Strip port for local testing (e.g., growfin.my.id:3000 -> growfin.my.id)
   hostname = hostname.split(':')[0];
@@ -32,12 +34,12 @@ export default function middleware(req: NextRequest) {
   // 1. Handle Subdomains & Custom Domains (e.g. kopisenja.growfin.my.id or www.kopisenja.com)
   if (
     hostname !== 'localhost' &&
-    hostname !== process.env.NEXT_PUBLIC_ROOT_DOMAIN &&
-    hostname !== `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+    hostname !== rootDomain &&
+    hostname !== `www.${rootDomain}`
   ) {
     let currentHost = hostname;
-    if (process.env.NEXT_PUBLIC_ROOT_DOMAIN && hostname.endsWith(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`)) {
-      currentHost = hostname.replace(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`, '');
+    if (hostname.endsWith(`.${rootDomain}`)) {
+      currentHost = hostname.replace(`.${rootDomain}`, '');
     }
     
     // We rewrite to /site/[currentHost] to render the tenant's page

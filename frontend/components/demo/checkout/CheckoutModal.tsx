@@ -81,6 +81,8 @@ export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutMo
         password,
       });
 
+      let finalUserId = null;
+
       if (error) {
         // If user exists, try to sign in instead
         if (error.message.includes('already registered')) {
@@ -89,12 +91,27 @@ export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutMo
             password
           });
           if (signInError) throw signInError;
-          setUserId(signInData.user.id);
+          finalUserId = signInData.user.id;
         } else {
           throw error;
         }
       } else if (data.user) {
-        setUserId(data.user.id);
+        finalUserId = data.user.id;
+      }
+
+      if (finalUserId) {
+        setUserId(finalUserId);
+        
+        // Execute Intermediate Claim (Silent)
+        try {
+          await fetch('/api/demo/claim', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug, user_id: finalUserId })
+          });
+        } catch (e) {
+          console.error("Failed to execute intermediate claim:", e);
+        }
       }
 
       // Automatically move to payment step

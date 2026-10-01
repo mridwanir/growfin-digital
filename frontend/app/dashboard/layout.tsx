@@ -14,8 +14,8 @@ export default async function DashboardLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    // If not logged in, boot them out
-    redirect('/');
+    // If not logged in, boot them out to login page
+    redirect('/login');
   }
 
   return (

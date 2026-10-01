@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase';
 import { createClient } from '@/utils/supabase/server';
 import { resolveTemplateType } from '@/lib/template-resolver';
 import { DemoEditorWrapper } from '@/components/demo/editor/DemoEditorWrapper';
+import { LockedScreen } from '@/components/demo/LockedScreen';
 import type { Metadata } from 'next';
 
 interface DemoPageProps {
@@ -56,6 +57,31 @@ export default async function DemoPage({ params }: DemoPageProps) {
       </div>
     );
   }
+
+  // --- MULAI: LOGIKA EXPIRED ON-THE-FLY ---
+  const now = new Date();
+  
+  // Kasus 1: Secara eksplisit sudah dilock dari database
+  if (dbData.status === 'locked') {
+    return <LockedScreen type="subscription_expired" businessName={dbData.name} isClaimed={!!dbData.user_id} slug={slug} currentTier={dbData.package_tier} />;
+  }
+
+  // Kasus 2: Masa FOMO (Trial) Habis
+  if (dbData.status === 'draft' && dbData.fomo_expires_at) {
+    const fomoExpiresAt = new Date(dbData.fomo_expires_at);
+    if (now > fomoExpiresAt) {
+      return <LockedScreen type="fomo_expired" businessName={dbData.name} isClaimed={!!dbData.user_id} slug={slug} currentTier={dbData.package_tier} />;
+    }
+  }
+
+  // Kasus 3: Masa Berlangganan Habis
+  if (dbData.status === 'published' && dbData.site_active_until) {
+    const activeUntil = new Date(dbData.site_active_until);
+    if (now > activeUntil) {
+      return <LockedScreen type="subscription_expired" businessName={dbData.name} isClaimed={!!dbData.user_id} slug={slug} currentTier={dbData.package_tier} />;
+    }
+  }
+  // --- SELESAI: LOGIKA EXPIRED ---
 
   // 3. Auth Guard: Check if demo is claimed
   if (dbData.user_id) {

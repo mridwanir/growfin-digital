@@ -38,7 +38,7 @@ export function LiveEditorDrawer({
   // States for Menu Editor Form
   const [editingMenuIdx, setEditingMenuIdx] = useState<number | null>(null);
   const [menuForm, setMenuForm] = useState<Partial<MenuItem>>({});
-  
+
   const supabase = createClient();
 
   const handleChange = (field: keyof BusinessDemo, value: any) => {
@@ -399,7 +399,7 @@ export function LiveEditorDrawer({
                   <textarea placeholder="Deskripsi Singkat" value={menuForm.desc || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, desc: e.target.value }))} className="w-full bg-[#0B0B0E] border border-[#262633] rounded-lg px-3 py-2 text-sm text-white focus:border-[#00b894] focus:outline-none resize-none" rows={2} />
                   <input type="text" placeholder="Kategori (misal: Makanan Utama)" value={menuForm.category || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, category: e.target.value }))} className="w-full bg-[#0B0B0E] border border-[#262633] rounded-lg px-3 py-2 text-sm text-white focus:border-[#00b894] focus:outline-none" />
                   <div className="pt-2">
-                    <CloudinaryUploader 
+                    <CloudinaryUploader
                       currentImageUrl={menuForm.imageUrl}
                       onUploadSuccess={async (url, publicId) => {
                         if (menuForm.imagePublicId) {
@@ -490,9 +490,9 @@ export function LiveEditorDrawer({
             <Save className="w-4 h-4" /> {isSaving ? 'Menyimpan...' : 'Simpan Draft'}
           </button>
           <button
-             onClick={() => setIsPublishConfirmOpen(true)}
-             disabled={isSaving}
-             className="flex-1 py-3 bg-[#00b894] hover:bg-[#00e0b8] text-[#14141A] font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,184,148,0.3)]"
+            onClick={() => setIsPublishConfirmOpen(true)}
+            disabled={isSaving}
+            className="flex-1 py-3 bg-[#00b894] hover:bg-[#00e0b8] text-[#14141A] font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,184,148,0.3)]"
           >
             <Rocket className="w-4 h-4" /> Publish
           </button>

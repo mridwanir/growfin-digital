@@ -6,6 +6,8 @@ import { GroomingDemoClient } from '@/components/demo/grooming-demo-client';
 import { supabase } from '@/lib/supabase';
 import { resolveTemplateType } from '@/lib/template-resolver';
 import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider';
+import { LockedScreen } from '@/components/demo/LockedScreen';
+import { GlobalClickTracker } from '@/components/demo/GlobalClickTracker';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -49,6 +51,23 @@ export default async function SitePage({ params }: SitePageProps) {
     // 2. Not Found or Not Published yet
     notFound();
   }
+
+  // --- MULAI: LOGIKA EXPIRED ON-THE-FLY ---
+  const now = new Date();
+  
+  // Kasus 1: Secara eksplisit sudah dilock dari database
+  if (dbData.status === 'locked') {
+    return <LockedScreen type="subscription_expired" businessName={dbData.name} isClaimed={!!dbData.user_id} slug={slug} currentTier={dbData.package_tier} />;
+  }
+
+  // Kasus 2: Masa Berlangganan Habis
+  if (dbData.site_active_until) {
+    const activeUntil = new Date(dbData.site_active_until);
+    if (now > activeUntil) {
+      return <LockedScreen type="subscription_expired" businessName={dbData.name} isClaimed={!!dbData.user_id} slug={slug} currentTier={dbData.package_tier} />;
+    }
+  }
+  // --- SELESAI: LOGIKA EXPIRED ---
 
   // 3. Determine Template Type using Resolver
   const templateType = resolveTemplateType(dbData.category);
@@ -108,6 +127,7 @@ export default async function SitePage({ params }: SitePageProps) {
 
   return (
     <DynamicThemeProvider themeColor={genericClient.themeColor}>
+      <GlobalClickTracker businessId={dbData.id} />
       {demoComponent}
     </DynamicThemeProvider>
   );

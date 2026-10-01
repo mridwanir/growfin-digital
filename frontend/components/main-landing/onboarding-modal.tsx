@@ -13,6 +13,7 @@ interface OnboardingModalProps {
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const router = useRouter();
   const [mode, setMode] = useState<'generate' | 'find'>('generate');
+  const [isMapsMode, setIsMapsMode] = useState(true);
   const [step, setStep] = useState<'form' | 'loading' | 'existing' | 'confirmation' | 'emailSent'>('form');
   const [realName, setRealName] = useState('');
 
@@ -23,6 +24,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     email: '',
     city: '',
     mapsUrl: '',
+    businessDescription: '',
     force: false,
     turnstileToken: ''
   });
@@ -78,6 +80,16 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return;
     }
 
+    if (isMapsMode && !formData.mapsUrl) {
+      setErrorMsg('Link Google Maps wajib diisi. Jika bisnis Anda belum terdaftar di Maps, silakan pilih tab "Belum di Maps" di atas.');
+      return;
+    }
+
+    if (!isMapsMode && !formData.businessDescription) {
+      setErrorMsg('Deskripsi bisnis wajib diisi agar AI bisa membuatkan website yang sesuai.');
+      return;
+    }
+
     if (!formData.turnstileToken) {
       setErrorMsg('Mohon centang verifikasi keamanan (CAPTCHA).');
       return;
@@ -86,7 +98,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     setStep('loading');
 
     try {
-      const payload = { ...formData, force: isForce };
+      const payload = { ...formData, force: isForce, isMapsMode };
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -214,8 +226,26 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
           {step === 'form' && mode === 'generate' && (
             <>
-              <h3 className="text-2xl font-extrabold text-dark mb-1">Ceritakan Bisnis Anda</h3>
-              <p className="text-sm text-slate-500 mb-6 font-medium">Isi detail singkat ini, dan sistem kami akan meracik website untuk Anda!</p>
+              <h3 className="text-2xl font-extrabold text-dark mb-1">Ceritakan Bisnis Kamu</h3>
+              {/* <p className="text-sm text-slate-500 mb-4 font-medium">Isi detail singkat ini, dan sistem kami akan meracik website untuk Anda!</p> */}
+
+              {/* Tabs Ada di Maps vs Belum di Maps */}
+              <div className="flex bg-slate-100 p-1 rounded-xl mb-6">
+                <button
+                  type="button"
+                  onClick={() => setIsMapsMode(true)}
+                  className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${isMapsMode ? 'bg-white text-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Bisnis Tersedia di Maps
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsMapsMode(false)}
+                  className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${!isMapsMode ? 'bg-white text-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Belum ada di Maps
+                </button>
+              </div>
 
               {errorMsg && (
                 <div className="mb-4 p-3 bg-red-50 text-red-500 text-sm rounded-xl text-center font-bold">
@@ -248,9 +278,22 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                 <div>
                   <input type="text" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Kota" required value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
                 </div>
-                <div>
-                  <input type="url" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Link Google Maps" required value={formData.mapsUrl} onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })} />
-                </div>
+                {isMapsMode ? (
+                  <div>
+                    <input type="url" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Link Google Maps (Wajib)" required value={formData.mapsUrl} onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })} />
+                  </div>
+                ) : (
+                  <div>
+                    <textarea
+                      className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all resize-none"
+                      placeholder="Deskripsikan bisnis kamu secara singkat (Misal: Kedai kopi kekinian dengan area outdoor yang luas...)"
+                      rows={3}
+                      required
+                      value={formData.businessDescription}
+                      onChange={(e) => setFormData({ ...formData, businessDescription: e.target.value })}
+                    />
+                  </div>
+                )}
                 <div className="flex justify-center pt-2">
                   <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} onSuccess={(token) => setFormData({ ...formData, turnstileToken: token })} />
                 </div>
@@ -263,7 +306,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
               <div className="mt-6 text-center">
                 <button onClick={() => { setMode('find'); setErrorMsg(''); }} className="text-slate-400 hover:text-emerald text-xs font-bold transition-colors">
-                  Sudah punya template? Masuk di sini
+                  Sudah pernah generate? Masuk di sini
                 </button>
               </div>
             </>

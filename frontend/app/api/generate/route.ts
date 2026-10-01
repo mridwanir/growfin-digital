@@ -61,12 +61,26 @@ function mapPrimaryTypeToCategory(primaryType: string, userCategory: string): st
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, category, phone, email, city, mapsUrl, force, turnstileToken } = body;
+    const { name, category, phone, email, city, mapsUrl, businessDescription, isMapsMode, force, turnstileToken } = body;
 
     // Validate required fields
-    if (!name || !category || !phone || !email || !city || !mapsUrl) {
+    if (!name || !category || !phone || !email || !city) {
       return NextResponse.json(
-        { error: 'All fields are required.' },
+        { error: 'Semua kolom wajib diisi.' },
+        { status: 400 }
+      );
+    }
+
+    if (isMapsMode && !mapsUrl) {
+      return NextResponse.json(
+        { error: 'Link Google Maps wajib diisi jika Anda memilih tab "Ada di Maps".' },
+        { status: 400 }
+      );
+    }
+
+    if (!isMapsMode && !businessDescription) {
+      return NextResponse.json(
+        { error: 'Deskripsi bisnis wajib diisi jika Anda memilih tab "Belum di Maps".' },
         { status: 400 }
       );
     }
@@ -98,19 +112,20 @@ export async function POST(request: Request) {
 
     const normalizedPhone = normalizePhone(phone);
 
-    // 1. Check if this phone number already generated a template
+    // 1. Check if this exact business (based on Maps URL) has already been generated
+    // This allows one phone number to have multiple different businesses/branches.
     const { data: existingData, error: findError } = await supabase
       .from('business_demos')
       .select('slug')
-      .eq('phone', normalizedPhone)
-      .maybeSingle();
+      .eq('maps_url', mapsUrl)
+      .limit(1);
 
     if (findError) {
       return NextResponse.json({ error: 'Failed to verify existing records.' }, { status: 500 });
     }
 
-    if (existingData) {
-      return NextResponse.json({ success: true, slug: existingData.slug, isExisting: true });
+    if (existingData && existingData.length > 0) {
+      return NextResponse.json({ success: true, slug: existingData[0].slug, isExisting: true });
     }
 
     // 2. Validasi ke Google Places API (New)
@@ -167,111 +182,123 @@ export async function POST(request: Request) {
       }
     }
 
-    const searchQuery = urlPlaceName ? urlPlaceName : (lat && lng ? name : `${name} ${city}`);
+    let places = [];
 
-    const placesUrl = "https://places.googleapis.com/v1/places:searchText";
-    const placesHeaders = {
-      "Content-Type": "application/json",
-      "X-Goog-Api-Key": googleApiKey,
-      "X-Goog-FieldMask": "places.displayName,places.primaryType,places.rating,places.userRatingCount,places.formattedAddress,places.googleMapsUri,places.reviews"
-    };
+    if (isMapsMode) {
+      const searchQuery = urlPlaceName ? urlPlaceName : (lat && lng ? name : `${name} ${city}`);
 
-    const placesPayload: any = {
-      textQuery: searchQuery,
-      languageCode: "id"
-    };
-
-    if (lat && lng) {
-      // Gunakan locationBias, searchText tidak support circle di locationRestriction
-      placesPayload.locationBias = {
-        circle: {
-          center: { latitude: lat, longitude: lng },
-          radius: 100.0 // 100 meters
-        }
+      const placesUrl = "https://places.googleapis.com/v1/places:searchText";
+      const placesHeaders = {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": googleApiKey,
+        "X-Goog-FieldMask": "places.displayName,places.primaryType,places.rating,places.userRatingCount,places.formattedAddress,places.googleMapsUri,places.reviews"
       };
-    }
 
-    const placesRes = await fetch(placesUrl, {
-      method: 'POST',
-      headers: placesHeaders,
-      body: JSON.stringify(placesPayload)
-    });
+      const placesPayload: any = {
+        textQuery: searchQuery,
+        languageCode: "id"
+      };
 
-    const placesData = await placesRes.json();
-    let places = placesData.places || [];
-
-    // Jika pencarian menghasilkan bisnis yang namanya melenceng jauh (Fuzzy Match dari Google), kita validasi.
-    if (places.length > 0 && !force) {
-      const originalPlaceName = places[0].displayName?.text || "";
-      const firstMatchName = originalPlaceName.toLowerCase();
-      const inputName = name.toLowerCase();
-
-      // Hitung kata yang cocok (abaikan kata generik seperti kopi, warung, toko, klinik)
-      const ignoreWords = ['kopi', 'warung', 'toko', 'klinik', 'cafe', 'salon', 'apotek'];
-      const inputWords = inputName.split(' ').filter((w: string) => w.length > 2 && !ignoreWords.includes(w));
-
-      let hasMeaningfulMatch = false;
-      if (inputWords.length === 0) {
-        // Jika input hanya berisi kata generik (misal: "Kopi"), kita cek apakah input ada di nama hasil
-        hasMeaningfulMatch = firstMatchName.includes(inputName);
-      } else {
-        hasMeaningfulMatch = inputWords.some((w: string) => firstMatchName.includes(w));
+      if (lat && lng) {
+        // Gunakan locationBias, searchText tidak support circle di locationRestriction
+        placesPayload.locationBias = {
+          circle: {
+            center: { latitude: lat, longitude: lng },
+            radius: 100.0 // 100 meters
+          }
+        };
       }
 
-      if (!hasMeaningfulMatch && !firstMatchName.includes(inputName) && !inputName.includes(firstMatchName)) {
-        // Nama terlalu melenceng (Google mengembalikan rekomendasi acak atau nama aslinya beda)
-        if (lat && lng) {
-          // Jika URL valid (ada titik), mungkin mereka salah input nama. Minta konfirmasi!
-          return NextResponse.json({
-            needsConfirmation: true,
-            realName: originalPlaceName
-          });
+      const placesRes = await fetch(placesUrl, {
+        method: 'POST',
+        headers: placesHeaders,
+        body: JSON.stringify(placesPayload)
+      });
+
+      const placesData = await placesRes.json();
+      places = placesData.places || [];
+
+      // Jika pencarian menghasilkan bisnis yang namanya melenceng jauh (Fuzzy Match dari Google), kita validasi.
+      if (places.length > 0 && !force) {
+        const originalPlaceName = places[0].displayName?.text || "";
+        const firstMatchName = originalPlaceName.toLowerCase();
+        const inputName = name.toLowerCase();
+
+        // Hitung kata yang cocok (abaikan kata generik seperti kopi, warung, toko, klinik)
+        const ignoreWords = ['kopi', 'warung', 'toko', 'klinik', 'cafe', 'salon', 'apotek'];
+        const inputWords = inputName.split(' ').filter((w: string) => w.length > 2 && !ignoreWords.includes(w));
+
+        let hasMeaningfulMatch = false;
+        if (inputWords.length === 0) {
+          // Jika input hanya berisi kata generik (misal: "Kopi"), kita cek apakah input ada di nama hasil
+          hasMeaningfulMatch = firstMatchName.includes(inputName);
         } else {
-          // Jika tidak ada URL dan nama melenceng jauh, tolak langsung.
-          places = [];
+          hasMeaningfulMatch = inputWords.some((w: string) => firstMatchName.includes(w));
+        }
+
+        if (!hasMeaningfulMatch && !firstMatchName.includes(inputName) && !inputName.includes(firstMatchName)) {
+          // Nama terlalu melenceng (Google mengembalikan rekomendasi acak atau nama aslinya beda)
+          if (lat && lng) {
+            // Jika URL valid (ada titik), mungkin mereka salah input nama. Minta konfirmasi!
+            return NextResponse.json({
+              needsConfirmation: true,
+              realName: originalPlaceName
+            });
+          } else {
+            // Jika tidak ada URL dan nama melenceng jauh, tolak langsung.
+            places = [];
+          }
         }
       }
-    }
 
-    // Jika tidak ditemukan di Google Maps, tolak registrasi
-    if (places.length === 0) {
-      return NextResponse.json(
-        { error: 'Bisnis tidak ditemukan di Google Maps. Pastikan URL Maps valid atau Nama sesuai dengan yang terdaftar.' },
-        { status: 404 }
-      );
-    }
-
-    // Ambil hasil teratas
-    const place = places[0];
-    const realName = place.displayName?.text || name;
-    const realAddress = place.formattedAddress || city;
-    const rating = place.rating || 4.5;
-    const reviewCount = place.userRatingCount || 0;
-    const primaryType = place.primaryType || 'store';
-
-    // (Fitur ekstraksi foto Google Maps ditiadakan, sistem akan skip url gambar bisnis)
-
-    // Override kategori jika terjadi mis-match
-    const adjustedCategory = mapPrimaryTypeToCategory(primaryType, category);
-
-    // 4. Proses Ulasan (Maksimal 3 ulasan teratas)
-    let reviewsText = "";
-    if (place.reviews && place.reviews.length > 0) {
-      // Filter hanya rating 4 dan 5
-      const goodReviews = place.reviews.filter((rev: any) => (rev.rating || 5) >= 4);
-      if (goodReviews.length > 0) {
-        reviewsText = "Data Ulasan Asli dari Pelanggan:\n";
-        goodReviews.slice(0, 3).forEach((rev: any, idx: number) => {
-          const author = rev.authorAttribution?.displayName || "Anonim";
-          const rtg = rev.rating || 5;
-          const text = rev.text?.text || "";
-          const time = rev.relativePublishTimeDescription || "";
-          reviewsText += `${idx + 1}. [${rtg}⭐] ${author} (${time}): "${text}"\n`;
-        });
+      // Jika tidak ditemukan di Google Maps, tolak registrasi
+      if (places.length === 0) {
+        return NextResponse.json(
+          { error: 'Bisnis tidak ditemukan di Google Maps. Pastikan URL Maps valid atau Nama sesuai dengan yang terdaftar.' },
+          { status: 404 }
+        );
       }
+    }
+
+    // Default fallback values untuk non-maps
+    let realName = name;
+    let realAddress = city;
+    let rating = 4.9;
+    let reviewCount = Math.floor(Math.random() * 50) + 10;
+    let primaryType = 'store';
+    let reviewsText = "";
+
+    if (isMapsMode && places.length > 0) {
+      // Ambil hasil teratas
+      const place = places[0];
+      realName = place.displayName?.text || name;
+      realAddress = place.formattedAddress || city;
+      rating = place.rating || 4.5;
+      reviewCount = place.userRatingCount || 0;
+      primaryType = place.primaryType || 'store';
+      
+      if (place.reviews && place.reviews.length > 0) {
+        const goodReviews = place.reviews.filter((rev: any) => (rev.rating || 5) >= 4);
+        if (goodReviews.length > 0) {
+          reviewsText = "Data Ulasan Asli dari Pelanggan:\n";
+          goodReviews.slice(0, 3).forEach((rev: any, idx: number) => {
+            const author = rev.authorAttribution?.displayName || "Anonim";
+            const rtg = rev.rating || 5;
+            const text = rev.text?.text || "";
+            const time = rev.relativePublishTimeDescription || "";
+            reviewsText += `${idx + 1}. [${rtg}⭐] ${author} (${time}): "${text}"\n`;
+          });
+        }
+      }
+    } else {
+      // No Maps Mode - use description provided by user
+      reviewsText = `INFORMASI TAMBAHAN PENTING DARI PEMILIK BISNIS:\n"${businessDescription}"\n\nBuatkan 3 ulasan fiktif (mock review) yang sangat positif untuk bisnis ini berdasarkan deskripsi di atas. Gunakan nama orang Indonesia lokal.`;
     }
 
     // (photosText ditiadakan)
+
+    // Override kategori jika terjadi mis-match (hanya relevan jika dari maps, jika non-maps gunakan category pilihan user)
+    const adjustedCategory = isMapsMode ? mapPrimaryTypeToCategory(primaryType, category) : category;
 
     // 5. Generate JSON menggunakan Gemini AI
     const prompt = `

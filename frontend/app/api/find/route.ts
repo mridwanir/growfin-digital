@@ -28,12 +28,13 @@ export async function POST(request: Request) {
 
     const normalizedPhone = normalizePhone(phone);
 
-    // Search in Supabase
+    // Search in Supabase (Get the most recent one if they have multiple)
     const { data, error } = await supabase
       .from('business_demos')
       .select('slug')
       .eq('phone', normalizedPhone)
-      .maybeSingle();
+      .order('created_at', { ascending: false })
+      .limit(1);
 
     if (error) {
       console.error('Supabase Find Error:', error);
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!data) {
+    if (!data || data.length === 0) {
       return NextResponse.json(
         { error: 'Nomor WhatsApp tidak ditemukan. Anda belum pernah membuat template.' },
         { status: 404 }
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
     }
 
     // Return the slug
-    return NextResponse.json({ success: true, slug: data.slug });
+    return NextResponse.json({ success: true, slug: data[0].slug });
 
   } catch (error) {
     console.error('API Error:', error);

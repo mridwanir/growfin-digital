@@ -266,7 +266,7 @@ export function LiveEditorDrawer({
               className={`px-4 py-3 text-[11px] font-bold uppercase tracking-wider border-b-2 whitespace-nowrap transition-colors ${activeTab === t ? 'border-[#00b894] text-[#00b894]' : 'border-transparent text-[#8E8EA0] hover:text-white'
                 }`}
             >
-              {t}
+              {t === 'menu' ? 'Produk / Layanan' : t}
             </button>
           ))}
         </div>
@@ -387,8 +387,31 @@ export function LiveEditorDrawer({
 
           {/* TAB MENU */}
           {activeTab === 'menu' && (
-            <div className="space-y-4">
-              {menuForm.name !== undefined ? (
+            <div className="space-y-6">
+              {/* CTA CONFIG */}
+              {menuForm.name === undefined && (
+                <div className="bg-[#14141A] border border-[#262633] p-4 rounded-xl space-y-4">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    🎯 Pengaturan Tombol Kedua (Hero)
+                  </h4>
+                  <p className="text-xs text-[#8E8EA0]">Tentukan aksi saat pengunjung mengklik tombol CTA kedua di bagian atas website.</p>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#8E8EA0] uppercase">Tujuan Tombol Ke-2</label>
+                    <select
+                      value={client.heroSecondaryAction || (client.fbType === 'DINE_IN' ? 'whatsapp' : 'cart')}
+                      onChange={(e) => handleChange('heroSecondaryAction', e.target.value)}
+                      className="w-full bg-[#0B0B0E] border border-[#262633] rounded-xl px-4 py-3 text-sm text-white focus:border-[#00b894] focus:outline-none transition-colors"
+                    >
+                      <option value="whatsapp">Arahkan ke WhatsApp (Reservasi/Tanya)</option>
+                      <option value="cart">Buka Keranjang / Pesan Langsung</option>
+                      <option value="gallery">Scroll ke Galeri (Eksplorasi)</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {menuForm.name !== undefined ? (
                 <div className="bg-[#14141A] border border-[#262633] rounded-xl p-4 space-y-4">
                   <div className="flex justify-between items-center mb-2">
                     <h4 className="text-sm font-bold text-white">{editingMenuIdx !== null ? 'Edit Menu' : 'Tambah Menu'}</h4>
@@ -420,9 +443,9 @@ export function LiveEditorDrawer({
                 </div>
               ) : (
                 <>
-                  {client.menu.length >= PACKAGE_LIMITS[client.package_tier || 'free_trial'].maxProducts ? (
+                  {(client.menu?.length || 0) >= (PACKAGE_LIMITS[client.package_tier || 'free_trial'] || PACKAGE_LIMITS['free_trial']).maxProducts ? (
                     <button onClick={onUpgradeClick} className="w-full py-3 border border-dashed border-amber-500 text-amber-500 rounded-xl font-bold flex justify-center items-center gap-2 hover:bg-amber-500/10 transition-colors text-sm">
-                      Paket {client.package_tier || 'free_trial'} hanya mendukung (Maks {PACKAGE_LIMITS[client.package_tier || 'free_trial'].maxProducts}). Menu.
+                      Paket {client.package_tier || 'free_trial'} hanya mendukung (Maks {(PACKAGE_LIMITS[client.package_tier || 'free_trial'] || PACKAGE_LIMITS['free_trial']).maxProducts}) Menu.
                     </button>
                   ) : (
                     <button onClick={() => openMenuForm(null)} className="w-full py-3 border border-dashed border-[#00b894] text-[#00b894] rounded-xl font-bold flex justify-center items-center gap-2 hover:bg-[#00b894]/10 transition-colors text-sm">
@@ -452,6 +475,7 @@ export function LiveEditorDrawer({
                 </>
               )}
             </div>
+          </div>
           )}
 
           {/* TAB FOTO */}

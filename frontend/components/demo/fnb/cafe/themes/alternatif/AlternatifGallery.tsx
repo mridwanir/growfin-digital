@@ -16,7 +16,7 @@ export function AlternatifGallery() {
     : fallbackImages;
 
   return (
-    <section id="gallery-section" className="py-20 bg-white px-4 md:px-8">
+    <section id="gallery" className="py-20 bg-white px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end mb-10">
                 <div className="max-w-xl">

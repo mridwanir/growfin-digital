@@ -76,4 +76,5 @@ export interface BusinessDemo {
   fbType?: 'DINE_IN' | 'QUICK_SERVICE' | 'PRE_ORDER'; // Determines order form fields
   themeColor?: string; // Hex color string, e.g. '#10b981'
   package_tier?: PackageTier; // Track subscription level
+  heroSecondaryAction?: 'whatsapp' | 'cart' | 'gallery';
 }

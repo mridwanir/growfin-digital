@@ -30,7 +30,7 @@ export function AlternatifMenu() {
   };
 
   return (
-    <section id="menu-section" className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+    <section id="menu" className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-stone-900 mb-4">Pilihan Menu</h2>
             

@@ -16,6 +16,7 @@ export function FnbHeroScreen() {
   };
 
   const heroImg = client.heroImage || '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
+  const secondaryAction = client.heroSecondaryAction || (client.fbType === 'DINE_IN' ? 'whatsapp' : 'cart');
 
   return (
     <header className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center overflow-hidden scroll-mt-20">
@@ -65,7 +66,7 @@ export function FnbHeroScreen() {
             <Utensils className="w-5 h-5" /> Lihat Menu & Pesan
           </button>
 
-          {client.fbType === 'DINE_IN' ? (
+          {secondaryAction === 'whatsapp' ? (
             <a
               href={getWaReservationUrl()}
               target="_blank"
@@ -74,12 +75,19 @@ export function FnbHeroScreen() {
             >
               <CalendarCheck className="w-5 h-5" /> Reservasi Meja
             </a>
-          ) : (
+          ) : secondaryAction === 'cart' ? (
             <button
               onClick={() => setIsCartModalOpen(true)}
               className="px-8 py-4 bg-white hover:bg-stone-100 text-stone-900 rounded-xl font-semibold shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               <CalendarCheck className="w-5 h-5" /> Cek Pesanan
+            </button>
+          ) : (
+            <button
+              onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 bg-white hover:bg-stone-100 text-stone-900 rounded-xl font-semibold shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+            >
+              <CalendarCheck className="w-5 h-5" /> Lihat Suasana
             </button>
           )}
         </div>

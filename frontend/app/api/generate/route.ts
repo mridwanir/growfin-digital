@@ -112,13 +112,17 @@ export async function POST(request: Request) {
 
     const normalizedPhone = normalizePhone(phone);
 
-    // 1. Check if this exact business (based on Maps URL) has already been generated
-    // This allows one phone number to have multiple different businesses/branches.
-    const { data: existingData, error: findError } = await supabase
-      .from('business_demos')
-      .select('slug')
-      .eq('maps_url', mapsUrl)
-      .limit(1);
+    // 1. Check if this exact business has already been generated
+    // If mapsUrl exists, use it. Otherwise, use phone + name to differentiate branches/businesses.
+    let query = supabase.from('business_demos').select('slug');
+    
+    if (isMapsMode && mapsUrl) {
+      query = query.eq('maps_url', mapsUrl);
+    } else {
+      query = query.eq('phone', normalizedPhone).eq('name', name);
+    }
+
+    const { data: existingData, error: findError } = await query.limit(1);
 
     if (findError) {
       return NextResponse.json({ error: 'Failed to verify existing records.' }, { status: 500 });

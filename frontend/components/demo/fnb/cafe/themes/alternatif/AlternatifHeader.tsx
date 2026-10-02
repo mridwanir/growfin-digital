@@ -2,8 +2,13 @@ import { useFnbDemo } from '../../../core/FnbDemoContext';
 import { ArrowRight } from 'lucide-react';
 
 export function AlternatifHeader() {
-  const { client, isOpenNow } = useFnbDemo();
+  const { client, isOpenNow, setIsCartModalOpen } = useFnbDemo();
   const heroImage = client.heroImage || '/image/fnb/haydn-golden-EVoICOUotkg-unsplash.jpg';
+  const secondaryAction = client.heroSecondaryAction || 'gallery';
+
+  const getWaReservationUrl = () => {
+    return `https://wa.me/${client.waNumber}?text=Halo%20${encodeURIComponent(client.name)},%20saya%20mau%20reservasi%20meja.`;
+  };
 
   return (
     <header className="relative w-full min-h-[90vh] flex flex-col lg:flex-row bg-white">
@@ -31,12 +36,22 @@ export function AlternatifHeader() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="#menu-section" className="px-8 py-4 bg-brand-primary text-white hover:bg-black text-white rounded-2xl font-bold shadow-xl shadow-stone-900/20 active:scale-95 transition-all flex justify-center items-center gap-2">
+            <button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 bg-brand-primary text-white hover:bg-black rounded-2xl font-bold shadow-xl shadow-stone-900/20 active:scale-95 transition-all flex justify-center items-center gap-2">
               Pesan Sekarang <ArrowRight size={20} />
-            </a>
-            <a href="#gallery-section" className="px-8 py-4 bg-stone-100 hover:bg-stone-200 text-stone-900 rounded-2xl font-bold active:scale-95 transition-all flex justify-center items-center gap-2">
-              Lihat Suasana
-            </a>
+            </button>
+            {secondaryAction === 'whatsapp' ? (
+              <a href={getWaReservationUrl()} target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-stone-100 hover:bg-stone-200 text-stone-900 rounded-2xl font-bold active:scale-95 transition-all flex justify-center items-center gap-2">
+                Reservasi WA
+              </a>
+            ) : secondaryAction === 'cart' ? (
+              <button onClick={() => setIsCartModalOpen(true)} className="px-8 py-4 bg-stone-100 hover:bg-stone-200 text-stone-900 rounded-2xl font-bold active:scale-95 transition-all flex justify-center items-center gap-2">
+                Cek Pesanan
+              </button>
+            ) : (
+              <button onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 bg-stone-100 hover:bg-stone-200 text-stone-900 rounded-2xl font-bold active:scale-95 transition-all flex justify-center items-center gap-2">
+                Lihat Suasana
+              </button>
+            )}
           </div>
         </div>
       </div>

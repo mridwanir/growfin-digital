@@ -24,7 +24,7 @@ export function FnbGallery() {
   }
 
   return (
-    <section className="py-16 px-4 max-w-7xl mx-auto bg-stone-50">
+    <section id="gallery" className="py-16 px-4 max-w-7xl mx-auto bg-stone-50">
       <div
         ref={ref}
         className={`text-center mb-10 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}

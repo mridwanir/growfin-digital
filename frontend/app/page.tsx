@@ -7,6 +7,7 @@ import { Pricing } from '@/components/main-landing/pricing';
 import { FAQ } from '@/components/main-landing/faq';
 import { CTA } from '@/components/main-landing/cta';
 import { Footer } from '@/components/main-landing/footer';
+import { FloatingWhatsApp } from '@/components/main-landing/floating-whatsapp';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function Page() {
       </main>
       <CTA />
       <Footer />
+      <FloatingWhatsApp />
     </>
   );
 }

@@ -77,4 +77,32 @@ export interface BusinessDemo {
   themeColor?: string; // Hex color string, e.g. '#10b981'
   package_tier?: PackageTier; // Track subscription level
   heroSecondaryAction?: 'whatsapp' | 'cart' | 'gallery';
+  galleryTitle?: string;
+  galleryDescription?: string;
+  menuTitle?: string;
+  menuDescription?: string;
+  reviewsTitle?: string;
+  reviewsDescription?: string;
+  sectionOrder?: string[];
+  marketing?: {
+    promoLabel?: string;
+    discountPercentage?: number;
+    flashSaleEnd?: string;
+    usps?: { title: string; desc: string }[];
+  };
+  uiLabels?: {
+    buyButtonText?: string;
+    viewAllButtonText?: string;
+    lookbookButtonText?: string;
+  };
+  userEmail?: string;
+  socialMedia?: {
+    instagram?: { url: string; active: boolean };
+    tiktok?: { url: string; active: boolean };
+    facebook?: { url: string; active: boolean };
+  };
+  faqs?: {
+    question: string;
+    answer: string;
+  }[];
 }

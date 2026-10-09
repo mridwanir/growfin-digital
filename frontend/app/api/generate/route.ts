@@ -358,11 +358,11 @@ export async function POST(request: Request) {
 
     // Determine correct default layout
     const templateType = resolveTemplateType(adjustedCategory);
-    let defaultLayoutId = 'retail-clothing-default';
+    let defaultLayoutId = 'retail-theme-urban';
 
     if (templateType === 'fnb') {
-      if (adjustedCategory.toLowerCase().includes('restaurant')) defaultLayoutId = 'fnb-restaurant-default';
-      else defaultLayoutId = 'fnb-cafe-default';
+      if (adjustedCategory.toLowerCase().includes('restaurant')) defaultLayoutId = 'fnb-theme-premium';
+      else defaultLayoutId = 'fnb-theme-classic';
     } else if (templateType === 'grooming') {
       const isNailSpa = adjustedCategory.toLowerCase().includes('nail');
       if (isNailSpa) {
@@ -376,12 +376,12 @@ export async function POST(request: Request) {
       const isElectronic = cat.includes('electronic') || cat.includes('gadget') || cat.includes('computer');
 
       if (isGroceries) {
-        defaultLayoutId = 'retail-groceries-default';
+        defaultLayoutId = 'retail-theme-fresh';
       } else if (isElectronic) {
-        defaultLayoutId = 'retail-electronic-default';
+        defaultLayoutId = 'retail-theme-tech';
       } else {
         // Includes shoe store, clothing store, etc
-        defaultLayoutId = 'retail-clothing-default';
+        defaultLayoutId = 'retail-theme-urban';
       }
     }
 

@@ -1,54 +1,67 @@
 'use client';
 
 import { BusinessDemo } from '@/lib/types';
-import { ClothingRouter } from './retail/clothing/ClothingRouter';
-import { GroceriesRouter } from './retail/groceries/GroceriesRouter';
-import { ElectronicRouter } from './retail/electronic/ElectronicRouter';
+import { RetailDemoProvider } from './retail/core/RetailDemoContext';
 
-export function RetailDemoClient({ client, themeVariant }: { client: BusinessDemo, themeVariant?: string }) {
-  // Pattern: "retail-[category]-[theme]"
-  const parts = themeVariant ? themeVariant.split('-') : [];
-  
-  let category = 'clothing'; // default fallback
-  let themeName = themeVariant;
+// Themes
+import { UrbanLayout } from './retail/themes/urban/UrbanLayout';
+import { EditorialLayout } from './retail/themes/editorial/EditorialLayout';
+import { TechLayout } from './retail/themes/tech/TechLayout';
+import { DarkLayout } from './retail/themes/dark/DarkLayout';
+import { FreshLayout } from './retail/themes/fresh/FreshLayout';
+import { ArtisanLayout } from './retail/themes/artisan/ArtisanLayout';
 
-  if (parts.length >= 2 && parts[0] === 'retail') {
-    category = parts[1];
-    themeName = parts.length >= 3 ? parts.slice(2).join('-') : 'default';
-  } else if (themeVariant === 'editorial' || themeVariant === 'default') {
-    // Handling direct "editorial" or "default" layout_ids
-    category = 'clothing';
-    themeName = themeVariant;
-  } else if (!themeVariant) {
-    const isGroceries = client.category?.toLowerCase().includes('supermarket') || 
-                        client.category?.toLowerCase().includes('convenience') ||
-                        client.category?.toLowerCase().includes('grosir') ||
-                        client.category?.toLowerCase().includes('minimarket');
-    const isElectronic = client.category?.toLowerCase().includes('electronic') || 
-                         client.category?.toLowerCase().includes('gadget') ||
-                         client.category?.toLowerCase().includes('computer');
-                         
-    if (isGroceries) {
-      category = 'groceries';
-      themeName = 'default';
-    } else if (isElectronic) {
-      category = 'electronic';
-      themeName = 'default';
-    }
+// Universals
+import { RetailCartModal } from './retail/universal/RetailCartModal';
+import { RetailFloatingCart } from './retail/universal/RetailFloatingCart';
+import { RetailFloatingDock } from './retail/universal/RetailFloatingDock';
+import { RetailQuickViewModal } from './retail/universal/RetailQuickViewModal';
+
+export function RetailDemoClient({ client, themeVariant = 'retail-theme-urban' }: { client: BusinessDemo, themeVariant?: string }) {
+  // Map legacy theme variants to the new format for backward compatibility
+  let normalizedVariant = themeVariant;
+  if (themeVariant === 'clothing-default' || themeVariant === 'default') normalizedVariant = 'retail-theme-urban';
+  if (themeVariant === 'clothing-editorial' || themeVariant === 'editorial') normalizedVariant = 'retail-theme-editorial';
+  if (themeVariant === 'electronic-default') normalizedVariant = 'retail-theme-tech';
+  if (themeVariant === 'electronic-dark' || themeVariant === 'dark') normalizedVariant = 'retail-theme-dark';
+  if (themeVariant === 'groceries-default') normalizedVariant = 'retail-theme-fresh';
+  if (themeVariant === 'groceries-artisan' || themeVariant === 'artisan') normalizedVariant = 'retail-theme-artisan';
+  
+  if (themeVariant === 'retail-clothing-default') normalizedVariant = 'retail-theme-urban';
+  if (themeVariant === 'retail-electronic-dark') normalizedVariant = 'retail-theme-dark';
+  if (themeVariant === 'retail-groceries-artisan') normalizedVariant = 'retail-theme-artisan';
+
+  let LayoutComponent = UrbanLayout;
+  
+  switch (normalizedVariant) {
+    case 'retail-theme-urban': LayoutComponent = UrbanLayout; break;
+    case 'retail-theme-editorial': LayoutComponent = EditorialLayout; break;
+    case 'retail-theme-tech': LayoutComponent = TechLayout; break;
+    case 'retail-theme-dark': LayoutComponent = DarkLayout; break;
+    case 'retail-theme-fresh': LayoutComponent = FreshLayout; break;
+    case 'retail-theme-artisan': LayoutComponent = ArtisanLayout; break;
   }
 
-  if (category === 'clothing') {
-    return <ClothingRouter client={client} themeName={themeName} />;
-  }
-  
-  if (category === 'groceries') {
-    return <GroceriesRouter client={client} themeName={themeName} />;
-  }
-  
-  if (category === 'electronic') {
-    return <ElectronicRouter client={client} themeName={themeName} />;
-  }
-  
-  // Ultimate Fallback
-  return <ClothingRouter client={client} themeName="default" />;
+  // Determine which universal components to render based on the theme family
+  const isClothing = normalizedVariant.includes('urban') || normalizedVariant.includes('editorial');
+  const isElectronic = normalizedVariant.includes('tech') || normalizedVariant.includes('dark');
+  const isGroceries = normalizedVariant.includes('fresh') || normalizedVariant.includes('artisan');
+
+  return (
+    <RetailDemoProvider client={client}>
+      <LayoutComponent client={client} />
+      
+      {/* Universal Components for all Themes */}
+      <RetailCartModal />
+      <RetailQuickViewModal />
+      
+      {/* Theme specific floating elements (mostly for Clothing) */}
+      {isClothing && (
+        <>
+          <RetailFloatingCart />
+          <RetailFloatingDock />
+        </>
+      )}
+    </RetailDemoProvider>
+  );
 }

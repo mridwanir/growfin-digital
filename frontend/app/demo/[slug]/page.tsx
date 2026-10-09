@@ -106,6 +106,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
   if (isMigratedData) {
     // Use exact structure from Supabase metadata
     genericClient = {
+      ...metadataSource,
       name: dbData.name,
       category: dbData.category,
       city: dbData.city,

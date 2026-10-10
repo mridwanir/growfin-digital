@@ -12,11 +12,14 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [showResend, setShowResend] = useState(false);
+
   const supabase = createClient();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg('');
+    setShowResend(false);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -31,7 +34,33 @@ export default function LoginPage() {
       router.push('/dashboard');
       router.refresh();
     } catch (err: any) {
-      setErrorMsg(err.message || 'Gagal login. Periksa kembali email dan password Anda.');
+      const msg = err.message || 'Gagal login. Periksa kembali email dan password Anda.';
+      setErrorMsg(msg);
+      if (msg.toLowerCase().includes('email not confirmed')) {
+        setShowResend(true);
+        setErrorMsg('Email Anda belum diverifikasi. Silakan cek kotak masuk Anda atau kirim ulang tautan konfirmasi.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setIsLoading(true);
+    setErrorMsg('');
+    setShowResend(false);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      if (error) throw error;
+      setErrorMsg('Tautan konfirmasi telah dikirim ulang! Silakan cek folder Inbox atau Spam email Anda.');
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Gagal mengirim ulang tautan konfirmasi.');
     } finally {
       setIsLoading(false);
     }
@@ -55,8 +84,17 @@ export default function LoginPage() {
         </div>
 
         {errorMsg && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-500 text-sm text-center font-semibold">
-            {errorMsg}
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-center flex flex-col gap-3">
+            <p className="text-red-500 text-sm font-semibold">{errorMsg}</p>
+            {showResend && (
+              <button 
+                onClick={handleResendConfirmation}
+                disabled={isLoading}
+                className="py-2 px-4 bg-white border border-red-200 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50 transition-colors"
+              >
+                {isLoading ? 'Mengirim...' : 'Kirim Ulang Konfirmasi'}
+              </button>
+            )}
           </div>
         )}
 

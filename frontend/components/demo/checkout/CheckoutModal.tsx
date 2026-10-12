@@ -79,6 +79,9 @@ export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutMo
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
       });
 
       let finalUserId = null;

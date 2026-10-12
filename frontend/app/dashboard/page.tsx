@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { Store, Globe, ArrowRight, Activity, CalendarDays, MousePointerClick, MessageCircle } from 'lucide-react';
 import { CreateWebsiteButton } from '@/components/dashboard/CreateWebsiteButton';
+import { ShareWebsiteButton } from '@/components/dashboard/ShareWebsiteModal';
 
 export default async function DashboardOverview() {
   const supabase = await createClient();
@@ -13,7 +14,7 @@ export default async function DashboardOverview() {
   // Fetch the user's businesses
   const { data: businesses } = await supabase
     .from('business_demos')
-    .select('id, name, slug, category, status, package_tier, created_at')
+    .select('id, name, slug, category, city, status, package_tier, created_at')
     .eq('user_id', user!.id)
     .order('created_at', { ascending: false });
 
@@ -127,7 +128,8 @@ export default async function DashboardOverview() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <ShareWebsiteButton business={biz} />
                     <Link
                       href={`https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id'}/${biz.slug}`}
                       target="_blank"

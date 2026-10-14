@@ -52,12 +52,22 @@ export function FnbDemoProvider({ children, client }: { children: ReactNode; cli
   const [isCustomizationModalOpen, setIsCustomizationModalOpen] = useState(false);
   const [selectedProductForCustomization, setSelectedProductForCustomization] = useState<MenuItem | null>(null);
 
-  const [isOpenNow, setIsOpenNow] = useState(true);
+  const [isOpenNow, setIsOpenNow] = useState(client.isOpen !== false);
 
   // Parse open/close times to calculate if open now
   useEffect(() => {
+    if (client.isOpen === false) {
+      setIsOpenNow(false);
+      return;
+    }
+
     if (client.openTime && client.closeTime) {
       const checkIsOpen = () => {
+        if (client.isOpen === false) {
+          setIsOpenNow(false);
+          return;
+        }
+
         const now = new Date();
         const currentHours = now.getHours();
         const currentMinutes = now.getMinutes();
@@ -87,8 +97,10 @@ export function FnbDemoProvider({ children, client }: { children: ReactNode; cli
       checkIsOpen();
       const interval = setInterval(checkIsOpen, 60000); // Check every minute
       return () => clearInterval(interval);
+    } else {
+      setIsOpenNow(true);
     }
-  }, [client.openTime, client.closeTime]);
+  }, [client.isOpen, client.openTime, client.closeTime]);
 
   const addToCart = (item: CartItem) => {
     setCart((prev) => [...prev, item]);

@@ -1,5 +1,13 @@
+const DEFAULT_FALLBACK_HEX = '#00b894';
+
+export function isValidHex(hex?: string): boolean {
+  if (!hex || typeof hex !== 'string') return false;
+  return /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex.trim());
+}
+
 export function hexToHsl(hex: string): { h: number; s: number; l: number } {
-  let cleanHex = hex.replace(/^#/, '');
+  const safeHex = isValidHex(hex) ? hex.trim() : DEFAULT_FALLBACK_HEX;
+  let cleanHex = safeHex.replace(/^#/, '');
   if (cleanHex.length === 3) {
     cleanHex = cleanHex.split('').map(x => x + x).join('');
   }
@@ -35,11 +43,14 @@ export function hslToHex(h: number, s: number, l: number): string {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-export function generateThemePalette(baseHex: string) {
-  const hsl = hexToHsl(baseHex);
+export function generateThemePalette(baseHex?: string) {
+  const safeBase = isValidHex(baseHex)
+    ? (baseHex!.startsWith('#') ? baseHex! : `#${baseHex}`)
+    : DEFAULT_FALLBACK_HEX;
+  const hsl = hexToHsl(safeBase);
   
   return {
-    primary: baseHex,
+    primary: safeBase,
     hover: hslToHex(hsl.h, hsl.s, Math.max(0, hsl.l - 12)), // Darker for hover
     light: hslToHex(hsl.h, Math.min(100, hsl.s + 10), 96),  // Very pale for backgrounds
     dark: hslToHex(hsl.h, hsl.s, 15),                       // Very dark for headers

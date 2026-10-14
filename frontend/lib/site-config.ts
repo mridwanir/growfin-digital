@@ -19,7 +19,7 @@ export const PACKAGE_LIMITS: Record<PackageTier, PackageLimits> = {
     aiRegenerations: 3,
   },
   'instan': {
-    maxProducts: 10,
+    maxProducts: 20,
     maxCategories: 5,
     customDomain: false,
     paymentGateway: false,
@@ -55,7 +55,7 @@ export const PACKAGE_LIMITS: Record<PackageTier, PackageLimits> = {
 export const siteConfig = {
   contact: {
     whatsappNumber: "6289630352370",
-    email: "hello@growfin.my.id",
+    email: "growfin.id@gmail.com",
     // Base URLs for quick chat links
     waLinks: {
       instan: "https://wa.me/6289630352370?text=Halo%20Growfin,%20saya%20tertarik%20dengan%20Paket%20Template%20Instan.",

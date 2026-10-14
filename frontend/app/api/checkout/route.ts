@@ -45,7 +45,9 @@ export async function POST(request: Request) {
         user_id,
         business_demo_id: businessData.id,
         amount: finalAmount,
-        status: 'pending'
+        status: 'pending',
+        snapshot_tier: package_tier || 'instan',
+        transaction_type: 'activation'
       })
       .select('id')
       .single();

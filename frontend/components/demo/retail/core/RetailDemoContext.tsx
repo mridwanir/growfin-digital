@@ -107,10 +107,20 @@ export function RetailDemoProvider({ children, client }: { children: ReactNode; 
   const selectedProductForCustomization = selectedProduct; // Alias
   const setSelectedProductForCustomization = setSelectedProduct; // Alias
 
-  const [isOpenNow, setIsOpenNow] = useState(true);
+  const [isOpenNow, setIsOpenNow] = useState(client.isOpen !== false);
   useEffect(() => {
+    if (client.isOpen === false) {
+      setIsOpenNow(false);
+      return;
+    }
+
     if (client.openTime && client.closeTime) {
       const checkIsOpen = () => {
+        if (client.isOpen === false) {
+          setIsOpenNow(false);
+          return;
+        }
+
         const now = new Date();
         const currentHours = now.getHours();
         const currentMinutes = now.getMinutes();
@@ -139,8 +149,10 @@ export function RetailDemoProvider({ children, client }: { children: ReactNode; 
       checkIsOpen();
       const interval = setInterval(checkIsOpen, 60000); 
       return () => clearInterval(interval);
+    } else {
+      setIsOpenNow(true);
     }
-  }, [client.openTime, client.closeTime]);
+  }, [client.isOpen, client.openTime, client.closeTime]);
 
   const addToCart = (item: RetailCartItem) => {
     setCart((prev) => {

@@ -41,7 +41,7 @@ export function ServiceDemoProvider({ children, client }: { children: ReactNode;
   });
   
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isOpenNow, setIsOpenNow] = useState(true);
+  const [isOpenNow, setIsOpenNow] = useState(client.isOpen !== false);
 
   const updateBookingField = <K extends keyof BookingState>(field: K, value: BookingState[K]) => {
     setBookingState(prev => ({ ...prev, [field]: value }));
@@ -49,8 +49,18 @@ export function ServiceDemoProvider({ children, client }: { children: ReactNode;
 
   // Parse open/close times to calculate if open now
   useEffect(() => {
+    if (client.isOpen === false) {
+      setIsOpenNow(false);
+      return;
+    }
+
     if (client.openTime && client.closeTime) {
       const checkIsOpen = () => {
+        if (client.isOpen === false) {
+          setIsOpenNow(false);
+          return;
+        }
+
         const now = new Date();
         const currentHours = now.getHours();
         const currentMinutes = now.getMinutes();
@@ -79,8 +89,10 @@ export function ServiceDemoProvider({ children, client }: { children: ReactNode;
       checkIsOpen();
       const interval = setInterval(checkIsOpen, 60000); 
       return () => clearInterval(interval);
+    } else {
+      setIsOpenNow(true);
     }
-  }, [client.openTime, client.closeTime]);
+  }, [client.isOpen, client.openTime, client.closeTime]);
 
   return (
     <ServiceDemoContext.Provider value={{

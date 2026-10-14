@@ -7,7 +7,7 @@ import { BoldFooter } from './BoldFooter';
 
 export function BoldLayout() {
   const { client } = useFnbDemo();
-  const themeColor = client.metadata?.themeColor || '#f59e0b'; // Default amber-500
+  const themeColor = client.themeColor || '#f59e0b'; // Default amber-500
 
   return (
     <>

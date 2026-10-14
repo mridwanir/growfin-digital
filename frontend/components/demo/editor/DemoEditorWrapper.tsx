@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { BusinessDemo } from '@/lib/types';
 import { DynamicThemeProvider } from '../DynamicThemeProvider';
@@ -22,9 +22,20 @@ interface DemoEditorWrapperProps {
 
 export function DemoEditorWrapper({ initialClient, initialLayout, templateType, slug }: DemoEditorWrapperProps) {
   const [client, setClient] = useState<BusinessDemo>(initialClient);
-  const [layoutVariant, setLayoutVariant] = useState(initialLayout);
+  const normalizedInitialLayout = (templateType === 'fnb' && (initialLayout === 'classic' || !initialLayout))
+    ? 'fnb-theme-classic'
+    : initialLayout;
+  const [layoutVariant, setLayoutVariant] = useState(normalizedInitialLayout);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+  const handleClientChange = useCallback((updater: Partial<BusinessDemo> | ((prev: BusinessDemo) => BusinessDemo)) => {
+    if (typeof updater === 'function') {
+      setClient(prev => updater(prev));
+    } else {
+      setClient(prev => ({ ...prev, ...updater }));
+    }
+  }, []);
 
   // Re-render the correct demo client based on template type
   let demoComponent;
@@ -52,7 +63,7 @@ export function DemoEditorWrapper({ initialClient, initialLayout, templateType, 
         isOpen={isEditorOpen} 
         onClose={() => setIsEditorOpen(false)} 
         client={client} 
-        onChange={setClient} 
+        onChange={handleClientChange} 
         layoutVariant={layoutVariant}
         onLayoutChange={setLayoutVariant}
         templateType={templateType}

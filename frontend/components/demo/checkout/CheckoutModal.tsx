@@ -153,7 +153,12 @@ export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutMo
           await fetch('/api/checkout/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ order_id: result.order_id, slug })
+            body: JSON.stringify({ 
+              order_id: result.order_id, 
+              slug,
+              payment_method: result.payment_type,
+              payment_gateway_ref: result.transaction_id
+            })
           });
           setStep('success');
         },

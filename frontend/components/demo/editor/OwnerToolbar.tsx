@@ -11,7 +11,24 @@ interface OwnerToolbarProps {
 export function OwnerToolbar({ onEditClick, onPublishClick }: OwnerToolbarProps) {
   const [isVisible, setIsVisible] = useState(true);
 
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return (
+      <div className="fixed bottom-6 left-6 z-[100] animate-in fade-in duration-300">
+        <button
+          onClick={() => setIsVisible(true)}
+          className="group flex items-center gap-2 bg-[#14141A]/90 hover:bg-[#1f1f28] text-white p-2.5 rounded-full border border-[#262633] shadow-2xl hover:scale-105 transition-all duration-300"
+          title="Buka Toolbar Editor"
+        >
+          <div className="w-8 h-8 rounded-full bg-[#00b894]/20 text-[#00b894] flex items-center justify-center">
+            <Edit3 className="w-4 h-4" />
+          </div>
+          <span className="text-xs font-bold pr-2 hidden group-hover:inline transition-all duration-300 whitespace-nowrap text-slate-200">
+            Buka Toolbar
+          </span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">

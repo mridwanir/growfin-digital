@@ -11,7 +11,7 @@ interface LiveEditorDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   client: BusinessDemo;
-  onChange: (newClient: BusinessDemo) => void;
+  onChange: (updater: BusinessDemo | ((prev: BusinessDemo) => BusinessDemo)) => void;
   layoutVariant: string;
   onLayoutChange: (newLayout: string) => void;
   templateType: 'fnb' | 'service' | 'retail' | 'grooming';
@@ -48,12 +48,39 @@ export function LiveEditorDrawer({
   // States for Menu Editor Form
   const [editingMenuIdx, setEditingMenuIdx] = useState<number | null>(null);
   const [menuForm, setMenuForm] = useState<Partial<MenuItem>>({});
+  const [menuFormError, setMenuFormError] = useState<string | null>(null);
+  const [pendingImageToDelete, setPendingImageToDelete] = useState<string | null>(null);
+  const [tempUploadedPublicIds, setTempUploadedPublicIds] = useState<string[]>([]);
 
   const supabase = createClient();
 
-  const handleChange = (field: keyof BusinessDemo, value: any) => {
-    onChange({ ...client, [field]: value });
+  const deleteCloudinaryImage = async (publicId: string | null | undefined) => {
+    if (!publicId) return;
+    try {
+      await supabase.functions.invoke('delete-cloudinary-image', {
+        body: { public_id: publicId }
+      });
+    } catch (e) {
+      console.error('Failed to delete Cloudinary image:', publicId, e);
+    }
   };
+
+  // Functional state handlers to prevent stale closure bugs
+  const handleFieldChange = <K extends keyof BusinessDemo>(field: K, value: BusinessDemo[K]) => {
+    onChange((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleMultipleFieldsChange = (updates: Partial<BusinessDemo>) => {
+    onChange((prev) => ({ ...prev, ...updates }));
+  };
+
+  const handleChange = (field: keyof BusinessDemo, value: any) => {
+    handleFieldChange(field, value);
+  };
+
+  const normalizedLayoutVariant = (templateType === 'fnb' && (layoutVariant === 'classic' || !layoutVariant))
+    ? 'fnb-theme-classic'
+    : layoutVariant;
 
   const getAvailableThemes = () => {
     if (templateType === 'fnb') {
@@ -98,9 +125,27 @@ export function LiveEditorDrawer({
   const themes = getAvailableThemes();
 
   // Menu CRUD handlers
-  const handleSaveMenuForm = () => {
-    if (!menuForm.name || !menuForm.price) return;
-    const updatedMenu = [...client.menu];
+  const handleSaveMenuForm = async () => {
+    if (!menuForm.name?.trim() || !menuForm.price?.trim()) {
+      setMenuFormError('Nama produk dan harga wajib diisi ya!');
+      return;
+    }
+
+    // 1. Hapus foto lama Cloudinary hanya setelah user benar-benar menekan Simpan
+    if (pendingImageToDelete) {
+      await deleteCloudinaryImage(pendingImageToDelete);
+      setPendingImageToDelete(null);
+    }
+
+    // 2. Jika user mengunggah beberapa foto baru berturut-turut di sesi ini, bersihkan foto perantara yang tidak terpakai
+    const finalPublicId = menuForm.imagePublicId;
+    const intermediateUploads = tempUploadedPublicIds.filter(id => id !== finalPublicId);
+    for (const id of intermediateUploads) {
+      deleteCloudinaryImage(id);
+    }
+    setTempUploadedPublicIds([]);
+
+    const updatedMenu = [...(client.menu || [])];
     if (editingMenuIdx !== null) {
       updatedMenu[editingMenuIdx] = menuForm as MenuItem;
     } else {
@@ -109,42 +154,79 @@ export function LiveEditorDrawer({
         id: Date.now()
       });
     }
-    handleChange('menu', updatedMenu);
+
+    // Auto-update categories jika ada kategori baru yang ditambahkan
+    const currentCategories = client.categories || ['Semua'];
+    let updatedCategories = [...currentCategories];
+    if (menuForm.category && menuForm.category.trim() !== '') {
+      const trimmedCategory = menuForm.category.trim();
+      if (!updatedCategories.some(c => c.toLowerCase() === trimmedCategory.toLowerCase())) {
+        updatedCategories.push(trimmedCategory);
+      }
+    }
+
+    handleMultipleFieldsChange({
+      menu: updatedMenu,
+      categories: updatedCategories
+    });
     setEditingMenuIdx(null);
     setMenuForm({});
+    setMenuFormError(null);
+  };
+
+  const handleCancelMenuForm = async () => {
+    // Hapus semua foto baru yang diunggah di Cloudinary karena user membatalkan edit/tambah
+    for (const id of tempUploadedPublicIds) {
+      await deleteCloudinaryImage(id);
+    }
+    setTempUploadedPublicIds([]);
+    setPendingImageToDelete(null);
+    setEditingMenuIdx(null);
+    setMenuForm({});
+    setMenuFormError(null);
   };
 
   const handleDeleteMenu = async (idx: number) => {
-    const updated = [...client.menu];
+    const updated = [...(client.menu || [])];
     const itemToDelete = updated[idx];
-    if (itemToDelete.imagePublicId) {
-      try {
-        await supabase.functions.invoke('delete-cloudinary-image', {
-          body: { public_id: itemToDelete.imagePublicId }
-        });
-      } catch (e) {
-        console.error('Failed to delete old image', e);
-      }
+    if (itemToDelete?.imagePublicId) {
+      await deleteCloudinaryImage(itemToDelete.imagePublicId);
     }
     updated.splice(idx, 1);
-    handleChange('menu', updated);
+    handleFieldChange('menu', updated);
+
+    // Perbaiki editingMenuIdx agar tidak desync saat item dihapus
+    if (editingMenuIdx !== null) {
+      if (editingMenuIdx === idx) {
+        setEditingMenuIdx(null);
+        setMenuForm({});
+        setMenuFormError(null);
+        setPendingImageToDelete(null);
+        setTempUploadedPublicIds([]);
+      } else if (editingMenuIdx > idx) {
+        setEditingMenuIdx(editingMenuIdx - 1);
+      }
+    }
   };
 
   const moveMenuUp = (idx: number) => {
     if (idx === 0) return;
-    const newMenu = [...client.menu];
+    const newMenu = [...(client.menu || [])];
     [newMenu[idx - 1], newMenu[idx]] = [newMenu[idx], newMenu[idx - 1]];
-    handleChange('menu', newMenu);
+    handleFieldChange('menu', newMenu);
   };
 
   const moveMenuDown = (idx: number) => {
-    if (idx === client.menu.length - 1) return;
-    const newMenu = [...client.menu];
+    if (idx === (client.menu?.length || 0) - 1) return;
+    const newMenu = [...(client.menu || [])];
     [newMenu[idx + 1], newMenu[idx]] = [newMenu[idx], newMenu[idx + 1]];
-    handleChange('menu', newMenu);
+    handleFieldChange('menu', newMenu);
   };
 
   const openMenuForm = (idx: number | null) => {
+    setMenuFormError(null);
+    setPendingImageToDelete(null);
+    setTempUploadedPublicIds([]);
     if (idx !== null) {
       setMenuForm({ ...client.menu[idx] });
       setEditingMenuIdx(idx);
@@ -279,7 +361,13 @@ export function LiveEditorDrawer({
             <div className="animate-in slide-in-from-right-8 fade-in duration-300">
               {/* Back Button */}
               <button
-                onClick={() => { setActiveCategory(null); setEditingMenuIdx(null); setMenuForm({}); }}
+                onClick={() => {
+                  setActiveCategory(null);
+                  setEditingMenuIdx(null);
+                  setMenuForm({});
+                  setMenuFormError(null);
+                  setPendingImageToDelete(null);
+                }}
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-800 mb-6 text-sm font-bold transition-colors bg-white border border-slate-200 px-4 py-2 rounded-xl hover:bg-slate-50"
               >
                 <ArrowLeft className="w-4 h-4" /> Balik ke Menu
@@ -310,13 +398,13 @@ export function LiveEditorDrawer({
                           <button
                             key={theme.id}
                             onClick={() => onLayoutChange(theme.id)}
-                            className={`p-3 rounded-xl border text-left flex flex-col gap-2 transition-all ${layoutVariant === theme.id
+                            className={`p-3 rounded-xl border text-left flex flex-col gap-2 transition-all ${normalizedLayoutVariant === theme.id
                               ? 'border-emerald-500 bg-emerald-50 shadow-sm'
                               : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
                               }`}
                           >
-                            <span className={`font-bold text-sm ${layoutVariant === theme.id ? 'text-emerald-700' : 'text-slate-700'}`}>{theme.label}</span>
-                            {layoutVariant === theme.id ? (
+                            <span className={`font-bold text-sm ${normalizedLayoutVariant === theme.id ? 'text-emerald-700' : 'text-slate-700'}`}>{theme.label}</span>
+                            {normalizedLayoutVariant === theme.id ? (
                               <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md w-max">Lagi Dipake</span>
                             ) : (
                               <span className="text-[10px] text-slate-400">Pilih Ini</span>
@@ -420,7 +508,16 @@ export function LiveEditorDrawer({
                       </div>
                       <div className="relative">
                         <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input type="text" placeholder="No WhatsApp (Pakai 628... ya)" value={client.waNumber || client.phone || ''} onChange={(e) => { handleChange('waNumber', e.target.value); handleChange('phone', e.target.value); }} className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 focus:border-emerald-500 outline-none shadow-sm" />
+                        <input
+                          type="text"
+                          placeholder="No WhatsApp (Pakai 628... ya)"
+                          value={client.waNumber || client.phone || ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            handleMultipleFieldsChange({ waNumber: val, phone: val });
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 focus:border-emerald-500 outline-none shadow-sm"
+                        />
                       </div>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -500,48 +597,61 @@ export function LiveEditorDrawer({
 
                   <div className="space-y-4 pt-6 border-t border-slate-200">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Atur Susunan Halaman</label>
-                    <div className="bg-white border border-slate-200 shadow-sm p-2 rounded-xl">
-                      {(() => {
-                        const defaultOrder = layoutVariant === 'fnb-theme-modern' || layoutVariant === 'fnb-cafe-alternatif' ? ['hero', 'menu', 'gallery', 'reviews'] : ['hero', 'gallery', 'reviews', 'menu'];
-                        const currentOrder = client.sectionOrder || defaultOrder;
+                    {templateType === 'service' || templateType === 'grooming' ? (
+                      <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm text-xs text-slate-500 leading-relaxed">
+                        Susunan tata letak halaman untuk bisnis <span className="font-bold text-slate-700 capitalize">{templateType}</span> sudah dirancang optimal khusus untuk pengalaman reservasi & booking pelanggan.
+                      </div>
+                    ) : (
+                      <div className="bg-white border border-slate-200 shadow-sm p-2 rounded-xl">
+                        {(() => {
+                          const defaultOrder = templateType === 'retail'
+                            ? ['hero', 'lookbook', 'katalog', 'testimoni']
+                            : (normalizedLayoutVariant === 'fnb-theme-modern' || normalizedLayoutVariant === 'fnb-cafe-alternatif'
+                              ? ['hero', 'menu', 'gallery', 'reviews']
+                              : ['hero', 'gallery', 'reviews', 'menu']);
+                          const currentOrder = client.sectionOrder || defaultOrder;
 
-                        const moveUp = (index: number) => {
-                          if (index <= 1) return;
-                          const newOrder = [...currentOrder];
-                          [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-                          handleChange('sectionOrder', newOrder);
-                        };
+                          const moveUp = (index: number) => {
+                            if (index <= 1) return;
+                            const newOrder = [...currentOrder];
+                            [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+                            handleChange('sectionOrder', newOrder);
+                          };
 
-                        const moveDown = (index: number) => {
-                          if (index === currentOrder.length - 1 || index === 0) return;
-                          const newOrder = [...currentOrder];
-                          [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
-                          handleChange('sectionOrder', newOrder);
-                        };
+                          const moveDown = (index: number) => {
+                            if (index === currentOrder.length - 1 || index === 0) return;
+                            const newOrder = [...currentOrder];
+                            [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
+                            handleChange('sectionOrder', newOrder);
+                          };
 
-                        const getSectionLabel = (id: string) => {
-                          switch (id) {
-                            case 'hero': return 'Banner Utama (Gak bisa digeser)';
-                            case 'gallery': return 'Galeri / Foto-foto';
-                            case 'reviews': return 'Kata Orang (Ulasan)';
-                            case 'menu': return 'Katalog Produk / Menu';
-                            default: return id;
-                          }
-                        };
+                          const getSectionLabel = (id: string) => {
+                            switch (id) {
+                              case 'hero': return 'Banner Utama (Tetap)';
+                              case 'gallery':
+                              case 'lookbook': return templateType === 'retail' ? 'Katalog Lookbook' : 'Galeri / Foto-foto';
+                              case 'reviews':
+                              case 'testimoni': return 'Kata Orang (Ulasan)';
+                              case 'menu':
+                              case 'katalog': return templateType === 'retail' ? 'Etalase Produk' : 'Katalog Produk / Menu';
+                              default: return id;
+                            }
+                          };
 
-                        return currentOrder.map((sectionId, idx) => (
-                          <div key={sectionId} className="flex items-center justify-between p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors rounded-lg">
-                            <span className={`text-sm font-bold ${sectionId === 'hero' ? 'text-slate-400' : 'text-slate-700'}`}>{getSectionLabel(sectionId)}</span>
-                            {sectionId !== 'hero' && (
-                              <div className="flex gap-1">
-                                <button onClick={() => moveUp(idx)} disabled={idx <= 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↑</button>
-                                <button onClick={() => moveDown(idx)} disabled={idx === currentOrder.length - 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↓</button>
-                              </div>
-                            )}
-                          </div>
-                        ));
-                      })()}
-                    </div>
+                          return currentOrder.map((sectionId, idx) => (
+                            <div key={sectionId} className="flex items-center justify-between p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors rounded-lg">
+                              <span className={`text-sm font-bold ${sectionId === 'hero' ? 'text-slate-400' : 'text-slate-700'}`}>{getSectionLabel(sectionId)}</span>
+                              {sectionId !== 'hero' && (
+                                <div className="flex gap-1">
+                                  <button onClick={() => moveUp(idx)} disabled={idx <= 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↑</button>
+                                  <button onClick={() => moveDown(idx)} disabled={idx === currentOrder.length - 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↓</button>
+                                </div>
+                              )}
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-4 pt-6 border-t border-slate-200">
@@ -571,12 +681,44 @@ export function LiveEditorDrawer({
                     <div className="bg-white border border-slate-200 shadow-lg rounded-2xl p-5 space-y-5 animate-in slide-in-from-bottom-4 fade-in">
                       <div className="flex justify-between items-center mb-2">
                         <h4 className="text-lg font-extrabold text-slate-900">{editingMenuIdx !== null ? 'Edit Produk Ini' : 'Tambah Produk Baru'}</h4>
-                        <button onClick={() => setMenuForm({})} className="p-2 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors"><X className="w-4 h-4" /></button>
+                        <button
+                          type="button"
+                          onClick={handleCancelMenuForm}
+                          className="p-2 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors"
+                          title="Batal dan tutup"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
 
+                      {menuFormError && (
+                        <div className="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-xl text-xs font-bold flex items-center gap-2">
+                          <X className="w-4 h-4 shrink-0" />
+                          <span>{menuFormError}</span>
+                        </div>
+                      )}
+
                       <div className="space-y-3">
-                        <input type="text" placeholder="Nama Produk (Misal: Kopi Susu Aren)" value={menuForm.name || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, name: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium" />
-                        <input type="text" placeholder="Harga (Misal: Rp 15.000)" value={menuForm.price || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, price: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium" />
+                        <input
+                          type="text"
+                          placeholder="Nama Produk (Misal: Kopi Susu Aren) *"
+                          value={menuForm.name || ''}
+                          onChange={(e) => {
+                            if (menuFormError) setMenuFormError(null);
+                            setMenuForm(prev => ({ ...prev, name: e.target.value }));
+                          }}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Harga (Misal: Rp 15.000) *"
+                          value={menuForm.price || ''}
+                          onChange={(e) => {
+                            if (menuFormError) setMenuFormError(null);
+                            setMenuForm(prev => ({ ...prev, price: e.target.value }));
+                          }}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
+                        />
                         <textarea placeholder="Tulisin penjelasan singkat biar pada ngiler..." value={menuForm.desc || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, desc: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none resize-none font-medium" rows={3} />
                         <input type="text" placeholder="Kategori (Misal: Minuman Dingin)" value={menuForm.category || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, category: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium" />
                       </div>
@@ -586,10 +728,13 @@ export function LiveEditorDrawer({
                         <div className="border border-slate-200 rounded-xl p-1 bg-slate-50">
                           <CloudinaryUploader
                             currentImageUrl={menuForm.imageUrl}
-                            onUploadSuccess={async (url, publicId) => {
-                              if (menuForm.imagePublicId) {
-                                try { await supabase.functions.invoke('delete-cloudinary-image', { body: { public_id: menuForm.imagePublicId } }); } catch (e) { }
+                            onUploadSuccess={(url, publicId) => {
+                              // Catat foto lama produk yang sedang diedit (hanya dihapus saat user klik Simpan)
+                              if (editingMenuIdx !== null && client.menu[editingMenuIdx]?.imagePublicId) {
+                                setPendingImageToDelete(client.menu[editingMenuIdx].imagePublicId!);
                               }
+                              // Catat foto baru yang baru diupload agar bisa dibersihkan jika dibatalkan
+                              setTempUploadedPublicIds(prev => [...prev, publicId]);
                               setMenuForm(prev => ({ ...prev, imageUrl: url, imagePublicId: publicId }));
                             }}
                             label="Upload Foto Baru"
@@ -602,9 +747,22 @@ export function LiveEditorDrawer({
                         <ComingSoonField label="Label Promo Khusus" placeholder="Kasih label 'Best Seller' gitu" icon={Tag} />
                       </div>
 
-                      <button onClick={handleSaveMenuForm} className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5">
-                        Sip, Simpan Produk!
-                      </button>
+                      <div className="flex gap-2.5">
+                        <button
+                          type="button"
+                          onClick={handleCancelMenuForm}
+                          className="w-1/3 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all"
+                        >
+                          Batal
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSaveMenuForm}
+                          className="flex-1 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5"
+                        >
+                          Sip, Simpan Produk!
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <>
@@ -717,9 +875,21 @@ export function LiveEditorDrawer({
               {activeCategory === 'sosial' && (
                 <div className="space-y-8">
                   <div className="space-y-4">
-                    <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
-                      <Star className="w-4 h-4 text-amber-500" /> Tunjukin Apa Hebatnya Usahamu!
+                    <label className="text-xs font-bold text-slate-500 uppercase flex items-center justify-between">
+                      <span className="flex items-center gap-2">
+                        <Star className="w-4 h-4 text-amber-500" /> Tunjukin Apa Hebatnya Usahamu!
+                      </span>
+                      {templateType === 'retail' && (
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                          Tampil di Banner Depan
+                        </span>
+                      )}
                     </label>
+                    {templateType !== 'retail' && (
+                      <p className="text-xs text-slate-400">
+                        Poin keunggulan ini diutamakan dan langsung tampil di etalase/banner pada tema Retail & Toko.
+                      </p>
+                    )}
                     <div className="space-y-3">
                       {[0, 1, 2].map((idx) => {
                         const usps = client.marketing?.usps || [

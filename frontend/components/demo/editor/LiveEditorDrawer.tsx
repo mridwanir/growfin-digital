@@ -168,8 +168,9 @@ export function LiveEditorDrawer({
         })
       });
       if (!res.ok) throw new Error('Failed to save');
+      const resData = await res.json();
 
-      if (publish && (!client.package_tier || client.package_tier === 'free_trial')) {
+      if (publish && (!client.package_tier || client.package_tier === 'free_trial' || resData.requiresUpgrade)) {
         onClose();
         onUpgradeClick();
       } else {

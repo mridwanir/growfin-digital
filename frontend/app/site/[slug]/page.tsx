@@ -30,9 +30,11 @@ export async function generateMetadata({ params }: SitePageProps): Promise<Metad
 
   if (!dbData) return { title: 'Site Not Found' };
 
+  const clientName = dbData.metadata?.name || dbData.name;
+
   return {
-    title: `${dbData.name} | By Growfin`,
-    description: dbData.metadata?.tagline || `Official website of ${dbData.name}`,
+    title: `${clientName} | By Growfin`,
+    description: dbData.metadata?.tagline || `Official website of ${clientName}`,
   };
 }
 
@@ -73,13 +75,15 @@ export default async function SitePage({ params }: SitePageProps) {
   const templateType = resolveTemplateType(dbData.category);
 
   // 4. Map DB metadata to genericClient (Strictly use metadata, NEVER draft_metadata)
+  const metadataSource = dbData.metadata;
   const genericClient: BusinessDemo = {
-    name: dbData.name,
+    ...metadataSource,
+    name: metadataSource?.name || dbData.name,
     category: dbData.category,
     city: dbData.city,
-    phone: dbData.phone,
-    googleMapsUrl: dbData.maps_url,
-    waNumber: dbData.phone.replace(/\D/g, ''),
+    phone: metadataSource?.phone || dbData.phone || '',
+    googleMapsUrl: metadataSource?.googleMapsUrl || dbData.maps_url,
+    waNumber: (metadataSource?.waNumber || metadataSource?.phone || dbData.phone || '').replace(/\D/g, ''),
     rating: dbData.metadata.rating,
     reviewCount: dbData.metadata.reviewCount,
     address: dbData.metadata.address,

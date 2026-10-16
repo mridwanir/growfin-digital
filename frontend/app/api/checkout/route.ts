@@ -55,8 +55,9 @@ export async function POST(request: Request) {
     if (trxError) throw trxError;
 
     // Create Snap API instance
+    const isProduction = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true';
     let snap = new midtransClient.Snap({
-      isProduction: false,
+      isProduction,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
       clientKey: process.env.MIDTRANS_CLIENT_KEY
     });

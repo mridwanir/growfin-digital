@@ -105,4 +105,7 @@ export interface BusinessDemo {
     question: string;
     answer: string;
   }[];
+  doctor?: any;
+  admin?: any;
+  metadata?: any;
 }

@@ -9,8 +9,8 @@ export function NailspaFooter() {
         <div className="text-center md:text-left">
           <p className="text-lg font-serif text-charcoal uppercase tracking-widest font-semibold">{client.name}</p>
           <p className="mt-1">{client.address || "Jl. Senopati No. 42, Kebayoran Baru, Jakarta Selatan"}</p>
-          {client.metadata?.hours && (
-            <p className="mt-1 font-medium text-brand-primary">{client.metadata.hours}</p>
+          {client.hours && (
+            <p className="mt-1 font-medium text-brand-primary">{client.hours}</p>
           )}
         </div>
         <p>© {new Date().getFullYear()} {client.name}. All rights reserved.</p>

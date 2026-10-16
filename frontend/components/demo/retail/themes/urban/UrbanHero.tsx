@@ -2,6 +2,7 @@
 
 import { useRetailDemo } from './../../core/RetailDemoContext';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { CountdownTimer } from '@/components/demo/CountdownTimer';
 
 export function UrbanHero() {
   const { client } = useRetailDemo();
@@ -74,7 +75,7 @@ export function UrbanHero() {
                 {flashSaleEnd && (
                   <span className="text-[9px] font-mono font-bold text-rose-500 flex items-center gap-1">
                     <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    {flashSaleEnd}
+                    <CountdownTimer targetDate={flashSaleEnd} />
                   </span>
                 )}
               </div>

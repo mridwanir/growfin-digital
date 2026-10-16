@@ -8,7 +8,9 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 
 export function PremiumLayout() {
   const { client } = useFnbDemo();
-  const currentOrder = client.sectionOrder || ['hero', 'menu', 'gallery', 'reviews'];
+  const currentOrder = client.sectionOrder?.length 
+    ? client.sectionOrder 
+    : ['hero', 'menu', 'gallery', 'reviews'];
 
   const renderSection = (sectionId: string) => {
     switch (sectionId) {

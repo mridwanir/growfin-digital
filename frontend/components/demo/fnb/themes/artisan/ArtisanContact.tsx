@@ -21,15 +21,16 @@ export function ArtisanContact() {
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold mb-1">
                 Online & Siap Membantu
               </div>
-              <h3 className="text-lg font-bold text-stone-900">{client.metadata?.admin?.name || 'Admin Reservasi'}</h3>
-              <p className="text-xs text-stone-500">{client.metadata?.admin?.role || 'Concierge & Guest Relations'}</p>
-              <p className="text-xs text-stone-600 mt-2 italic">"{client.metadata?.admin?.sampleChat?.recommendationDesc || 'Butuh meja romantis, VIP Room, atau catering event?'}"</p>
+              <h3 className="text-lg font-bold text-stone-900">{client.admin?.name || 'Admin Reservasi'}</h3>
+              <p className="text-xs text-stone-500">{client.admin?.role || 'Concierge & Guest Relations'}</p>
+              <p className="text-xs text-stone-600 mt-2 italic">"{client.admin?.sampleChat?.recommendationDesc || 'Butuh meja romantis, VIP Room, atau catering event?'}"</p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <button
               onClick={() => handleWaClick(`Halo Admin ${client.name}, saya mau tanya ketersediaan meja hari ini.`)}
+              data-track="whatsapp"
               className="px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-sm transition"
             >
               <MessageCircle className="w-4 h-4" />

@@ -35,6 +35,7 @@ export const viewport: Viewport = {
 
 import { LanguageProvider } from '@/lib/language-context';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { MetaPixel } from '@/components/analytics/MetaPixel';
 
 const plusJakarta = Plus_Jakarta_Sans({ 
   subsets: ['latin'],
@@ -52,6 +53,7 @@ export default function RootLayout({
       <body className="antialiased bg-white text-slate-800 font-sans">
         <LanguageProvider>
           {children}
+          <MetaPixel />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </LanguageProvider>
       </body>

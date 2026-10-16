@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Search } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
+import { trackMetaEvent } from '@/lib/fpixel';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -114,6 +115,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       }
 
       if (data.success && data.slug) {
+        trackMetaEvent('Lead', {
+          content_name: formData.name,
+          content_category: formData.category,
+          city: formData.city,
+        });
         setStep('emailSent');
       } else {
         setErrorMsg(data.error || 'Gagal membuat template.');

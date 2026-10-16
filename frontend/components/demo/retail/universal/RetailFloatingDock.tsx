@@ -23,7 +23,7 @@ export function RetailFloatingDock() {
           <span className="text-[10px] font-bold mt-1">Katalog</span>
         </a>
 
-        <button onClick={handleWA} className="flex flex-col items-center justify-center w-full gap-1 text-slate-500 hover:text-emerald-500 transition-colors">
+        <button onClick={handleWA} data-track="whatsapp" className="flex flex-col items-center justify-center w-full gap-1 text-slate-500 hover:text-emerald-500 transition-colors">
           <MessageCircle className="w-5 h-5" />
           <span className="text-[10px] font-bold mt-1">Tanya CS</span>
         </button>

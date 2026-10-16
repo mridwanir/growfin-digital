@@ -13,14 +13,14 @@ export function ElegantReviews() {
           <Star className="w-4 h-4 fill-brand-primary" />
           <Star className="w-4 h-4 fill-brand-primary" />
           <Star className="w-4 h-4 fill-brand-primary" />
-          <span className="text-stone-900 font-bold text-sm ml-2">{client.metadata?.rating || 4.9}/5 dari {client.metadata?.reviewCount || '1.800+'} Pemesanan</span>
+          <span className="text-stone-900 font-bold text-sm ml-2">{client.rating || 4.9}/5 dari {client.reviewCount || '1.800+'} Pemesanan</span>
         </div>
         <h2 className="font-serif-title text-3xl sm:text-4xl text-stone-900 font-bold">{client.reviewsTitle || 'Kisah Manis Pelanggan Kami'}</h2>
         <p className="text-stone-600 text-sm mt-1">{client.reviewsDescription || 'Keamanan kue saat transit dan rasa premium adalah komitmen mutlak kami.'}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {(client.metadata?.reviews || [
+        {(client.reviews || [
           { text: "Pesan cake ultah H-1 via instant courier, sampai ke BSD dalam keadaan super mulus! Box-nya kokoh ada ice gel pack di dalamnya.", authorName: "Anindya Pramesti", rating: 5, time: "Pemberian Ultah Ibu" },
           { text: "Koleksi Basque Cheesecake mereka adalah yang terbaik di kota ini. Manisnya pas, rasa cream cheese-nya mewah dan lumer di mulut.", authorName: "Reza Wicaksono", rating: 5, time: "Corporate Catering" },
           { text: "Admin responsif sekali saat kirim rekap WhatsApp. Saya minta request kartu ucapan kaligrafi ditulis rapi banget. Detail pelayanannya bintang lima!", authorName: "Clarissa Leonita", rating: 5, time: "Anniversary Gift" }
@@ -28,7 +28,7 @@ export function ElegantReviews() {
           <div key={i} className="bg-white p-7 rounded-3xl border border-stone-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex text-brand-primary gap-1 text-xs mb-3">
-                {[...Array(review.rating || 5)].map((_, idx) => (
+                {[...Array(Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))))].map((_, idx) => (
                   <Star key={idx} className="w-3 h-3 fill-current" />
                 ))}
               </div>

@@ -146,6 +146,7 @@ export function ServiceBookingModal() {
               </button>
               <button 
                 type="submit" 
+                data-track="whatsapp"
                 className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transition flex items-center gap-2"
               >
                 <MessageCircle className="w-5 h-5" /> Lanjut ke WhatsApp

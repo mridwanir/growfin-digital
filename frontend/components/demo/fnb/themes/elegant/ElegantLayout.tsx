@@ -7,7 +7,11 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 
 export function ElegantLayout() {
   const { client } = useFnbDemo();
-  const themeColor = client.metadata?.themeColor || '#C94A29'; // Default orange/red
+  const themeColor = client.themeColor || '#C94A29'; // Default orange/red
+
+  const order = client.sectionOrder?.length 
+    ? client.sectionOrder 
+    : ['hero', 'menu', 'gallery', 'reviews'];
 
   return (
     <>
@@ -23,7 +27,7 @@ export function ElegantLayout() {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
       <div className="bg-stone-50 text-stone-900 antialiased selection:bg-brand-primary selection:text-white pb-20 font-sans-bakery">
-        {client.sectionOrder?.map((sectionId) => {
+        {order.map((sectionId) => {
           switch (sectionId) {
             case 'hero': return <ElegantHeader key="hero" />;
             case 'menu': return <ElegantMenu key="menu" />;
@@ -31,14 +35,7 @@ export function ElegantLayout() {
             case 'reviews': return <ElegantReviews key="reviews" />;
             default: return null;
           }
-        }) || (
-          <>
-            <ElegantHeader />
-            <ElegantMenu />
-            <ElegantGallery />
-            <ElegantReviews />
-          </>
-        )}
+        })}
         <ElegantFooter />
       </div>
     </>

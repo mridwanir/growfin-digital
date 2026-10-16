@@ -22,7 +22,7 @@ export function ArtisanReviews() {
           <div key={i} className="bg-white p-7 rounded-3xl border border-zinc-200/90 shadow-xs flex flex-col justify-between">
             <div className="space-y-3">
               <div className="flex text-amber-500 gap-1">
-                {[...Array(r.rating || 5)].map((_, j) => (
+                {[...Array(Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5))))].map((_, j) => (
                   <svg key={j} className="w-4 h-4 fill-amber-400" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 ))}
               </div>

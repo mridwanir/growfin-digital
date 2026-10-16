@@ -30,7 +30,7 @@ export function ServiceSocialProof() {
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Review" className="w-5 h-5 ml-auto" />
               </div>
               <div className="flex text-yellow-400 text-xs mb-3">
-                {'⭐'.repeat(review.rating)}
+                {'⭐'.repeat(Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))))}
               </div>
               <p className="text-gray-600 text-sm italic mb-4 flex-grow">"{review.text}"</p>
             </div>

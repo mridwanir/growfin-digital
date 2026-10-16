@@ -7,7 +7,9 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 
 export function ModernLayout() {
   const { client } = useFnbDemo();
-  const order = client.sectionOrder || ['hero', 'menu', 'gallery', 'reviews'];
+  const order = client.sectionOrder?.length 
+    ? client.sectionOrder 
+    : ['hero', 'menu', 'gallery', 'reviews'];
 
   const renderSection = (id: string) => {
     switch (id) {

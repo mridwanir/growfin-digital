@@ -14,7 +14,7 @@ export function ModernReviews() {
                 {client.reviews.map((rev, i) => (
                   <div key={i} className="snap-center shrink-0 w-[85vw] md:w-96 bg-white p-8 rounded-3xl shadow-sm border border-stone-100">
                       <div className="text-yellow-400 text-sm mb-4 flex gap-1">
-                          {[...Array(Math.floor(rev.rating))].map((_, idx) => (
+                          {[...Array(Math.max(1, Math.min(5, Math.round(Number(rev.rating) || 5))))].map((_, idx) => (
                             <Star key={idx} className="fill-current w-4 h-4 text-yellow-400" />
                           ))}
                       </div>

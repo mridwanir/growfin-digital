@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
-import { Store, Globe, ArrowRight, Activity, CalendarDays, MousePointerClick, MessageCircle } from 'lucide-react';
+import { Store, Globe, ArrowRight, Activity, CalendarDays, MousePointerClick, MessageCircle, Eye } from 'lucide-react';
 import { CreateWebsiteButton } from '@/components/dashboard/CreateWebsiteButton';
 import { ShareWebsiteButton } from '@/components/dashboard/ShareWebsiteModal';
 
@@ -18,20 +18,23 @@ export default async function DashboardOverview() {
     .eq('user_id', user!.id)
     .order('created_at', { ascending: false });
 
-  // Fetch Analytics Data
+  // Fetch Analytics Data (both WhatsApp clicks and page views)
   let analyticsData: any[] = [];
   if (businesses && businesses.length > 0) {
     const businessIds = businesses.map(b => b.id);
     const { data: events } = await supabase
       .from('analytics_events')
       .select('business_id, event_type')
-      .in('business_id', businessIds)
-      .eq('event_type', 'whatsapp_click');
+      .in('business_id', businessIds);
     
     analyticsData = events || [];
   }
 
-  const totalWaClicks = analyticsData.length;
+  const totalWaClicks = analyticsData.filter(e => e.event_type === 'whatsapp_click').length;
+  const totalPageViews = analyticsData.filter(e => e.event_type === 'page_view').length;
+  const conversionRate = totalPageViews > 0 
+    ? ((totalWaClicks / totalPageViews) * 100).toFixed(1) 
+    : '0.0';
 
   return (
     <div className="space-y-8">
@@ -41,9 +44,9 @@ export default async function DashboardOverview() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-[#14141A] border border-[#262633] rounded-2xl p-6">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-12 bg-[#00b894]/20 rounded-xl flex items-center justify-center">
               <Store className="w-6 h-6 text-[#00b894]" />
             </div>
@@ -53,36 +56,46 @@ export default async function DashboardOverview() {
             </div>
           </div>
         </div>
+
         <div className="bg-[#14141A] border border-[#262633] rounded-2xl p-6">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-              <Globe className="w-6 h-6 text-blue-500" />
+              <Eye className="w-6 h-6 text-blue-500" />
             </div>
             <div>
-              <p className="text-[#8E8EA0] text-sm font-semibold">Domain Tersambung</p>
-              <h3 className="text-2xl font-black text-white">0</h3>
+              <p className="text-[#8E8EA0] text-sm font-semibold">Total Pengunjung (Views)</p>
+              <h3 className="text-2xl font-black text-white">{totalPageViews}</h3>
             </div>
           </div>
         </div>
+
         <div className="bg-[#14141A] border border-[#262633] rounded-2xl p-6">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+              <MessageCircle className="w-6 h-6 text-emerald-500" />
+            </div>
+            <div>
+              <p className="text-[#8E8EA0] text-sm font-semibold">Total Prospek (Leads WA)</p>
+              <div className="flex items-baseline gap-2">
+                <h3 className="text-2xl font-black text-white">{totalWaClicks}</h3>
+                {totalPageViews > 0 && (
+                  <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                    {conversionRate}% konversi
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-[#14141A] border border-[#262633] rounded-2xl p-6">
+          <div className="flex items-center gap-4 mb-2">
             <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
               <Activity className="w-6 h-6 text-orange-500" />
             </div>
             <div>
               <p className="text-[#8E8EA0] text-sm font-semibold">Status Langganan</p>
               <h3 className="text-2xl font-black text-white">Lifetime</h3>
-            </div>
-          </div>
-        </div>
-        <div className="bg-[#14141A] border border-[#262633] rounded-2xl p-6 md:col-span-3 lg:col-span-1">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-              <MessageCircle className="w-6 h-6 text-emerald-500" />
-            </div>
-            <div>
-              <p className="text-[#8E8EA0] text-sm font-semibold">Total Prospek (Klik WA)</p>
-              <h3 className="text-2xl font-black text-white">{totalWaClicks}</h3>
             </div>
           </div>
         </div>
@@ -103,7 +116,9 @@ export default async function DashboardOverview() {
         ) : (
           <div className="divide-y divide-[#262633]">
             {businesses.map((biz) => {
-              const bizClicks = analyticsData.filter(e => e.business_id === biz.id).length;
+              const bizClicks = analyticsData.filter(e => e.business_id === biz.id && e.event_type === 'whatsapp_click').length;
+              const bizViews = analyticsData.filter(e => e.business_id === biz.id && e.event_type === 'page_view').length;
+              const bizConversion = bizViews > 0 ? ((bizClicks / bizViews) * 100).toFixed(1) : null;
               return (
                 <div key={biz.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#262633]/30 transition-colors">
                   <div>
@@ -118,12 +133,18 @@ export default async function DashboardOverview() {
                     <p className="text-sm text-[#8E8EA0] flex items-center gap-2">
                       {biz.category} • {biz.package_tier || 'Belum ada paket'}
                     </p>
-                    <div className="flex items-center gap-4 mt-2">
+                    <div className="flex items-center gap-3 mt-2 flex-wrap">
                       <p className="text-xs text-[#8E8EA0] flex items-center gap-1">
-                        <CalendarDays className="w-3 h-3" /> Dibuat {new Date(biz.created_at).toLocaleDateString('id-ID')}
+                        <CalendarDays className="w-3.5 h-3.5" /> Dibuat {new Date(biz.created_at).toLocaleDateString('id-ID')}
                       </p>
-                      <p className="text-xs text-[#00b894] flex items-center gap-1 font-semibold bg-[#00b894]/10 px-2 py-0.5 rounded-full">
-                        <MousePointerClick className="w-3 h-3" /> {bizClicks} Klik Prospek
+                      <p className="text-xs text-blue-400 flex items-center gap-1 font-semibold bg-blue-500/10 px-2.5 py-0.5 rounded-full">
+                        <Eye className="w-3.5 h-3.5" /> {bizViews} Pengunjung
+                      </p>
+                      <p className="text-xs text-[#00b894] flex items-center gap-1 font-semibold bg-[#00b894]/10 px-2.5 py-0.5 rounded-full">
+                        <MessageCircle className="w-3.5 h-3.5" /> {bizClicks} Prospek WA
+                        {bizConversion !== null && (
+                          <span className="text-[10px] text-emerald-400/80 font-normal ml-0.5">({bizConversion}%)</span>
+                        )}
                       </p>
                     </div>
                   </div>

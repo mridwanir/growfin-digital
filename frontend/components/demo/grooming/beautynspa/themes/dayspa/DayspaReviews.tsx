@@ -14,10 +14,10 @@ export function DayspaReviews() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {(client.reviews || client.metadata?.reviews)?.slice(0, 3).map((review: any, idx: number) => (
+          {(client.reviews || [])?.slice(0, 3).map((review: any, idx: number) => (
             <div key={idx} className="bg-white p-8 rounded-3xl border border-[#F3ECE2] relative shadow-sm">
               <div className="flex text-amber-500 mb-4 gap-1">
-                {Array.from({ length: review.rating || 5 }).map((_, i) => (
+                {Array.from({ length: Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))) }).map((_, i) => (
                   <Star key={i} size={16} className="fill-current text-amber-500" />
                 ))}
               </div>

@@ -114,7 +114,7 @@ export function ServiceProfileScreen() {
                   <div key={index} className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-white text-xs">{rev.authorName}</span>
-                      <span className="text-[8px] text-amber-500">{'⭐'.repeat(rev.rating)}</span>
+                      <span className="text-[8px] text-amber-500">{'⭐'.repeat(Math.max(1, Math.min(5, Math.round(Number(rev.rating) || 5))))}</span>
                     </div>
                     <p className="text-[11px] text-slate-400 line-clamp-2 italic">
                       &quot;{rev.text}&quot;

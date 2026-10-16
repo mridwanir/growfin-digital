@@ -209,6 +209,7 @@ export function CheckoutModal() {
               href={generateWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
+              data-track="whatsapp"
               onClick={() => setIsCartModalOpen(false)}
               className={`w-full py-3.5 rounded-xl text-center font-bold text-white transition-transform active:scale-95 shadow-md flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-hover`}
             >

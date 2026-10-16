@@ -37,9 +37,9 @@ export default function middleware(req: NextRequest) {
     hostname !== rootDomain &&
     hostname !== `www.${rootDomain}`
   ) {
-    let currentHost = hostname;
-    if (hostname.endsWith(`.${rootDomain}`)) {
-      currentHost = hostname.replace(`.${rootDomain}`, '');
+    let currentHost = hostname.replace(/^www\./, '');
+    if (currentHost.endsWith(`.${rootDomain}`)) {
+      currentHost = currentHost.replace(`.${rootDomain}`, '');
     }
     
     // We rewrite to /site/[currentHost] to render the tenant's page

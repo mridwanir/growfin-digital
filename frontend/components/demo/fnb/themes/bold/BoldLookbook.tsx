@@ -3,7 +3,7 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 export function BoldLookbook() {
   const { client } = useFnbDemo();
 
-  const lookbookItems = client.lookbook || client.metadata?.lookbook || [
+  const lookbookItems = client.lookbook || [
     {
       name: "Party Platter & Crispy Loaded Fries",
       desc: "Ideal untuk 3-4 orang. Kombinasi 2 Burger Signature, 6pcs Korean Wings, dan Truffle Fries Jumbo.",

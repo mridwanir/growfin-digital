@@ -197,6 +197,7 @@ export function RetailCartModal() {
             </div>
             <button 
               onClick={handleSendWA}
+              data-track="whatsapp"
               className="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black shadow-lg shadow-emerald-500/25 transition-transform active:scale-[0.98] flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-5 h-5" />

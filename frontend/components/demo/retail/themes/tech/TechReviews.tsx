@@ -21,7 +21,7 @@ export function TechReviews() {
           <div key={i} className="bg-white p-7 rounded-2xl border border-zinc-200 flex flex-col justify-between shadow-xs">
             <div>
               <div className="flex gap-1 mb-4" style={{ color: 'var(--theme-color)' }}>
-                {[...Array(r.rating || 5)].map((_, j) => (
+                {[...Array(Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5))))].map((_, j) => (
                   <svg key={j} className="w-4 h-4 fill-current" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 ))}
               </div>

@@ -349,6 +349,13 @@ export async function POST(request: Request) {
       metadata.rating = rating;
       metadata.reviewCount = reviewCount;
       metadata.address = realAddress;
+
+      if (Array.isArray(metadata.reviews)) {
+        metadata.reviews = metadata.reviews.map((rev: any) => ({
+          ...rev,
+          rating: Math.max(1, Math.min(5, Math.round(Number(rev.rating) || 5)))
+        }));
+      }
     } catch (e) {
       console.error('Failed to parse Gemini JSON:', e);
       return NextResponse.json({ error: 'AI Gagal memproses data. Coba lagi.' }, { status: 500 });

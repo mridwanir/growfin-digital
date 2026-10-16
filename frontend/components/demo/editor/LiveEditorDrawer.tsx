@@ -1,6 +1,6 @@
 'use client';
 
-import { X, Save, Image as ImageIcon, Type, Plus, Trash2, Edit2, LayoutTemplate, Rocket, Palette, Store, LayoutDashboard, ShoppingBag, HeartHandshake, ChevronRight, ArrowLeft, Clock, MapPin, Phone, Mail, MessageSquare, Star, Users, HelpCircle, Tag, Settings, Link } from 'lucide-react';
+import { X, Save, Image as ImageIcon, Type, Plus, Trash2, Edit2, LayoutTemplate, Rocket, Palette, Store, LayoutDashboard, ShoppingBag, HeartHandshake, ChevronRight, ArrowLeft, Clock, MapPin, Phone, Mail, MessageSquare, Star, Users, HelpCircle, Tag, Settings, Link, Percent, Calendar } from 'lucide-react';
 import { BusinessDemo, MenuItem } from '@/lib/types';
 import { useState } from 'react';
 import { PACKAGE_LIMITS } from '@/lib/site-config';
@@ -386,6 +386,78 @@ export function LiveEditorDrawer({
               {activeCategory === 'desain' && (
                 <div className="space-y-8">
                   <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Atur Susunan Halaman</label>
+                      <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Urutan Seksi</span>
+                    </div>
+                    {templateType === 'service' || templateType === 'grooming' ? (
+                      <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm text-xs text-slate-500 leading-relaxed">
+                        Susunan tata letak halaman untuk bisnis <span className="font-bold text-slate-700 capitalize">{templateType}</span> sudah dirancang optimal khusus untuk pengalaman reservasi & booking pelanggan.
+                      </div>
+                    ) : (
+                      <div className="bg-white border border-slate-200 shadow-sm p-2 rounded-xl">
+                        {(() => {
+                          const defaultOrder = templateType === 'retail'
+                            ? ['hero', 'lookbook', 'katalog', 'testimoni']
+                            : (normalizedLayoutVariant === 'fnb-theme-classic'
+                              ? ['hero', 'gallery', 'reviews', 'menu']
+                              : ['hero', 'menu', 'gallery', 'reviews']);
+                          const currentOrder = client.sectionOrder?.length ? client.sectionOrder : defaultOrder;
+
+                          const moveUp = (index: number) => {
+                            if (index <= 1) return;
+                            const newOrder = [...currentOrder];
+                            [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+                            handleChange('sectionOrder', newOrder);
+                          };
+
+                          const moveDown = (index: number) => {
+                            if (index === currentOrder.length - 1 || index === 0) return;
+                            const newOrder = [...currentOrder];
+                            [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
+                            handleChange('sectionOrder', newOrder);
+                          };
+
+                          const retailLabels: Record<string, string> = {
+                            hero: 'Banner Utama',
+                            lookbook: 'Galeri Lookbook',
+                            katalog: 'Katalog Produk',
+                            testimoni: 'Ulasan Pelanggan'
+                          };
+
+                          const fnbLabels: Record<string, string> = {
+                            hero: 'Banner Utama',
+                            menu: 'Daftar Menu',
+                            gallery: 'Galeri Foto',
+                            reviews: 'Ulasan Pelanggan'
+                          };
+
+                          const getSectionLabel = (id: string) => {
+                            if (templateType === 'retail') {
+                              return retailLabels[id] || id;
+                            }
+                            return fnbLabels[id] || id;
+                          };
+
+                          return currentOrder.map((sectionId, idx) => (
+                            <div key={sectionId} className="flex items-center justify-between p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors rounded-lg">
+                              <span className={`text-sm font-bold ${sectionId === 'hero' ? 'text-slate-400' : 'text-slate-700'}`}>
+                                {getSectionLabel(sectionId)} {sectionId === 'hero' && <span className="text-[10px] text-slate-400 font-normal ml-1">(Tetap di atas)</span>}
+                              </span>
+                              {sectionId !== 'hero' && (
+                                <div className="flex gap-1">
+                                  <button onClick={() => moveUp(idx)} disabled={idx <= 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↑</button>
+                                  <button onClick={() => moveDown(idx)} disabled={idx === currentOrder.length - 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↓</button>
+                                </div>
+                              )}
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4 pt-6 border-t border-slate-200">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Pilih Gaya Tampilan</label>
                     {themes.length === 1 ? (
                       <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 text-sm">
@@ -437,9 +509,94 @@ export function LiveEditorDrawer({
 
                   <div className="space-y-4 pt-6 border-t border-slate-200">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Kata-kata di Tombol (Call to Action)</label>
-                    <ComingSoonField label="Tombol Beli / Pesan" placeholder="Misal: Pesan Sekarang" icon={Type} />
-                    <ComingSoonField label="Tombol Lihat Semua" placeholder="Misal: Liat Menu Lainnya" icon={Type} />
-                    <ComingSoonField label="Label Diskon/Promo" placeholder="Misal: Promo Gila!" icon={Tag} />
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <Type className="w-4 h-4 text-slate-400" /> Tombol Beli / Pesan
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Misal: Pesan Sekarang / Beli Langsung"
+                        value={client.uiLabels?.buyButtonText || ''}
+                        onChange={(e) => handleChange('uiLabels', { ...client.uiLabels, buyButtonText: e.target.value })}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <ImageIcon className="w-4 h-4 text-slate-400" /> Tombol Lookbook / Galeri
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Misal: Inspirasi Setup / Galeri"
+                        value={client.uiLabels?.lookbookButtonText || ''}
+                        onChange={(e) => handleChange('uiLabels', { ...client.uiLabels, lookbookButtonText: e.target.value })}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <Type className="w-4 h-4 text-slate-400" /> Tombol Lihat Semua
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Misal: Liat Menu Lainnya / Buka Etalase"
+                        value={client.uiLabels?.viewAllButtonText || ''}
+                        onChange={(e) => handleChange('uiLabels', { ...client.uiLabels, viewAllButtonText: e.target.value })}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 pt-6 border-t border-slate-200">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Promo & Flash Sale (Marketing)</label>
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                        Aktif di Banner
+                      </span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <Tag className="w-4 h-4 text-slate-400" /> Label Diskon/Promo
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Misal: Promo Gila! / Penawaran Terbatas"
+                        value={client.marketing?.promoLabel || ''}
+                        onChange={(e) => handleChange('marketing', { ...client.marketing, promoLabel: e.target.value })}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <Percent className="w-4 h-4 text-slate-400" /> Persentase Diskon (%)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="Misal: 25"
+                        value={client.marketing?.discountPercentage ?? ''}
+                        onChange={(e) => handleChange('marketing', { ...client.marketing, discountPercentage: Number(e.target.value) })}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4 text-slate-400" /> Batas Waktu Flash Sale
+                      </label>
+                      <input
+                        type="datetime-local"
+                        value={client.marketing?.flashSaleEnd ? client.marketing.flashSaleEnd.slice(0, 16) : ''}
+                        onChange={(e) => handleChange('marketing', { ...client.marketing, flashSaleEnd: e.target.value })}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all"
+                      />
+                      <p className="text-[11px] text-slate-400">
+                        Atur batas waktu untuk memunculkan badge countdown atau batas akhir promo di etalase/banner.
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -593,65 +750,6 @@ export function LiveEditorDrawer({
                       <option value="cart">Langsung masuk ke pemesanan</option>
                       <option value="gallery">Lihat-lihat foto galeri dulu</option>
                     </select>
-                  </div>
-
-                  <div className="space-y-4 pt-6 border-t border-slate-200">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Atur Susunan Halaman</label>
-                    {templateType === 'service' || templateType === 'grooming' ? (
-                      <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm text-xs text-slate-500 leading-relaxed">
-                        Susunan tata letak halaman untuk bisnis <span className="font-bold text-slate-700 capitalize">{templateType}</span> sudah dirancang optimal khusus untuk pengalaman reservasi & booking pelanggan.
-                      </div>
-                    ) : (
-                      <div className="bg-white border border-slate-200 shadow-sm p-2 rounded-xl">
-                        {(() => {
-                          const defaultOrder = templateType === 'retail'
-                            ? ['hero', 'lookbook', 'katalog', 'testimoni']
-                            : (normalizedLayoutVariant === 'fnb-theme-modern' || normalizedLayoutVariant === 'fnb-cafe-alternatif'
-                              ? ['hero', 'menu', 'gallery', 'reviews']
-                              : ['hero', 'gallery', 'reviews', 'menu']);
-                          const currentOrder = client.sectionOrder || defaultOrder;
-
-                          const moveUp = (index: number) => {
-                            if (index <= 1) return;
-                            const newOrder = [...currentOrder];
-                            [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-                            handleChange('sectionOrder', newOrder);
-                          };
-
-                          const moveDown = (index: number) => {
-                            if (index === currentOrder.length - 1 || index === 0) return;
-                            const newOrder = [...currentOrder];
-                            [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
-                            handleChange('sectionOrder', newOrder);
-                          };
-
-                          const getSectionLabel = (id: string) => {
-                            switch (id) {
-                              case 'hero': return 'Banner Utama (Tetap)';
-                              case 'gallery':
-                              case 'lookbook': return templateType === 'retail' ? 'Katalog Lookbook' : 'Galeri / Foto-foto';
-                              case 'reviews':
-                              case 'testimoni': return 'Kata Orang (Ulasan)';
-                              case 'menu':
-                              case 'katalog': return templateType === 'retail' ? 'Etalase Produk' : 'Katalog Produk / Menu';
-                              default: return id;
-                            }
-                          };
-
-                          return currentOrder.map((sectionId, idx) => (
-                            <div key={sectionId} className="flex items-center justify-between p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors rounded-lg">
-                              <span className={`text-sm font-bold ${sectionId === 'hero' ? 'text-slate-400' : 'text-slate-700'}`}>{getSectionLabel(sectionId)}</span>
-                              {sectionId !== 'hero' && (
-                                <div className="flex gap-1">
-                                  <button onClick={() => moveUp(idx)} disabled={idx <= 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↑</button>
-                                  <button onClick={() => moveDown(idx)} disabled={idx === currentOrder.length - 1} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30">↓</button>
-                                </div>
-                              )}
-                            </div>
-                          ));
-                        })()}
-                      </div>
-                    )}
                   </div>
 
                   <div className="space-y-4 pt-6 border-t border-slate-200">

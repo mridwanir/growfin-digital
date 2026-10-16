@@ -135,7 +135,7 @@ export function GroomingBookingModal() {
             />
           </div>
 
-          <button type="submit" className="w-full mt-4 py-4 rounded-full bg-[#00A884] hover:bg-[#008f6f] text-white font-semibold text-xs tracking-widest uppercase transition flex items-center justify-center gap-2 shadow-lg">
+          <button type="submit" data-track="whatsapp" className="w-full mt-4 py-4 rounded-full bg-[#00A884] hover:bg-[#008f6f] text-white font-semibold text-xs tracking-widest uppercase transition flex items-center justify-center gap-2 shadow-lg">
             Amankan Slot via WhatsApp
           </button>
         </form>

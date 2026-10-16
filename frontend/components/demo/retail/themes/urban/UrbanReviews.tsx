@@ -19,7 +19,10 @@ export function UrbanReviews() {
           {reviews.slice(0, 3).map((review, idx) => (
             <div key={idx} className="bg-gray-50 p-8 rounded-3xl border border-gray-100">
               <div className="flex text-yellow-400 mb-4">
-                {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                {(() => {
+                  const stars = Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5)));
+                  return '★'.repeat(stars) + '☆'.repeat(5 - stars);
+                })()}
               </div>
               <p className="text-gray-700 mb-6 italic">"{review.text}"</p>
               <div className="flex items-center">

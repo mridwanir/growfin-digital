@@ -1,6 +1,7 @@
 'use client';
 
 import { useRetailDemo } from '../../core/RetailDemoContext';
+import { CountdownTimer } from '@/components/demo/CountdownTimer';
 
 export function ArtisanHero() {
   const { client, setIsCartDrawerOpen } = useRetailDemo();
@@ -86,7 +87,7 @@ export function ArtisanHero() {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-md">{spotlightLabel}</span>
                 {flashSaleEnd && (
                   <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                    {flashSaleEnd}
+                    <CountdownTimer targetDate={flashSaleEnd} />
                   </span>
                 )}
               </div>

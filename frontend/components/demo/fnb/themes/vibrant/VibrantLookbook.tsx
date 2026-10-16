@@ -3,7 +3,7 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 export function VibrantLookbook() {
   const { client } = useFnbDemo();
 
-  const lookbookItems = client.lookbook || client.metadata?.lookbook || [
+  const lookbookItems = client.lookbook || [
     {
       name: "Matcha Oat Booster",
       category: "Desk Focus",

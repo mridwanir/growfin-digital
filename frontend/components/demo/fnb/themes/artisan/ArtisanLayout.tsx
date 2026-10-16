@@ -8,7 +8,11 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 
 export function ArtisanLayout() {
   const { client } = useFnbDemo();
-  const themeColor = client.metadata?.themeColor; // amber-500 fallback
+  const themeColor = client.themeColor || '#f59e0b'; // amber-500 fallback
+
+  const order = client.sectionOrder?.length 
+    ? client.sectionOrder 
+    : ['hero', 'menu', 'gallery', 'reviews'];
 
   return (
     <>
@@ -24,7 +28,7 @@ export function ArtisanLayout() {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
       <div className="bg-stone-50 text-stone-800 antialiased selection:bg-brand-primary selection:text-white pb-28 font-sans-artisan">
-        {client.sectionOrder?.map((sectionId) => {
+        {order.map((sectionId) => {
           switch (sectionId) {
             case 'hero': return <ArtisanHeader key="hero" />;
             case 'menu': return <ArtisanMenu key="menu" />;
@@ -32,14 +36,7 @@ export function ArtisanLayout() {
             case 'reviews': return <ArtisanReviews key="reviews" />;
             default: return null;
           }
-        }) || (
-          <>
-            <ArtisanHeader />
-            <ArtisanMenu />
-            <ArtisanGallery />
-            <ArtisanReviews />
-          </>
-        )}
+        })}
         <ArtisanContact />
       </div>
     </>

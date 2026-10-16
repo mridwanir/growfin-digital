@@ -1,6 +1,7 @@
 'use client';
 
 import { useRetailDemo } from '../../core/RetailDemoContext';
+import { CountdownTimer } from '@/components/demo/CountdownTimer';
 
 export function FreshHero() {
   const { client, setIsCartDrawerOpen } = useRetailDemo();
@@ -99,7 +100,7 @@ export function FreshHero() {
                   <div className="mb-2">
                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300 bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-md">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                      {flashSaleEnd}
+                      <CountdownTimer targetDate={flashSaleEnd} />
                     </span>
                   </div>
                 )}

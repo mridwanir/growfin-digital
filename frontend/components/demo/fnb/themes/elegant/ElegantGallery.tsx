@@ -4,7 +4,7 @@ export function ElegantGallery() {
   const { client } = useFnbDemo();
   
   // Use lookbook from client or fallback to default
-  const lookbookItems = client.lookbook || client.metadata?.lookbook || [
+  const lookbookItems = client.lookbook || [
     {
       name: "High Tea Set & Viennoiserie",
       desc: "Padukan Butter Croissant renyah dengan Artisan Earl Grey Tea untuk santap sore elegan bersama sahabat.",

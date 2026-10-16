@@ -1,6 +1,7 @@
 'use client';
 
 import { useRetailDemo } from '../../core/RetailDemoContext';
+import { CountdownTimer } from '@/components/demo/CountdownTimer';
 
 export function DarkHero() {
   const { client, setIsCartDrawerOpen } = useRetailDemo();
@@ -107,7 +108,7 @@ export function DarkHero() {
                   {flashSaleEnd && (
                     <div className="mb-3 inline-flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/50 px-2.5 py-1 rounded-md">
                       <svg className="w-3.5 h-3.5 text-rose-400 animate-pulse" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                      <span className="text-[10px] font-mono font-bold text-rose-400 tracking-widest">{flashSaleEnd}</span>
+                      <CountdownTimer targetDate={flashSaleEnd} className="text-[10px] font-mono font-bold text-rose-400 tracking-widest" />
                     </div>
                   )}
 

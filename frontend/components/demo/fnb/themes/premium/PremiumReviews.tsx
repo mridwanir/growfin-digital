@@ -19,7 +19,7 @@ export function PremiumReviews() {
                 {client.reviews.map((rev, i) => (
                   <div key={i} className="bg-slate-900 border border-slate-800 p-8 hover:border-brand-primary/50 transition-colors group">
                       <div className="flex text-brand-primary mb-6 text-sm">
-                          {[...Array(Math.floor(rev.rating))].map((_, idx) => (
+                          {[...Array(Math.max(1, Math.min(5, Math.round(Number(rev.rating) || 5))))].map((_, idx) => (
                             <Star key={idx} className="fill-current w-4 h-4 text-brand-primary" />
                           ))}
                       </div>

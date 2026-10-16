@@ -53,7 +53,7 @@ export function Testimonials() {
           {reviews.map((review, idx) => (
             <div key={idx} className="flex flex-col p-6 bg-[#14141A] rounded-2xl border border-[#262633] hover:border-[#00b894]/50 transition-colors">
               <div className="flex mb-4">
-                {[...Array(review.rating)].map((_, i) => (
+                {[...Array(Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))))].map((_, i) => (
                   <Star key={i} className="w-5 h-5 text-[#00e0b8] fill-[#00e0b8]" />
                 ))}
               </div>

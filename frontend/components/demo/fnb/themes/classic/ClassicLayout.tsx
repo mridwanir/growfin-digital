@@ -8,7 +8,9 @@ import { useFnbDemo } from '../../core/FnbDemoContext';
 
 export function ClassicLayout() {
   const { client } = useFnbDemo();
-  const order = client.sectionOrder || ['hero', 'gallery', 'reviews', 'menu'];
+  const order = client.sectionOrder?.length 
+    ? client.sectionOrder 
+    : ['hero', 'gallery', 'reviews', 'menu'];
 
   const renderSection = (id: string) => {
     switch (id) {

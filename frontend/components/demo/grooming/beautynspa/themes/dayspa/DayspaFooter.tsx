@@ -19,11 +19,11 @@ export function DayspaFooter() {
         </div>
         <div>
           <h5 className="text-white font-medium uppercase tracking-wider mb-3">Jam Operasional</h5>
-          <p className="leading-relaxed">{client.metadata?.hours || 'Setiap Hari: 09.00 - 21.00 WIB'}</p>
+          <p className="leading-relaxed">{client.hours || 'Setiap Hari: 09.00 - 21.00 WIB'}</p>
         </div>
         <div>
           <h5 className="text-white font-medium uppercase tracking-wider mb-3">Kontak Reservasi</h5>
-          <p className="leading-relaxed">WhatsApp: {client.metadata?.contact || '+62 812-3456-7890'}</p>
+          <p className="leading-relaxed">WhatsApp: {client.phone || client.waNumber || '+62 812-3456-7890'}</p>
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/10 text-center text-white/40">

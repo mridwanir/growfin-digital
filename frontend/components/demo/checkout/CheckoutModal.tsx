@@ -6,6 +6,7 @@ import { X, Lock, CheckCircle2, ChevronRight, Mail, Key } from 'lucide-react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import { siteConfig } from '@/lib/site-config';
+import { trackMetaEvent } from '@/lib/fpixel';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -66,7 +67,16 @@ export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutMo
       }
       setIsCheckingSession(false);
     };
-    if (isOpen) checkSession();
+    if (isOpen) {
+      checkSession();
+      trackMetaEvent('InitiateCheckout', {
+        content_name: selectedPackage?.name || 'Paket Website Growfin',
+        content_category: 'Website Subscription',
+        content_ids: selectedPackage ? [selectedPackage.id] : [],
+        value: selectedPackage?.price || 0,
+        currency: 'IDR'
+      });
+    }
   }, [isOpen]);
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -149,6 +159,15 @@ export function CheckoutModal({ isOpen, onClose, slug, currentTier }: CheckoutMo
       // @ts-ignore
       window.snap.pay(data.token, {
         onSuccess: async function (result: any) {
+          // Track Pixel Purchase event
+          trackMetaEvent('Purchase', {
+            value: selectedPackage.price,
+            currency: 'IDR',
+            content_name: selectedPackage.name,
+            content_ids: [selectedPackage.id],
+            order_id: result.order_id,
+          });
+
           // Update status in backend or database directly
           await fetch('/api/checkout/verify', {
             method: 'POST',

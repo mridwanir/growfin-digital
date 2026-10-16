@@ -1,6 +1,7 @@
 'use client';
 
 import { useRetailDemo } from '../../core/RetailDemoContext';
+import { CountdownTimer } from '@/components/demo/CountdownTimer';
 
 export function EditorialHero() {
   const { client } = useRetailDemo();
@@ -61,7 +62,7 @@ export function EditorialHero() {
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{spotlightLabel}</span>
                 {flashSaleEnd && (
-                  <span className="text-[9px] font-mono font-bold text-[#121212] bg-gray-100 px-2 py-0.5">{flashSaleEnd}</span>
+                  <CountdownTimer targetDate={flashSaleEnd} className="text-[9px] font-mono font-bold text-[#121212] bg-gray-100 px-2 py-0.5" />
                 )}
               </div>
               <div className="flex gap-4 items-center">

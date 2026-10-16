@@ -1,6 +1,7 @@
 'use client';
 
 import { useRetailDemo } from '../../core/RetailDemoContext';
+import { CountdownTimer } from '@/components/demo/CountdownTimer';
 
 export function TechHero() {
   const { client, setIsCartDrawerOpen } = useRetailDemo();
@@ -99,7 +100,9 @@ export function TechHero() {
             {flashSaleEnd && (
               <div className="mb-4 inline-flex items-center gap-2">
                 <span className="text-[10px] font-bold text-zinc-400 uppercase">Berakhir dalam</span>
-                <span className="text-xs font-mono font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">{flashSaleEnd}</span>
+                <span className="text-xs font-mono font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">
+                  <CountdownTimer targetDate={flashSaleEnd} />
+                </span>
               </div>
             )}
 

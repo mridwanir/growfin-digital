@@ -18,7 +18,7 @@ export function BeautynspaReviews() {
             <div key={idx} className={`bg-white p-8 rounded-2xl shadow-sm relative ${idx === 1 ? 'transform md:-translate-y-4' : ''}`}>
               <div className="text-4xl text-stone-200 absolute top-6 right-6 font-serif">"</div>
               <div className="flex text-amber-400 text-sm mb-4 gap-1">
-                {Array.from({ length: review.rating }).map((_, i) => (
+                {Array.from({ length: Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))) }).map((_, i) => (
                   <span key={i}>⭐</span>
                 ))}
               </div>

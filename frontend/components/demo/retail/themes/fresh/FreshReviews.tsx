@@ -28,7 +28,7 @@ export function FreshReviews() {
           <div key={i} className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-1 text-amber-400 mb-3">
-                {[...Array(r.rating || 5)].map((_, j) => (
+                {[...Array(Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5))))].map((_, j) => (
                   <svg key={j} className="w-4 h-4" fill="currentColor" viewBox="0 0 256 256"><path d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z"></path></svg>
                 ))}
               </div>

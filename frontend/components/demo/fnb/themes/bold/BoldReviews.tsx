@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 export function BoldReviews() {
   const { client } = useFnbDemo();
 
-  const reviews = client.metadata?.reviews || [
+  const reviews = client.reviews || [
     { text: "Packaging termal mereka gokil banget! Burger nyampe kantor masih panas beruap dan rotinya nggak bonyok kena uap air. Truffle mayo-nya berasa daging wagyu premium.", authorName: "Raditya Ardiansyah", rating: 5, location: "Jakarta Selatan" },
     { text: "Nashville Hot Chicken-nya gurih pedas nendang, tingkat pedas level Medium cocok buat yang suka pedas tapi masih bisa dinikmati. Pengiriman via kurir express tepat waktu!", authorName: "Nadia Daniswara", rating: 5, location: "Bandung Kota" },
     { text: "Sistem ordernya ringkas tanpa ribet akun-akun, langsung nyambung ke WA admin dengan detail item dan catatan custom saus lengkap. Rekomended untuk katering kantor.", authorName: "Fahmi Kurniawan", rating: 5, location: "Tangerang" }
@@ -25,7 +25,7 @@ export function BoldReviews() {
               <Star className="w-5 h-5 fill-brand-primary text-brand-primary" />
               <Star className="w-5 h-5 fill-brand-primary text-brand-primary" />
             </span>
-            <span>{client.metadata?.rating || 4.9} / 5.0 dari {client.metadata?.reviewCount || '1.800+'} Pesanan Delivery</span>
+            <span>{client.rating || 4.9} / 5.0 dari {client.reviewCount || '1.800+'} Pesanan Delivery</span>
           </div>
         </div>
 
@@ -34,7 +34,7 @@ export function BoldReviews() {
             <div key={i} className="p-6 rounded-3xl bg-neutral-50 border border-neutral-200 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-1 text-brand-primary mb-4">
-                  {[...Array(review.rating || 5)].map((_, idx) => (
+                  {[...Array(Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))))].map((_, idx) => (
                     <Star key={idx} className="w-4 h-4 fill-brand-primary text-brand-primary" />
                   ))}
                 </div>

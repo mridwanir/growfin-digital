@@ -13,8 +13,8 @@ export function ArtisanReviews() {
         </div>
         <div className="flex items-center gap-2 mt-3 md:mt-0 text-brand-primary font-bold text-sm">
           <Star className="w-5 h-5 fill-brand-primary text-brand-primary" />
-          <span className="text-stone-900 text-base">{client.metadata?.rating || 4.9} / 5.0</span>
-          <span className="text-stone-400 font-normal">dari {client.metadata?.reviewCount || '450+'} ulasan Google</span>
+          <span className="text-stone-900 text-base">{client.rating || 4.9} / 5.0</span>
+          <span className="text-stone-400 font-normal">dari {client.reviewCount || '450+'} ulasan Google</span>
         </div>
       </div>
 
@@ -27,7 +27,7 @@ export function ArtisanReviews() {
           <div key={i} className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex text-brand-primary mb-3">
-                {[...Array(review.rating || 5)].map((_, i) => (
+                {[...Array(Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5))))].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-current" />
                 ))}
               </div>

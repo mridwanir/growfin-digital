@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRetailDemo, FulfillmentMode, getRetailPlaceholderImage } from '../core/RetailDemoContext';
+import { formatVariantOptionDisplay } from '@/lib/catalog';
 import { MessageCircle } from 'lucide-react';
 
 export function RetailCartModal() {
@@ -35,12 +36,15 @@ export function RetailCartModal() {
   const handleSendWA = () => {
     let message = `Halo ${client.name}, saya ingin order:\n\n`;
     
-    cart.forEach((item: any, index: number) => {
+    cart.forEach((item, index) => {
       message += `${index + 1}. *${item.product.name}* (x${item.quantity})\n`;
       
       const variantEntries = Object.entries(item.selectedVariants || {});
       if (variantEntries.length > 0) {
-        message += `   Varian: ${variantEntries.map(([k,v]) => `${k}: ${v}`).join(', ')}\n`;
+        const variantsText = variantEntries
+          .map(([k, v]) => formatVariantOptionDisplay(k, v))
+          .join(', ');
+        message += `   Varian: ${variantsText}\n`;
       }
       if (item.selectedAddons && item.selectedAddons.length > 0) {
         message += `   Tambahan: ${item.selectedAddons.join(', ')}\n`;
@@ -101,7 +105,7 @@ export function RetailCartModal() {
               
               {/* Order Items */}
               <div className="space-y-4">
-                {cart.map((item: any) => (
+                {cart.map((item) => (
                   <div key={item.id} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex gap-4">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={item.product.imageUrl || getRetailPlaceholderImage(item.product.id)} alt={item.product.name} className="w-16 h-16 rounded-xl object-cover bg-slate-100 shrink-0" />
@@ -111,8 +115,8 @@ export function RetailCartModal() {
                       <p className="text-brand-primary font-bold text-sm mb-2">{formatRupiah(item.totalPrice / item.quantity)}</p>
                       
                       <div className="text-xs text-slate-500 space-y-0.5 mb-3">
-                        {Object.entries(item.selectedVariants || {}).map(([k,v]) => (
-                          <p key={k}><span className="font-medium text-slate-600">{k}:</span> {v as string}</p>
+                        {Object.entries(item.selectedVariants || {}).map(([k, v]) => (
+                          <p key={k}>{formatVariantOptionDisplay(k, v)}</p>
                         ))}
                         {item.selectedAddons && item.selectedAddons.length > 0 && (
                           <p><span className="font-medium text-slate-600">Tambahan:</span> {item.selectedAddons.join(', ')}</p>

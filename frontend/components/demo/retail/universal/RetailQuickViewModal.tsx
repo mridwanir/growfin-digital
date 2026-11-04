@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRetailDemo, getRetailPlaceholderImage } from '../core/RetailDemoContext';
+import { VariantOption } from '@/lib/types';
+import { calculateItemPrice, normalizeVariantOption, buildCartItemHash } from '@/lib/catalog';
 
 export function RetailQuickViewModal() {
   const { 
@@ -13,7 +15,7 @@ export function RetailQuickViewModal() {
   } = useRetailDemo();
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string | VariantOption>>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
 
@@ -24,9 +26,9 @@ export function RetailQuickViewModal() {
       setNotes('');
       setSelectedAddons([]);
       
-      const initialVariants: Record<string, string> = {};
-      selectedProductForCustomization.variants?.forEach((v: any) => {
-        if (v.options.length > 0) {
+      const initialVariants: Record<string, string | VariantOption> = {};
+      selectedProductForCustomization.variants?.forEach((v) => {
+        if (v.options && v.options.length > 0) {
           initialVariants[v.name] = v.options[0]; // Select first option by default
         }
       });
@@ -38,31 +40,20 @@ export function RetailQuickViewModal() {
 
   const product = selectedProductForCustomization;
 
-  const getBasePrice = () => {
-    const p = product.price?.replace(/\D/g, '');
-    return p ? parseInt(p) : 0;
-  };
-
   const calculateTotal = () => {
-    let total = getBasePrice();
-    // Addons
-    selectedAddons.forEach(addonName => {
-      const addonObj = product.addons?.find(a => a.name === addonName);
-      if (addonObj) total += addonObj.price;
-    });
-    // Variants could have price modifiers (simplified here as just string options, but you could parse "(+Rp 5.000)")
-    Object.values(selectedVariants).forEach(opt => {
-      const match = opt.match(/\(\+Rp\s*([\d.]+)\)/);
-      if (match) {
-        total += parseInt(match[1].replace(/\./g, ''));
-      }
-    });
-    return total * quantity;
+    const activeAddons = (product.addons || []).filter(addon => selectedAddons.includes(addon.name));
+    const unitPrice = calculateItemPrice(
+      product.price,
+      Object.values(selectedVariants),
+      activeAddons
+    );
+    return unitPrice * quantity;
   };
 
   const handleAddToCart = () => {
+    const hash = buildCartItemHash(product.id, selectedVariants, selectedAddons);
     addToCart({
-      id: Math.random().toString(36).substring(2, 9),
+      id: hash,
       product: product,
       quantity,
       selectedVariants,
@@ -112,23 +103,38 @@ export function RetailQuickViewModal() {
           {/* Variants */}
           {product.variants && product.variants.length > 0 && (
             <div className="space-y-4">
-              {product.variants.map((variant: any) => (
+              {product.variants.map((variant) => (
                 <div key={variant.name}>
                   <h3 className="font-bold text-slate-900 mb-2">{variant.name} <span className="text-rose-500">*</span></h3>
                   <div className="flex flex-wrap gap-2">
-                    {variant.options.map((opt: any) => (
-                      <button
-                        key={opt}
-                        onClick={() => setSelectedVariants(prev => ({ ...prev, [variant.name]: opt }))}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
-                          selectedVariants[variant.name] === opt 
-                          ? 'border-brand-primary ring-2 ring-brand-primary/20 bg-brand-light text-brand-primary' 
-                          : 'border-slate-200 text-slate-600 hover:border-slate-300'
-                        }`}
-                      >
-                        {opt}
-                      </button>
-                    ))}
+                    {variant.options.map((opt) => {
+                      const normalizedOpt = normalizeVariantOption(opt);
+                      const currentSelected = selectedVariants[variant.name];
+                      const normalizedSelected = currentSelected ? normalizeVariantOption(currentSelected) : null;
+                      const isSelected = normalizedSelected?.label === normalizedOpt.label;
+
+                      return (
+                        <button
+                          key={normalizedOpt.label}
+                          type="button"
+                          onClick={() => setSelectedVariants(prev => ({ ...prev, [variant.name]: opt }))}
+                          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border flex items-center gap-1.5 ${
+                            isSelected 
+                            ? 'border-brand-primary ring-2 ring-brand-primary/20 bg-brand-light text-brand-primary' 
+                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                          }`}
+                        >
+                          <span>{normalizedOpt.label}</span>
+                          {normalizedOpt.priceModifier > 0 && (
+                            <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${
+                              isSelected ? 'bg-brand-primary/10 text-brand-primary' : 'bg-slate-100 text-slate-500'
+                            }`}>
+                              +Rp {normalizedOpt.priceModifier.toLocaleString('id-ID')}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
@@ -140,7 +146,7 @@ export function RetailQuickViewModal() {
             <div>
                <h3 className="font-bold text-slate-900 mb-2">Tambahan Opsional</h3>
                <div className="space-y-2">
-                 {product.addons.map((addon: any) => {
+                 {product.addons.map((addon) => {
                    const isSelected = selectedAddons.includes(addon.name);
                    return (
                      <label key={addon.name} className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${isSelected ? 'border-brand-primary bg-brand-light/50' : 'border-slate-200 hover:bg-slate-50'}`}>
@@ -157,7 +163,7 @@ export function RetailQuickViewModal() {
                          checked={isSelected}
                          onChange={(e) => {
                            if (e.target.checked) setSelectedAddons([...selectedAddons, addon.name]);
-                           else setSelectedAddons(selectedAddons.filter((a: any) => a !== addon.name));
+                           else setSelectedAddons(selectedAddons.filter((a) => a !== addon.name));
                          }}
                        />
                      </label>

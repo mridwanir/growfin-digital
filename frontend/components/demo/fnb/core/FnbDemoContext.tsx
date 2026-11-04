@@ -1,14 +1,15 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { BusinessDemo, MenuItem } from '@/lib/types';
+import { BusinessDemo, MenuItem, VariantOption } from '@/lib/types';
 import { THEMES, ThemeKey, getDefaultTheme } from '@/lib/themes';
+import { stackCartItem } from '@/lib/catalog';
 
 export interface CartItem {
   id: string; // unique cart item id
   product: MenuItem;
   quantity: number;
-  selectedVariants: Record<string, string>; 
+  selectedVariants: Record<string, string | VariantOption>;
   selectedAddons: string[];
   notes: string;
   totalPrice: number;
@@ -103,7 +104,7 @@ export function FnbDemoProvider({ children, client }: { children: ReactNode; cli
   }, [client.isOpen, client.openTime, client.closeTime]);
 
   const addToCart = (item: CartItem) => {
-    setCart((prev) => [...prev, item]);
+    setCart((prev) => stackCartItem(prev, item));
   };
 
   const removeFromCart = (id: string) => {

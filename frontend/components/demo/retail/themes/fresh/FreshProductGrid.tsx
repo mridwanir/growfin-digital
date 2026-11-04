@@ -2,12 +2,14 @@
 
 import { useRetailDemo, getRetailPlaceholderImage } from '../../core/RetailDemoContext';
 import { useState } from 'react';
+import { hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog';
+import { MenuItem } from '@/lib/types';
 
 export function FreshProductGrid() {
   const { client, setSelectedProduct, setIsProductModalOpen } = useRetailDemo();
   const [activeCategory, setActiveCategory] = useState<string>('Semua');
 
-  const handleOpenProduct = (product: any) => {
+  const handleOpenProduct = (product: MenuItem) => {
     setSelectedProduct(product);
     setIsProductModalOpen(true);
   };
@@ -43,8 +45,12 @@ export function FreshProductGrid() {
 
       {/* Product Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((item, index) => (
-          <div key={item.id} className="group bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+        {filteredProducts.map((item, index) => {
+          const hasDiscount = hasValidDiscount(item.price, item.originalPrice);
+          const discountPct = getDiscountPercentage(item.price, item.originalPrice);
+          const origNum = parseNumericPrice(item.originalPrice);
+          return (
+            <div key={item.id} className="group bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
             <div>
               {/* Large Aspect Ratio Clean Image Container */}
               <div className="aspect-[4/3] bg-zinc-100 relative overflow-hidden cursor-pointer" onClick={() => handleOpenProduct(item)}>
@@ -52,6 +58,11 @@ export function FreshProductGrid() {
                 <span className="absolute top-3 left-3 bg-zinc-900/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
                   {item.category}
                 </span>
+                {hasDiscount && (
+                  <span className="absolute top-3 right-3 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md z-10">
+                    -{discountPct}%
+                  </span>
+                )}
                 <button className="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-zinc-900 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition transform group-hover:scale-110">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.48c.35.79,8.82,19.58,27.65,38.41C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.35c18.83-18.83,27.3-37.62,27.65-38.41A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                 </button>
@@ -72,6 +83,14 @@ export function FreshProductGrid() {
             <div className="px-5 pb-5 pt-2 flex items-center justify-between border-t border-zinc-100">
               <div>
                 <span className="text-[10px] uppercase text-zinc-400 font-bold block">Harga Mulai</span>
+                {hasDiscount && origNum !== undefined && (
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className="text-xs text-zinc-400 line-through">{formatIDR(origNum)}</span>
+                    <span className="bg-rose-50 text-rose-600 border border-rose-200 text-[9px] font-bold px-1 rounded">
+                      Hemat {discountPct}%
+                    </span>
+                  </div>
+                )}
                 <span className="text-base font-black text-[var(--theme-color)]">{formatIDR(Number(item.price.toString().replace(/[^0-9]/g, '')) || 0)}</span>
               </div>
               <button onClick={() => handleOpenProduct(item)} className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-[var(--theme-color)] text-emerald-700 hover:text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer">
@@ -80,7 +99,8 @@ export function FreshProductGrid() {
               </button>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

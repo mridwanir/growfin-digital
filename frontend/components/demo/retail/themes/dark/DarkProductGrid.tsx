@@ -1,11 +1,13 @@
 'use client';
 
 import { useRetailDemo, getRetailPlaceholderImage } from '../../core/RetailDemoContext';
+import { hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog';
+import { MenuItem } from '@/lib/types';
 
 export function DarkProductGrid() {
   const { client, setSelectedProduct, setIsProductModalOpen } = useRetailDemo();
 
-  const handleOpenModal = (product: any) => {
+  const handleOpenModal = (product: MenuItem) => {
     setSelectedProduct(product);
     setIsProductModalOpen(true);
   };
@@ -25,6 +27,9 @@ export function DarkProductGrid() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {client.menu.map((prod) => {
           const priceNum = Number(prod.price.toString().replace(/[^0-9]/g, '')) || 0;
+          const hasDiscount = hasValidDiscount(prod.price, prod.originalPrice);
+          const discountPct = getDiscountPercentage(prod.price, prod.originalPrice);
+          const origNum = parseNumericPrice(prod.originalPrice);
           return (
             <div key={prod.id} className="group bg-slate-900/40 rounded-3xl border border-slate-800/90 hover:border-slate-700 transition-all duration-300 flex flex-col overflow-hidden">
               {/* Large Image Container */}
@@ -37,6 +42,11 @@ export function DarkProductGrid() {
                 <span className="absolute top-3 left-3 text-slate-950 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md shadow" style={{ backgroundColor: 'var(--theme-color)' }}>
                   {prod.category?.split(' ')[0] || 'Tech'}
                 </span>
+                {hasDiscount && (
+                  <span className="absolute top-3 right-3 bg-rose-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md shadow">
+                    -{discountPct}%
+                  </span>
+                )}
                 <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <span className="px-4 py-2 rounded-xl bg-slate-900/90 text-white text-xs font-semibold backdrop-blur-sm border border-slate-700 flex items-center gap-1.5 shadow-lg">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg> Quick View
@@ -62,6 +72,14 @@ export function DarkProductGrid() {
 
                 <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
                   <div>
+                    {hasDiscount && origNum !== undefined && (
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-xs text-slate-500 line-through">{formatIDR(origNum)}</span>
+                        <span className="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[9px] font-bold px-1 rounded">
+                          Hemat {discountPct}%
+                        </span>
+                      </div>
+                    )}
                     <div className="text-lg font-bold" style={{ color: 'var(--theme-color)' }}>{formatIDR(priceNum)}</div>
                   </div>
 

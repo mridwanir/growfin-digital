@@ -3,7 +3,7 @@
 import { useRetailDemo, getRetailPlaceholderImage } from '../../core/RetailDemoContext';
 import { useState } from 'react';
 import { MenuItem, VariantOption } from '@/lib/types';
-import { normalizeVariantOption } from '@/lib/catalog';
+import { normalizeVariantOption, hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog';
 
 export function ArtisanProductGrid() {
   const { client, setSelectedProduct, setIsProductModalOpen, addToCart } = useRetailDemo();
@@ -86,6 +86,9 @@ export function ArtisanProductGrid() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {filteredProducts.map((p) => {
           const price = Number(p.price.toString().replace(/[^0-9]/g, '')) || 0;
+          const hasDiscount = hasValidDiscount(p.price, p.originalPrice);
+          const discountPct = getDiscountPercentage(p.price, p.originalPrice);
+          const origNum = parseNumericPrice(p.originalPrice);
           return (
             <div key={p.id} className="group bg-white rounded-3xl border border-zinc-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
               <div className="relative aspect-[3/4] overflow-hidden bg-zinc-100 cursor-pointer" onClick={() => handleOpenModal(p)}>
@@ -98,6 +101,11 @@ export function ArtisanProductGrid() {
                 <span className="absolute top-3 left-3 bg-[#FBF9F5]/90 backdrop-blur-xs text-[10px] font-bold px-2.5 py-1 rounded-lg text-zinc-700">
                   {p.category}
                 </span>
+                {hasDiscount && (
+                  <span className="absolute top-3 right-3 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-lg shadow-sm">
+                    -{discountPct}%
+                  </span>
+                )}
               </div>
 
               <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
@@ -106,8 +114,18 @@ export function ArtisanProductGrid() {
                     {p.name}
                   </h3>
                   <p className="text-[11px] text-zinc-400 mt-0.5">{getFirstVariantLabel(p)}</p>
-                  <div className="text-base sm:text-lg font-extrabold text-[var(--theme-color)] mt-2">
-                    {formatIDR(price)}
+                  <div className="mt-2">
+                    {hasDiscount && origNum !== undefined && (
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-[11px] text-zinc-400 line-through">{formatIDR(origNum)}</span>
+                        <span className="bg-rose-50 text-rose-600 border border-rose-200 text-[9px] font-bold px-1 rounded">
+                          Hemat {discountPct}%
+                        </span>
+                      </div>
+                    )}
+                    <div className="text-base sm:text-lg font-extrabold text-[var(--theme-color)]">
+                      {formatIDR(price)}
+                    </div>
                   </div>
                 </div>
 

@@ -207,3 +207,5 @@ export function buildCartItemHash(
 
   return `${String(productId)}::variants=[${variantSegments.join(',')}]::addons=[${sortedAddons.join(',')}]`;
 }
+
+export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer';

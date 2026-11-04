@@ -32,29 +32,38 @@ export function ClassicReviews() {
 
         {/* Horizontal Scroll Container */}
         <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 scrollbar-none">
-          {client.reviews.map((r, idx) => (
-            <div key={idx} className="snap-start shrink-0 w-80 bg-stone-50 rounded-2xl p-6 shadow-sm border border-stone-100">
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-stone-200 flex items-center justify-center font-bold text-stone-500">
-                    {r.authorName.charAt(0)}
+          {client.reviews.map((r, idx) => {
+            const rawReview: unknown = r;
+            const author = r.authorName || (
+              rawReview && typeof rawReview === 'object' && 'name' in rawReview && typeof rawReview.name === 'string'
+                ? rawReview.name
+                : 'Pelanggan'
+            );
+
+            return (
+              <div key={idx} className="snap-start shrink-0 w-80 bg-stone-50 rounded-2xl p-6 shadow-sm border border-stone-100">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-stone-200 flex items-center justify-center font-bold text-stone-500">
+                      {author.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm">{author}</h4>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-sm">{r.authorName}</h4>
-                  </div>
+                  <span className="text-xs text-stone-400">{r.time}</span>
                 </div>
-                <span className="text-xs text-stone-400">{r.time}</span>
+                <div className="text-brand-primary flex gap-1 text-sm mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`w-4 h-4 ${i < Math.floor(r.rating) ? 'fill-current' : 'text-stone-300'}`} />
+                  ))}
+                </div>
+                <p className="text-stone-600 text-sm line-clamp-3">
+                  &quot;{r.text}&quot;
+                </p>
               </div>
-              <div className="text-brand-primary flex gap-1 text-sm mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-4 h-4 ${i < Math.floor(r.rating) ? 'fill-current' : 'text-stone-300'}`} />
-                ))}
-              </div>
-              <p className="text-stone-600 text-sm line-clamp-3">
-                &quot;{r.text}&quot;
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

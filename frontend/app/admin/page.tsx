@@ -12,7 +12,7 @@ import {
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Backstage Console | Growfin Digital',
+  title: 'Super Admin Console | Growfin Digital',
   description: 'Konsol manajemen Super Admin untuk tenant dan transaksi Growfin Digital.',
 };
 
@@ -29,7 +29,7 @@ function getSupabaseAdmin() {
   return createAdminClient(supabaseUrl, serviceKey);
 }
 
-export default async function BackstagePage() {
+export default async function AdminPage() {
   // 1. Authenticate user from session cookies
   const supabaseUser = await createServerSupabase();
   const {
@@ -37,7 +37,7 @@ export default async function BackstagePage() {
   } = await supabaseUser.auth.getUser();
 
   if (!user) {
-    redirect('/login?redirect=/back-stage');
+    redirect('/login?redirect=/admin');
   }
 
   // 2. Authorize user against ADMIN_EMAILS
@@ -51,7 +51,7 @@ export default async function BackstagePage() {
   const [tenantsResult, transactionsResult] = await Promise.all([
     supabaseAdmin
       .from('business_demos')
-      .select('id, name, slug, category, city, status, package_tier, custom_domain, site_active_until, domain_active_until, fomo_expires_at, created_at, updated_at, user_id, metadata, draft_metadata')
+      .select('id, name, slug, category, city, status, package_tier, custom_domain, site_active_until, domain_active_until, fomo_expires_at, created_at, updated_at, user_id')
       .order('created_at', { ascending: false }),
     supabaseAdmin
       .from('transactions')

@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { siteConfig } from '@/lib/site-config';
 import { getAdminEmails } from '@/lib/admin';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
 export interface InvoiceEmailParams {
   toEmail: string;
@@ -102,7 +102,7 @@ export async function resolveRecipientEmail(
  * Mengirim email invoice kuitansi resmi lunas via Resend
  * Selalu non-blocking dan aman dari crash runtime.
  */
-export async function sendInvoiceEmail(params: InvoiceEmailParams): Promise<{ success: boolean; error?: any }> {
+export async function sendInvoiceEmail(params: InvoiceEmailParams): Promise<{ success: boolean; data?: { id?: string } | null; error?: unknown }> {
   const {
     toEmail,
     businessName,
@@ -248,7 +248,7 @@ export interface FomoReminderEmailParams {
  */
 export async function sendFomoReminderEmail(
   params: FomoReminderEmailParams
-): Promise<{ success: boolean; error?: any }> {
+): Promise<{ success: boolean; data?: { id?: string } | null; error?: unknown }> {
   const { toEmail, businessName, slug, expiresAt } = params;
 
   if (!toEmail) {
@@ -377,7 +377,7 @@ export interface DomainRequestEmailParams {
  */
 export async function sendDomainRequestAdminEmail(
   params: DomainRequestEmailParams
-): Promise<{ success: boolean; error?: any }> {
+): Promise<{ success: boolean; data?: { id?: string } | null; error?: unknown }> {
   const { businessName, slug, requestedDomain, alternativeDomain, whatsappContact, userEmail } = params;
   const adminEmails = getAdminEmails();
 
@@ -433,7 +433,7 @@ export async function sendDomainRequestAdminEmail(
             </table>
             <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #262633;">
               <p style="font-size: 13px; color: #8E8EA0; margin: 0 0 12px 0;">Beli domain dan arahkan CNAME ke Vercel (<code>cname.vercel-dns.com</code>), lalu aktifkan di Konsol Super Admin:</p>
-              <a href="https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id'}/back-stage" style="display: inline-block; background: #00b894; color: #000; font-weight: bold; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 13px;">Buka Super Admin Console</a>
+              <a href="https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'growfin.my.id'}/admin" style="display: inline-block; background: #00b894; color: #000; font-weight: bold; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 13px;">Buka Super Admin Console</a>
             </div>
           </div>
         </body>

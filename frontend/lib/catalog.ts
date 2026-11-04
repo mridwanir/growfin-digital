@@ -87,12 +87,11 @@ export function normalizeProduct(item: Partial<MenuItem> | null | undefined): Me
   // Normalize specifications
   let specifications: SpecificationItem[] | undefined;
   if (Array.isArray(base.specifications)) {
-    specifications = base.specifications.map((s) => ({
-      label: String(s.label || '').trim(),
-      value: String(s.value || '').trim(),
-    }));
+    const valid = getValidSpecifications(base.specifications);
+    if (valid.length > 0) {
+      specifications = valid;
+    }
   }
-
   // Normalize variants
   let variants: MenuItemVariant[] | undefined;
   if (Array.isArray(base.variants)) {
@@ -268,4 +267,64 @@ export function stackCartItem<T extends { id: string; quantity: number; totalPri
   return [...cart, item];
 }
 
+/**
+ * Extracts gallery image URLs from a product item up to 5 photos.
+ * Falls back to product.imageUrl, then fallbackImage, or empty array.
+ */
+export function getProductGalleryImages(
+  product?: Partial<MenuItem> | null,
+  fallbackImage?: string
+): string[] {
+  if (!product && !fallbackImage) {
+    return [];
+  }
+
+  if (product && Array.isArray(product.imageGallery)) {
+    const valid = product.imageGallery
+      .filter((img): img is string => typeof img === 'string' && img.trim().length > 0)
+      .slice(0, 5);
+    if (valid.length > 0) {
+      return valid;
+    }
+  }
+
+  if (product?.imageUrl && typeof product.imageUrl === 'string' && product.imageUrl.trim().length > 0) {
+    return [product.imageUrl.trim()];
+  }
+
+  if (fallbackImage && typeof fallbackImage === 'string' && fallbackImage.trim().length > 0) {
+    return [fallbackImage.trim()];
+  }
+
+  return [];
+}
+
+/**
+ * Sanitizes and validates a list of specification items, filtering out
+ * rows with empty labels or empty values.
+ */
+export function getValidSpecifications(
+  specifications?: SpecificationItem[] | { label?: unknown; value?: unknown }[] | null
+): SpecificationItem[] {
+  if (!Array.isArray(specifications)) {
+    return [];
+  }
+
+  return specifications
+    .map((s) => ({
+      label: String(s?.label ?? '').trim(),
+      value: String(s?.value ?? '').trim(),
+    }))
+    .filter((s) => s.label.length > 0 && s.value.length > 0);
+}
+
+/**
+ * Checks whether a product has at least one valid specification row.
+ */
+export function hasSpecifications(product?: Partial<MenuItem> | null): boolean {
+  if (!product || !product.specifications) {
+    return false;
+  }
+  return getValidSpecifications(product.specifications).length > 0;
+}
 export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer';

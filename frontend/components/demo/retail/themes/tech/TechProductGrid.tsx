@@ -1,11 +1,13 @@
 'use client';
 
 import { useRetailDemo, getRetailPlaceholderImage } from '../../core/RetailDemoContext';
+import { hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog';
+import { MenuItem } from '@/lib/types';
 
 export function TechProductGrid() {
   const { client, setSelectedProduct, setIsProductModalOpen } = useRetailDemo();
 
-  const handleOpenModal = (product: any) => {
+  const handleOpenModal = (product: MenuItem) => {
     setSelectedProduct(product);
     setIsProductModalOpen(true);
   };
@@ -25,6 +27,9 @@ export function TechProductGrid() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {client.menu.map((prod) => {
           const priceNum = Number(prod.price.toString().replace(/[^0-9]/g, '')) || 0;
+          const hasDiscount = hasValidDiscount(prod.price, prod.originalPrice);
+          const discountPct = getDiscountPercentage(prod.price, prod.originalPrice);
+          const origNum = parseNumericPrice(prod.originalPrice);
           return (
             <div key={prod.id} className="bg-white rounded-3xl border border-zinc-200 p-6 flex flex-col justify-between hover:border-zinc-400 hover:shadow-lg transition-all duration-300">
               <div>
@@ -34,8 +39,12 @@ export function TechProductGrid() {
                     alt={prod.name}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
-
-                </div>
+                {hasDiscount && (
+                  <span className="absolute top-3 right-3 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-lg shadow-sm">
+                    -{discountPct}%
+                  </span>
+                )}
+              </div>
 
                 {prod.category && (
                   <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{prod.category}</span>
@@ -48,7 +57,14 @@ export function TechProductGrid() {
 
               <div className="pt-5 border-t border-zinc-100 mt-6 flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] text-zinc-400 line-through">{formatIDR(priceNum * 1.2)}</span>
+                  {hasDiscount && origNum !== undefined && (
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="text-[11px] text-zinc-400 line-through">{formatIDR(origNum)}</span>
+                      <span className="bg-rose-50 text-rose-600 border border-rose-200 text-[9px] font-bold px-1 rounded">
+                        Hemat {discountPct}%
+                      </span>
+                    </div>
+                  )}
                   <div className="text-lg font-bold text-zinc-950">{formatIDR(priceNum)}</div>
                 </div>
                 <button onClick={() => handleOpenModal(prod)} className="px-4 py-2.5 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm hover:opacity-90" style={{ backgroundColor: 'var(--theme-color)' }}>

@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useFnbDemo } from '../core/FnbDemoContext';
 import { VariantOption } from '@/lib/types';
-import { calculateItemPrice, normalizeVariantOption, buildCartItemHash } from '@/lib/catalog';
+import { 
+  calculateItemPrice, 
+  normalizeVariantOption, 
+  buildCartItemHash,
+  hasValidDiscount,
+  getDiscountPercentage,
+  parseNumericPrice,
+  getProductGalleryImages,
+  getValidSpecifications,
+} from '@/lib/catalog';
 
 const CAFE_MENU_IMAGES = [
   '/image/fnb/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
@@ -22,14 +31,14 @@ export function ProductCustomizationModal() {
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string | VariantOption>>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
-
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   // Reset state when product changes
   useEffect(() => {
     if (product) {
       setQuantity(1);
       setNotes('');
       setSelectedAddons([]);
-      const initialVariants: Record<string, string | VariantOption> = {};
+      setActiveImageIndex(0);
       if (product.variants) {
         product.variants.forEach(v => {
           if (v.options && v.options.length > 0) {
@@ -67,29 +76,112 @@ export function ProductCustomizationModal() {
     setIsCustomizationModalOpen(false);
   };
 
-  const menuImageUrl = CAFE_MENU_IMAGES[(product.id || 0) % CAFE_MENU_IMAGES.length];
-
+  const menuImageUrl = product.imageUrl || CAFE_MENU_IMAGES[(product.id || 0) % CAFE_MENU_IMAGES.length];
+  const galleryImages = getProductGalleryImages(product, menuImageUrl);
+  const currentImage = galleryImages[activeImageIndex] || galleryImages[0] || menuImageUrl;
+  const hasDiscount = hasValidDiscount(product.price, product.originalPrice);
+  const discountPercentage = getDiscountPercentage(product.price, product.originalPrice);
+  const origPriceNum = parseNumericPrice(product.originalPrice);
+  const validSpecs = getValidSpecifications(product.specifications);
+  const formatRupiah = (num: number) => `Rp ${num.toLocaleString('id-ID')}`;
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
       <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
-        {/* Header Image */}
-        <div className="relative h-48 bg-slate-100 shrink-0">
+        {/* Header Image / Multi-Photo Carousel */}
+        <div className="relative h-48 sm:h-56 bg-slate-100 shrink-0 select-none">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={menuImageUrl} alt={product.name} className="w-full h-full object-cover" />
+          <img src={currentImage} alt={`${product.name} - foto ${activeImageIndex + 1}`} className="w-full h-full object-cover transition-all duration-300" />
+          
+          {/* Carousel Controls (only when > 1 image) */}
+          {galleryImages.length > 1 && (
+            <>
+              <button 
+                type="button"
+                onClick={() => setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition-all cursor-pointer z-10"
+                aria-label="Foto sebelumnya"
+              >
+                ‹
+              </button>
+              <button 
+                type="button"
+                onClick={() => setActiveImageIndex((prev) => (prev + 1) % galleryImages.length)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition-all cursor-pointer z-10"
+                aria-label="Foto berikutnya"
+              >
+                ›
+              </button>
+
+              <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-sm text-white text-[11px] font-semibold">
+                {activeImageIndex + 1} / {galleryImages.length}
+              </div>
+            </>
+          )}
+
           <button
             onClick={() => setIsCustomizationModalOpen(false)}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors"
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors z-10"
           >
             ✕
           </button>
         </div>
 
+        {/* Thumbnail Selectors (rendered only if > 1 image) */}
+        {galleryImages.length > 1 && (
+          <div className="flex gap-2 px-5 pt-3 pb-1 overflow-x-auto bg-white border-b border-slate-100 shrink-0">
+            {galleryImages.map((img, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setActiveImageIndex(idx)}
+                className={`relative w-11 h-11 rounded-lg overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                  idx === activeImageIndex
+                    ? 'border-brand-primary ring-2 ring-brand-primary/20 scale-105'
+                    : 'border-slate-200 opacity-60 hover:opacity-100'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img} alt={`thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Content Scrollable */}
         <div className="p-5 overflow-y-auto flex-1">
           <h2 className="text-2xl font-black text-slate-900 leading-tight mb-1">{product.name}</h2>
           <p className="text-slate-500 text-sm font-medium leading-relaxed mb-4">{product.desc}</p>
-          <div className="text-xl font-black text-slate-900 mb-6">{product.price}</div>
+          {hasDiscount ? (
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <span className="text-xl font-black text-slate-900">{product.price}</span>
+              {origPriceNum !== undefined && (
+                <span className="text-slate-400 line-through text-sm font-semibold">
+                  {formatRupiah(origPriceNum)}
+                </span>
+              )}
+              <span className="bg-rose-500 text-white text-xs font-black px-2 py-0.5 rounded-full shadow-xs">
+                Hemat {discountPercentage}%
+              </span>
+            </div>
+          ) : (
+            <div className="text-xl font-black text-slate-900 mb-4">{product.price}</div>
+          )}
+
+          {/* Specifications Table (omitted cleanly if empty) */}
+          {validSpecs.length > 0 && (
+            <div className="mb-6">
+              <p className="font-bold text-slate-900 mb-2 text-sm uppercase tracking-wider">Spesifikasi</p>
+              <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100 text-sm">
+                {validSpecs.map((spec, idx) => (
+                  <div key={idx} className="flex px-4 py-2 odd:bg-slate-50/70 even:bg-white text-xs sm:text-sm">
+                    <span className="w-1/3 font-semibold text-slate-500 shrink-0 pr-2">{spec.label}</span>
+                    <span className="w-2/3 font-medium text-slate-900 break-words">{spec.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Variants */}
           {product.variants && product.variants.length > 0 && (

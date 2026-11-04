@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@supabase/supabase-js';
 import { sendInvoiceEmail, resolveRecipientEmail } from '@/lib/email';
-
+import { fetchMidtransStatus, validatePaymentStatus } from './payment-verification';
 export async function POST(request: Request) {
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,21 +19,36 @@ export async function POST(request: Request) {
       .single();
 
     if (trxFetchError || !existingTrx) {
-      throw new Error('Transaction not found');
+      return NextResponse.json({ error: 'Transaction not found' }, { status: 404 });
     }
 
     if (existingTrx.status === 'paid') {
       return NextResponse.json({ success: true, message: 'Transaction already paid' });
     }
 
-    // 2. Update the transaction to paid with audit columns
+    // 2. Query server-authoritative Midtrans Status API
+    const statusResponse = await fetchMidtransStatus(order_id);
+
+    // Validate payment status: only settlement or capture-accept are permitted
+    const validation = validatePaymentStatus(statusResponse);
+    if (!validation.isValid) {
+      return NextResponse.json(
+        { error: validation.message, status: validation.status },
+        { status: validation.httpStatus || 400 }
+      );
+    }
+
+    // 3. Update the transaction to paid with audit columns
+    const verifiedPaymentMethod = statusResponse.payment_type || payment_method || null;
+    const verifiedPaymentRef = statusResponse.transaction_id || payment_gateway_ref || null;
+
     const { data: trxData, error: trxError } = await supabaseAdmin
       .from('transactions')
       .update({
         status: 'paid',
         paid_at: new Date().toISOString(),
-        payment_method: payment_method || null,
-        payment_gateway_ref: payment_gateway_ref || null,
+        payment_method: verifiedPaymentMethod,
+        payment_gateway_ref: verifiedPaymentRef,
       })
       .eq('id', order_id)
       .select('user_id, snapshot_tier, amount, paid_at, payment_method, transaction_type')
@@ -118,7 +133,7 @@ export async function POST(request: Request) {
       if (recipientEmail) {
         await sendInvoiceEmail({
           toEmail: recipientEmail,
-          businessName: businessData.name || (businessData.metadata as any)?.name || 'Bisnis Anda',
+          businessName: businessData.name || (businessData.metadata && typeof businessData.metadata === 'object' && 'name' in businessData.metadata && typeof businessData.metadata.name === 'string' ? businessData.metadata.name : 'Bisnis Anda'),
           orderId: order_id,
           paidAt: trxData.paid_at || new Date().toISOString(),
           amount: trxData.amount || 0,
@@ -140,8 +155,9 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown server error';
     console.error('Verify Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

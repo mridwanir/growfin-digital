@@ -1,8 +1,18 @@
 import { PackageTier } from './site-config';
 
+export interface VariantOption {
+  label: string;
+  priceModifier: number;
+}
+
+export interface SpecificationItem {
+  label: string;
+  value: string;
+}
+
 export interface MenuItemVariant {
   name: string;
-  options: string[];
+  options: (string | VariantOption)[];
 }
 
 export interface MenuItemAddon {
@@ -15,6 +25,10 @@ export interface MenuItem {
   name: string;
   desc: string;
   price: string;
+  originalPrice?: number | string;
+  stock?: number;
+  imageGallery?: string[];
+  specifications?: SpecificationItem[];
   tag?: string;
   category?: string;
   imageUrl?: string;

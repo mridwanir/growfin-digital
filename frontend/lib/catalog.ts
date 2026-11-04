@@ -267,3 +267,5 @@ export function stackCartItem<T extends { id: string; quantity: number; totalPri
   }
   return [...cart, item];
 }
+
+export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer';

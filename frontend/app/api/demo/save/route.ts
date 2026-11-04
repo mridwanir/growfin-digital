@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@supabase/supabase-js';
 import { PackageTier, PACKAGE_LIMITS } from '@/lib/site-config';
+import { sanitizeMenuItems } from '@/lib/catalog';
 
 export async function POST(request: Request) {
   const supabaseAdmin = createClient(
@@ -60,7 +61,9 @@ export async function POST(request: Request) {
         : undefined;
 
       const sanitizedMenu = Array.isArray(clientData.menu)
-        ? clientData.menu.slice(0, tierLimits.maxProducts)
+        ? sanitizeMenuItems(clientData.menu.slice(0, tierLimits.maxProducts), {
+            advancedVariants: tierLimits.advancedVariants,
+          })
         : clientData.menu;
 
       const sanitizedCategories = Array.isArray(clientData.categories)

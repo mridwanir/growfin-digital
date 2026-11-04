@@ -327,4 +327,46 @@ export function hasSpecifications(product?: Partial<MenuItem> | null): boolean {
   }
   return getValidSpecifications(product.specifications).length > 0;
 }
+
+/**
+ * Normalizes an AI-generated or inbound metadata payload, ensuring:
+ * 1. Reviews have valid integer ratings clamped between 1 and 5.
+ * 2. Menu/products items are unified under `metadata.menu` and each product
+ *    is fully normalized via `normalizeProduct`.
+ */
+export function normalizeGeneratedMetadata<T extends Record<string, unknown>>(
+  metadata: T | null | undefined
+): T & { menu: MenuItem[] } {
+  const result: Record<string, unknown> =
+    metadata && typeof metadata === 'object' ? { ...metadata } : {};
+
+  if (Array.isArray(result.reviews)) {
+    result.reviews = result.reviews.map((rev) => {
+      if (rev && typeof rev === 'object') {
+        const ratingCandidate = 'rating' in rev ? rev.rating : 5;
+        const ratingNum = Number(ratingCandidate);
+        const safeRating = Number.isFinite(ratingNum) ? Math.round(ratingNum) : 5;
+        return {
+          ...rev,
+          rating: Math.max(1, Math.min(5, safeRating)),
+        };
+      }
+      return rev;
+    });
+  }
+
+  const rawMenu = Array.isArray(result.menu)
+    ? result.menu
+    : Array.isArray(result.products)
+    ? result.products
+    : null;
+
+  result.menu = rawMenu
+    ? rawMenu.map((item) =>
+        item && typeof item === 'object' ? normalizeProduct(item as Partial<MenuItem>) : normalizeProduct({})
+      )
+    : [];
+
+  return result as unknown as T & { menu: MenuItem[] };
+}
 export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer';

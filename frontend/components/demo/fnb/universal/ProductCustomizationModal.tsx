@@ -39,6 +39,7 @@ export function ProductCustomizationModal() {
       setNotes('');
       setSelectedAddons([]);
       setActiveImageIndex(0);
+      const initialVariants: Record<string, string | VariantOption> = {};
       if (product.variants) {
         product.variants.forEach(v => {
           if (v.options && v.options.length > 0) {

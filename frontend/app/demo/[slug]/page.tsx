@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
-import { BusinessDemo } from '@/lib/types';
+import { BusinessDemo, MenuItem } from '@/lib/types';
+import { normalizeProduct } from '@/lib/catalog';
 import { ServiceDemoClient } from '@/components/demo/service-demo-client';
 import { FnbDemoClient } from '@/components/demo/fnb-demo-client';
 import { RetailDemoClient } from '@/components/demo/retail-demo-client';
@@ -159,7 +160,9 @@ export default async function DemoPage({ params }: DemoPageProps) {
         { id: '1', name: 'Admin', role: 'Staff', avatarEmoji: '👨‍💼' }
       ]),
       categories: metadataSource.categories || [],
-      menu: metadataSource.menu || metadataSource.products || [],
+      menu: (metadataSource.menu || metadataSource.products || []).map((p: unknown) =>
+        normalizeProduct(p && typeof p === 'object' ? (p as Partial<MenuItem>) : {})
+      ),
       reviews: metadataSource.reviews || [],
       heroImage: metadataSource.heroImage,
       instagramFeed: metadataSource.instagramFeed,
@@ -194,16 +197,18 @@ export default async function DemoPage({ params }: DemoPageProps) {
         }
       ],
       categories: ['Semua', ...Array.from(new Set(mock!.products.map(p => p.category)))],
-      menu: mock!.products.map(p => ({
-        id: p.id,
-        name: p.name,
-        desc: p.desc,
-        price: p.price,
-        category: p.category,
-        imageUrl: p.imageUrl || 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=300&auto=format&fit=crop&q=80',
-        variants: p.variants,
-        addons: p.addons,
-      })),
+      menu: mock!.products.map((p) =>
+        normalizeProduct({
+          id: p.id,
+          name: p.name,
+          desc: p.desc,
+          price: p.price,
+          category: p.category,
+          imageUrl: p.imageUrl || 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=300&auto=format&fit=crop&q=80',
+          variants: p.variants,
+          addons: p.addons,
+        })
+      ),
       reviews: mock!.reviews,
       heroImage: mock!.heroImage,
       instagramFeed: mock!.instagramFeed,

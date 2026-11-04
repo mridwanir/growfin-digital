@@ -1,3 +1,7 @@
+import { PACKAGE_LIMITS, PackageTier } from '@/lib/site-config';
+import { sanitizeMenuItems } from '@/lib/catalog';
+import type { MenuItem } from '@/lib/types';
+
 export interface MidtransStatusResponse {
   transaction_status: string;
   fraud_status?: string;
@@ -56,6 +60,39 @@ export interface VerifyPaymentResult {
   status?: string;
   httpStatus?: number;
   data?: unknown;
+}
+
+/**
+ * Sanitizes draft_metadata.menu according to package tier limits.
+ * For tiers without advancedVariants (e.g. instan), strips imageGallery,
+ * specifications, and advanced variant option fields before copying to metadata.
+ */
+export function sanitizeDraftMetadata<T extends Record<string, unknown>>(
+  metadata: T | null | undefined,
+  tier: string | undefined
+): T | null | undefined {
+  if (!metadata || typeof metadata !== 'object') {
+    return metadata;
+  }
+  const packageTier = (tier && tier in PACKAGE_LIMITS ? tier : 'instan') as PackageTier;
+  const tierLimits = PACKAGE_LIMITS[packageTier] || PACKAGE_LIMITS['instan'];
+
+  const rawMenu = 'menu' in metadata && Array.isArray(metadata.menu)
+    ? (metadata.menu as (Partial<MenuItem> | MenuItem)[])
+    : null;
+
+  if (!rawMenu) {
+    return metadata;
+  }
+
+  const sanitizedMenu = sanitizeMenuItems(rawMenu.slice(0, tierLimits.maxProducts), {
+    advancedVariants: tierLimits.advancedVariants,
+  });
+
+  return {
+    ...metadata,
+    menu: sanitizedMenu,
+  };
 }
 
 /**

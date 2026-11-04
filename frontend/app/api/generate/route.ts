@@ -4,8 +4,7 @@ import { resolveTemplateType } from '@/lib/template-resolver';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Resend } from 'resend';
 import { checkRateLimit, extractDeviceId, getClientIp } from '@/lib/rate-limit';
-import { normalizeProduct } from '@/lib/catalog';
-import type { MenuItem } from '@/lib/types';
+import { normalizeGeneratedMetadata } from '@/lib/catalog';
 
 // 1. Inisialisasi Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -398,34 +397,7 @@ export async function POST(request: Request) {
       metadata.reviewCount = reviewCount;
       metadata.address = realAddress;
 
-      if (Array.isArray(metadata.reviews)) {
-        metadata.reviews = metadata.reviews.map((rev: unknown) => {
-          if (rev && typeof rev === 'object') {
-            const ratingCandidate = 'rating' in rev ? rev.rating : 5;
-            const ratingNum = Number(ratingCandidate);
-            const safeRating = Number.isFinite(ratingNum) ? Math.round(ratingNum) : 5;
-            return {
-              ...rev,
-              rating: Math.max(1, Math.min(5, safeRating)),
-            };
-          }
-          return rev;
-        });
-      }
-
-      // Run normalizeProduct over metadata.menu to guarantee all generated products
-      // have normalized structured variants, valid discounts, and clean fields.
-      const rawMenu = Array.isArray(metadata.menu)
-        ? metadata.menu
-        : Array.isArray(metadata.products)
-        ? metadata.products
-        : null;
-
-      if (rawMenu) {
-        metadata.menu = rawMenu.map((item: unknown) =>
-          normalizeProduct(item && typeof item === 'object' ? (item as Partial<MenuItem>) : {})
-        );
-      }
+      metadata = normalizeGeneratedMetadata(metadata);
     } catch (e) {
       console.error('Failed to parse Gemini JSON:', e);
       return NextResponse.json({ error: 'AI Gagal memproses data. Coba lagi.' }, { status: 500 });

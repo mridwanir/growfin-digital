@@ -89,4 +89,70 @@ describe('FOMO reminder cron authentication seam', () => {
       error: 'Unauthorized: Invalid or missing CRON_SECRET token',
     });
   });
+
+  it('asserts that authenticated requests query the 24-hour expiration window (gt: now, lte: in24Hours)', async () => {
+    interface QueryCall {
+      method: string;
+      args: unknown[];
+    }
+    const calls: QueryCall[] = [];
+
+    const mockSupabase = {
+      from: (table: string) => {
+        calls.push({ method: 'from', args: [table] });
+        const chain: Record<string, unknown> = {
+          select: (...args: unknown[]) => {
+            calls.push({ method: 'select', args });
+            return chain;
+          },
+          eq: (...args: unknown[]) => {
+            calls.push({ method: 'eq', args });
+            return chain;
+          },
+          gt: (...args: unknown[]) => {
+            calls.push({ method: 'gt', args });
+            return chain;
+          },
+          lte: (...args: unknown[]) => {
+            calls.push({ method: 'lte', args });
+            return Promise.resolve({ data: [], error: null });
+          },
+        };
+        return chain;
+      },
+    };
+
+    const before = Date.now();
+    const req = new Request('http://localhost/api/cron/fomo-reminder', {
+      method: 'GET',
+      headers: {
+        authorization: 'Bearer test-secret-123',
+      },
+    });
+
+    const res = await GET(req, mockSupabase);
+    const after = Date.now();
+
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.equal(body.found, 0);
+
+    const fromCall = calls.find((c) => c.method === 'from');
+    assert.equal(fromCall?.args[0], 'business_demos');
+
+    const eqCall = calls.find((c) => c.method === 'eq');
+    assert.deepEqual(eqCall?.args, ['status', 'draft']);
+
+    const gtCall = calls.find((c) => c.method === 'gt');
+    assert.equal(gtCall?.args[0], 'fomo_expires_at');
+    const gtTime = new Date(gtCall?.args[1] as string).getTime();
+    assert.ok(gtTime >= before - 1000 && gtTime <= after + 1000, 'gt should be roughly current time');
+
+    const lteCall = calls.find((c) => c.method === 'lte');
+    assert.equal(lteCall?.args[0], 'fomo_expires_at');
+    const lteTime = new Date(lteCall?.args[1] as string).getTime();
+    const expectedLte = gtTime + 24 * 60 * 60 * 1000;
+    assert.ok(Math.abs(lteTime - expectedLte) < 1000, 'lte should be in24Hours window');
+  });
 });

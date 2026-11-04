@@ -32,6 +32,23 @@ export function ProductCustomizationModal() {
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) {
+      setActiveImageIndex((prev) => (prev + 1) % galleryImages.length);
+    } else if (diff < -50) {
+      setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    }
+    setTouchStartX(null);
+  };
   // Reset state when product changes
   useEffect(() => {
     if (product) {
@@ -90,7 +107,11 @@ export function ProductCustomizationModal() {
       <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
         {/* Header Image / Multi-Photo Carousel */}
-        <div className="relative h-48 sm:h-56 bg-slate-100 shrink-0 select-none">
+        <div 
+          className="relative h-48 sm:h-56 bg-slate-100 shrink-0 select-none"
+          onTouchStart={galleryImages.length > 1 ? handleTouchStart : undefined}
+          onTouchEnd={galleryImages.length > 1 ? handleTouchEnd : undefined}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={currentImage} alt={`${product.name} - foto ${activeImageIndex + 1}`} className="w-full h-full object-cover transition-all duration-300" />
           

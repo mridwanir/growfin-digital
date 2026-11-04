@@ -133,4 +133,5 @@ export interface BusinessDemo {
   doctor?: any;
   admin?: any;
   metadata?: any;
+  status?: string;
 }

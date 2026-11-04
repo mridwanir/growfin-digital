@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 // @ts-ignore TS5097: Node test runner requires .ts extension under native strip-types
-import { validatePaymentStatus, verifyPayment, type MidtransStatusResponse } from '../payment-verification.ts';
+import { validatePaymentStatus, verifyPayment, sanitizeDraftMetadata, type MidtransStatusResponse } from '../payment-verification.ts';
 
 describe('Payment Verification Seam', () => {
   describe('validatePaymentStatus', () => {
@@ -356,6 +356,61 @@ describe('Payment Verification Seam', () => {
       assert.equal(result.httpStatus, 400);
       assert.match(result.error || '', /challenge/i);
       assert.equal(onVerifiedCalled, false, 'Activation must not be performed on fraud challenge');
+    });
+  });
+
+  describe('sanitizeDraftMetadata', () => {
+    const sampleDraftMetadata = {
+      name: 'Toko Kopi Senja',
+      menu: [
+        {
+          id: 1,
+          name: 'Kopi Susu Gula Aren',
+          price: '18000',
+          originalPrice: 22000,
+          imageGallery: ['https://example.com/gallery1.jpg', 'https://example.com/gallery2.jpg'],
+          specifications: [{ label: 'Beans', value: 'Arabica' }],
+          variants: [
+            {
+              name: 'Level Gula',
+              options: [
+                { label: 'Normal', priceModifier: 0 },
+                { label: 'Less Sugar', priceModifier: 2000 },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    it('strips advanced variants and gallery images when activating with instan tier', () => {
+      const sanitized = sanitizeDraftMetadata(sampleDraftMetadata, 'instan');
+      assert.ok(sanitized);
+      assert.equal(sanitized.name, 'Toko Kopi Senja');
+      assert.equal(Array.isArray(sanitized.menu), true);
+      const menuList = sanitized.menu as Array<Record<string, unknown>>;
+      const item = menuList[0];
+      assert.equal(item.name, 'Kopi Susu Gula Aren');
+      assert.equal(item.price, '18000');
+      assert.equal(item.originalPrice, 22000);
+      assert.equal(item.imageGallery, undefined, 'instan tier must not include imageGallery');
+      assert.equal(item.specifications, undefined, 'instan tier must not include specifications');
+    });
+
+    it('preserves advanced variants, gallery images, and specifications with pro-advanced tier', () => {
+      const sanitized = sanitizeDraftMetadata(sampleDraftMetadata, 'pro-advanced');
+      assert.ok(sanitized);
+      assert.equal(sanitized.name, 'Toko Kopi Senja');
+      const menuList = sanitized.menu as Array<Record<string, unknown>>;
+      const item = menuList[0];
+      assert.deepEqual(item.imageGallery, ['https://example.com/gallery1.jpg', 'https://example.com/gallery2.jpg']);
+      assert.deepEqual(item.specifications, [{ label: 'Beans', value: 'Arabica' }]);
+      assert.equal(Array.isArray(item.variants) && item.variants.length, 1);
+    });
+
+    it('returns null or undefined gracefully when metadata is missing', () => {
+      assert.equal(sanitizeDraftMetadata(null, 'instan'), null);
+      assert.equal(sanitizeDraftMetadata(undefined, 'instan'), undefined);
     });
   });
 });

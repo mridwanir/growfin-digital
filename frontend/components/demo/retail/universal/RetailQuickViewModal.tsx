@@ -28,6 +28,23 @@ export function RetailQuickViewModal() {
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) {
+      setActiveImageIndex((prev) => (prev + 1) % galleryImages.length);
+    } else if (diff < -50) {
+      setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    }
+    setTouchStartX(null);
+  };
   // Reset state when modal opens with a new product
   useEffect(() => {
     if (isCustomizationModalOpen && selectedProductForCustomization) {
@@ -92,7 +109,11 @@ export function RetailQuickViewModal() {
       <div className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-300">
         
         {/* Header Image / Multi-Photo Carousel */}
-        <div className="relative h-56 sm:h-72 shrink-0 bg-slate-100 select-none">
+        <div 
+          className="relative h-56 sm:h-72 shrink-0 bg-slate-100 select-none"
+          onTouchStart={galleryImages.length > 1 ? handleTouchStart : undefined}
+          onTouchEnd={galleryImages.length > 1 ? handleTouchEnd : undefined}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
             src={currentImage} 

@@ -1,12 +1,12 @@
 'use client';
 
-import { X, Save, Check, Eye, EyeOff, Image as ImageIcon, Type, Plus, Trash2, Edit2, LayoutTemplate, Rocket, Palette, Store, LayoutDashboard, ShoppingBag, HeartHandshake, ChevronRight, ArrowLeft, Clock, MapPin, Phone, Mail, MessageSquare, Star, Users, HelpCircle, Tag, Settings, Link, Percent, Calendar, Lock } from 'lucide-react';
+import { X, Save, Check, Eye, EyeOff, Image as ImageIcon, Type, Plus, Trash2, Edit2, LayoutTemplate, Rocket, Palette, Store, LayoutDashboard, ShoppingBag, HeartHandshake, ChevronLeft, ChevronRight, ArrowLeft, Clock, MapPin, Phone, Mail, MessageSquare, Star, Users, HelpCircle, Tag, Settings, Link, Percent, Calendar, Lock } from 'lucide-react';
 import { BusinessDemo, MenuItem, MenuItemVariant, SpecificationItem, VariantOption } from '@/lib/types';
 import { useState, useEffect, useRef } from 'react';
 import { PackageTier, PACKAGE_LIMITS } from '@/lib/site-config';
 import { CloudinaryUploader } from '@/components/dashboard/CloudinaryUploader';
 import { createClient } from '@/utils/supabase/client';
-import { normalizeVariantOption } from '@/lib/catalog';
+import { normalizeVariantOption, parseNumericPrice } from '@/lib/catalog';
 
 interface LiveEditorDrawerProps {
   isOpen: boolean;
@@ -134,7 +134,7 @@ export function LiveEditorDrawer({
 
   const currentTier: PackageTier = (client.package_tier || 'free_trial') as PackageTier;
   const limits = PACKAGE_LIMITS[currentTier] || PACKAGE_LIMITS['free_trial'];
-  const isTrial = !client.package_tier || client.package_tier === 'free_trial';
+  const isTrial = !client.package_tier || client.package_tier === 'free_trial' || client.status === 'draft';
   const tierLimits = limits;
   const isFreeTrial = isTrial;
   const canEditPromo = limits.promoFeatures;
@@ -252,12 +252,13 @@ export function LiveEditorDrawer({
       (img) => typeof img === 'string' && img.trim().length > 0
     );
 
+    const parsedOriginalPrice = parseNumericPrice(menuForm.originalPrice);
     const itemToSave: MenuItem = {
       ...(menuForm as MenuItem),
       name: menuForm.name!.trim(),
       price: menuForm.price!.trim(),
-      ...(menuForm.originalPrice !== undefined && String(menuForm.originalPrice).trim() !== ''
-        ? { originalPrice: String(menuForm.originalPrice).trim() }
+      ...(parsedOriginalPrice !== undefined
+        ? { originalPrice: parsedOriginalPrice }
         : {}),
       ...(canEditAdvancedVariants && cleanGallery.length > 0
         ? { imageGallery: cleanGallery.slice(0, 5) }
@@ -284,6 +285,9 @@ export function LiveEditorDrawer({
           }
         : {}),
     };
+    if (parsedOriginalPrice === undefined) {
+      delete itemToSave.originalPrice;
+    }
 
     const updatedMenu = [...(client.menu || [])];
     if (editingMenuIdx !== null) {
@@ -413,6 +417,18 @@ export function LiveEditorDrawer({
       imageGallery: (prev.imageGallery || []).filter((_, idx) => idx !== removeIdx),
     }));
   };
+  const handleMoveGalleryImage = (fromIdx: number, toIdx: number) => {
+    setMenuForm((prev) => {
+      const list = [...(prev.imageGallery || [])];
+      if (fromIdx < 0 || fromIdx >= list.length || toIdx < 0 || toIdx >= list.length) {
+        return prev;
+      }
+      const [moved] = list.splice(fromIdx, 1);
+      list.splice(toIdx, 0, moved);
+      return { ...prev, imageGallery: list };
+    });
+  };
+
 
   const handleAddVariantGroup = () => {
     setMenuForm((prev) => ({
@@ -1333,11 +1349,31 @@ export function LiveEditorDrawer({
                                     <button
                                       type="button"
                                       onClick={() => handleRemoveGalleryImage(imgIdx)}
-                                      className="absolute top-1 right-1 p-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded-full transition-colors shadow-sm"
+                                      className="absolute top-1 right-1 p-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded-full transition-colors shadow-sm z-10"
                                       title="Hapus foto ini"
                                     >
                                       <X className="w-3 h-3" />
                                     </button>
+                                    <div className="absolute bottom-1 left-1 right-1 flex items-center justify-between gap-1 opacity-90 group-hover:opacity-100 z-10">
+                                      <button
+                                        type="button"
+                                        disabled={imgIdx === 0}
+                                        onClick={() => handleMoveGalleryImage(imgIdx, imgIdx - 1)}
+                                        className="p-1 bg-black/60 hover:bg-black/80 disabled:opacity-20 disabled:cursor-not-allowed text-white rounded transition-colors shadow-sm"
+                                        title="Geser foto ke kiri"
+                                      >
+                                        <ChevronLeft className="w-3 h-3" />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        disabled={imgIdx === (menuForm.imageGallery || []).length - 1}
+                                        onClick={() => handleMoveGalleryImage(imgIdx, imgIdx + 1)}
+                                        className="p-1 bg-black/60 hover:bg-black/80 disabled:opacity-20 disabled:cursor-not-allowed text-white rounded transition-colors shadow-sm"
+                                        title="Geser foto ke kanan"
+                                      >
+                                        <ChevronRight className="w-3 h-3" />
+                                      </button>
+                                    </div>
                                   </div>
                                 ))}
                               </div>

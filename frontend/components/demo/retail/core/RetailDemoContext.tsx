@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { BusinessDemo, MenuItem } from '@/lib/types';
+import { BusinessDemo, MenuItem, VariantOption } from '@/lib/types';
+import { stackCartItem } from '@/lib/catalog';
 
 export const getRetailPlaceholderImage = (id: string | number) => {
   const placeholders = [
@@ -43,10 +44,12 @@ export interface RetailCartItem {
   totalPrice: number;
   // Unified customization options
   selectedOptions?: Record<string, string>;
+  selectedVariants?: Record<string, string | VariantOption>;
   selectedAddons?: string[];
   notes?: string;
+  selectedVariant?: string;
+  selectedSize?: string;
 }
-
 export type FulfillmentMode = 'PICKUP' | 'DELIVERY' | 'HOME_SERVICE';
 
 interface RetailContextType {
@@ -155,18 +158,7 @@ export function RetailDemoProvider({ children, client }: { children: ReactNode; 
   }, [client.isOpen, client.openTime, client.closeTime]);
 
   const addToCart = (item: RetailCartItem) => {
-    setCart((prev) => {
-      // Basic check for existing item matching options
-      const existing = prev.find(i => {
-        if (i.id !== item.id) return false;
-        if (JSON.stringify(i.selectedOptions) !== JSON.stringify(item.selectedOptions)) return false;
-        return true;
-      });
-      if (existing) {
-        return prev.map(i => i === existing ? { ...i, quantity: i.quantity + item.quantity, totalPrice: i.totalPrice + item.totalPrice } : i);
-      }
-      return [...prev, item];
-    });
+    setCart((prev) => stackCartItem(prev, item));
   };
 
   const removeFromCart = (id: string) => {

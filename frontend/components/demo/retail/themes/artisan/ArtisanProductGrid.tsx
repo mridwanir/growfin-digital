@@ -2,6 +2,8 @@
 
 import { useRetailDemo, getRetailPlaceholderImage } from '../../core/RetailDemoContext';
 import { useState } from 'react';
+import { MenuItem, VariantOption } from '@/lib/types';
+import { normalizeVariantOption } from '@/lib/catalog';
 
 export function ArtisanProductGrid() {
   const { client, setSelectedProduct, setIsProductModalOpen, addToCart } = useRetailDemo();
@@ -12,19 +14,47 @@ export function ArtisanProductGrid() {
 
   const formatIDR = (num: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
-  const handleOpenModal = (product: any) => {
+  const getFirstVariantLabel = (product: MenuItem): string => {
+    if (!product?.variants || !Array.isArray(product.variants) || product.variants.length === 0) {
+      return '1 Pack';
+    }
+    const first: unknown = product.variants[0];
+    if (typeof first === 'string') {
+      return normalizeVariantOption(first).label || '1 Pack';
+    }
+    if (first && typeof first === 'object') {
+      if ('options' in first && Array.isArray(first.options) && first.options.length > 0) {
+        const opt: unknown = first.options[0];
+        if (typeof opt === 'string' || (opt && typeof opt === 'object')) {
+          const normalized = normalizeVariantOption(opt as string | VariantOption);
+          return normalized.label || '1 Pack';
+        }
+      }
+      if ('label' in first && typeof first.label === 'string') {
+        return first.label.trim() || '1 Pack';
+      }
+      if ('name' in first && typeof first.name === 'string') {
+        return first.name.trim() || '1 Pack';
+      }
+    }
+    return '1 Pack';
+  };
+
+  const handleOpenModal = (product: MenuItem) => {
     setSelectedProduct(product);
     setIsProductModalOpen(true);
   };
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (e: React.MouseEvent, product: MenuItem) => {
     e.stopPropagation();
     const price = Number(product.price.toString().replace(/[^0-9]/g, '')) || 0;
+    const variantLabel = getFirstVariantLabel(product);
     addToCart({
-      id: product.id.toString(),
+      id: String(product.id),
       product,
       quantity: 1,
-      selectedVariant: product.variants?.[0] || 'Original',
+      selectedVariant: variantLabel,
+      selectedVariants: { Varian: variantLabel },
       selectedSize: 'Standard',
       totalPrice: price
     });
@@ -75,7 +105,7 @@ export function ArtisanProductGrid() {
                   <h3 onClick={() => handleOpenModal(p)} className="text-sm sm:text-base font-bold text-zinc-900 hover:text-[var(--theme-color)] cursor-pointer line-clamp-1 transition">
                     {p.name}
                   </h3>
-                  <p className="text-[11px] text-zinc-400 mt-0.5">{p.variants?.[0] || '1 Pack'}</p>
+                  <p className="text-[11px] text-zinc-400 mt-0.5">{getFirstVariantLabel(p)}</p>
                   <div className="text-base sm:text-lg font-extrabold text-[var(--theme-color)] mt-2">
                     {formatIDR(price)}
                   </div>

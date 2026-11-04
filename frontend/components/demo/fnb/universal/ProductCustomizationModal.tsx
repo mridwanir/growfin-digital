@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFnbDemo } from '../core/FnbDemoContext';
+import { VariantOption } from '@/lib/types';
+import { calculateItemPrice, normalizeVariantOption, buildCartItemHash } from '@/lib/catalog';
 
 const CAFE_MENU_IMAGES = [
   '/image/fnb/abolfazl-babaei-FiRSpvLx2d4-unsplash.jpg',
@@ -17,7 +19,7 @@ export function ProductCustomizationModal() {
     addToCart } = useFnbDemo();
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string | VariantOption>>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
 
@@ -27,10 +29,12 @@ export function ProductCustomizationModal() {
       setQuantity(1);
       setNotes('');
       setSelectedAddons([]);
-      const initialVariants: Record<string, string> = {};
+      const initialVariants: Record<string, string | VariantOption> = {};
       if (product.variants) {
         product.variants.forEach(v => {
-          initialVariants[v.name] = v.options[0]; // default to first option
+          if (v.options && v.options.length > 0) {
+            initialVariants[v.name] = v.options[0]; // default to first option
+          }
         });
       }
       setSelectedVariants(initialVariants);
@@ -39,36 +43,20 @@ export function ProductCustomizationModal() {
 
   if (!isCustomizationModalOpen || !product) return null;
 
-  const getBasePriceNumber = (priceStr: string) => {
-    return parseInt(priceStr.replace(/\D/g, ''), 10) || 0;
-  };
-
   const calculateTotal = () => {
-    let base = getBasePriceNumber(product.price);
-
-    // add variant extra prices
-    Object.values(selectedVariants).forEach(opt => {
-      const match = opt.match(/\(\+Rp\s*([\d.]+)\)/);
-      if (match) {
-        base += parseInt(match[1].replace(/\D/g, ''), 10);
-      }
-    });
-
-    // add addons prices
-    if (product.addons) {
-      product.addons.forEach(addon => {
-        if (selectedAddons.includes(addon.name)) {
-          base += addon.price;
-        }
-      });
-    }
-
-    return base * quantity;
+    const activeAddons = (product.addons || []).filter(addon => selectedAddons.includes(addon.name));
+    const unitPrice = calculateItemPrice(
+      product.price,
+      Object.values(selectedVariants),
+      activeAddons
+    );
+    return unitPrice * quantity;
   };
 
   const handleAddToCart = () => {
+    const hash = buildCartItemHash(product.id, selectedVariants, selectedAddons);
     addToCart({
-      id: `${product.id}-${Date.now()}`,
+      id: hash,
       product,
       quantity,
       selectedVariants,
@@ -111,17 +99,27 @@ export function ProductCustomizationModal() {
                   <p className="font-bold text-slate-900 mb-2">{variant.name}</p>
                   <div className="flex flex-wrap gap-2">
                     {variant.options.map(opt => {
-                      const isSelected = selectedVariants[variant.name] === opt;
+                      const normalizedOpt = normalizeVariantOption(opt);
+                      const currentSelected = selectedVariants[variant.name];
+                      const normalizedSelected = currentSelected ? normalizeVariantOption(currentSelected) : null;
+                      const isSelected = normalizedSelected?.label === normalizedOpt.label;
+
                       return (
                         <button
-                          key={opt}
+                          key={normalizedOpt.label}
+                          type="button"
                           onClick={() => setSelectedVariants(prev => ({ ...prev, [variant.name]: opt }))}
-                          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${isSelected
+                          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border flex items-center gap-1.5 ${isSelected
                             ? `bg-brand-primary text-white border-transparent shadow-md`
                             : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                             }`}
                         >
-                          {opt}
+                          <span>{normalizedOpt.label}</span>
+                          {normalizedOpt.priceModifier > 0 && (
+                            <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                              +Rp {normalizedOpt.priceModifier.toLocaleString('id-ID')}
+                            </span>
+                          )}
                         </button>
                       );
                     })}

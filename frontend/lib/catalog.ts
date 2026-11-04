@@ -208,4 +208,64 @@ export function buildCartItemHash(
   return `${String(productId)}::variants=[${variantSegments.join(',')}]::addons=[${sortedAddons.join(',')}]`;
 }
 
+/**
+ * Formats a variant option for display in UI or WhatsApp receipt,
+ * cleanly itemizing surcharges only when priceModifier > 0.
+ * Examples:
+ * - "Ukuran: Regular" (for priceModifier <= 0)
+ * - "Ukuran: Large (+Rp 5.000)" (for priceModifier > 0)
+ */
+export function formatVariantOptionDisplay(
+  variantName: string,
+  option: string | VariantOption | null | undefined
+): string {
+  if (!option) {
+    return variantName;
+  }
+  const normalized = normalizeVariantOption(option);
+  if (!normalized.label) {
+    return variantName;
+  }
+  if (normalized.priceModifier > 0) {
+    return `${variantName}: ${normalized.label} (+Rp ${normalized.priceModifier.toLocaleString('id-ID')})`;
+  }
+  return `${variantName}: ${normalized.label}`;
+}
+
+/**
+ * Formats a map of selected variant options into a clean, comma-separated
+ * line for WhatsApp orders or cart summaries.
+ */
+export function formatVariantReceiptLine(
+  selectedVariants: Record<string, string | VariantOption> = {}
+): string {
+  const safeVariants = selectedVariants || {};
+  const entries = Object.entries(safeVariants);
+  if (entries.length === 0) return '';
+  return entries.map(([k, v]) => formatVariantOptionDisplay(k, v)).join(', ');
+}
+
+/**
+ * Stacks quantity and total price if an item with matching id/hash already exists in the cart;
+ * otherwise appends as a new line item.
+ */
+export function stackCartItem<T extends { id: string; quantity: number; totalPrice: number }>(
+  cart: T[],
+  item: T
+): T[] {
+  const existingIndex = cart.findIndex((i) => i.id === item.id);
+  if (existingIndex >= 0) {
+    return cart.map((i, idx) =>
+      idx === existingIndex
+        ? {
+            ...i,
+            quantity: i.quantity + item.quantity,
+            totalPrice: i.totalPrice + item.totalPrice,
+          }
+        : i
+    );
+  }
+  return [...cart, item];
+}
+
 export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer';

@@ -327,3 +327,4 @@ export function hasSpecifications(product?: Partial<MenuItem> | null): boolean {
   }
   return getValidSpecifications(product.specifications).length > 0;
 }
+export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer';

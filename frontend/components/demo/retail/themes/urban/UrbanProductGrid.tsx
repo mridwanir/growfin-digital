@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRetailDemo } from './../../core/RetailDemoContext';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { MenuItem } from '@/lib/types';
+import { hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog';
 
 import { getClothingPlaceholderImage } from '../../core/RetailDemoContext';
 
@@ -21,6 +22,9 @@ function AnimatedProductCard({ item, index }: { item: MenuItem; index: number })
     return `Rp ${cleaned}`;
   };
 
+  const hasDiscount = hasValidDiscount(item.price, item.originalPrice);
+  const discountPct = getDiscountPercentage(item.price, item.originalPrice);
+  const origPriceNum = parseNumericPrice(item.originalPrice);
   const handleOpenProduct = () => {
     setSelectedProductForCustomization(item);
     setIsCustomizationModalOpen(true);
@@ -37,7 +41,11 @@ function AnimatedProductCard({ item, index }: { item: MenuItem; index: number })
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={item.imageUrl || getClothingPlaceholderImage(item.id)} alt={item.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
-
+        {hasDiscount && (
+          <span className="absolute top-3 left-3 bg-rose-500 text-white text-xs font-black px-2 py-0.5 rounded-full shadow-md z-10">
+            -{discountPct}%
+          </span>
+        )}
         {/* Hover Action (Dekstop) */}
         <div className="absolute bottom-4 left-4 right-4 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <div className="bg-white/90 backdrop-blur text-center py-3 rounded-xl font-medium text-gray-900 shadow-lg">
@@ -46,7 +54,21 @@ function AnimatedProductCard({ item, index }: { item: MenuItem; index: number })
         </div>
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-brand-primary transition-colors">{item.name}</h3>
-      <p className="text-gray-500 font-medium">{formatPrice(item.price)}</p>
+      {hasDiscount ? (
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-gray-900 font-semibold">{formatPrice(item.price)}</p>
+          {origPriceNum !== undefined && (
+            <span className="text-gray-400 line-through text-sm">
+              Rp {origPriceNum.toLocaleString('id-ID')}
+            </span>
+          )}
+          <span className="bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold px-1.5 py-0.5 rounded">
+            Hemat {discountPct}%
+          </span>
+        </div>
+      ) : (
+        <p className="text-gray-500 font-medium">{formatPrice(item.price)}</p>
+      )}
     </div>
   );
 }

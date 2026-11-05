@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { sendFomoReminderEmail, resolveRecipientEmail } from '@/lib/email';
 
-export async function GET(request: Request) {
-  return handleCron(request);
+export async function GET(request: Request, customSupabase?: SupabaseClient | unknown) {
+  return handleCron(request, customSupabase);
 }
 
-export async function POST(request: Request) {
-  return handleCron(request);
+export async function POST(request: Request, customSupabase?: SupabaseClient | unknown) {
+  return handleCron(request, customSupabase);
 }
 
-async function handleCron(request: Request) {
+export async function handleCron(request: Request, customSupabase?: SupabaseClient | unknown) {
   // 1. Verifikasi Keamanan Bearer Token CRON_SECRET
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
@@ -23,10 +23,13 @@ async function handleCron(request: Request) {
     );
   }
 
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const isCustomClient = customSupabase && typeof customSupabase === 'object' && 'from' in customSupabase && typeof (customSupabase as Record<string, unknown>).from === 'function';
+  const supabaseAdmin = isCustomClient
+    ? (customSupabase as unknown as SupabaseClient)
+    : createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
 
   try {
     const now = new Date();
@@ -148,10 +151,11 @@ async function handleCron(request: Request) {
       skipped: skippedCount,
       details: processLog,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     console.error('[Cron FOMO Error]:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

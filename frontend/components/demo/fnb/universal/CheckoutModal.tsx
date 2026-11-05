@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useFnbDemo } from '../core/FnbDemoContext';
+import { formatVariantOptionDisplay } from '@/lib/catalog';
 import { Trash2 } from 'lucide-react';
 
 const CAFE_MENU_IMAGES = [
@@ -41,9 +42,12 @@ export function CheckoutModal() {
     cart.forEach((item, idx) => {
       message += `${idx + 1}. *${item.product.name}* (x${item.quantity})\n`;
 
-      const variantEntries = Object.entries(item.selectedVariants);
+      const variantEntries = Object.entries(item.selectedVariants || {});
       if (variantEntries.length > 0) {
-        message += `   Variasi: ${variantEntries.map(([k, v]) => `${k}: ${v}`).join(', ')}\n`;
+        const variantsText = variantEntries
+          .map(([k, v]) => formatVariantOptionDisplay(k, v))
+          .join(', ');
+        message += `   Variasi: ${variantsText}\n`;
       }
 
       if (item.selectedAddons.length > 0) {
@@ -122,8 +126,8 @@ export function CheckoutModal() {
                       <h4 className="text-sm font-bold text-slate-900 mb-1">{item.product.name}</h4>
 
                       <div className="text-[10px] text-slate-500 mb-2 space-y-0.5">
-                        {Object.entries(item.selectedVariants).map(([k, v]) => (
-                          <div key={k}><span className="font-bold">{k}:</span> {v}</div>
+                        {Object.entries(item.selectedVariants || {}).map(([k, v]) => (
+                          <div key={k}>{formatVariantOptionDisplay(k, v)}</div>
                         ))}
                         {item.selectedAddons.length > 0 && (
                           <div><span className="font-bold">Tambahan:</span> {item.selectedAddons.join(', ')}</div>

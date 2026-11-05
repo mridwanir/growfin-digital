@@ -4,10 +4,11 @@ import { resolveTemplateType } from '@/lib/template-resolver';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Resend } from 'resend';
 import { checkRateLimit, extractDeviceId, getClientIp } from '@/lib/rate-limit';
+import { normalizeGeneratedMetadata } from '@/lib/catalog';
 
 // 1. Inisialisasi Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
 // Generate a URL-friendly slug from the business name
 function generateSlug(name: string): string {
@@ -350,8 +351,30 @@ export async function POST(request: Request) {
       3. Tentukan "themeColor" hex code yang cocok dengan industri ${adjustedCategory}.
       4. Buatkan "fbType" (DINE_IN / QUICK_SERVICE / PRE_ORDER) khusus jika ini F&B. Jika bukan, kosongkan.
       5. Isi array "categories" minimal dengan ["Semua", "Kategori A", "Kategori B"].
-      6. Buatkan array "menu" atau "products" berisi 4-5 layanan/produk utama dengan harga yang logis untuk di Indonesia.
-         Format item: { "id": 1, "name": "...", "desc": "...", "price": "Rp ...", "category": "Kategori A", "duration": 45 }
+      6. Buatkan array "menu" berisi 4-5 layanan/produk utama dengan harga yang logis untuk di Indonesia.
+         Format item:
+         {
+           "id": 1,
+           "name": "...",
+           "desc": "...",
+           "price": "Rp ...",
+           "category": "Kategori A",
+           "duration": 45, // opsional jika jasa/treatment
+           "originalPrice": 35000, // opsional: integer atau numeric string harga coret sebelum diskon (harus lebih tinggi dari price jika item promo/diskon)
+           "variants": [ // sertakan jika produk memiliki pilihan ukuran, suhu, level pedas, warna, kapasitas, dll
+             {
+               "name": "Ukuran",
+               "options": [
+                 { "label": "Regular", "priceModifier": 0 },
+                 { "label": "Large", "priceModifier": 5000 }
+               ]
+             }
+           ],
+           "specifications": [ // opsional: array spesifikasi produk [{ "label": "...", "value": "..." }]
+             { "label": "Bahan", "value": "100% Katun Combed 30s" }
+           ]
+         }
+         PENTING: Variasi produk WAJIB memiliki options terstruktur dengan { "label": string, "priceModifier": integer tambahan biaya (0 untuk opsi regular/dasar) }.
       7. Jika bisnis ini Klinik/Salon/Jasa, buat object "doctor" { name, role, sampleChat: { user, doctor, recommendationTitle, recommendationDesc } }. 
          Jika ini Kafe/Retail, buat profil Admin Reservasi.
       8. Salin ulasan pelanggan ke property "reviews": [{ authorName, rating, text, time }].
@@ -374,12 +397,7 @@ export async function POST(request: Request) {
       metadata.reviewCount = reviewCount;
       metadata.address = realAddress;
 
-      if (Array.isArray(metadata.reviews)) {
-        metadata.reviews = metadata.reviews.map((rev: any) => ({
-          ...rev,
-          rating: Math.max(1, Math.min(5, Math.round(Number(rev.rating) || 5)))
-        }));
-      }
+      metadata = normalizeGeneratedMetadata(metadata);
     } catch (e) {
       console.error('Failed to parse Gemini JSON:', e);
       return NextResponse.json({ error: 'AI Gagal memproses data. Coba lagi.' }, { status: 500 });

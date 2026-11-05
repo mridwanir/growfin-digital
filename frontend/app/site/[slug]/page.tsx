@@ -1,4 +1,5 @@
-import { BusinessDemo } from '@/lib/types';
+import { BusinessDemo, MenuItem } from '@/lib/types';
+import { normalizeProduct } from '@/lib/catalog';
 import { PackageTier, PACKAGE_LIMITS } from '@/lib/site-config';
 import { ServiceDemoClient } from '@/components/demo/service-demo-client';
 import { FnbDemoClient } from '@/components/demo/fnb-demo-client';
@@ -190,7 +191,9 @@ export default async function SitePage({ params }: SitePageProps) {
       { id: '1', name: 'Admin', role: 'Staff', avatarEmoji: '👨‍💼' }
     ]),
     categories: dbData.metadata.categories || [],
-    menu: dbData.metadata.menu || dbData.metadata.products || [],
+    menu: (dbData.metadata.menu || dbData.metadata.products || []).map((p: unknown) =>
+      normalizeProduct(p && typeof p === 'object' ? (p as Partial<MenuItem>) : {})
+    ),
     reviews: dbData.metadata.reviews || [],
     heroImage: dbData.metadata.heroImage,
     logoUrl: metadataSource?.logoUrl || metadataSource?.logo_url,

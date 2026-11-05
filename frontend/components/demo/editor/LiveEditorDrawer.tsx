@@ -1,11 +1,12 @@
 'use client';
 
-import { X, Save, Check, Eye, EyeOff, Image as ImageIcon, Type, Plus, Trash2, Edit2, LayoutTemplate, Rocket, Palette, Store, LayoutDashboard, ShoppingBag, HeartHandshake, ChevronRight, ArrowLeft, Clock, MapPin, Phone, Mail, MessageSquare, Star, Users, HelpCircle, Tag, Settings, Link, Percent, Calendar } from 'lucide-react';
-import { BusinessDemo, MenuItem } from '@/lib/types';
+import { X, Save, Check, Eye, EyeOff, Image as ImageIcon, Type, Plus, Trash2, Edit2, LayoutTemplate, Rocket, Palette, Store, LayoutDashboard, ShoppingBag, HeartHandshake, ChevronLeft, ChevronRight, ArrowLeft, Clock, MapPin, Phone, Mail, MessageSquare, Star, Users, HelpCircle, Tag, Settings, Link, Percent, Calendar, Lock } from 'lucide-react';
+import { BusinessDemo, MenuItem, MenuItemVariant, SpecificationItem, VariantOption } from '@/lib/types';
 import { useState, useEffect, useRef } from 'react';
 import { PackageTier, PACKAGE_LIMITS } from '@/lib/site-config';
 import { CloudinaryUploader } from '@/components/dashboard/CloudinaryUploader';
 import { createClient } from '@/utils/supabase/client';
+import { normalizeVariantOption, parseNumericPrice } from '@/lib/catalog';
 
 interface LiveEditorDrawerProps {
   isOpen: boolean;
@@ -53,6 +54,7 @@ export function LiveEditorDrawer({
   const [menuFormError, setMenuFormError] = useState<string | null>(null);
   const [pendingImageToDelete, setPendingImageToDelete] = useState<string | null>(null);
   const [tempUploadedPublicIds, setTempUploadedPublicIds] = useState<string[]>([]);
+  const [tempGalleryPublicIds, setTempGalleryPublicIds] = useState<string[]>([]);
 
   // Refs for Tracking Changes & Preventing Stale Closures
   const isInitialMount = useRef(true);
@@ -132,10 +134,11 @@ export function LiveEditorDrawer({
 
   const currentTier: PackageTier = (client.package_tier || 'free_trial') as PackageTier;
   const limits = PACKAGE_LIMITS[currentTier] || PACKAGE_LIMITS['free_trial'];
-  const isTrial = currentTier === 'free_trial';
+  const isTrial = !client.package_tier || client.package_tier === 'free_trial' || client.status === 'draft';
   const tierLimits = limits;
   const isFreeTrial = isTrial;
   const canEditPromo = limits.promoFeatures;
+  const canEditAdvancedVariants = isTrial || Boolean(limits.advancedVariants);
 
   const deleteCloudinaryImage = async (publicId: string | null | undefined) => {
     if (!publicId) return;
@@ -237,16 +240,64 @@ export function LiveEditorDrawer({
       deleteCloudinaryImage(id);
     }
     setTempUploadedPublicIds([]);
+    setTempGalleryPublicIds([]);
+
+    const cleanSpecs = (menuForm.specifications || []).filter(
+      (s) => (s.label && s.label.trim()) || (s.value && s.value.trim())
+    );
+    const cleanVariants = (menuForm.variants || []).filter(
+      (v) => (v.name && v.name.trim()) || (v.options && v.options.length > 0)
+    );
+    const cleanGallery = (menuForm.imageGallery || []).filter(
+      (img) => typeof img === 'string' && img.trim().length > 0
+    );
+
+    const parsedOriginalPrice = parseNumericPrice(menuForm.originalPrice);
+    const itemToSave: MenuItem = {
+      ...(menuForm as MenuItem),
+      name: menuForm.name!.trim(),
+      price: menuForm.price!.trim(),
+      ...(parsedOriginalPrice !== undefined
+        ? { originalPrice: parsedOriginalPrice }
+        : {}),
+      ...(canEditAdvancedVariants && cleanGallery.length > 0
+        ? { imageGallery: cleanGallery.slice(0, 5) }
+        : {}),
+      ...(canEditAdvancedVariants && cleanVariants.length > 0
+        ? {
+            variants: cleanVariants.map((v) => ({
+              name: (v.name || '').trim(),
+              options: (v.options || [])
+                .filter((opt) => (typeof opt === 'string' ? opt.trim() : opt.label?.trim()))
+                .map((opt) => {
+                  const norm = normalizeVariantOption(opt);
+                  return { label: norm.label, priceModifier: norm.priceModifier };
+                }),
+            })),
+          }
+        : {}),
+      ...(canEditAdvancedVariants && cleanSpecs.length > 0
+        ? {
+            specifications: cleanSpecs.map((s) => ({
+              label: (s.label || '').trim(),
+              value: (s.value || '').trim(),
+            })),
+          }
+        : {}),
+    };
+    if (parsedOriginalPrice === undefined) {
+      delete itemToSave.originalPrice;
+    }
 
     const updatedMenu = [...(client.menu || [])];
     if (editingMenuIdx !== null) {
-      updatedMenu[editingMenuIdx] = menuForm as MenuItem;
+      itemToSave.id = client.menu[editingMenuIdx].id;
+      updatedMenu[editingMenuIdx] = itemToSave;
     } else {
-      updatedMenu.push({
-        ...(menuForm as MenuItem),
-        id: Date.now()
-      });
+      itemToSave.id = Date.now();
+      updatedMenu.push(itemToSave);
     }
+    setTempGalleryPublicIds([]);
 
     // Auto-update categories jika ada kategori baru yang ditambahkan
     const currentCategories = client.categories || ['Semua'];
@@ -272,7 +323,11 @@ export function LiveEditorDrawer({
     for (const id of tempUploadedPublicIds) {
       await deleteCloudinaryImage(id);
     }
+    for (const id of tempGalleryPublicIds) {
+      await deleteCloudinaryImage(id);
+    }
     setTempUploadedPublicIds([]);
+    setTempGalleryPublicIds([]);
     setPendingImageToDelete(null);
     setEditingMenuIdx(null);
     setMenuForm({});
@@ -315,18 +370,170 @@ export function LiveEditorDrawer({
     [newMenu[idx + 1], newMenu[idx]] = [newMenu[idx], newMenu[idx + 1]];
     handleFieldChange('menu', newMenu);
   };
-
   const openMenuForm = (idx: number | null) => {
     setMenuFormError(null);
     setPendingImageToDelete(null);
     setTempUploadedPublicIds([]);
+    setTempGalleryPublicIds([]);
     if (idx !== null) {
-      setMenuForm({ ...client.menu[idx] });
+      const item = client.menu[idx];
+      setMenuForm({
+        ...item,
+        originalPrice: item.originalPrice !== undefined ? String(item.originalPrice) : '',
+        imageGallery: Array.isArray(item.imageGallery) ? [...item.imageGallery] : [],
+        variants: Array.isArray(item.variants)
+          ? item.variants.map((v) => ({
+              name: v.name || '',
+              options: (v.options || []).map((opt) => {
+                const norm = normalizeVariantOption(opt);
+                return { label: norm.label, priceModifier: norm.priceModifier };
+              }),
+            }))
+          : [],
+        specifications: Array.isArray(item.specifications)
+          ? item.specifications.map((s) => ({ label: s.label || '', value: s.value || '' }))
+          : [],
+      });
       setEditingMenuIdx(idx);
     } else {
-      setMenuForm({ name: '', desc: '', price: '', category: 'Semua', imageUrl: '' });
+      setMenuForm({
+        name: '',
+        desc: '',
+        price: '',
+        category: 'Semua',
+        imageUrl: '',
+        originalPrice: '',
+        imageGallery: [],
+        variants: [],
+        specifications: [],
+      });
       setEditingMenuIdx(null);
     }
+  };
+
+  const handleRemoveGalleryImage = (removeIdx: number) => {
+    setMenuForm((prev) => ({
+      ...prev,
+      imageGallery: (prev.imageGallery || []).filter((_, idx) => idx !== removeIdx),
+    }));
+  };
+  const handleMoveGalleryImage = (fromIdx: number, toIdx: number) => {
+    setMenuForm((prev) => {
+      const list = [...(prev.imageGallery || [])];
+      if (fromIdx < 0 || fromIdx >= list.length || toIdx < 0 || toIdx >= list.length) {
+        return prev;
+      }
+      const [moved] = list.splice(fromIdx, 1);
+      list.splice(toIdx, 0, moved);
+      return { ...prev, imageGallery: list };
+    });
+  };
+
+
+  const handleAddVariantGroup = () => {
+    setMenuForm((prev) => ({
+      ...prev,
+      variants: [
+        ...(prev.variants || []),
+        { name: '', options: [{ label: '', priceModifier: 0 }] },
+      ],
+    }));
+  };
+
+  const handleRemoveVariantGroup = (groupIdx: number) => {
+    setMenuForm((prev) => ({
+      ...prev,
+      variants: (prev.variants || []).filter((_, idx) => idx !== groupIdx),
+    }));
+  };
+
+  const handleVariantGroupNameChange = (groupIdx: number, name: string) => {
+    setMenuForm((prev) => {
+      const nextVariants = [...(prev.variants || [])];
+      if (nextVariants[groupIdx]) {
+        nextVariants[groupIdx] = { ...nextVariants[groupIdx], name };
+      }
+      return { ...prev, variants: nextVariants };
+    });
+  };
+
+  const handleAddOption = (groupIdx: number) => {
+    setMenuForm((prev) => {
+      const nextVariants = [...(prev.variants || [])];
+      if (nextVariants[groupIdx]) {
+        nextVariants[groupIdx] = {
+          ...nextVariants[groupIdx],
+          options: [...(nextVariants[groupIdx].options || []), { label: '', priceModifier: 0 }],
+        };
+      }
+      return { ...prev, variants: nextVariants };
+    });
+  };
+
+  const handleRemoveOption = (groupIdx: number, optIdx: number) => {
+    setMenuForm((prev) => {
+      const nextVariants = [...(prev.variants || [])];
+      if (nextVariants[groupIdx]) {
+        nextVariants[groupIdx] = {
+          ...nextVariants[groupIdx],
+          options: (nextVariants[groupIdx].options || []).filter((_, idx) => idx !== optIdx),
+        };
+      }
+      return { ...prev, variants: nextVariants };
+    });
+  };
+
+  const handleOptionChange = (
+    groupIdx: number,
+    optIdx: number,
+    field: 'label' | 'priceModifier',
+    val: string | number
+  ) => {
+    setMenuForm((prev) => {
+      const nextVariants = [...(prev.variants || [])];
+      if (nextVariants[groupIdx]) {
+        const nextOptions = [...(nextVariants[groupIdx].options || [])];
+        const currentOpt = nextOptions[optIdx];
+        const normalized: VariantOption = typeof currentOpt === 'string'
+          ? { label: currentOpt, priceModifier: 0 }
+          : { label: currentOpt?.label || '', priceModifier: currentOpt?.priceModifier || 0 };
+
+        if (field === 'label') {
+          normalized.label = String(val);
+        } else {
+          const num = typeof val === 'number' ? val : Number(String(val).replace(/[^0-9-]/g, '')) || 0;
+          normalized.priceModifier = num;
+        }
+
+        nextOptions[optIdx] = normalized;
+        nextVariants[groupIdx] = { ...nextVariants[groupIdx], options: nextOptions };
+      }
+      return { ...prev, variants: nextVariants };
+    });
+  };
+
+  const handleAddSpecification = () => {
+    setMenuForm((prev) => ({
+      ...prev,
+      specifications: [...(prev.specifications || []), { label: '', value: '' }],
+    }));
+  };
+
+  const handleRemoveSpecification = (specIdx: number) => {
+    setMenuForm((prev) => ({
+      ...prev,
+      specifications: (prev.specifications || []).filter((_, idx) => idx !== specIdx),
+    }));
+  };
+
+  const handleSpecificationChange = (specIdx: number, field: 'label' | 'value', val: string) => {
+    setMenuForm((prev) => {
+      const nextSpecs = [...(prev.specifications || [])];
+      if (nextSpecs[specIdx]) {
+        nextSpecs[specIdx] = { ...nextSpecs[specIdx], [field]: val };
+      }
+      return { ...prev, specifications: nextSpecs };
+    });
   };
 
   const handleSaveToAPI = async (publish: boolean) => {
@@ -1059,44 +1266,335 @@ export function LiveEditorDrawer({
                           }}
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
                         />
-                        <input
-                          type="text"
-                          placeholder="Harga (Misal: Rp 15.000) *"
-                          value={menuForm.price || ''}
-                          onChange={(e) => {
-                            if (menuFormError) setMenuFormError(null);
-                            setMenuForm(prev => ({ ...prev, price: e.target.value }));
-                          }}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
-                        />
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Harga Jual *</label>
+                            <input
+                              type="text"
+                              placeholder="Misal: Rp 15.000 *"
+                              value={menuForm.price || ''}
+                              onChange={(e) => {
+                                if (menuFormError) setMenuFormError(null);
+                                setMenuForm(prev => ({ ...prev, price: e.target.value }));
+                              }}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Harga Coret (Opsional)</label>
+                            <input
+                              type="text"
+                              placeholder="Misal: Rp 20.000"
+                              value={menuForm.originalPrice !== undefined ? String(menuForm.originalPrice) : ''}
+                              onChange={(e) => {
+                                setMenuForm(prev => ({ ...prev, originalPrice: e.target.value }));
+                              }}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
+                            />
+                          </div>
+                        </div>
                         <textarea placeholder="Tulisin penjelasan singkat biar pada ngiler..." value={menuForm.desc || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, desc: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none resize-none font-medium" rows={3} />
                         <input type="text" placeholder="Kategori (Misal: Minuman Dingin)" value={menuForm.category || ''} onChange={(e) => setMenuForm(prev => ({ ...prev, category: e.target.value }))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium" />
                       </div>
 
                       <div className="pt-2">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase mb-2 block">Pajang Fotonya Biar Menarik</label>
+                        <label className="text-[10px] font-bold text-slate-500 uppercase mb-2 block">Foto Utama Produk</label>
                         <div className="border border-slate-200 rounded-xl p-1 bg-slate-50">
                           <CloudinaryUploader
                             currentImageUrl={menuForm.imageUrl}
                             onUploadSuccess={(url, publicId) => {
-                              // Catat foto lama produk yang sedang diedit (hanya dihapus saat user klik Simpan)
                               if (editingMenuIdx !== null && client.menu[editingMenuIdx]?.imagePublicId) {
                                 setPendingImageToDelete(client.menu[editingMenuIdx].imagePublicId!);
                               }
-                              // Catat foto baru yang baru diupload agar bisa dibersihkan jika dibatalkan
                               setTempUploadedPublicIds(prev => [...prev, publicId]);
                               setMenuForm(prev => ({ ...prev, imageUrl: url, imagePublicId: publicId }));
                             }}
-                            label="Upload Foto Baru"
+                            label="Upload Foto Utama"
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-4 pt-4 border-t border-slate-200">
-                        <ComingSoonField label="Varian (Ukuran/Topping)" placeholder="Biar pelanggan bisa milih-milih" icon={LayoutTemplate} />
-                        <ComingSoonField label="Label Promo Khusus" placeholder="Kasih label 'Best Seller' gitu" icon={Tag} />
+                      {/* Galeri Multi-Foto (Maksimal 5 foto) */}
+                      <div className="pt-2 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[10px] font-bold text-slate-500 uppercase block">
+                            Galeri Foto Produk (Maks. 5 Foto)
+                          </label>
+                          <span className="text-[10px] text-slate-400 font-semibold">
+                            {(menuForm.imageGallery || []).length} / 5 Foto
+                          </span>
+                        </div>
+
+                        {!canEditAdvancedVariants ? (
+                          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-3 text-xs">
+                            <p className="font-semibold text-amber-900 flex items-center gap-1.5">
+                              <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+                              <span>Galeri multi-foto eksklusif untuk Paket Pro Advanced.</span>
+                            </p>
+                            <button
+                              type="button"
+                              onClick={onUpgradeClick}
+                              className="px-3 py-1.5 bg-[#00b894] hover:bg-[#00e0b8] text-black font-extrabold rounded-lg text-[11px] transition-all whitespace-nowrap shadow-sm shrink-0 active:scale-95 text-center"
+                            >
+                              Upgrade
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {(menuForm.imageGallery || []).length > 0 && (
+                              <div className="grid grid-cols-5 gap-2">
+                                {(menuForm.imageGallery || []).map((imgUrl, imgIdx) => (
+                                  <div key={imgIdx} className="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+                                    <img src={imgUrl} alt={`Foto galeri ${imgIdx + 1}`} className="w-full h-full object-cover" />
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveGalleryImage(imgIdx)}
+                                      className="absolute top-1 right-1 p-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded-full transition-colors shadow-sm z-10"
+                                      title="Hapus foto ini"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                    <div className="absolute bottom-1 left-1 right-1 flex items-center justify-between gap-1 opacity-90 group-hover:opacity-100 z-10">
+                                      <button
+                                        type="button"
+                                        disabled={imgIdx === 0}
+                                        onClick={() => handleMoveGalleryImage(imgIdx, imgIdx - 1)}
+                                        className="p-1 bg-black/60 hover:bg-black/80 disabled:opacity-20 disabled:cursor-not-allowed text-white rounded transition-colors shadow-sm"
+                                        title="Geser foto ke kiri"
+                                      >
+                                        <ChevronLeft className="w-3 h-3" />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        disabled={imgIdx === (menuForm.imageGallery || []).length - 1}
+                                        onClick={() => handleMoveGalleryImage(imgIdx, imgIdx + 1)}
+                                        className="p-1 bg-black/60 hover:bg-black/80 disabled:opacity-20 disabled:cursor-not-allowed text-white rounded transition-colors shadow-sm"
+                                        title="Geser foto ke kanan"
+                                      >
+                                        <ChevronRight className="w-3 h-3" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {(menuForm.imageGallery || []).length < 5 ? (
+                              <div className="border border-dashed border-slate-300 rounded-xl p-2 bg-slate-50/50">
+                                <CloudinaryUploader
+                                  onUploadSuccess={(url, publicId) => {
+                                    setTempGalleryPublicIds(prev => [...prev, publicId]);
+                                    setMenuForm(prev => ({
+                                      ...prev,
+                                      imageGallery: [...(prev.imageGallery || []), url].slice(0, 5)
+                                    }));
+                                  }}
+                                  label={`Tambah Foto Galeri (${(menuForm.imageGallery || []).length}/5)`}
+                                />
+                              </div>
+                            ) : (
+                              <p className="text-[11px] text-slate-400 italic">Maksimal 5 foto galeri telah tercapai.</p>
+                            )}
+                          </div>
+                        )}
                       </div>
 
+                      {/* Varian & Spesifikasi Produk (Tier Gated) */}
+                      <div className="space-y-4 pt-4 border-t border-slate-200">
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+                            Varian & Spesifikasi
+                          </label>
+                          {isTrial ? (
+                            <span className="text-[10px] font-bold text-amber-800 bg-amber-100 border border-amber-200 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                              ✨ Fitur Pro Advanced (Gratis Dicoba di Mode Demo)
+                            </span>
+                          ) : !canEditAdvancedVariants ? (
+                            <span className="text-[10px] font-bold text-slate-500 bg-slate-200 px-2 py-0.5 rounded-md flex items-center gap-1">
+                              <Lock className="w-3 h-3" /> Terkunci (Paket {currentTier === 'instan' ? 'Instan' : 'Pro Basic'})
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                              Fitur Pro Advanced Aktif
+                            </span>
+                          )}
+                        </div>
+
+                        {!canEditAdvancedVariants ? (
+                          <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-3 text-xs">
+                            <p className="font-semibold text-amber-900 flex items-center gap-1.5">
+                              <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+                              <span>Fitur varian multi-harga & spesifikasi produk memerlukan paket <strong>Pro Advanced</strong>.</span>
+                            </p>
+                            <button
+                              type="button"
+                              onClick={onUpgradeClick}
+                              className="px-3.5 py-2 bg-[#00b894] hover:bg-[#00e0b8] text-black font-extrabold rounded-lg text-xs transition-all whitespace-nowrap shadow-sm shrink-0 active:scale-95 text-center"
+                            >
+                              Upgrade ke Pro Advanced
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            {/* Variant Groups Repeater */}
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                  <LayoutTemplate className="w-4 h-4 text-slate-500" />
+                                  Grup Varian & Tambahan Harga
+                                 </label>
+                                <button
+                                  type="button"
+                                  onClick={handleAddVariantGroup}
+                                  className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200 flex items-center gap-1 transition-colors"
+                                >
+                                  <Plus className="w-3.5 h-3.5" /> Tambah Grup Varian
+                                </button>
+                              </div>
+
+                              {(!menuForm.variants || menuForm.variants.length === 0) ? (
+                                <div className="p-3 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-400">
+                                  Belum ada varian (misal: Ukuran, Level Pedas, Topping).
+                                </div>
+                              ) : (
+                                <div className="space-y-3">
+                                  {menuForm.variants.map((variantGroup, groupIdx) => (
+                                    <div key={groupIdx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5">
+                                      <div className="flex items-center gap-2">
+                                        <input
+                                          type="text"
+                                          placeholder="Nama Grup (Misal: Ukuran / Topping)"
+                                          value={variantGroup.name || ''}
+                                          onChange={(e) => handleVariantGroupNameChange(groupIdx, e.target.value)}
+                                          className="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-800 focus:border-emerald-500 outline-none"
+                                        />
+                                        <button
+                                          type="button"
+                                          onClick={() => handleRemoveVariantGroup(groupIdx)}
+                                          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                                          title="Hapus grup varian ini"
+                                        >
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+
+                                      {/* Options list */}
+                                      <div className="space-y-1.5 pl-2 border-l-2 border-slate-200">
+                                        {(variantGroup.options || []).map((opt, optIdx) => {
+                                          const optLabel = typeof opt === 'string' ? opt : opt.label || '';
+                                          const optPriceMod = typeof opt === 'string' ? 0 : opt.priceModifier || 0;
+
+                                          return (
+                                            <div key={optIdx} className="flex items-center gap-2">
+                                              <input
+                                                type="text"
+                                                placeholder="Pilihan (Misal: Regular / Large)"
+                                                value={optLabel}
+                                                onChange={(e) => handleOptionChange(groupIdx, optIdx, 'label', e.target.value)}
+                                                className="flex-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 focus:border-emerald-500 outline-none font-medium"
+                                              />
+                                              <div className="w-28 relative">
+                                                <input
+                                                  type="number"
+                                                  placeholder="+Rp 0"
+                                                  value={optPriceMod === 0 ? '' : optPriceMod}
+                                                  onChange={(e) => handleOptionChange(groupIdx, optIdx, 'priceModifier', e.target.value)}
+                                                  className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 focus:border-emerald-500 outline-none font-medium text-right"
+                                                />
+                                              </div>
+                                              <button
+                                                type="button"
+                                                onClick={() => handleRemoveOption(groupIdx, optIdx)}
+                                                className="p-1 text-slate-400 hover:text-rose-500 transition-colors"
+                                                title="Hapus opsi"
+                                              >
+                                                <X className="w-3.5 h-3.5" />
+                                              </button>
+                                            </div>
+                                          );
+                                        })}
+
+                                        <button
+                                          type="button"
+                                          onClick={() => handleAddOption(groupIdx)}
+                                          className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 pt-1"
+                                        >
+                                          <Plus className="w-3 h-3" /> Tambah Pilihan
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Specifications Repeater */}
+                            <div className="space-y-3 pt-3 border-t border-slate-200">
+                              <div className="flex items-center justify-between">
+                                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                  <Settings className="w-4 h-4 text-slate-500" />
+                                  Spesifikasi & Rincian Produk
+                                </label>
+                                <button
+                                  type="button"
+                                  onClick={handleAddSpecification}
+                                  className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200 flex items-center gap-1 transition-colors"
+                                >
+                                  <Plus className="w-3.5 h-3.5" /> Tambah Spesifikasi
+                                </button>
+                              </div>
+
+                              {(!menuForm.specifications || menuForm.specifications.length === 0) ? (
+                                <div className="p-3 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-400">
+                                  Belum ada spesifikasi (misal: Bahan, Ukuran, Berat, Kalori).
+                                </div>
+                              ) : (
+                                <div className="space-y-2">
+                                  {menuForm.specifications.map((spec, sIdx) => (
+                                    <div key={sIdx} className="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                                      <input
+                                        type="text"
+                                        placeholder="Label (Misal: Bahan / Berat)"
+                                        value={spec.label || ''}
+                                        onChange={(e) => handleSpecificationChange(sIdx, 'label', e.target.value)}
+                                        className="w-1/2 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:border-emerald-500 outline-none font-medium"
+                                      />
+                                      <input
+                                        type="text"
+                                        placeholder="Nilai (Misal: 100% Katun / 250gr)"
+                                        value={spec.value || ''}
+                                        onChange={(e) => handleSpecificationChange(sIdx, 'value', e.target.value)}
+                                        className="w-1/2 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:border-emerald-500 outline-none font-medium"
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveSpecification(sIdx)}
+                                        className="p-1 text-slate-400 hover:text-rose-500 transition-colors"
+                                        title="Hapus baris spesifikasi"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        )}
+
+                        <div className="space-y-1.5 pt-2">
+                          <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                            <Tag className="w-4 h-4 text-slate-400" /> Label Promo Khusus (Opsional)
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Misal: Best Seller / Favorit"
+                            value={menuForm.tag || ''}
+                            onChange={(e) => setMenuForm(prev => ({ ...prev, tag: e.target.value }))}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:border-emerald-500 focus:bg-white outline-none font-medium"
+                          />
+                        </div>
+                      </div>
                       <div className="flex gap-2.5">
                         <button
                           type="button"

@@ -4,11 +4,11 @@
 
 **Blocked by:** 01: Workspace Initialization and Root App Shell
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Configure Drizzle ORM client with connection pooling targeting Neon Serverless PostgreSQL
-- [ ] Define relational database tables: `tenants`, `categories`, `products`, `product_variants`, `variant_options`, `orders`, and `analytics_events`
-- [ ] Define scoped JSONB columns on `tenants`: `branding_content`, `theme_config`, and `operating_hours`
-- [ ] Define Better Auth schema tables: `users`, `sessions`, `accounts`, and `verifications`
-- [ ] Generate and execute initial database migrations using Drizzle Kit
-- [ ] Automated test: connect to Neon, insert a tenant with relational categories, products, and variants, and query them back using Drizzle relational queries
+- [x] Configure Drizzle ORM client with connection pooling targeting Neon Serverless PostgreSQL
+- [x] Define relational database tables: `tenants`, `categories`, `products`, `product_variants`, `variant_options`, `orders`, and `analytics_events`
+- [x] Define scoped JSONB columns on `tenants`: `branding_content`, `theme_config`, and `operating_hours`
+- [x] Define Better Auth schema tables: `users`, `sessions`, `accounts`, and `verifications`
+- [x] Generate and execute initial database migrations using Drizzle Kit
+- [x] Automated test: connect to Neon, insert a tenant with relational categories, products, and variants, and query them back using Drizzle relational queries

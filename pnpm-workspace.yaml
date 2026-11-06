@@ -14,7 +14,11 @@ packages:
 # catalogs:
 
 allowBuilds:
+  esbuild: true
   sharp: false
   unrs-resolver: false
 minimumReleaseAgeExclude:
   - playwright-core@1.65.0
+permissions:
+  drizzle-kit:
+    skills: true

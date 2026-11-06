@@ -13,5 +13,10 @@ export default ashtrathLint({
     entryPoint: 'src/styles/globals.css',
   },
 
-  ignorePatterns: ['migrations/**/*', 'src/components/ui/**/*.tsx', 'frontend'],
+  ignorePatterns: [
+    'migrations/**/*',
+    'src/db/migrations/**/*',
+    'src/components/ui/**/*.tsx',
+    'frontend',
+  ],
 })

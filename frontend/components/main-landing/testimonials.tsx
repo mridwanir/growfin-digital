@@ -42,7 +42,7 @@ export function Testimonials() {
           <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-[#FFFFFF]">
             {language === 'en' ? 'Loved by Clinic Owners' : 'Disukai oleh Pemilik Klinik'}
           </h2>
-          <p className="text-[#8E8EA0] text-lg max-w-[600px]">
+          <p className="text-[#8E8EA0] text-lg max-w-150">
             {language === 'en'
               ? 'See how our automated solutions and premium designs are helping local businesses scale.'
               : 'Lihat bagaimana solusi otomatis dan desain premium kami membantu bisnis lokal berkembang.'}

@@ -36,11 +36,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [deviceId, setDeviceId] = useState('');
 
   useEffect(() => {
-    let id = localStorage.getItem('growfin_device_id');
+    let id = localStorage.getItem('meracikweb_device_id') || localStorage.getItem('growfin_device_id');
     if (!id) {
       id = 'dev_' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
-      localStorage.setItem('growfin_device_id', id);
     }
+    localStorage.setItem('meracikweb_device_id', id);
     setDeviceId(id);
   }, []);
 
@@ -225,7 +225,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 animate-in fade-in duration-300" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => {
         if (step === 'form') {
           onClose();
@@ -237,11 +237,13 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
         {step === 'form' && (
           <button
+            type="button"
+            aria-label="Tutup modal"
             onClick={() => {
               onClose();
               setTimeout(() => { setStep('form'); setMode('generate'); setErrorMsg(''); }, 300);
             }}
-            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors z-20"
+            className="absolute top-4 right-4 p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors z-20 focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
           >
             <X className="w-4 h-4" />
           </button>
@@ -251,7 +253,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
           {step === 'form' && mode === 'generate' && (
             <>
-              <h3 className="text-2xl font-extrabold text-dark mb-1">Ceritakan Bisnis Kamu</h3>
+              <h3 className="text-2xl font-extrabold text-dark mb-1 text-balance">Ceritakan Bisnis Kamu</h3>
               {/* <p className="text-sm text-slate-500 mb-4 font-medium">Isi detail singkat ini, dan sistem kami akan meracik website untuk Anda!</p> */}
 
               {/* Tabs Ada di Maps vs Belum di Maps */}
@@ -259,14 +261,14 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                 <button
                   type="button"
                   onClick={() => { setIsMapsMode(true); setIsMapsNotFound(false); setErrorMsg(''); }}
-                  className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${isMapsMode ? 'bg-white text-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 min-h-[44px] py-2 text-sm font-bold rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none ${isMapsMode ? 'bg-white text-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Bisnis Tersedia di Maps
                 </button>
                 <button
                   type="button"
                   onClick={() => { setIsMapsMode(false); setIsMapsNotFound(false); setErrorMsg(''); }}
-                  className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${!isMapsMode ? 'bg-white text-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 min-h-[44px] py-2 text-sm font-bold rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none ${!isMapsMode ? 'bg-white text-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Belum ada di Maps
                 </button>
@@ -280,7 +282,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
               {isMapsNotFound && isMapsMode && (
                 <div className="mb-4 p-3.5 bg-emerald-50 border border-emerald/20 rounded-2xl text-center">
-                  <p className="text-xs text-slate-600 mb-2 font-medium">
+                  <p className="text-xs text-slate-600 mb-2 font-medium text-pretty">
                     Bisnis belum ada di Maps? Tenang, sistem kami tetap bisa membuatkan website untuk bisnis Anda!
                   </p>
                   <button
@@ -290,7 +292,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                       setIsMapsNotFound(false);
                       setErrorMsg('');
                     }}
-                    className="w-full py-2.5 px-3 bg-emerald hover:bg-emerald-light text-white text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                    className="w-full min-h-[44px] py-2.5 px-3 bg-emerald hover:bg-emerald-light text-white text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1.5 focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
                   >
                     <span>Bisnis belum ada di Maps? Isi Deskripsi Manual ➔</span>
                   </button>
@@ -299,10 +301,24 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
               <form onSubmit={handleSubmitGenerate} className="space-y-4">
                 <div>
-                  <input type="text" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Nama Bisnis" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                  <input
+                    type="text"
+                    aria-label="Nama Bisnis"
+                    className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                    placeholder="Nama Bisnis"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
                 </div>
                 <div>
-                  <select className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 text-slate-600 focus:outline-none focus:border-emerald focus:bg-white transition-all" required value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+                  <select
+                    aria-label="Kategori Bisnis"
+                    className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 text-slate-600 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                    required
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  >
                     <option value="" disabled>Kategori Bisnis</option>
                     {categoryGroups.map(group => (
                       <optgroup key={group.label} label={group.label}>
@@ -314,22 +330,55 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   </select>
                 </div>
                 <div>
-                  <input type="tel" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Nomor WhatsApp (Cth: 628...)" required value={formData.phone} onChange={(e) => handlePhoneChange(e, 'generate')} />
+                  <input
+                    type="tel"
+                    aria-label="Nomor WhatsApp"
+                    className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                    placeholder="Nomor WhatsApp (Cth: 628...)"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => handlePhoneChange(e, 'generate')}
+                  />
                 </div>
                 <div>
-                  <input type="email" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Alamat Email (Untuk kirim hasil website)" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                  <input
+                    type="email"
+                    aria-label="Alamat Email"
+                    className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                    placeholder="Alamat Email (Untuk kirim hasil website)"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
                 </div>
                 <div>
-                  <input type="text" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Kota" required value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
+                  <input
+                    type="text"
+                    aria-label="Kota"
+                    className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                    placeholder="Kota"
+                    required
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  />
                 </div>
                 {isMapsMode ? (
                   <div>
-                    <input type="url" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Link Google Maps (Wajib)" required value={formData.mapsUrl} onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })} />
+                    <input
+                      type="url"
+                      aria-label="Link Google Maps"
+                      className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                      placeholder="Link Google Maps (Wajib)"
+                      required
+                      value={formData.mapsUrl}
+                      onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })}
+                    />
                   </div>
                 ) : (
                   <div>
                     <textarea
-                      className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all resize-none"
+                      aria-label="Deskripsi Bisnis Singkat"
+                      className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all resize-none"
                       placeholder="Deskripsikan bisnis kamu secara singkat (Misal: Kedai kopi kekinian dengan area outdoor yang luas...)"
                       rows={3}
                       required
@@ -342,14 +391,21 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   <Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} onSuccess={(token) => setFormData({ ...formData, turnstileToken: token })} />
                 </div>
                 <div className="pt-4">
-                  <button type="submit" className="w-full py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-[0_10px_20px_rgba(0,184,148,0.2)] hover:shadow-[0_15px_25px_rgba(0,184,148,0.3)] transition-all active:scale-95">
+                  <button
+                    type="submit"
+                    className="w-full min-h-[48px] py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-[0_10px_20px_rgba(0,184,148,0.2)] hover:shadow-[0_15px_25px_rgba(0,184,148,0.3)] transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
+                  >
                     Buat Website Sekarang
                   </button>
                 </div>
               </form>
 
               <div className="mt-6 text-center">
-                <button onClick={() => { setMode('find'); setErrorMsg(''); }} className="text-slate-400 hover:text-emerald text-xs font-bold transition-colors">
+                <button
+                  type="button"
+                  onClick={() => { setMode('find'); setErrorMsg(''); }}
+                  className="min-h-[44px] inline-flex items-center justify-center px-3 text-slate-400 hover:text-emerald text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 rounded-lg outline-none"
+                >
                   Sudah pernah generate? Masuk di sini
                 </button>
               </div>
@@ -358,8 +414,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
           {step === 'form' && mode === 'find' && (
             <>
-              <h3 className="text-2xl font-extrabold text-dark mb-1">Cari Template Anda</h3>
-              <p className="text-sm text-slate-500 mb-6 font-medium">Masukkan nomor WA yang Anda daftarkan sebelumnya.</p>
+              <h3 className="text-2xl font-extrabold text-dark mb-1 text-balance">Cari Template Anda</h3>
+              <p className="text-sm text-slate-500 mb-6 font-medium text-pretty">Masukkan nomor WA yang Anda daftarkan sebelumnya.</p>
 
               {errorMsg && (
                 <div className="mb-4 p-3 bg-red-50 text-red-500 text-sm rounded-xl text-center font-bold">
@@ -369,17 +425,32 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
               <form onSubmit={handleSubmitFind} className="space-y-4">
                 <div>
-                  <input type="tel" className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-emerald focus:bg-white transition-all" placeholder="Nomor WhatsApp" required value={findPhone} onChange={(e) => handlePhoneChange(e, 'find')} />
+                  <input
+                    type="tel"
+                    aria-label="Nomor WhatsApp Terdaftar"
+                    className="w-full px-5 py-3.5 border-2 border-slate-100 rounded-2xl text-sm bg-slate-50 focus:outline-none focus:border-electric-blue focus:bg-white focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 transition-all"
+                    placeholder="Nomor WhatsApp"
+                    required
+                    value={findPhone}
+                    onChange={(e) => handlePhoneChange(e, 'find')}
+                  />
                 </div>
                 <div className="pt-4">
-                  <button type="submit" className="w-full py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-[0_10px_20px_rgba(0,184,148,0.2)] hover:shadow-[0_15px_25px_rgba(0,184,148,0.3)] transition-all active:scale-95">
+                  <button
+                    type="submit"
+                    className="w-full min-h-[48px] py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-[0_10px_20px_rgba(0,184,148,0.2)] hover:shadow-[0_15px_25px_rgba(0,184,148,0.3)] transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
+                  >
                     Buka Template Saya
                   </button>
                 </div>
               </form>
 
               <div className="mt-6 text-center">
-                <button onClick={() => { setMode('generate'); setErrorMsg(''); }} className="text-slate-400 hover:text-emerald text-xs font-bold transition-colors">
+                <button
+                  type="button"
+                  onClick={() => { setMode('generate'); setErrorMsg(''); }}
+                  className="min-h-[44px] inline-flex items-center justify-center px-3 text-slate-400 hover:text-emerald text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 rounded-lg outline-none"
+                >
                   ← Kembali ke pendaftaran baru
                 </button>
               </div>
@@ -389,17 +460,17 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {step === 'loading' && (
             <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
               <div className="relative w-16 h-16">
-                <div className="absolute inset-0 bg-emerald/20 border-4 border-emerald-soft rounded-full animate-ping"></div>
+                <div className="absolute inset-0 bg-emerald/20 border-4 border-emerald-soft rounded-full animate-ping motion-reduce:animate-none"></div>
                 <div className="w-full h-full bg-emerald-soft border-4 border-emerald rounded-full flex items-center justify-center relative z-10">
-                  <div className="w-4 h-4 bg-emerald rounded-full animate-bounce"></div>
+                  <div className="w-4 h-4 bg-emerald rounded-full animate-pulse motion-reduce:animate-none"></div>
                 </div>
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-extrabold text-dark">Membangun Website Anda...</h3>
-                <p className="text-sm text-slate-500 font-medium">Sistem sedang meracik tampilan terbaik untuk bisnis Anda. hasilnya akan dikirim ke {formData.email}</p>
+                <h3 className="text-xl font-extrabold text-dark text-balance">Membangun Website Anda...</h3>
+                <p className="text-sm text-slate-500 font-medium text-pretty">Sistem sedang meracik tampilan terbaik untuk bisnis Anda. hasilnya akan dikirim ke {formData.email}</p>
               </div>
               <div className="w-full max-w-xs bg-slate-100 rounded-full h-2.5 mt-4 overflow-hidden relative">
-                <div className="bg-emerald h-2.5 rounded-full animate-[progress_3s_ease-in-out_infinite]" style={{ width: '100%', transformOrigin: 'left' }}></div>
+                <div className="bg-emerald h-2.5 rounded-full animate-[progress_3s_ease-in-out_infinite] motion-reduce:animate-none" style={{ width: '100%', transformOrigin: 'left' }}></div>
               </div>
             </div>
           )}
@@ -407,14 +478,14 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {step === 'existing' && (
             <div className="py-12 flex flex-col items-center justify-center text-center space-y-6 animate-in zoom-in duration-300">
               <div className="relative">
-                <div className="absolute inset-0 bg-blue-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 bg-blue-500 blur-xl opacity-20 rounded-full animate-pulse motion-reduce:animate-none"></div>
                 <div className="w-20 h-20 bg-blue-50 border-2 border-blue-500 rounded-full flex items-center justify-center relative z-10 shadow-lg">
                   <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                 </div>
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-extrabold text-dark">Data Ditemukan!</h3>
-                <p className="text-sm text-slate-500 font-medium">Mengarahkan Anda ke Live Preview sekarang...</p>
+                <h3 className="text-xl font-extrabold text-dark text-balance">Data Ditemukan!</h3>
+                <p className="text-sm text-slate-500 font-medium text-pretty">Mengarahkan Anda ke Live Preview sekarang...</p>
               </div>
             </div>
           )}
@@ -422,31 +493,33 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {step === 'confirmation' && (
             <div className="py-8 flex flex-col items-center justify-center text-center space-y-6 animate-in zoom-in duration-300">
               <div className="relative">
-                <div className="absolute inset-0 bg-yellow-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 bg-yellow-500 blur-xl opacity-20 rounded-full animate-pulse motion-reduce:animate-none"></div>
                 <div className="w-20 h-20 bg-yellow-50 border-2 border-yellow-500 rounded-full flex items-center justify-center relative z-10 shadow-lg">
                   <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
               </div>
               <div className="space-y-4">
-                <h3 className="text-xl font-extrabold text-dark">Konfirmasi Data Bisnis</h3>
-                <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                <h3 className="text-xl font-extrabold text-dark text-balance">Konfirmasi Data Bisnis</h3>
+                <p className="text-sm text-slate-600 font-medium leading-relaxed text-pretty">
                   Berdasarkan Link Google Maps, nama bisnis Anda terdeteksi sebagai: <br />
                   <span className="text-lg font-bold text-yellow-600 block mt-2 mb-1">{realName}</span>
                   (Berbeda dengan yang Anda input: <span className="font-semibold text-dark">{formData.name}</span>).
                 </p>
-                <p className="text-sm text-slate-500 font-medium">Apakah Anda ingin melanjutkan dengan nama asli dari Google Maps?</p>
+                <p className="text-sm text-slate-500 font-medium text-pretty">Apakah Anda ingin melanjutkan dengan nama asli dari Google Maps?</p>
               </div>
 
               <div className="flex w-full gap-3 pt-4">
                 <button
+                  type="button"
                   onClick={() => { setStep('form'); }}
-                  className="flex-1 py-3 px-4 bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-600 text-sm font-bold rounded-xl transition-colors"
+                  className="flex-1 min-h-[44px] py-3 px-4 bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-600 text-sm font-bold rounded-xl transition-colors focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
                 >
                   Ubah Data
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleSubmitGenerate(undefined, true)}
-                  className="flex-1 py-3 px-4 bg-yellow-500 hover:bg-yellow-400 text-white text-sm font-extrabold rounded-xl transition-all shadow-[0_5px_15px_rgba(234,179,8,0.3)] active:scale-95"
+                  className="flex-1 min-h-[44px] py-3 px-4 bg-yellow-500 hover:bg-yellow-400 text-white text-sm font-extrabold rounded-xl transition-all shadow-[0_5px_15px_rgba(234,179,8,0.3)] active:scale-95 focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
                 >
                   Ya, Lanjutkan
                 </button>
@@ -457,17 +530,21 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {step === 'emailSent' && (
             <div className="py-12 flex flex-col items-center justify-center text-center space-y-6 animate-in zoom-in duration-300">
               <div className="relative">
-                <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-20 rounded-full animate-pulse motion-reduce:animate-none"></div>
                 <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-500 rounded-full flex items-center justify-center relative z-10 shadow-lg">
                   <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 </div>
               </div>
               <div className="space-y-3">
-                <h3 className="text-xl font-extrabold text-dark">Cek Email Anda!</h3>
-                <p className="text-sm text-slate-500 font-medium">Link website berhasil dibuat dan telah dikirim ke <span className="font-bold text-dark">{formData.email}</span>.</p>
-                <p className="text-xs text-slate-400">Silakan periksa kotak masuk atau folder spam Anda.</p>
+                <h3 className="text-xl font-extrabold text-dark text-balance">Cek Email Anda!</h3>
+                <p className="text-sm text-slate-500 font-medium text-pretty">Link website berhasil dibuat dan telah dikirim ke <span className="font-bold text-dark">{formData.email}</span>.</p>
+                <p className="text-xs text-slate-400 text-pretty">Silakan periksa kotak masuk atau folder spam Anda.</p>
               </div>
-              <button onClick={() => { onClose(); setTimeout(() => { setStep('form'); setMode('generate'); setFormData({ ...formData, turnstileToken: '' }); }, 300); }} className="w-full py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-lg transition-all active:scale-95 mt-4">
+              <button
+                type="button"
+                onClick={() => { onClose(); setTimeout(() => { setStep('form'); setMode('generate'); setFormData({ ...formData, turnstileToken: '' }); }, 300); }}
+                className="w-full min-h-[48px] py-4 bg-emerald hover:bg-emerald-light text-white font-extrabold rounded-2xl shadow-lg transition-all active:scale-95 mt-4 focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 outline-none"
+              >
                 Selesai
               </button>
             </div>

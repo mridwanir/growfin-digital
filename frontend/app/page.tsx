@@ -11,15 +11,15 @@ import { FloatingWhatsApp } from '@/components/main-landing/floating-whatsapp';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Growfin Digital | Website Bisnis Super Cepat!',
-  description: 'Nggak perlu ribet coding. Cukup isi form simpel, dan sistem kita bakal siapin website super premium buat UMKM u langsung live hari ini juga!',
+  title: 'MeracikWeb | Racik Website Cepat Sesuai Gayamu',
+  description: 'Buat website profesional untuk bisnis, UMKM, atau personal brand dengan mudah, cepat, dan siap online.',
 };
 
 export default function Page() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <Hero />
         <SocialProof />
         <Features />

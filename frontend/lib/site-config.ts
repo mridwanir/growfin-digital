@@ -8,7 +8,7 @@ export interface PackageLimits {
   bookingSystem: boolean;
   promoFeatures: boolean;     // Mengontrol Flash Sale, Promo Badge, Discount % & Custom UI Labels
   advancedVariants: boolean;  // Mengontrol Multi-Varian dengan Price Modifier (+Rp), Galeri Multi-Foto & Tabel Spesifikasi
-  removeBranding: boolean;    // Menghapus floating/footer badge "Powered by Growfin Digital"
+  removeBranding: boolean;    // Menghapus floating/footer badge "Powered by MeracikWeb"
 }
 
 export const PACKAGE_LIMITS: Record<PackageTier, PackageLimits> = {
@@ -67,13 +67,13 @@ export const PACKAGE_LIMITS: Record<PackageTier, PackageLimits> = {
 export const siteConfig = {
   contact: {
     whatsappNumber: "6289630352370",
-    email: "growfin.id@gmail.com",
+    email: "contact@meracikweb.id",
     // Base URLs for quick chat links
     waLinks: {
-      instan: "https://wa.me/6289630352370?text=Halo%20Growfin,%20saya%20tertarik%20dengan%20Paket%20Template%20Instan.",
-      proBasic: "https://wa.me/6289630352370?text=Halo%20Growfin,%20saya%20tertarik%20dengan%20Paket%20Pro%20Basic.",
-      proAdvanced: "https://wa.me/6289630352370?text=Halo%20Growfin,%20saya%20tertarik%20dengan%20Paket%20Pro%20Advanced.",
-      enterprise: "https://wa.me/6289630352370?text=Halo%20Growfin,%20saya%20tertarik%20berkonsultasi%20untuk%20Enterprise%20Solutions.",
+      instan: "https://wa.me/6289630352370?text=Halo%20MeracikWeb,%20saya%20tertarik%20dengan%20Paket%20Template%20Instan.",
+      proBasic: "https://wa.me/6289630352370?text=Halo%20MeracikWeb,%20saya%20tertarik%20dengan%20Paket%20Pro%20Basic.",
+      proAdvanced: "https://wa.me/6289630352370?text=Halo%20MeracikWeb,%20saya%20tertarik%20dengan%20Paket%20Pro%20Advanced.",
+      enterprise: "https://wa.me/6289630352370?text=Halo%20MeracikWeb,%20saya%20tertarik%20berkonsultasi%20untuk%20Enterprise%20Solutions.",
     }
   },
   pricing: [
@@ -90,14 +90,14 @@ export const siteConfig = {
       periodEn: "One-time payment (Lifetime)",
       periodId: "Sekali Bayar (Aktif Selamanya)",
       featuresEn: [
-        "1 Business Website & Official Subdomain (.growfin.my.id)",
+        "1 Business Website & Official Subdomain (.meracikweb.id)",
         "Lifetime Website Access (No Monthly Fees)",
         "Up to 20 Products/Menu & 5 Categories",
         "Live Editor: Customize Theme, Color & Page Layout",
         "WhatsApp Order Integration & Smart QR ID Card"
       ],
       featuresId: [
-        "1 Website Bisnis & Subdomain Resmi (.growfin.my.id)",
+        "1 Website Bisnis & Subdomain Resmi (.meracikweb.id)",
         "Masa Aktif Website Selamanya (Tanpa Biaya Bulanan)",
         "Hingga 20 Produk/Menu & 5 Kategori",
         "Live Editor: Kustomisasi Tema, Warna & Susunan Halaman",
@@ -126,7 +126,7 @@ export const siteConfig = {
         "Up to 100 Products/Menu & 20 Categories",
         "Promo Badge, Strikethrough Discount & Flash Sale Timer",
         "Custom Button Labels (Call to Action)",
-        "No 'Powered by Growfin' Watermark"
+        "No 'Powered by MeracikWeb' Watermark"
       ],
       featuresId: [
         { text: "Gratis Domain (.com) 1 Tahun — Terima Beres Disetup Admin", bold: true },
@@ -134,7 +134,7 @@ export const siteConfig = {
         "Hingga 100 Produk/Menu & 20 Kategori",
         "Fitur Promo Badge, Diskon Coret & Flash Sale Timer",
         "Kustomisasi Teks Tombol (Call to Action)",
-        "Tanpa Watermark 'Powered by Growfin'"
+        "Tanpa Watermark 'Powered by MeracikWeb'"
       ],
       linkKey: "proBasic",
       buttonEn: "Choose Pro Basic",

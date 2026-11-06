@@ -1,0 +1,20 @@
+ignoreWorkspaceRootCheck: true
+shellEmulator: true
+
+trustPolicy: no-downgrade
+trustPolicyExcludePrune: true
+minimumReleaseAge: 1440
+minimumReleaseAgeExcludePrune: true
+
+packages:
+  - '.'
+
+# TODO: Migrate to named catalogs
+# catalogMode: prefer
+# catalogs:
+
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - playwright-core@1.65.0

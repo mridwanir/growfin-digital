@@ -7,6 +7,7 @@ Status: ready-for-agent
 The platform's codebase is disorganized and difficult to maintain. The Next.js application is trapped in a nested directory alongside orphaned Python lead generation scripts, dead static HTML prototypes, and uncompressed media assets exceeding 120 MB. Package management is divided between npm lockfiles and non-standard pnpm configuration files.
 
 At the data layer, all website metadata, menus, variant pricing, operational hours, and theme styling are serialized into a single JSONB column (`metadata`) inside a monolithic table in Supabase. This causes severe production vulnerabilities:
+
 - **Concurrent Overwrites**: Dashboard and live-editor updates read and rewrite the entire JSON document, causing users in separate tabs or background reminder crons to clobber each other's edits.
 - **Silent Catalog Data Loss**: Editing products in the dashboard silently strips out AI-generated variants, addons, and specifications because the form is only aware of base product fields.
 - **Zero Relational & Price Integrity**: Orders and transactions cannot enforce foreign-key constraints or price consistency against catalog records.
@@ -19,6 +20,7 @@ Furthermore, the application relies on fragmented Supabase clients and a Supabas
 Rebuild the web application from the ground up on a dedicated branch (`refactor/clean-slate-rebuild`) as a clean root-level Next.js 16 application using `pnpm` and the standard `src/` directory layout.
 
 Consolidate backend infrastructure onto Neon Serverless Cloud:
+
 - **Database & ORM**: Neon Serverless PostgreSQL managed via Drizzle ORM.
 - **Data Model**: A Hybrid Schema that normalizes transactional and searchable catalog data (`tenants`, `categories`, `products`, `product_variants`, `orders`) into relational tables, while keeping visual styling and marketing content in scoped JSONB columns (`theme_config`, `branding_content`).
 - **Storefront Compatibility**: A Storefront Data Adapter (`src/lib/storefront/mapper.ts`) that joins relational catalog data into the legacy data contract, allowing all existing storefront theme components to render without modification.
@@ -31,6 +33,7 @@ Consolidate backend infrastructure onto Neon Serverless Cloud:
 ## User Stories
 
 ### Storefront Visitors & Customers
+
 1. As a storefront visitor on a tenant subdomain (`tenant.growfin.my.id`), I want the website to load immediately without edge database latency, so that I can browse the store without delay.
 2. As a storefront visitor, I want to view categorized products, complete with photos, descriptions, and accurate prices, so that I can decide what to purchase.
 3. As a storefront visitor, I want to select product variants (e.g. size, storage capacity, color) with accurate price modifiers, so that the correct final price is calculated in my shopping cart.
@@ -40,6 +43,7 @@ Consolidate backend infrastructure onto Neon Serverless Cloud:
 7. As a storefront visitor, I want to read verified customer reviews and lookbook galleries, so that I feel confident in the business's credibility.
 
 ### Business Owners / Tenants
+
 8. As a business owner, I want to generate a complete website draft in one click by entering my business name and Google Maps URL, so that I can see an instant working preview of my online presence.
 9. As a business owner, I want the AI generation process to atomically insert my business profile, categories, and products, so that generation never fails halfway through or produces corrupted records.
 10. As a business owner, I want to claim an unclaimed website demo by signing in with my email address via a passwordless magic link or OTP, so that I do not have to manage passwords.
@@ -54,17 +58,20 @@ Consolidate backend infrastructure onto Neon Serverless Cloud:
 19. As a business owner, I want to request and link a custom domain (e.g. `mybusiness.com`), so that my customers can access my store through a branded URL.
 
 ### Super Administrators
+
 20. As a super administrator, I want to sign in using an authorized administrator email, so that administrative actions are strictly protected from unauthorized access.
 21. As a super administrator, I want to view a centralized console of all tenants with their subscription tiers, publication statuses, expiration dates, and assigned domains, so that I can oversee platform operations.
 22. As a super administrator, I want to manually update a tenant's publication status, tier limits, or custom domain mappings, so that I can resolve customer support requests.
 23. As a super administrator, I want to view an audit log of all payment transactions and gateway references, so that I can reconcile billing events against Midtrans payouts.
 
 ### Automated System & Platform Operations
+
 24. As the Midtrans payment webhook listener, I want to receive asynchronous payment notifications, verify transaction signatures, and execute atomic database transactions to mark orders as paid and publish tenant sites, so that customer subscriptions are activated reliably.
 25. As a scheduled reminder job, I want to query expiring demo websites and record notification statuses without clobbering tenant catalog data, so that marketing reminders do not create race conditions.
 26. As a search engine crawler, I want each tenant storefront to serve dynamic JSON-LD structured data and OpenGraph tags, so that local businesses are indexed effectively on search engines.
 
 ### Developers & AI Agents
+
 27. As a developer, I want all dependencies managed cleanly through `pnpm` with a single root lockfile, so that builds and installations are fast, deterministic, and free of package conflicts.
 28. As a developer, I want all database schemas, relations, and queries typed through Drizzle ORM, so that schema mismatches and invalid column accesses fail at compile time.
 29. As a developer, I want database migrations generated and executed via Drizzle Kit against Neon Serverless Postgres, so that database evolution is tracked in version control.
@@ -74,6 +81,7 @@ Consolidate backend infrastructure onto Neon Serverless Cloud:
 ## Implementation Decisions
 
 ### 1. Repository Layout & Tooling
+
 - The repository root will house a single Next.js 16 (App Router) project using TypeScript with all source code under `src/`.
 - All legacy Python code (`outreach_crew`), design mockups (`template/`), and loose migration scripts will be removed from the rewrite branch (backed up in the `legacy` branch).
 - `pnpm` will be the exclusive package manager, enforced via `packageManager: "pnpm@..."` in `package.json` with a single root `pnpm-lock.yaml`.
@@ -81,6 +89,7 @@ Consolidate backend infrastructure onto Neon Serverless Cloud:
 - Matt Pocock-compatible agent skills will be placed in `.agents/skills/` covering `drizzle-orm`, `better-auth`, `shadcn-ui`, `tailwind-v4`, and `next-app-router`.
 
 ### 2. Database Architecture (Hybrid Relational + Scoped JSONB)
+
 The data layer will be implemented using Drizzle ORM on Neon Serverless PostgreSQL, divided into normalized tables and scoped JSONB columns:
 
 - **`tenants` table**: Represents a business website instance.
@@ -108,25 +117,30 @@ The data layer will be implemented using Drizzle ORM on Neon Serverless PostgreS
 - **Better Auth Tables**: Generated by Better Auth (`users`, `sessions`, `accounts`, `verifications`).
 
 ### 3. Storefront Compatibility Adapter
+
 To avoid refactoring the ~120 existing theme components in `frontend/components/demo/`:
+
 - A server-side data mapper module (`src/lib/storefront/mapper.ts`) will accept a `tenant` record along with its joined `categories`, `products`, and `variant_options`.
 - The mapper will transform these relational rows into the canonical `BusinessDemo` TypeScript interface.
 - Storefront routes (`/site/[slug]` and `/demo/[slug]`) will fetch relational data, run it through the mapper, and inject it into the existing React Context providers (`RetailDemoContext`, `FnbDemoContext`, `GroomingDemoContext`, `ServiceDemoContext`).
 - Existing theme components will read from context exactly as they do today, with zero component code changes.
 
 ### 4. Authentication Architecture (Neon Managed Better Auth)
+
 - Neon Managed Better Auth will handle all user sessions, accounts, and verifications.
 - Auth configuration will use the Email Magic Link and OTP plugin, using Resend for email delivery.
 - Session cookies will be configured with `.growfin.my.id` domain sharing in production, allowing users to stay logged in when navigating between the main portal and tenant previews.
 - Super Admin access will be verified on server routes by checking authenticated user emails against an `ADMIN_EMAILS` environment variable.
 
 ### 5. Media Storage (Neon Object Storage)
+
 - Cloudinary and the legacy Supabase Edge Function will be removed entirely.
 - File uploads (logos, product photos, hero banners) will be stored in Neon Object Storage using an S3-compatible client (`@aws-sdk/client-s3`).
 - A Next.js API route (`/api/storage/upload`) will handle authenticated uploads or presigned URL issuance, and an endpoint (`/api/storage/delete`) will handle asset deletions.
 - Media rendering will use Next.js's native `<Image />` component for automated WebP compression and responsive srcset generation.
 
 ### 6. Edge Routing & Multi-Tenancy Middleware
+
 - Next.js `middleware.ts` will remain strictly stateless:
   - Extract the incoming `Host` header.
   - If the host is a custom subdomain (e.g. `kopisenja.growfin.my.id`) or a custom domain (e.g. `kopisenja.com`), rewrite the request URL directly to `/site/[host]`.
@@ -135,6 +149,7 @@ To avoid refactoring the ~120 existing theme components in `frontend/components/
 - The React Server Component at `src/app/site/[slug]/page.tsx` will query Neon via Drizzle, handle 404s, inject SEO metadata, and stream the rendered HTML.
 
 ### 7. Transactional AI Website Generation (`/api/generate`)
+
 - The AI generator will invoke the Google Gemini API to produce structured website draft data.
 - The route handler will wrap database writes in an atomic Drizzle transaction (`db.transaction`):
   1. Insert the `tenants` record with `branding_content` and `theme_config`.
@@ -144,6 +159,7 @@ To avoid refactoring the ~120 existing theme components in `frontend/components/
 - If any operation fails or validation rejects an item, the transaction will roll back automatically.
 
 ### 8. Midtrans Payment Pipeline
+
 - `/api/checkout`: Generates a Midtrans Snap transaction token and creates a `pending` row in `orders`.
 - `/api/midtrans/notification`: Webhook endpoint that verifies Midtrans SHA-512 signature hashes and executes an atomic Drizzle transaction to mark the order as `paid`, update the tenant's `status` to `published`, and set `site_active_until`.
 - `/api/checkout/verify`: Client verification polling endpoint reading settlement status from Drizzle.
@@ -151,27 +167,35 @@ To avoid refactoring the ~120 existing theme components in `frontend/components/
 ## Testing Decisions
 
 ### What Makes a Good Test
+
 Tests must verify observable system behavior and interface contracts, not internal implementation details. A good test asserts that a given input or HTTP request produces the expected output, status code, and database state. Tests must not assert component internal state or mock out the units under test.
 
 ### Testing Seams
 
 #### 1. Primary Seam: HTTP API & Route Handler Boundaries (Highest Seam)
+
 The primary testing seam sits at the Next.js Route Handler and Server Action boundary:
+
 - **AI Generator Route Handler**: Send mock Gemini JSON outputs to `/api/generate` and assert HTTP 200, verifying that the database transaction creates the corresponding `tenant`, `categories`, `products`, and `variants`.
 - **Midtrans Webhook Route Handler**: Send valid and invalidly signed Midtrans notification payloads to `/api/midtrans/notification` and assert that valid signatures update `orders` and `tenants` status to `published`, while invalid signatures return HTTP 401 without mutating data.
 - **Better Auth Session Seam**: Verify that protected API routes (`/api/dashboard/*`, `/api/admin/*`) reject unauthenticated requests with HTTP 401 and admit authenticated sessions.
 
 #### 2. Secondary Seam: Storefront Compatibility Adapter
+
 A dedicated unit seam for `src/lib/storefront/mapper.ts`:
+
 - Input: Relational database mock rows (`tenant` joined with `categories`, `products`, and `variant_options`).
 - Assertion: The returned object matches the exact `BusinessDemo` contract expected by legacy theme contexts, verifying price format conversions, variant option structures, and fallback values.
 
 #### 3. Tertiary Seam: Catalog & Sanitizer Logic
+
 - Test product price parsing (`parseNumericPrice`) ensuring integer conversion handles dots, commas, and currency strings.
 - Test subscription tier sanitizer functions (`tier-sanitizer.ts`) ensuring free-tier tenants have pro-tier features (multi-image galleries, custom specifications) stripped out.
 
 ### Prior Art in Codebase
+
 Existing tests in `frontend/lib/__tests__/` serve as direct prior art:
+
 - `catalog.test.ts`: Tests numeric price parsing, cart hashing, and discount math.
 - `tier-gating-sanitizer.test.ts`: Tests feature stripping against subscription tier limits.
 - `ai-generation-schema.test.ts`: Tests Gemini JSON metadata parsing and normalization.
@@ -189,7 +213,9 @@ All ported tests will run using the Node native test runner (`node:test`, `node:
 ## Further Notes
 
 ### Environment Variables Inventory
+
 The target architecture requires the following environment variables:
+
 - `DATABASE_URL`: Neon PostgreSQL connection string (pooled).
 - `BETTER_AUTH_SECRET`: Secret key for session encryption.
 - `BETTER_AUTH_URL`: Canonical URL of the application.
@@ -202,4 +228,5 @@ The target architecture requires the following environment variables:
 - `NEXT_PUBLIC_BASE_DOMAIN`: Base domain for multi-tenant subdomains (e.g. `growfin.my.id`).
 
 ### Git Branching & Cutover
+
 All implementation work will be committed to `refactor/clean-slate-rebuild`. Merging into `main` will occur only after the test suite passes, a full smoke run verifies tenant generation, authentication, storefront rendering, and Midtrans payment webhooks with zero regressions.

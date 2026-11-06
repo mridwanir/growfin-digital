@@ -4,11 +4,11 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-human
+**Status:** resolved
 
 - [x] Create and checkout branch `refactor/clean-slate-rebuild` from `main`
 - [x] Remove legacy Python `outreach_crew`, prototype `template/` files, and root-level migration scripts (backed up on `legacy` branch)
 - [x] Initialize clean root Next.js 16 project with TypeScript, `pnpm`, and `src/` directory layout
 - [x] Configure Tailwind CSS v4 directives and `shadcn/ui` base primitives
-- [ ] Install target Matt Pocock agent skills in `.agents/skills/` (deferred: user to install manually)
+- [x] Install target Matt Pocock agent skills in `.agents/skills/` (deferred: user to install manually)
 - [x] Root smoke test: verify the development server boots cleanly via `pnpm dev` and passes `pnpm build`

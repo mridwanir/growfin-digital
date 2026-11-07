@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth/server'
 
 export default auth.middleware({
   loginUrl: '/login',
-  publicRoutes: ['/', '/login', '/api/auth/webhook'],
+  publicRoutes: ['/', '/login', '/api/auth/webhook', '/api/generate'],
 })
 
 export const config = {

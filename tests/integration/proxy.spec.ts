@@ -24,7 +24,7 @@ describe('Next.js Proxy Authentication Route Protection', () => {
     expect(location).toContain('/login')
   })
 
-  it('allows access to public routes like / and /login', async () => {
+  it('allows access to public routes like /, /login, and /api/generate', async () => {
     const loginRequest = new NextRequest('http://localhost:3000/login')
     const loginResponse = await proxy(loginRequest)
     expect(loginResponse.status).toBe(200)
@@ -32,5 +32,9 @@ describe('Next.js Proxy Authentication Route Protection', () => {
     const homeRequest = new NextRequest('http://localhost:3000/')
     const homeResponse = await proxy(homeRequest)
     expect(homeResponse.status).toBe(200)
+
+    const generateRequest = new NextRequest('http://localhost:3000/api/generate')
+    const generateResponse = await proxy(generateRequest)
+    expect(generateResponse.status).toBe(200)
   })
 })

@@ -1,0 +1,174 @@
+'use client'
+
+import type { BusinessDemo, MenuItem, VariantOption } from '@/lib/types'
+
+import { createContext, useContext, useState, type ReactNode, useEffect } from 'react'
+
+import { stackCartItem } from '@/lib/catalog'
+import { THEMES, type ThemeKey, getDefaultTheme } from '@/lib/themes'
+
+export interface CartItem {
+  id: string // unique cart item id
+  product: MenuItem
+  quantity: number
+  selectedVariants: Record<string, string | VariantOption>
+  selectedAddons: string[]
+  notes: string
+  totalPrice: number
+}
+
+interface FnbDemoContextType {
+  client: BusinessDemo
+
+  currentTheme: ThemeKey
+  setCurrentTheme: (theme: ThemeKey) => void
+
+  // Cart State
+  cart: CartItem[]
+  addToCart: (item: CartItem) => void
+  removeFromCart: (id: string) => void
+  updateCartItemQuantity: (id: string, quantity: number) => void
+  clearCart: () => void
+  cartTotal: number
+  cartItemCount: number
+
+  // Modals
+  isCartModalOpen: boolean
+  setIsCartModalOpen: (open: boolean) => void
+  isCustomizationModalOpen: boolean
+  setIsCustomizationModalOpen: (open: boolean) => void
+  selectedProductForCustomization: MenuItem | null
+  setSelectedProductForCustomization: (product: MenuItem | null) => void
+
+  // Operational Logic
+  isOpenNow: boolean
+}
+
+const FnbDemoContext = createContext<FnbDemoContextType | undefined>(undefined)
+
+export function FnbDemoProvider({
+  children,
+  client,
+}: {
+  children: ReactNode
+  client: BusinessDemo
+}) {
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>(() => getDefaultTheme(client.category))
+
+  const [cart, setCart] = useState<CartItem[]>([])
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false)
+  const [isCustomizationModalOpen, setIsCustomizationModalOpen] = useState(false)
+  const [selectedProductForCustomization, setSelectedProductForCustomization] =
+    useState<MenuItem | null>(null)
+
+  const [isOpenNow, setIsOpenNow] = useState(client.isOpen !== false)
+
+  // Parse open/close times to calculate if open now
+  useEffect(() => {
+    if (client.isOpen === false) {
+      setIsOpenNow(false)
+      return
+    }
+
+    if (client.openTime && client.closeTime) {
+      const checkIsOpen = () => {
+        if (client.isOpen === false) {
+          setIsOpenNow(false)
+          return
+        }
+
+        const now = new Date()
+        const currentHours = now.getHours()
+        const currentMinutes = now.getMinutes()
+        const currentTime = currentHours * 60 + currentMinutes
+
+        const [openHour, openMin] = client.openTime!.split(':').map(Number)
+        const [closeHour, closeMin] = client.closeTime!.split(':').map(Number)
+
+        const openTime = openHour * 60 + openMin
+        let closeTime = closeHour * 60 + closeMin
+
+        if (closeTime < openTime) {
+          // Crosses midnight
+          if (currentTime >= openTime || currentTime < closeTime) {
+            setIsOpenNow(true)
+            return
+          }
+        } else {
+          if (currentTime >= openTime && currentTime < closeTime) {
+            setIsOpenNow(true)
+            return
+          }
+        }
+        setIsOpenNow(false)
+      }
+
+      checkIsOpen()
+      const interval = setInterval(checkIsOpen, 60000) // Check every minute
+      return () => clearInterval(interval)
+    } else {
+      setIsOpenNow(true)
+    }
+  }, [client.isOpen, client.openTime, client.closeTime])
+
+  const addToCart = (item: CartItem) => {
+    setCart(prev => stackCartItem(prev, item))
+  }
+
+  const removeFromCart = (id: string) => {
+    setCart(prev => prev.filter(item => item.id !== id))
+  }
+
+  const updateCartItemQuantity = (id: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(id)
+      return
+    }
+    setCart(prev =>
+      prev.map(item =>
+        item.id === id
+          ? { ...item, quantity, totalPrice: (item.totalPrice / item.quantity) * quantity }
+          : item,
+      ),
+    )
+  }
+
+  const clearCart = () => setCart([])
+
+  const cartTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0)
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+
+  return (
+    <FnbDemoContext.Provider
+      value={{
+        client,
+        currentTheme,
+        setCurrentTheme,
+        cart,
+        addToCart,
+        removeFromCart,
+        updateCartItemQuantity,
+        clearCart,
+        cartTotal,
+        cartItemCount,
+        isCartModalOpen,
+        setIsCartModalOpen,
+        isCustomizationModalOpen,
+        setIsCustomizationModalOpen,
+        selectedProductForCustomization,
+        setSelectedProductForCustomization,
+        isOpenNow,
+      }}
+    >
+      {children}
+    </FnbDemoContext.Provider>
+  )
+}
+
+export function useFnbDemo() {
+  const context = useContext(FnbDemoContext)
+  if (context === undefined) {
+    throw new Error('useFnbDemo must be used within a FnbDemoProvider')
+  }
+  return context
+}

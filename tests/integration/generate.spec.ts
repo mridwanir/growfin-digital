@@ -2,7 +2,7 @@ import type { GeneratedWebsiteData } from '@/lib/generator/schema'
 
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { POST as generateHandler } from '@/app/api/generate/route'
 import { db } from '@/db'
@@ -73,6 +73,9 @@ const mockGeminiOutput: GeneratedWebsiteData = generatedWebsiteSchema.parse({
 
 describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
   const createdTenantIds: string[] = []
+  beforeAll(async () => {
+    await db.delete(tenants).where(eq(tenants.googleMapsUrl, 'https://maps.google.com/?cid=123'))
+  })
 
   afterEach(async () => {
     vi.restoreAllMocks()

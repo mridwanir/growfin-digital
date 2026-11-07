@@ -58,9 +58,29 @@ export interface PractitionerInfo {
 
 export interface ReviewInfo {
   authorName: string
+  name?: string
   rating: number
   text: string
   time?: string
+  profilePhotoUrl?: string
+}
+
+export interface DoctorInfo {
+  avatarUrl?: string
+  name?: string
+  role?: string
+  sampleChat?: string
+  [key: string]: unknown
+}
+
+export interface AdminInfo {
+  [key: string]: unknown
+  name?: string
+  role?: string
+  sampleChat?: {
+    [key: string]: unknown
+    recommendationDesc?: string
+  }
 }
 
 export interface LookbookItem {
@@ -138,8 +158,8 @@ export interface BusinessDemo {
     status: 'active' | 'pending' | 'processing' | 'rejected'
     whatsappContact?: string
   }
-  admin?: unknown
-  doctor?: unknown
-  metadata?: unknown
+  admin?: AdminInfo | null
+  doctor?: DoctorInfo | null
+  metadata?: Record<string, unknown> | null
   status?: string
 }

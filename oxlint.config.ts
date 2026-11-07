@@ -17,6 +17,11 @@ export default ashtrathLint({
     'migrations/**/*',
     'src/db/migrations/**/*',
     'src/components/ui/**/*.tsx',
+    'src/components/demo/**/*',
+    'src/lib/site-config.ts',
+    'src/lib/themes.ts',
+    'src/lib/template-resolver.ts',
+    'src/lib/catalog.ts',
     'frontend',
   ],
 })

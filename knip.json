@@ -2,6 +2,6 @@
   "$schema": "./node_modules/knip/schema.json",
   "entry": ["src/app/**/*.{js,jsx,ts,tsx}", "src/db/index.ts"],
   "ignore": ["src/components/ui/*", "frontend/**/*"],
-  "ignoreDependencies": ["lucide-react"],
+  "ignoreDependencies": [],
   "treatConfigHintsAsErrors": true
 }

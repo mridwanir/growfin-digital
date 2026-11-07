@@ -12,6 +12,10 @@ export default defineConfig({
   },
   resolve: {
     tsconfigPaths: true,
+    alias: {
+      'next/headers': 'next/headers.js',
+      'next/navigation': 'next/navigation.js',
+    },
   },
   test: {
     reporters: ['default', process.env.CI ? 'github-actions' : {}],
@@ -25,7 +29,7 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           exclude: [...defaultExclude, 'src/hooks/**/*.spec.ts'],
-          include: ['src/**/*.spec.{js,ts}'],
+          include: ['src/**/*.spec.{js,ts}', 'tests/**/*.spec.{js,ts}'],
         },
       },
       {
@@ -41,5 +45,10 @@ export default defineConfig({
         },
       },
     ],
+    server: {
+      deps: {
+        inline: ['@neon/auth'],
+      },
+    },
   },
 })

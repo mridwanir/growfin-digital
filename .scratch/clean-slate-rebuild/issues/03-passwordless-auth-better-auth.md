@@ -4,11 +4,11 @@
 
 **Blocked by:** 02: Hybrid Database Schema and Neon Connection Setup
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Configure Neon Managed Better Auth server and client handlers using the Email Magic Link and OTP plugin with Resend
-- [ ] Build login page at `/login` allowing merchants to enter their email address and request a magic link or one-time passcode
-- [ ] Configure cross-subdomain session cookies (`.growfin.my.id` in production, localhost in development)
-- [ ] Protect `/dashboard` routes so unauthenticated requests redirect to `/login`
-- [ ] Implement administrator authorization guard checking user emails against the `ADMIN_EMAILS` environment variable before granting access to `/admin`
-- [ ] Automated integration test: request an OTP/magic link, verify credentials, receive session cookies, and access protected route handlers
+- [x] Configure Neon Managed Better Auth server and client handlers using the Email Magic Link and OTP plugin with Resend
+- [x] Build login page at `/login` allowing merchants to enter their email address and request a magic link or one-time passcode
+- [x] Configure cross-subdomain session cookies (`.growfin.my.id` in production, localhost in development)
+- [x] Protect `/dashboard` routes so unauthenticated requests redirect to `/login`
+- [x] Implement administrator authorization guard checking user emails against the `ADMIN_EMAILS` environment variable before granting access to `/admin`
+- [x] Automated integration test: request an OTP/magic link, verify credentials, receive session cookies, and access protected route handlers

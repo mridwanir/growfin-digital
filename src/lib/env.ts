@@ -15,6 +15,7 @@ export const env = createEnv({
   server: {
     ADMIN_EMAILS: z.string().min(1),
     CRON_SECRET: z.string().min(32, { message: 'CRON_SECRET must be at least 32 characters long' }),
+    EMAIL_FROM: z.string().default('Growfin Digital <auth@growfin.my.id>'),
 
     GEMINI_API_KEY: z.string().min(1),
     GOOGLE_MAPS_API_KEY: z.string().min(1),

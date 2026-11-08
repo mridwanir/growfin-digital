@@ -1,12 +1,13 @@
 import {
-  UtensilsCrossed,
-  ShoppingBag,
-  Sparkles,
   Calendar,
   Clock3,
   Coffee,
   ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  UtensilsCrossed,
 } from 'lucide-react'
+import Image from 'next/image'
 
 import { useFnbDemo } from '../../core/FnbDemoContext'
 
@@ -63,10 +64,13 @@ export function ArtisanHeader() {
 
       <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-stone-950 text-white">
         <div className="absolute inset-0 z-0">
-          <img
-            src={heroImage}
+          <Image
             alt="Restaurant Ambiance"
-            className="h-full w-full scale-105 object-cover opacity-35 transition-transform duration-1000 ease-out"
+            className="scale-105 object-cover opacity-35 transition-transform duration-1000 ease-out"
+            fill
+            priority
+            sizes="100vw"
+            src={heroImage}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/60 to-transparent"></div>
         </div>

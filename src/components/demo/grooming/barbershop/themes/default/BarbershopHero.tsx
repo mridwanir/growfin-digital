@@ -1,5 +1,6 @@
-import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext'
+import Image from 'next/image'
 
+import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext'
 export function BarbershopHero() {
   const { client } = useGroomingDemo()
   const heroImage = client.heroImage || '/image/grooming/barber/1.jpg'
@@ -7,10 +8,13 @@ export function BarbershopHero() {
   return (
     <header className="relative flex h-screen items-center justify-center overflow-hidden">
       <div className="bg-vintage-900 absolute inset-0 z-0">
-        <img
-          src={heroImage}
+        <Image
           alt="Vintage Barbershop"
-          className="h-full w-full object-cover object-center opacity-40 mix-blend-luminosity"
+          className="object-cover object-center opacity-40 mix-blend-luminosity"
+          fill
+          priority
+          sizes="100vw"
+          src={heroImage}
         />
         <div className="from-vintage-900 via-vintage-900/60 absolute inset-0 bg-gradient-to-t to-transparent"></div>
       </div>

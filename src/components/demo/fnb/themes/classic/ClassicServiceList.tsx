@@ -1,6 +1,7 @@
 import type { MenuItem } from '@/lib/types'
 
 import { Plus } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 
 import { useScrollReveal } from '@/hooks/useScrollReveal'
@@ -33,11 +34,12 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
       className={`flex transform flex-col overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm transition-shadow hover:shadow-md ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}
     >
       <div className="relative h-48 overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={menuImageUrl}
+        <Image
           alt={item.name}
-          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+          className="object-cover transition-transform duration-500 hover:scale-105"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          src={menuImageUrl}
         />
         <div className="absolute top-3 right-3 rounded-lg bg-white px-2 py-1 text-xs font-semibold text-stone-900 shadow-sm">
           {item.category}

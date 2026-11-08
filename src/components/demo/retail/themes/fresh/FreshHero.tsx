@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { CountdownTimer } from '@/components/demo/CountdownTimer'
 
 import { useRetailDemo } from '../../core/RetailDemoContext'
@@ -143,11 +145,18 @@ export function FreshHero() {
           </div>
 
           <div className="relative lg:col-span-5">
-            <div className="group relative mx-auto max-w-sm rotate-1 transform overflow-hidden rounded-2xl border border-white/20 shadow-2xl transition duration-500 hover:rotate-0">
-              <img
-                src={spotlightProduct.imageUrl}
+            <div className="group relative mx-auto h-80 max-w-sm rotate-1 transform overflow-hidden rounded-2xl border border-white/20 shadow-2xl transition duration-500 hover:rotate-0 sm:h-96">
+              <Image
                 alt={spotlightProduct.name}
-                className="h-80 w-full object-cover sm:h-96"
+                className="object-cover"
+                fill
+                priority
+                sizes="(max-width: 640px) 100vw, 384px"
+                src={
+                  spotlightProduct.imageUrl ||
+                  client.heroImage ||
+                  'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80'
+                }
               />
               <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4">
                 <div className="mb-2 flex items-start justify-between gap-2">

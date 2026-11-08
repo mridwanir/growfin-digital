@@ -1,7 +1,14 @@
 {
   "$schema": "./node_modules/knip/schema.json",
   "entry": ["src/app/**/*.{js,jsx,ts,tsx}", "src/db/index.ts"],
-  "ignore": ["src/db/schema/*", "src/components/ui/*", "src/components/demo/**/*", "frontend/**/*"],
+  "ignore": [
+    "src/db/schema/*",
+    "src/components/ui/*",
+    "src/components/dashboard/**/*",
+    "src/components/demo/**/*",
+    "src/lib/storage/client.ts",
+    "frontend/**/*"
+  ],
   "ignoreDependencies": [],
   "treatConfigHintsAsErrors": true
 }

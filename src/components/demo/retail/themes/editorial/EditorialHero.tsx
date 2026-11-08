@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { CountdownTimer } from '@/components/demo/CountdownTimer'
 
 import { useRetailDemo } from '../../core/RetailDemoContext'
@@ -84,13 +86,15 @@ export function EditorialHero() {
             </div>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <img
+                <Image
+                  alt={spotlightProduct.name}
+                  className="h-16 w-16 rounded-sm object-cover transition group-hover:opacity-80"
+                  height={64}
                   src={
                     spotlightProduct.imageUrl ||
                     'https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=200&auto=format&fit=crop'
                   }
-                  alt={spotlightProduct.name}
-                  className="h-16 w-16 rounded-sm object-cover transition group-hover:opacity-80"
+                  width={64}
                 />
                 {client.marketing?.discountPercentage && (
                   <span className="absolute -top-1.5 -right-1.5 rounded-sm bg-[#121212] px-1 py-0.5 text-[8px] font-bold text-white">

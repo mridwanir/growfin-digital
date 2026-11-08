@@ -2,9 +2,11 @@
 
 import type { MenuItem } from '@/lib/types'
 
-import { hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog'
+import Image from 'next/image'
 
-import { useRetailDemo, getClothingPlaceholderImage } from '../../core/RetailDemoContext'
+import { getDiscountPercentage, hasValidDiscount, parseNumericPrice } from '@/lib/catalog'
+
+import { getClothingPlaceholderImage, useRetailDemo } from '../../core/RetailDemoContext'
 
 export function EditorialProductGrid() {
   const { client, setSelectedProductForCustomization, setIsCustomizationModalOpen } =
@@ -66,14 +68,12 @@ export function EditorialProductGrid() {
                 onClick={() => openQuickView(prod)}
               >
                 <div className="relative mb-6 aspect-[3/4] w-full overflow-hidden bg-[#F5F5F5]">
-                  <img
-                    src={prod.imageUrl || getClothingPlaceholderImage(prod.id)}
+                  <Image
                     alt={prod.name}
-                    className="h-full w-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
-                    onError={e => {
-                      e.currentTarget.src =
-                        'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=800&auto=format&fit=crop'
-                    }}
+                    className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    src={prod.imageUrl || getClothingPlaceholderImage(prod.id)}
                   />
 
                   {hasDiscount && (

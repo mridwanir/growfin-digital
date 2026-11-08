@@ -25,6 +25,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1164.0",
     "@base-ui/react": "^1.9.0",
     "@neon/auth": "^0.8.2",
     "@t3-oss/env-nextjs": "^0.13.11",

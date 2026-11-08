@@ -1,4 +1,5 @@
 import { Droplet } from 'lucide-react'
+import Image from 'next/image'
 
 import { useGroomingDemo } from '@/components/demo/grooming/core/GroomingDemoContext'
 
@@ -11,13 +12,16 @@ export function DayspaHero() {
       className="relative mt-20 flex min-h-[92vh] items-center justify-center overflow-hidden px-6 py-20"
     >
       <div className="absolute inset-0 z-0">
-        <img
+        <Image
+          alt="Spa Ambience"
+          className="object-cover object-center brightness-[0.88] contrast-105"
+          fill
+          priority
+          sizes="100vw"
           src={
             client.heroImage ||
             'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2000&q=80'
           }
-          alt="Spa Ambience"
-          className="h-full w-full object-cover object-center brightness-[0.88] contrast-105"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#2B2623]/75 via-[#2B2623]/45 to-transparent"></div>
       </div>

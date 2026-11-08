@@ -1,4 +1,5 @@
-import { Utensils, CalendarCheck } from 'lucide-react'
+import { CalendarCheck, Utensils } from 'lucide-react'
+import Image from 'next/image'
 
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
@@ -25,8 +26,14 @@ export function ClassicHeroScreen() {
     <header className="relative flex h-[80vh] min-h-[500px] w-full scroll-mt-20 items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={heroImg} alt="Fnb Interior" className="h-full w-full object-cover" />
+        <Image
+          alt="Fnb Interior"
+          className="object-cover"
+          fill
+          priority
+          sizes="100vw"
+          src={heroImg}
+        />
         <div className="absolute inset-0 bg-black/70"></div>
       </div>
 

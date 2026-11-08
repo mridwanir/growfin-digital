@@ -22,6 +22,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1),
 
     AWS_ACCESS_KEY_ID: z.string().min(1),
+    AWS_BUCKET_NAME: z.string().default('growfin-media'),
     AWS_ENDPOINT_URL_S3: z.url(),
     AWS_REGION: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),

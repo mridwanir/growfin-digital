@@ -2,6 +2,7 @@
 
 import type { MenuItem } from '@/lib/types'
 
+import Image from 'next/image'
 import { useState } from 'react'
 
 import { hasValidDiscount, getDiscountPercentage, parseNumericPrice } from '@/lib/catalog'
@@ -83,10 +84,12 @@ export function FreshProductGrid() {
                   className="relative aspect-[4/3] cursor-pointer overflow-hidden bg-zinc-100"
                   onClick={() => handleOpenProduct(item)}
                 >
-                  <img
-                    src={item.imageUrl || getRetailPlaceholderImage(item.id)}
+                  <Image
                     alt={item.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    src={item.imageUrl || getRetailPlaceholderImage(item.id)}
                   />
                   <span className="absolute top-3 left-3 rounded-md bg-zinc-900/80 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-md">
                     {item.category}

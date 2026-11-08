@@ -4,11 +4,11 @@
 
 **Blocked by:** 03: Passwordless Authentication Flow with Better Auth, 06: Stateless Subdomain Routing and Storefront Rendering
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Configure S3 client using `@aws-sdk/client-s3` connected to Neon Object Storage endpoints
-- [ ] Implement authenticated upload API endpoint (`/api/storage/upload`) allowing merchants to upload business logos, product photos, and hero banners
-- [ ] Implement authenticated deletion API endpoint (`/api/storage/delete`) that purges previous assets from the S3 bucket upon image replacement or product removal
-- [ ] Replace legacy Cloudinary upload widgets and Supabase Edge Function deletion calls across dashboard forms
-- [ ] Update storefront and dashboard media components to render uploaded assets using Next.js `<Image />` with automatic optimization
-- [ ] Automated integration test: upload a test image file, confirm S3 object persistence, and verify clean deletion from storage
+- [x] Configure S3 client using `@aws-sdk/client-s3` connected to Neon Object Storage endpoints
+- [x] Implement authenticated upload API endpoint (`/api/storage/upload`) allowing merchants to upload business logos, product photos, and hero banners
+- [x] Implement authenticated deletion API endpoint (`/api/storage/delete`) that purges previous assets from the S3 bucket upon image replacement or product removal
+- [x] Replace legacy Cloudinary upload widgets and Supabase Edge Function deletion calls across dashboard forms
+- [x] Update storefront and dashboard media components to render uploaded assets using Next.js `<Image />` with automatic optimization
+- [x] Automated integration test: upload a test image file, confirm S3 object persistence, and verify clean deletion from storage

@@ -1,6 +1,7 @@
 import type { MenuItem } from '@/lib/types'
 
 import { Plus } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 
 import { useFnbDemo } from '../../core/FnbDemoContext'
@@ -73,10 +74,12 @@ export function ArtisanMenu() {
           >
             <div>
               <div className="relative h-48 overflow-hidden bg-stone-100">
-                <img
-                  src={item.imageUrl || FNB_MENU_IMAGES[idx % FNB_MENU_IMAGES.length]}
+                <Image
                   alt={item.name}
-                  className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                  className="object-cover transition duration-300 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  src={item.imageUrl || FNB_MENU_IMAGES[idx % FNB_MENU_IMAGES.length]}
                 />
                 <span className="text-brand-primary absolute top-3 left-3 rounded-full bg-stone-900/80 px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase backdrop-blur-md">
                   {item.category}

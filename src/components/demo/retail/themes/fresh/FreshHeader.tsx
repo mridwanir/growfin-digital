@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { useRetailDemo } from '../../core/RetailDemoContext'
 
 export function FreshHeader() {
@@ -10,9 +12,21 @@ export function FreshHeader() {
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <a href="#" className="group flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--theme-color)] text-xl font-black text-white shadow-[var(--theme-color)]/20 shadow-md transition-transform group-hover:scale-105">
-            {client.name.charAt(0).toUpperCase()}
-          </div>
+          {client.logoUrl ? (
+            <div className="relative h-10 w-10 overflow-hidden rounded-xl">
+              <Image
+                alt={client.name}
+                className="object-cover"
+                fill
+                sizes="40px"
+                src={client.logoUrl}
+              />
+            </div>
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--theme-color)] text-xl font-black text-white shadow-[var(--theme-color)]/20 shadow-md transition-transform group-hover:scale-105">
+              {client.name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <div>
             <span className="block text-xl leading-none font-extrabold tracking-tight text-zinc-900">
               {client.name}

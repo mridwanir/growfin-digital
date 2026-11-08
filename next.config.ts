@@ -16,6 +16,39 @@ const nextConfig: NextConfig = {
 
   images: {
     qualities: [90, 100],
+    remotePatterns: [
+      {
+        hostname: '**.neon.tech',
+        protocol: 'https',
+      },
+      {
+        hostname: '**.amazonaws.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'images.unsplash.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'res.cloudinary.com',
+        protocol: 'https',
+      },
+      ...(process.env.AWS_ENDPOINT_URL_S3
+        ? [
+            (() => {
+              try {
+                const url = new URL(process.env.AWS_ENDPOINT_URL_S3)
+                return {
+                  hostname: url.hostname,
+                  protocol: url.protocol.replace(':', '') as 'http' | 'https',
+                }
+              } catch {
+                return null
+              }
+            })(),
+          ].filter((p): p is { hostname: string; protocol: 'http' | 'https' } => p !== null)
+        : []),
+    ],
   },
 
   turbopack: {

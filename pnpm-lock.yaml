@@ -221,6 +221,9 @@ importers:
       '@ashtrath/oxc-config':
         specifier: ^0.1.1
         version: 0.1.1(@typescript-eslint/typescript-estree@8.72.1(typescript@7.0.2))(@typescript-eslint/utils@8.72.1(eslint@10.14.0(jiti@2.7.0))(typescript@7.0.2))(eslint-plugin-sonarjs@4.2.2(eslint@10.14.0(jiti@2.7.0)))(eslint@10.14.0(jiti@2.7.0))(oxfmt@0.76.0)(oxlint-tailwindcss@1.17.1)(oxlint@1.91.0)(typescript@7.0.2)
+      '@ashtrath/skills':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@electric-sql/pglite-socket':
         specifier: ^0.2.18
         version: 0.2.18(@electric-sql/pglite-age@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_hashids@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_ivm@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_textsearch@0.0.17(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_uuidv7@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pgtap@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pgvector@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite@0.5.15)
@@ -305,6 +308,9 @@ packages:
         optional: true
       oxlint-tsgolint:
         optional: true
+
+  '@ashtrath/skills@0.1.0':
+    resolution: {integrity: sha512-iBtY127EUpzYd/bbX+He0jQiuFpW+1gBKulnfVO7ojlAjZY47DZnCJPnlHpgfNSyLo9E7O73HaIfwQmStYxvyQ==}
 
   '@aws-sdk/checksums@3.1002.3':
     resolution: {integrity: sha512-lBwLpni4uWNIH0UxgP8hR3XiGSunn9C7DrhzQzte/uc4chFpghMpf4GkiBrvvygs3NTp1VI5QdD9ZbRA0hM0OQ==}
@@ -4212,6 +4218,8 @@ snapshots:
       - eslint
       - supports-color
       - typescript
+
+  '@ashtrath/skills@0.1.0': {}
 
   '@aws-sdk/checksums@3.1002.3':
     dependencies:

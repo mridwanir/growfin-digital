@@ -19,6 +19,7 @@ allowBuilds:
   unrs-resolver: false
 minimumReleaseAgeExclude:
   - playwright-core@1.65.0
+  - '@ashtrath/skills@0.1.0'
 permissions:
   drizzle-kit:
     skills: true

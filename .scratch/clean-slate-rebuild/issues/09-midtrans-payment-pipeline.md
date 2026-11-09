@@ -4,11 +4,11 @@
 
 **Blocked by:** 06: Stateless Subdomain Routing and Storefront Rendering
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Implement `/api/checkout` generating Midtrans Snap payment tokens and inserting a `pending` row into `orders`
-- [ ] Implement `/api/checkout/verify` allowing the storefront checkout modal to poll payment settlement status
-- [ ] Implement `/api/midtrans/notification` webhook handler verifying Midtrans SHA-512 signatures
-- [ ] On verified settlement, execute an atomic Drizzle transaction updating order status to `paid` and upgrading tenant `status` to `'published'` with calculated `site_active_until`
-- [ ] Verify that paid, published websites render without trial lockouts or expired demo banners
-- [ ] Automated integration test: assert that valid signed notification payloads activate the tenant and mark orders paid, while tampered or invalid signatures are rejected with HTTP 401
+- [x] Implement `/api/checkout` generating Midtrans Snap payment tokens and inserting a `pending` row into `orders`
+- [x] Implement `/api/checkout/verify` allowing the storefront checkout modal to poll payment settlement status
+- [x] Implement `/api/midtrans/notification` webhook handler verifying Midtrans SHA-512 signatures
+- [x] On verified settlement, execute an atomic Drizzle transaction updating order status to `paid` and upgrading tenant `status` to `'published'` with calculated `site_active_until`
+- [x] Verify that paid, published websites render without trial lockouts or expired demo banners
+- [x] Automated integration test: assert that valid signed notification payloads activate the tenant and mark orders paid, while tampered or invalid signatures are rejected with HTTP 401

@@ -38,15 +38,14 @@ export function ArtisanContact() {
                 Online & Siap Membantu
               </div>
               <h3 className="text-lg font-bold text-stone-900">
-                {client.admin?.name || 'Admin Reservasi'}
+                Admin Reservasi
               </h3>
               <p className="text-xs text-stone-500">
-                {client.admin?.role || 'Concierge & Guest Relations'}
+                Concierge & Guest Relations
               </p>
               <p className="mt-2 text-xs text-stone-600 italic">
                 "
-                {client.admin?.sampleChat?.recommendationDesc ||
-                  'Butuh meja romantis, VIP Room, atau catering event?'}
+                Butuh meja romantis, VIP Room, atau catering event?
                 "
               </p>
             </div>

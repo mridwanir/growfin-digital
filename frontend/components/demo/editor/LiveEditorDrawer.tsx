@@ -15,7 +15,7 @@ interface LiveEditorDrawerProps {
   onChange: (updater: BusinessDemo | ((prev: BusinessDemo) => BusinessDemo)) => void;
   layoutVariant: string;
   onLayoutChange: (newLayout: string) => void;
-  templateType: 'fnb' | 'service' | 'retail' | 'grooming';
+  templateType: 'fnb' | 'retail' | string;
   slug: string;
   onUpgradeClick: () => void;
 }
@@ -179,33 +179,15 @@ export function LiveEditorDrawer({
         { id: 'fnb-theme-bold', label: 'Bold' },
         { id: 'fnb-theme-vibrant', label: 'Vibrant' }
       ];
-    } else if (templateType === 'grooming') {
-      if (client.category.toLowerCase().includes('barber') || client.category.toLowerCase().includes('pangkas') || client.category.toLowerCase().includes('cukur')) {
-        return [
-          { id: 'grooming-barbershop-default', label: 'Barbershop Vintage' },
-          { id: 'grooming-barbershop-light', label: 'Salon Chic' }
-        ];
-      }
-      if (client.category.toLowerCase().includes('nail') || client.category.toLowerCase().includes('manicure') || client.category.toLowerCase().includes('pedicure')) {
-        return [
-          { id: 'grooming-nailspa-default', label: 'Aesthetic Nail Studio' }
-        ];
-      }
-      return [
-        { id: 'grooming-beautynspa-default', label: 'Beauty Minimalist' },
-        { id: 'grooming-beautynspa-lumiere', label: 'Beauty Lumiere' },
-        { id: 'grooming-beautynspa-dayspa', label: 'Beauty Sanctuary' }
-      ];
-    } else if (templateType === 'retail') {
-      return [
-        { id: 'retail-theme-urban', label: 'Urban Minimalist' },
-        { id: 'retail-theme-editorial', label: 'Editorial Layout' },
-        { id: 'retail-theme-tech', label: 'Modern Aesthetic' },
-        { id: 'retail-theme-dark', label: 'Dark Mode' },
-        { id: 'retail-theme-fresh', label: 'Fresh Vibe' },
-        { id: 'retail-theme-artisan', label: 'Artisan Crafted' }
-      ];
     }
+    return [
+      { id: 'retail-theme-urban', label: 'Urban Minimalist' },
+      { id: 'retail-theme-editorial', label: 'Editorial Layout' },
+      { id: 'retail-theme-tech', label: 'Modern Aesthetic' },
+      { id: 'retail-theme-dark', label: 'Dark Mode' },
+      { id: 'retail-theme-fresh', label: 'Fresh Vibe' },
+      { id: 'retail-theme-artisan', label: 'Artisan Crafted' }
+    ];
     return [{ id: layoutVariant, label: 'Theme Default' }];
   };
   const themes = getAvailableThemes();
@@ -265,24 +247,24 @@ export function LiveEditorDrawer({
         : {}),
       ...(canEditAdvancedVariants && cleanVariants.length > 0
         ? {
-            variants: cleanVariants.map((v) => ({
-              name: (v.name || '').trim(),
-              options: (v.options || [])
-                .filter((opt) => (typeof opt === 'string' ? opt.trim() : opt.label?.trim()))
-                .map((opt) => {
-                  const norm = normalizeVariantOption(opt);
-                  return { label: norm.label, priceModifier: norm.priceModifier };
-                }),
-            })),
-          }
+          variants: cleanVariants.map((v) => ({
+            name: (v.name || '').trim(),
+            options: (v.options || [])
+              .filter((opt) => (typeof opt === 'string' ? opt.trim() : opt.label?.trim()))
+              .map((opt) => {
+                const norm = normalizeVariantOption(opt);
+                return { label: norm.label, priceModifier: norm.priceModifier };
+              }),
+          })),
+        }
         : {}),
       ...(canEditAdvancedVariants && cleanSpecs.length > 0
         ? {
-            specifications: cleanSpecs.map((s) => ({
-              label: (s.label || '').trim(),
-              value: (s.value || '').trim(),
-            })),
-          }
+          specifications: cleanSpecs.map((s) => ({
+            label: (s.label || '').trim(),
+            value: (s.value || '').trim(),
+          })),
+        }
         : {}),
     };
     if (parsedOriginalPrice === undefined) {
@@ -383,12 +365,12 @@ export function LiveEditorDrawer({
         imageGallery: Array.isArray(item.imageGallery) ? [...item.imageGallery] : [],
         variants: Array.isArray(item.variants)
           ? item.variants.map((v) => ({
-              name: v.name || '',
-              options: (v.options || []).map((opt) => {
-                const norm = normalizeVariantOption(opt);
-                return { label: norm.label, priceModifier: norm.priceModifier };
-              }),
-            }))
+            name: v.name || '',
+            options: (v.options || []).map((opt) => {
+              const norm = normalizeVariantOption(opt);
+              return { label: norm.label, priceModifier: norm.priceModifier };
+            }),
+          }))
           : [],
         specifications: Array.isArray(item.specifications)
           ? item.specifications.map((s) => ({ label: s.label || '', value: s.value || '' }))
@@ -724,126 +706,117 @@ export function LiveEditorDrawer({
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Atur Susunan Halaman</label>
                       <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Urutan Seksi</span>
                     </div>
-                    {templateType === 'service' || templateType === 'grooming' ? (
-                      <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm text-xs text-slate-500 leading-relaxed">
-                        Susunan tata letak halaman untuk bisnis <span className="font-bold text-slate-700 capitalize">{templateType}</span> sudah dirancang optimal khusus untuk pengalaman reservasi & booking pelanggan.
-                      </div>
-                    ) : (
-                      <div className="bg-white border border-slate-200 shadow-sm p-2 rounded-xl">
-                        {(() => {
-                          const defaultOrder = templateType === 'retail'
-                            ? ['hero', 'lookbook', 'katalog', 'testimoni']
-                            : (normalizedLayoutVariant === 'fnb-theme-classic'
-                              ? ['hero', 'gallery', 'reviews', 'menu']
-                              : ['hero', 'menu', 'gallery', 'reviews']);
-                          const currentOrder = client.sectionOrder?.length ? client.sectionOrder : defaultOrder;
+                    <div className="bg-white border border-slate-200 shadow-sm p-2 rounded-xl">
+                      {(() => {
+                        const defaultOrder = templateType === 'retail'
+                          ? ['hero', 'lookbook', 'katalog', 'testimoni']
+                          : (normalizedLayoutVariant === 'fnb-theme-classic'
+                            ? ['hero', 'gallery', 'reviews', 'menu']
+                            : ['hero', 'menu', 'gallery', 'reviews']);
+                        const currentOrder = client.sectionOrder?.length ? client.sectionOrder : defaultOrder;
 
-                          const moveUp = (index: number) => {
-                            if (index <= 1) return;
-                            const newOrder = [...currentOrder];
-                            [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-                            handleChange('sectionOrder', newOrder);
-                          };
+                        const moveUp = (index: number) => {
+                          if (index <= 1) return;
+                          const newOrder = [...currentOrder];
+                          [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+                          handleChange('sectionOrder', newOrder);
+                        };
 
-                          const moveDown = (index: number) => {
-                            if (index === currentOrder.length - 1 || index === 0) return;
-                            const newOrder = [...currentOrder];
-                            [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
-                            handleChange('sectionOrder', newOrder);
-                          };
+                        const moveDown = (index: number) => {
+                          if (index === currentOrder.length - 1 || index === 0) return;
+                          const newOrder = [...currentOrder];
+                          [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
+                          handleChange('sectionOrder', newOrder);
+                        };
 
-                          const toggleHideSection = (sectionId: string) => {
-                            const currentHidden = client.hiddenSections || [];
-                            const isHidden = currentHidden.includes(sectionId);
-                            const nextHidden = isHidden
-                              ? currentHidden.filter(id => id !== sectionId)
-                              : [...currentHidden, sectionId];
-                            handleChange('hiddenSections', nextHidden);
-                          };
+                        const toggleHideSection = (sectionId: string) => {
+                          const currentHidden = client.hiddenSections || [];
+                          const isHidden = currentHidden.includes(sectionId);
+                          const nextHidden = isHidden
+                            ? currentHidden.filter(id => id !== sectionId)
+                            : [...currentHidden, sectionId];
+                          handleChange('hiddenSections', nextHidden);
+                        };
 
-                          const retailLabels: Record<string, string> = {
-                            hero: 'Banner Utama',
-                            lookbook: 'Galeri Lookbook',
-                            katalog: 'Katalog Produk',
-                            testimoni: 'Ulasan Pelanggan'
-                          };
+                        const retailLabels: Record<string, string> = {
+                          hero: 'Banner Utama',
+                          lookbook: 'Galeri Lookbook',
+                          katalog: 'Katalog Produk',
+                          testimoni: 'Ulasan Pelanggan'
+                        };
 
-                          const fnbLabels: Record<string, string> = {
-                            hero: 'Banner Utama',
-                            menu: 'Daftar Menu',
-                            gallery: 'Galeri Foto',
-                            reviews: 'Ulasan Pelanggan'
-                          };
+                        const fnbLabels: Record<string, string> = {
+                          hero: 'Banner Utama',
+                          menu: 'Daftar Menu',
+                          gallery: 'Galeri Foto',
+                          reviews: 'Ulasan Pelanggan'
+                        };
 
-                          const getSectionLabel = (id: string) => {
-                            if (templateType === 'retail') {
-                              return retailLabels[id] || id;
-                            }
-                            return fnbLabels[id] || id;
-                          };
+                        const getSectionLabel = (id: string) => {
+                          if (templateType === 'retail') {
+                            return retailLabels[id] || id;
+                          }
+                          return fnbLabels[id] || id;
+                        };
 
-                          return currentOrder.map((sectionId, idx) => {
-                            const isHidden = (client.hiddenSections || []).includes(sectionId);
-                            return (
-                              <div
-                                key={sectionId}
-                                className={`flex items-center justify-between p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors rounded-lg ${
-                                  isHidden ? 'bg-slate-50/80 opacity-60' : ''
+                        return currentOrder.map((sectionId, idx) => {
+                          const isHidden = (client.hiddenSections || []).includes(sectionId);
+                          return (
+                            <div
+                              key={sectionId}
+                              className={`flex items-center justify-between p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors rounded-lg ${isHidden ? 'bg-slate-50/80 opacity-60' : ''
                                 }`}
-                              >
-                                <span className={`text-sm font-bold flex items-center gap-2 ${
-                                  sectionId === 'hero' ? 'text-slate-400' : isHidden ? 'text-slate-400 line-through' : 'text-slate-700'
+                            >
+                              <span className={`text-sm font-bold flex items-center gap-2 ${sectionId === 'hero' ? 'text-slate-400' : isHidden ? 'text-slate-400 line-through' : 'text-slate-700'
                                 }`}>
-                                  {getSectionLabel(sectionId)}
-                                  {sectionId === 'hero' && (
-                                    <span className="text-[10px] text-slate-400 font-normal ml-1">(Tetap di atas)</span>
-                                  )}
-                                  {isHidden && (
-                                    <span className="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-normal no-underline">
-                                      Disembunyikan
-                                    </span>
-                                  )}
-                                </span>
-                                {sectionId !== 'hero' && (
-                                  <div className="flex items-center gap-1">
-                                    <button
-                                      type="button"
-                                      onClick={() => toggleHideSection(sectionId)}
-                                      className={`p-1.5 rounded-md transition-all ${
-                                        isHidden
-                                          ? 'text-amber-600 bg-amber-50 hover:bg-amber-100 hover:scale-105'
-                                          : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
-                                      }`}
-                                      title={isHidden ? 'Tampilkan kembali seksi ini' : 'Sembunyikan seksi ini'}
-                                    >
-                                      {isHidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => moveUp(idx)}
-                                      disabled={idx <= 1}
-                                      className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30 transition-colors"
-                                      title="Geser ke atas"
-                                    >
-                                      ↑
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => moveDown(idx)}
-                                      disabled={idx === currentOrder.length - 1}
-                                      className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30 transition-colors"
-                                      title="Geser ke bawah"
-                                    >
-                                      ↓
-                                    </button>
-                                  </div>
+                                {getSectionLabel(sectionId)}
+                                {sectionId === 'hero' && (
+                                  <span className="text-[10px] text-slate-400 font-normal ml-1">(Tetap di atas)</span>
                                 )}
-                              </div>
-                            );
-                          });
-                        })()}
-                      </div>
-                    )}
+                                {isHidden && (
+                                  <span className="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-normal no-underline">
+                                    Disembunyikan
+                                  </span>
+                                )}
+                              </span>
+                              {sectionId !== 'hero' && (
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => toggleHideSection(sectionId)}
+                                    className={`p-1.5 rounded-md transition-all ${isHidden
+                                        ? 'text-amber-600 bg-amber-50 hover:bg-amber-100 hover:scale-105'
+                                        : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+                                      }`}
+                                    title={isHidden ? 'Tampilkan kembali seksi ini' : 'Sembunyikan seksi ini'}
+                                  >
+                                    {isHidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => moveUp(idx)}
+                                    disabled={idx <= 1}
+                                    className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30 transition-colors"
+                                    title="Geser ke atas"
+                                  >
+                                    ↑
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => moveDown(idx)}
+                                    disabled={idx === currentOrder.length - 1}
+                                    className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-md disabled:opacity-30 transition-colors"
+                                    title="Geser ke bawah"
+                                  >
+                                    ↓
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
                   </div>
 
                   <div className="space-y-4 pt-6 border-t border-slate-200">
@@ -935,9 +908,8 @@ export function LiveEditorDrawer({
                         placeholder="Misal: Pesan Sekarang / Beli Langsung"
                         value={client.uiLabels?.buyButtonText || ''}
                         onChange={(e) => handleChange('uiLabels', { ...client.uiLabels, buyButtonText: e.target.value })}
-                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${
-                          !limits.promoFeatures ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
-                        }`}
+                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${!limits.promoFeatures ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
+                          }`}
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -950,9 +922,8 @@ export function LiveEditorDrawer({
                         placeholder="Misal: Inspirasi Setup / Galeri"
                         value={client.uiLabels?.lookbookButtonText || ''}
                         onChange={(e) => handleChange('uiLabels', { ...client.uiLabels, lookbookButtonText: e.target.value })}
-                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${
-                          !limits.promoFeatures ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
-                        }`}
+                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${!limits.promoFeatures ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
+                          }`}
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -965,9 +936,8 @@ export function LiveEditorDrawer({
                         placeholder="Misal: Liat Menu Lainnya / Buka Etalase"
                         value={client.uiLabels?.viewAllButtonText || ''}
                         onChange={(e) => handleChange('uiLabels', { ...client.uiLabels, viewAllButtonText: e.target.value })}
-                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${
-                          !limits.promoFeatures ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
-                        }`}
+                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${!limits.promoFeatures ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
+                          }`}
                       />
                     </div>
                   </div>
@@ -1015,9 +985,8 @@ export function LiveEditorDrawer({
                         placeholder="Misal: Promo Gila! / Penawaran Terbatas"
                         value={client.marketing?.promoLabel || ''}
                         onChange={(e) => handleChange('marketing', { ...client.marketing, promoLabel: e.target.value })}
-                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${
-                          !canEditPromo ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
-                        }`}
+                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${!canEditPromo ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
+                          }`}
                       />
                     </div>
 
@@ -1033,9 +1002,8 @@ export function LiveEditorDrawer({
                         placeholder="Misal: 25"
                         value={client.marketing?.discountPercentage ?? ''}
                         onChange={(e) => handleChange('marketing', { ...client.marketing, discountPercentage: Number(e.target.value) })}
-                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${
-                          !canEditPromo ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
-                        }`}
+                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${!canEditPromo ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
+                          }`}
                       />
                     </div>
 
@@ -1048,9 +1016,8 @@ export function LiveEditorDrawer({
                         disabled={!canEditPromo}
                         value={client.marketing?.flashSaleEnd ? client.marketing.flashSaleEnd.slice(0, 16) : ''}
                         onChange={(e) => handleChange('marketing', { ...client.marketing, flashSaleEnd: e.target.value })}
-                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${
-                          !canEditPromo ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
-                        }`}
+                        className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none shadow-sm transition-all ${!canEditPromo ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : ''
+                          }`}
                       />
                       <p className="text-[11px] text-slate-400">
                         Atur batas waktu untuk memunculkan badge countdown atau batas akhir promo di etalase/banner.
@@ -1442,7 +1409,7 @@ export function LiveEditorDrawer({
                                 <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                                   <LayoutTemplate className="w-4 h-4 text-slate-500" />
                                   Grup Varian & Tambahan Harga
-                                 </label>
+                                </label>
                                 <button
                                   type="button"
                                   onClick={handleAddVariantGroup}

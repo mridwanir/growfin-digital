@@ -6,6 +6,7 @@ import { env } from '@/lib/env'
 import { generateWithGemini } from '@/lib/generator/gemini'
 import { persistGeneratedWebsite } from '@/lib/generator/persistence'
 import { generateInputSchema } from '@/lib/generator/schema'
+import { resolveArchetype } from '@/lib/storefront/mapper'
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,6 +29,20 @@ export async function POST(request: NextRequest) {
     const input = validationResult.data
 
     const generatedData = await generateWithGemini(input)
+    // Map grooming/service categories and layouts to retail archetype
+    const archetype = resolveArchetype(generatedData.business.category)
+    const currentLayout = generatedData.business.themeConfig?.layoutId
+    const isLegacyLayout =
+      currentLayout?.startsWith('grooming') || currentLayout?.startsWith('service')
+    const needsRetailLayout =
+      archetype === 'retail' && (!currentLayout || !currentLayout.startsWith('retail'))
+
+    if (isLegacyLayout || needsRetailLayout) {
+      generatedData.business.themeConfig = {
+        ...generatedData.business.themeConfig,
+        layoutId: 'retail-theme-urban',
+      }
+    }
     const { tenant } = await persistGeneratedWebsite(generatedData)
 
     const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN

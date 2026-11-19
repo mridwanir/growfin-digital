@@ -12,18 +12,6 @@ function getFnbBusinessType(cat: string): string {
   return 'Restaurant'
 }
 
-function getGroomingBusinessType(cat: string): string {
-  if (cat.includes('barber') || cat.includes('cukur')) return 'Barbershop'
-  if (cat.includes('beauty') || cat.includes('salon')) return 'BeautySalon'
-  return 'DaySpa'
-}
-
-function getServiceBusinessType(cat: string): string {
-  if (cat.includes('klinik') || cat.includes('dokter')) return 'MedicalClinic'
-  if (cat.includes('gigi') || cat.includes('dental')) return 'Dentist'
-  if (cat.includes('bengkel')) return 'AutoRepair'
-  return 'ProfessionalService'
-}
 
 export function getLocalBusinessType(
   category: string = '',
@@ -31,8 +19,6 @@ export function getLocalBusinessType(
 ): string {
   const cat = category.toLowerCase()
   if (templateType === 'fnb') return getFnbBusinessType(cat)
-  if (templateType === 'grooming') return getGroomingBusinessType(cat)
-  if (templateType === 'service') return getServiceBusinessType(cat)
   return 'Store'
 }
 
@@ -134,32 +120,32 @@ export function buildLocalBusinessJsonLd(
     ...(client.googleMapsUrl ? { hasMap: client.googleMapsUrl } : {}),
     ...(client.rating && client.reviewCount
       ? {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: client.rating,
-            reviewCount: client.reviewCount,
-          },
-        }
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: client.rating,
+          reviewCount: client.reviewCount,
+        },
+      }
       : {}),
     ...(client.openTime && client.closeTime
       ? {
-          openingHoursSpecification: [
-            {
-              '@type': 'OpeningHoursSpecification',
-              closes: client.closeTime,
-              opens: client.openTime,
-              dayOfWeek: [
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday',
-              ],
-            },
-          ],
-        }
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            closes: client.closeTime,
+            opens: client.openTime,
+            dayOfWeek: [
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday',
+            ],
+          },
+        ],
+      }
       : {}),
   }
 }

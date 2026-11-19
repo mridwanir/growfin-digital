@@ -5,9 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { FnbDemoClient } from '@/components/demo/fnb-demo-client'
-import { GroomingDemoClient } from '@/components/demo/grooming-demo-client'
 import { RetailDemoClient } from '@/components/demo/retail-demo-client'
-import { ServiceDemoClient } from '@/components/demo/service-demo-client'
 import { calculateItemPrice, formatVariantOptionDisplay, stackCartItem } from '@/lib/catalog'
 
 const mockFnbClient: BusinessDemo = {
@@ -83,47 +81,6 @@ const mockRetailClient: BusinessDemo = {
   ],
 }
 
-const mockGroomingClient: BusinessDemo = {
-  ...mockFnbClient,
-  name: 'Gentlemen Classic Barber',
-  category: 'Barbershop & Grooming',
-  themeColor: '#1c1917',
-  menu: [
-    {
-      id: 201,
-      name: 'Gentleman Cut & Wash',
-      category: 'Haircut',
-      desc: 'Potong rambut klasik dengan hot towel',
-      duration: 45,
-      price: '65000',
-    },
-  ],
-}
-
-const mockServiceClient: BusinessDemo = {
-  ...mockFnbClient,
-  name: 'Smile Dental Care',
-  category: 'Klinik Gigi & Dental Care',
-  themeColor: '#0284c7',
-  menu: [
-    {
-      id: 301,
-      name: 'Ultrasonic Scaling',
-      category: 'Pembersihan',
-      desc: 'Pembersihan karang gigi dengan teknologi ultrasonic',
-      duration: 30,
-      price: '250000',
-    },
-  ],
-  practitioners: [
-    {
-      id: 'doc-1',
-      name: 'drg. Rian Hidayat',
-      avatarEmoji: '👨‍⚕️',
-      role: 'Dokter Gigi Spesialis Ortodonti',
-    },
-  ],
-}
 
 describe('storefront theme rendering, catalog & variant ordering (seam 3)', () => {
   describe('catalog variant selection & cart math', () => {
@@ -238,43 +195,6 @@ describe('storefront theme rendering, catalog & variant ordering (seam 3)', () =
     }
   })
 
-  describe('grooming visual themes rendering', () => {
-    const groomingThemes = [
-      'grooming-barbershop-default',
-      'grooming-barbershop-light',
-      'grooming-beautynspa-default',
-      'grooming-beautynspa-dayspa',
-      'grooming-beautynspa-lumiere',
-      'grooming-nailspa-default',
-    ]
-
-    for (const theme of groomingThemes) {
-      it(`renders Grooming theme variant "${theme}" without crashing`, () => {
-        const markup = renderToStaticMarkup(
-          React.createElement(GroomingDemoClient, {
-            client: mockGroomingClient,
-            themeVariant: theme,
-          }),
-        )
-
-        expect(markup).toContain('Gentlemen Classic Barber')
-      })
-    }
-  })
-
-  describe('service archetype rendering', () => {
-    it('renders Service template with practitioner and service pricing lists', () => {
-      const markup = renderToStaticMarkup(
-        React.createElement(ServiceDemoClient, {
-          client: mockServiceClient,
-        }),
-      )
-
-      expect(markup).toContain('Smile Dental Care')
-      expect(markup).toContain('drg. Rian Hidayat')
-      expect(markup).toContain('Ultrasonic Scaling')
-    })
-  })
 
   describe('whatsApp link integration', () => {
     it('generates properly formatted WhatsApp ordering link with catalog items', () => {

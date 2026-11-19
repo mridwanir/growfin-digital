@@ -45,17 +45,6 @@ export interface MenuItem {
   variants?: MenuItemVariant[]
   addons?: MenuItemAddon[]
 }
-
-export interface PractitionerInfo {
-  id: string
-  name: string
-  role: string
-  avatarEmoji?: string
-  avatarUrl?: string
-  licenseNumber?: string
-  schedule?: string
-}
-
 export interface ReviewInfo {
   authorName: string
   name?: string
@@ -64,25 +53,6 @@ export interface ReviewInfo {
   time?: string
   profilePhotoUrl?: string
 }
-
-export interface DoctorInfo {
-  avatarUrl?: string
-  name?: string
-  role?: string
-  sampleChat?: string
-  [key: string]: unknown
-}
-
-export interface AdminInfo {
-  [key: string]: unknown
-  name?: string
-  role?: string
-  sampleChat?: {
-    [key: string]: unknown
-    recommendationDesc?: string
-  }
-}
-
 export interface LookbookItem {
   id: string
   name: string
@@ -107,7 +77,6 @@ export interface BusinessDemo {
   waNumber: string
   tagline: string
   iconEmoji: string
-  practitioners?: PractitionerInfo[]
   categories: string[]
   menu: MenuItem[]
   reviews?: ReviewInfo[]
@@ -158,8 +127,6 @@ export interface BusinessDemo {
     status: 'active' | 'pending' | 'processing' | 'rejected'
     whatsappContact?: string
   }
-  admin?: AdminInfo | null
-  doctor?: DoctorInfo | null
   metadata?: Record<string, unknown> | null
   status?: string
 }

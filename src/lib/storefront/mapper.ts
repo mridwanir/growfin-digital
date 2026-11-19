@@ -6,12 +6,11 @@ import type {
   LookbookItem,
   MenuItem,
   MenuItemVariant,
-  PractitionerInfo,
   ReviewInfo,
   SpecificationItem,
 } from '@/lib/types'
 
-export type StorefrontArchetype = 'fnb' | 'retail' | 'grooming' | 'service'
+export type StorefrontArchetype = 'fnb' | 'retail'
 
 export interface RelationalVariantOptionInput {
   id?: string
@@ -60,9 +59,9 @@ export interface RelationalStorefrontInput {
 export type RelationalStorefrontInputParam =
   | RelationalStorefrontInput
   | (Tenant & {
-      categories?: Category[]
-      products?: RelationalStorefrontProductInput[]
-    })
+    categories?: Category[]
+    products?: RelationalStorefrontProductInput[]
+  })
 
 const ARCHETYPE_KEYWORDS = {
   fnb: [
@@ -87,27 +86,6 @@ const ARCHETYPE_KEYWORDS = {
     'juice',
     'f&b',
     'fnb',
-  ],
-  grooming: [
-    'kecantikan',
-    'salon',
-    'spa',
-    'cukur',
-    'barber',
-    'pijat',
-    'massage',
-    'terapi',
-    'beauty',
-    'hair',
-    'nail',
-    'skin care',
-    'skincare',
-    'make-up',
-    'makeup',
-    'artist',
-    'klinik kecantikan',
-    'aesthetic',
-    'grooming',
   ],
   retail: [
     'toko',
@@ -140,8 +118,25 @@ const ARCHETYPE_KEYWORDS = {
     'shoe',
     'hardware',
     'retail',
-  ],
-  service: [
+    'kecantikan',
+    'salon',
+    'spa',
+    'cukur',
+    'barber',
+    'pijat',
+    'massage',
+    'terapi',
+    'beauty',
+    'hair',
+    'nail',
+    'skin care',
+    'skincare',
+    'make-up',
+    'makeup',
+    'artist',
+    'klinik kecantikan',
+    'aesthetic',
+    'grooming',
     'klinik',
     'dokter',
     'gigi',
@@ -165,7 +160,6 @@ interface ArchetypeDefaultConfig {
   emoji: string
   fbType?: 'DINE_IN' | 'QUICK_SERVICE' | 'PRE_ORDER'
   lookbook: LookbookItem[]
-  practitioners: PractitionerInfo[]
   reviews: ReviewInfo[]
   themeColor: string
 }
@@ -174,7 +168,6 @@ const ARCHETYPE_DEFAULTS: Record<StorefrontArchetype, ArchetypeDefaultConfig> = 
   fnb: {
     emoji: '☕',
     fbType: 'DINE_IN',
-    practitioners: [{ id: '1', name: 'Barista / Chef', avatarEmoji: '👨‍🍳', role: 'Staff' }],
     themeColor: '#78350f',
     lookbook: [
       {
@@ -205,49 +198,8 @@ const ARCHETYPE_DEFAULTS: Record<StorefrontArchetype, ArchetypeDefaultConfig> = 
       },
     ],
   },
-  grooming: {
-    emoji: '✂️',
-    themeColor: '#c2410c',
-    lookbook: [
-      {
-        id: 'lb-grooming-1',
-        name: 'Precision Styling & Haircut',
-        desc: 'Potongan rambut presisi dengan sentuhan stylist profesional',
-        imageUrl: '/image/grooming/lookbook1.jpg',
-      },
-      {
-        id: 'lb-grooming-2',
-        name: 'Relaxing Spa & Treatment',
-        desc: 'Perawatan relaksasi kepala dan tubuh menyegarkan',
-        imageUrl: '/image/grooming/lookbook2.jpg',
-      },
-    ],
-    practitioners: [
-      {
-        id: '1',
-        name: 'Master Stylist / Terapis',
-        avatarEmoji: '💇',
-        role: 'Professional',
-      },
-    ],
-    reviews: [
-      {
-        authorName: 'Natasha W.',
-        rating: 5,
-        text: 'Hasil perawatan sangat rapi dan teliti. Tempatnya estetik dan staf sangat ramah.',
-        time: 'Kemarin',
-      },
-      {
-        authorName: 'Adrian K.',
-        rating: 5,
-        text: 'Potongan rambut sangat presisi sesuai ekspektasi. Pasti akan kembali lagi.',
-        time: '3 hari lalu',
-      },
-    ],
-  },
   retail: {
     emoji: '🛍️',
-    practitioners: [{ id: '1', name: 'Customer Service', avatarEmoji: '👨‍💼', role: 'Staff' }],
     themeColor: '#18181b',
     lookbook: [
       {
@@ -278,46 +230,6 @@ const ARCHETYPE_DEFAULTS: Record<StorefrontArchetype, ArchetypeDefaultConfig> = 
       },
     ],
   },
-  service: {
-    emoji: '🩺',
-    themeColor: '#0284c7',
-    lookbook: [
-      {
-        id: 'lb-service-1',
-        name: 'Comprehensive Inspection & Diagnostic',
-        desc: 'Pemeriksaan menyeluruh dengan peralatan modern berstandar tinggi',
-        imageUrl: '/image/service/lookbook1.jpg',
-      },
-      {
-        id: 'lb-service-2',
-        name: 'Certified Professional Care',
-        desc: 'Penanganan cepat dan tepat oleh tenaga ahli bersertifikasi',
-        imageUrl: '/image/service/lookbook2.jpg',
-      },
-    ],
-    practitioners: [
-      {
-        id: '1',
-        name: 'Dokter / Teknisi Spesialis',
-        avatarEmoji: '👨‍⚕️',
-        role: 'Professional',
-      },
-    ],
-    reviews: [
-      {
-        authorName: 'Budi Santoso',
-        rating: 5,
-        text: 'Pengerjaan cepat, transparan, dan bergaransi resmi. Sangat memuaskan!',
-        time: 'Kemarin',
-      },
-      {
-        authorName: 'Siti Rahma',
-        rating: 5,
-        text: 'Teknisi ramah dan menjelaskan masalah dengan jelas sebelum mulai perbaikan.',
-        time: '4 hari lalu',
-      },
-    ],
-  },
 }
 
 /**
@@ -327,14 +239,27 @@ export function resolveArchetype(category: string | null | undefined): Storefron
   if (!category) return 'retail'
   const normalized = category.toLowerCase().trim()
 
-  for (const keyword of ARCHETYPE_KEYWORDS.grooming) {
-    if (normalized.includes(keyword)) return 'grooming'
+  // Salon, barbershop, spa, and clinic categories resolve cleanly to retail
+  const legacyRetailCategories = [
+    'barber',
+    'salon',
+    'spa',
+    'cukur',
+    'klinik',
+    'dokter',
+    'pijat',
+    'massage',
+  ]
+  for (const keyword of legacyRetailCategories) {
+    if (normalized.includes(keyword)) return 'retail'
   }
+
   for (const keyword of ARCHETYPE_KEYWORDS.fnb) {
-    if (normalized.includes(keyword)) return 'fnb'
-  }
-  for (const keyword of ARCHETYPE_KEYWORDS.service) {
-    if (normalized.includes(keyword)) return 'service'
+    if (keyword === 'bar') {
+      if (/\bbar\b/.test(normalized)) return 'fnb'
+    } else if (normalized.includes(keyword)) {
+      return 'fnb'
+    }
   }
   for (const keyword of ARCHETYPE_KEYWORDS.retail) {
     if (normalized.includes(keyword)) return 'retail'
@@ -536,12 +461,6 @@ export function mapTenantToBusinessDemo(input: RelationalStorefrontInputParam): 
   const lookbook: LookbookItem[] =
     Array.isArray(rawLookbook) && rawLookbook.length > 0 ? rawLookbook : defaults.lookbook
 
-  // Practitioners fallback
-  const rawPractitioners = (branding['practitioners'] as PractitionerInfo[]) || []
-  const practitioners: PractitionerInfo[] =
-    Array.isArray(rawPractitioners) && rawPractitioners.length > 0
-      ? rawPractitioners
-      : defaults.practitioners
 
   // Social media mapping & fallbacks
   const socialMedia = {
@@ -596,7 +515,6 @@ export function mapTenantToBusinessDemo(input: RelationalStorefrontInputParam): 
     openTime,
     package_tier: tenant.packageTier,
     phone: tenant.phone || '',
-    practitioners,
     rating,
     reviewCount,
     reviews,

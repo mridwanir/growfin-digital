@@ -85,8 +85,8 @@ describe('Storefront Data Adapter - Archetype Resolution', () => {
 
     expect(fnbType).toBe('fnb')
     expect(retailType).toBe('retail')
-    expect(groomingType).toBe('grooming')
-    expect(serviceType).toBe('service')
+    expect(groomingType).toBe('retail')
+    expect(serviceType).toBe('retail')
     expect(fallbackType).toBe('retail')
   })
 
@@ -404,8 +404,6 @@ describe('Storefront Data Adapter - Contract Mapper (Seam 1)', () => {
       expect(Array.isArray(demo.lookbook)).toBe(true)
       expect(Array.isArray(demo.reviews)).toBe(true)
       expect(demo.reviews?.length).toBeGreaterThanOrEqual(1)
-      expect(Array.isArray(demo.practitioners)).toBe(true)
-      expect(demo.practitioners?.length).toBeGreaterThanOrEqual(1)
 
       // Zero missing keys contract verification
       const requiredKeys = [
@@ -430,7 +428,6 @@ describe('Storefront Data Adapter - Contract Mapper (Seam 1)', () => {
         'openTime',
         'package_tier',
         'phone',
-        'practitioners',
         'rating',
         'reviewCount',
         'reviews',
@@ -496,8 +493,6 @@ describe('Storefront Data Adapter - Contract Mapper (Seam 1)', () => {
     expect(demo.lookbook?.length).toBeGreaterThanOrEqual(1)
     expect(Array.isArray(demo.reviews)).toBe(true)
     expect(demo.reviews?.length).toBeGreaterThanOrEqual(1)
-    expect(Array.isArray(demo.practitioners)).toBe(true)
-    expect(demo.practitioners?.length).toBeGreaterThanOrEqual(1)
     expect(demo.socialMedia).toEqual({
       facebook: { active: false, url: '' },
       instagram: { active: false, url: '' },

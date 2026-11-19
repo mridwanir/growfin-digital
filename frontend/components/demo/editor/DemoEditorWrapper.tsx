@@ -5,8 +5,6 @@ import { MessageCircle } from 'lucide-react';
 import { BusinessDemo } from '@/lib/types';
 import { DynamicThemeProvider } from '../DynamicThemeProvider';
 import { FnbDemoClient } from '../fnb-demo-client';
-import { ServiceDemoClient } from '../service-demo-client';
-import { GroomingDemoClient } from '../grooming-demo-client';
 import { RetailDemoClient } from '../retail-demo-client';
 import { OwnerToolbar } from './OwnerToolbar';
 import { LiveEditorDrawer } from './LiveEditorDrawer';
@@ -17,7 +15,7 @@ import { siteConfig } from '@/lib/site-config';
 interface DemoEditorWrapperProps {
   initialClient: BusinessDemo;
   initialLayout: string;
-  templateType: 'fnb' | 'service' | 'retail' | 'grooming';
+  templateType: 'fnb' | 'retail' | string;
   slug: string;
 }
 
@@ -42,10 +40,6 @@ export function DemoEditorWrapper({ initialClient, initialLayout, templateType, 
   let demoComponent;
   if (templateType === 'fnb') {
     demoComponent = <FnbDemoClient client={client} themeVariant={layoutVariant} />;
-  } else if (templateType === 'service') {
-    demoComponent = <ServiceDemoClient client={client} />;
-  } else if (templateType === 'grooming') {
-    demoComponent = <GroomingDemoClient client={client} themeVariant={layoutVariant} />;
   } else {
     demoComponent = <RetailDemoClient client={client} themeVariant={layoutVariant} />;
   }
@@ -53,18 +47,18 @@ export function DemoEditorWrapper({ initialClient, initialLayout, templateType, 
   return (
     <DynamicThemeProvider themeColor={client.themeColor}>
       {demoComponent}
-      
+
       {/* Editor Controls for Owner */}
-      <OwnerToolbar 
-        onEditClick={() => setIsEditorOpen(true)} 
-        onPublishClick={() => setIsCheckoutOpen(true)} 
+      <OwnerToolbar
+        onEditClick={() => setIsEditorOpen(true)}
+        onPublishClick={() => setIsCheckoutOpen(true)}
       />
-      
-      <LiveEditorDrawer 
-        isOpen={isEditorOpen} 
-        onClose={() => setIsEditorOpen(false)} 
-        client={client} 
-        onChange={handleClientChange} 
+
+      <LiveEditorDrawer
+        isOpen={isEditorOpen}
+        onClose={() => setIsEditorOpen(false)}
+        client={client}
+        onChange={handleClientChange}
         layoutVariant={layoutVariant}
         onLayoutChange={setLayoutVariant}
         templateType={templateType}
@@ -76,22 +70,22 @@ export function DemoEditorWrapper({ initialClient, initialLayout, templateType, 
       />
 
       {/* Floating Segmented Bar khusus layar HP: [ ✏️ Edit Formulir | 👁️ Intip Hasil ] */}
-      <MobileSegmentedControl 
-        isEditorOpen={isEditorOpen} 
-        onToggle={(open) => setIsEditorOpen(open)} 
+      <MobileSegmentedControl
+        isEditorOpen={isEditorOpen}
+        onToggle={(open) => setIsEditorOpen(open)}
       />
 
-      <CheckoutModal 
-        isOpen={isCheckoutOpen} 
-        onClose={() => setIsCheckoutOpen(false)} 
-        slug={slug} 
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        slug={slug}
         currentTier={client.package_tier}
         client={client}
       />
 
       {/* Floating Support/Help CTA */}
       <div className="fixed bottom-6 right-6 z-[90]">
-        <a 
+        <a
           href={`https://wa.me/${siteConfig.contact.whatsappNumber}?text=${encodeURIComponent(`Halo Tim Growfin, saya butuh bantuan terkait Live Editor website saya di: https://growfin.my.id/demo/${slug}`)}`}
           target="_blank"
           rel="noreferrer"

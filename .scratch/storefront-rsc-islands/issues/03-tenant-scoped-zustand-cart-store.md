@@ -4,12 +4,16 @@
 
 **Blocked by:** 02: Headless WhatsApp & Cart Domain Engine
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] Zustand is installed and configured with a store factory function (`createCartStore(tenantId)`).
-- [ ] Cart state is persisted to browser `localStorage` using key `growfin_cart_${tenantId}`, isolating cart contents across different tenant subdomains.
-- [ ] Persisted state is validated upon client hydration against a versioned Zod schema (`v: 1`), gracefully resetting corrupted or incompatible data to an empty cart without crashing.
-- [ ] Cart store actions support adding items (leveraging the domain hash function for automatic stacking), incrementing and decrementing quantities, removing line items, and clearing the cart.
-- [ ] A React Context provider (`<StorefrontCartProvider tenantId={...}>`) instantiates and supplies the tenant store instance safely across SSR and client transitions.
-- [ ] Fine-grained selector hooks allow component leaves to subscribe only to the specific slices they consume (e.g. total item count, total price, or line item array) to prevent unnecessary re-renders.
-- [ ] Automated unit tests verify cart addition, item stacking, quantity mutations, removal, local storage persistence, and multi-tenant isolation.
+- [x] Zustand is installed and configured with a store factory function (`createCartStore(tenantId)`).
+- [x] Cart state is persisted to browser `localStorage` using key `growfin_cart_${tenantId}`, isolating cart contents across different tenant subdomains.
+- [x] Persisted state is validated upon client hydration against a versioned Zod schema (`v: 1`), gracefully resetting corrupted or incompatible data to an empty cart without crashing.
+- [x] Cart store actions support adding items (leveraging the domain hash function for automatic stacking), incrementing and decrementing quantities, removing line items, and clearing the cart.
+- [x] A React Context provider (`<StorefrontCartProvider tenantId={...}>`) instantiates and supplies the tenant store instance safely across SSR and client transitions.
+- [x] Fine-grained selector hooks allow component leaves to subscribe only to the specific slices they consume (e.g. total item count, total price, or line item array) to prevent unnecessary re-renders.
+- [x] Automated unit tests verify cart addition, item stacking, quantity mutations, removal, local storage persistence, and multi-tenant isolation.
+
+## Answer
+
+Implemented tenant-scoped Zustand cart state engine and island context provider in `src/lib/storefront/cart/`. The store persists cart items to browser `localStorage` keyed per tenant (`growfin_cart_${tenantId}`) and validates hydrated payloads with versioned Zod schema (`CART_STORAGE_VERSION = 1`), recovering gracefully to an empty cart on corrupt data or schema mismatches. Provided granular selector hooks (`useCartItems`, `useCartItemCount`, `useCartTotal`, `useCartActions`, `useCartStore`, `useCartStoreApi`) and React context provider `<StorefrontCartProvider>`. Added 20 automated unit tests in `tests/unit/cart-store.spec.ts` covering line item operations, stacking, mutations, removals, multi-tenant isolation, corrupted storage recovery, and React provider consumption.

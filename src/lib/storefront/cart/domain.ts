@@ -1,6 +1,6 @@
 /**
- * Pure domain module for storefront shopping carts.
- * Decoupled from React UI components, DOM, and browser storage APIs.
+ * Pure domain module for storefront shopping carts. Decoupled from React UI components, DOM, and
+ * browser storage APIs.
  */
 
 export interface CartLineItem {
@@ -13,12 +13,21 @@ export interface CartLineItem {
   selectedAddons?: string[]
   notes?: string
   subtotal: number
+  hash?: string
+  unitPrice?: number
+}
+
+export type AddCartItemInput = Omit<CartLineItem, 'hash' | 'subtotal' | 'id'> & {
+  id?: string
+  hash?: string
+  subtotal?: number
+  unitPrice?: number
 }
 
 /**
- * Calculates item subtotal price using integer IDR arithmetic.
- * Formula: subtotal = (basePrice + sum(variantModifiers) + sum(addons)) * quantity
- * Clamps result to 0 when negative modifiers exceed base price or quantity is <= 0.
+ * Calculates item subtotal price using integer IDR arithmetic. Formula: subtotal = (basePrice +
+ * sum(variantModifiers) + sum(addons)) * quantity Clamps result to 0 when negative modifiers exceed
+ * base price or quantity is <= 0.
  */
 export function calculateItemSubtotal(
   basePrice: number,
@@ -49,9 +58,9 @@ export function calculateItemSubtotal(
 }
 
 /**
- * Generates a deterministic composite hash for cart item deduplication and stacking.
- * Sorts variant keys and addon names to ensure identical configurations stack
- * quantities while distinct configurations remain separate line items.
+ * Generates a deterministic composite hash for cart item deduplication and stacking. Sorts variant
+ * keys and addon names to ensure identical configurations stack quantities while distinct
+ * configurations remain separate line items.
  */
 export function buildCartItemHash(
   productId: string,

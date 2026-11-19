@@ -1,0 +1,41 @@
+import type { Metadata } from 'next'
+
+import { GrowfinWatermark } from '@/components/storefront'
+import { StorefrontClientIslands } from '@/components/storefront/client-islands'
+import { getStorefrontLayout } from '@/components/storefront/layouts'
+import { ThemePreviewBar } from '@/components/storefront/theme-preview-bar'
+import { getMockStorefrontData } from '@/lib/storefront/mock-data'
+
+// oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
+export const instant = false
+
+interface PreviewPageProps {
+  searchParams: Promise<{ theme?: string }>
+}
+
+export async function generateMetadata({ searchParams }: PreviewPageProps): Promise<Metadata> {
+  const { theme } = await searchParams
+  const { selectedTheme, tenant } = getMockStorefrontData(theme)
+
+  return {
+    description: `Preview tema ${selectedTheme.label} (${selectedTheme.archetype.toUpperCase()}) - ${selectedTheme.description}`,
+    title: `Preview: ${selectedTheme.label} Theme | ${tenant.name}`,
+  }
+}
+
+export default async function PreviewPage({ searchParams }: PreviewPageProps) {
+  const { theme } = await searchParams
+  const { categories, products, selectedTheme, tenant } = getMockStorefrontData(theme)
+
+  const LayoutComponent = getStorefrontLayout(selectedTheme.id, selectedTheme.archetype)
+
+  return (
+    <div className="relative min-h-screen">
+      <ThemePreviewBar currentThemeId={selectedTheme.id} />
+      <LayoutComponent categories={categories} products={products} tenant={tenant}>
+        <StorefrontClientIslands tenant={tenant} />
+        <GrowfinWatermark />
+      </LayoutComponent>
+    </div>
+  )
+}

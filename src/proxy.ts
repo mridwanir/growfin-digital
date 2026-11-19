@@ -7,7 +7,7 @@ import { env } from '@/lib/env'
 
 const authMiddleware = auth.middleware({
   loginUrl: '/login',
-  publicRoutes: ['/', '/login', '/api/auth/webhook', '/api/generate', '/demo', '/site'],
+  publicRoutes: ['/', '/login', '/api/auth/webhook', '/api/generate', '/demo', '/site', '/preview'],
 })
 
 const RESERVED_PATHS = [
@@ -19,6 +19,7 @@ const RESERVED_PATHS = [
   '/admin',
   '/api',
   '/site',
+  '/preview',
 ]
 
 export default async function proxy(request: NextRequest) {

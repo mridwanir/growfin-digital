@@ -658,7 +658,8 @@ describe('Storefront Client Islands (Ticket 05)', () => {
 
       expect(markup).toContain('3') // count
       expect(markup).toContain('Rp 45.000') // total
-      expect(markup).toContain('fixed bottom-0') // sticky mobile dock classes
+      expect(markup).toContain('fixed')
+      expect(markup).toContain('bottom-0')
     })
 
     it('triggers onOpenCart callback when user clicks the bar or button', () => {

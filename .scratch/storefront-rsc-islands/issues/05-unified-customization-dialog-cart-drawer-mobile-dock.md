@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Tenant-Scoped Zustand Cart Store & Island Provider, 04: Shadcn-Style Compound Catalog Components
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] A canonical `<ProductCustomizationDialog>` is created to replace the separate legacy F&B and Retail customization modals.
 - [ ] The customization dialog displays product gallery photos, description, required single-select variant groups, optional multi-select addons, special request notes, and a quantity stepper.

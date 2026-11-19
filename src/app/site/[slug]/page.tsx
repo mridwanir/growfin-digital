@@ -12,7 +12,6 @@ import {
 } from '@/components/storefront'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { PACKAGE_LIMITS } from '@/lib/site-config'
-import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 import {
   buildLocalBusinessJsonLd,
@@ -86,7 +85,7 @@ export default async function SitePage({ params }: SitePageProps) {
   const jsonLd = buildLocalBusinessJsonLd(tenant, archetype)
 
   return (
-    <StorefrontCartProvider tenantId={tenant.id}>
+    <>
       <script
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
@@ -96,6 +95,6 @@ export default async function SitePage({ params }: SitePageProps) {
         <StorefrontClientIslands tenant={tenant} />
         {!tierLimits.removeBranding && <GrowfinWatermark />}
       </LayoutComponent>
-    </StorefrontCartProvider>
+    </>
   )
 }

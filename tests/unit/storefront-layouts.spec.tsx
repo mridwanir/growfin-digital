@@ -363,6 +363,44 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).not.toContain('data-slot="storefront-reviews"')
     })
   })
+  it('resolves catalog section heading based on resolveArchetype(tenant.category)', () => {
+    const retailTenant: Tenant = {
+      ...mockTenant,
+      category: 'Boutique Fashion & Apparel',
+      brandingContent: {
+        ...mockTenant.brandingContent,
+        menuTitle: undefined,
+      },
+    }
+
+    const retailHtml = renderToStaticMarkup(
+      <ModernLayout
+        tenant={retailTenant}
+        categories={mockCategories}
+        products={mockProducts}
+      />,
+    )
+    expect(retailHtml).toContain('Katalog Produk')
+
+    const fnbTenant: Tenant = {
+      ...mockTenant,
+      category: 'Cafe & Coffee Shop',
+      brandingContent: {
+        ...mockTenant.brandingContent,
+        menuTitle: undefined,
+      },
+    }
+
+    const fnbHtml = renderToStaticMarkup(
+      <ModernLayout
+        tenant={fnbTenant}
+        categories={mockCategories}
+        products={mockProducts}
+      />,
+    )
+    expect(fnbHtml).toContain('Menu Pilihan')
+  })
+
 
   // -------------------------------------------------------------------------
   // 5. Pure Server Static Sections In Isolation
@@ -377,6 +415,18 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('Buka Sekarang')
       expect(html).toContain('Lihat Menu &amp; Katalog')
       expect(html).toContain('https://wa.me/6281234567890')
+    })
+    it('Hero uses normalizeWaNumber to handle complex phone formats', () => {
+      const customPhoneTenant: Tenant = {
+        ...mockTenant,
+        phone: '+62 0812-3456-7890',
+        brandingContent: {
+          ...mockTenant.brandingContent,
+          socialLinks: undefined,
+        },
+      }
+      const html = renderToStaticMarkup(<Hero tenant={customPhoneTenant} />)
+      expect(html).toContain('https://wa.me/6281234567890?text=')
     })
 
     it('Hero renders closed state when tenant operatingHours.isOpen is false', () => {
@@ -439,6 +489,18 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('href="https://maps.google.com/?cid=12345"')
       expect(html).toContain('target="_blank"')
       expect(html).toContain('rel="noopener noreferrer"')
+    })
+    it('Footer uses normalizeWaNumber to handle complex phone formats', () => {
+      const customPhoneTenant: Tenant = {
+        ...mockTenant,
+        phone: '+62 0812-3456-7890',
+        brandingContent: {
+          ...mockTenant.brandingContent,
+          socialLinks: undefined,
+        },
+      }
+      const html = renderToStaticMarkup(<Footer tenant={customPhoneTenant} />)
+      expect(html).toContain('href="https://wa.me/6281234567890"')
     })
   })
 

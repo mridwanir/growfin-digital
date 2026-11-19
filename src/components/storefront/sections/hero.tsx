@@ -2,6 +2,7 @@ import type { Tenant, BrandingContent, OperatingHours } from '@/db/schema/tenant
 
 import { cn } from 'cn'
 import { ArrowRight, MessageCircle, ShoppingBag } from 'lucide-react'
+import { normalizeWaNumber } from '@/lib/storefront/whatsapp'
 
 export interface HeroSectionProps {
   tenant: Tenant
@@ -38,8 +39,7 @@ export function Hero({
     (branding['waNumber'] as string) ||
     tenant.phone ||
     ''
-  const cleanWa = rawWa.replace(/[^0-9]/g, '')
-  const waNumber = cleanWa.startsWith('0') ? `62${cleanWa.slice(1)}` : cleanWa
+  const waNumber = normalizeWaNumber(rawWa)
   const waUrl = waNumber
     ? `https://wa.me/${waNumber}?text=Halo%20${encodeURIComponent(name)},%20saya%20tertarik%20dengan%20produk%20Anda.`
     : undefined

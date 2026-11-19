@@ -1,7 +1,7 @@
 'use client'
 
 import type { ProductWithVariants } from '@/components/storefront/catalog'
-import type { Tenant } from '@/db/schema/tenants'
+import type { Tenant, ThemeConfig } from '@/db/schema/tenants'
 
 import { useEffect, useState } from 'react'
 
@@ -10,22 +10,50 @@ import {
   ProductCustomizationDialog,
   StorefrontCartDrawer,
 } from '@/components/storefront/cart'
+import { resolveArchetype } from '@/lib/storefront/archetype'
+import { StorefrontCartProvider, useCartActions } from '@/lib/storefront/cart'
 
+export type FulfillmentMode = 'DELIVERY' | 'DINE_IN' | 'PICKUP' | 'TAKEAWAY'
+
+export const FNB_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = [
+  'DINE_IN',
+  'TAKEAWAY',
+  'DELIVERY',
+]
+export const RETAIL_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = [
+  'PICKUP',
+  'DELIVERY',
+]
+
+export function resolveFulfillmentModes(
+  category?: string | null,
+  themeConfig?: ThemeConfig | Record<string, unknown> | null,
+): ReadonlyArray<FulfillmentMode> {
+  const rawModes = themeConfig?.fulfillmentModes
+  if (Array.isArray(rawModes) && rawModes.length > 0) {
+    return rawModes as FulfillmentMode[]
+  }
+  const archetype = resolveArchetype(category)
+  return archetype === 'fnb' ? FNB_FULFILLMENT_MODES : RETAIL_FULFILLMENT_MODES
+}
 export interface StorefrontClientIslandsProps {
   tenant:
   | Tenant
   | {
     brandingContent?: Record<string, unknown> | null
+    category?: string | null
     id?: string
     name: string
     phone?: string | null
+    themeConfig?: ThemeConfig | Record<string, unknown> | null
     [key: string]: unknown
   }
 }
 
-export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps) {
+function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps) {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [customizingProduct, setCustomizingProduct] = useState<ProductWithVariants | null>(null)
+  const { addItem } = useCartActions()
 
   useEffect(() => {
     const handleOpenCart = () => setIsCartOpen(true)
@@ -33,6 +61,18 @@ export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps
       const customEvent = e as CustomEvent<ProductWithVariants>
       if (customEvent.detail) {
         setCustomizingProduct(customEvent.detail)
+      }
+    }
+
+    const handleAddToCart = (e: Event) => {
+      const customEvent = e as CustomEvent<ProductWithVariants>
+      if (customEvent.detail) {
+        addItem({
+          basePrice: customEvent.detail.basePrice,
+          name: customEvent.detail.name,
+          productId: customEvent.detail.id,
+          quantity: 1,
+        })
       }
     }
 
@@ -46,14 +86,16 @@ export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps
 
     window.addEventListener('growfin:open-cart', handleOpenCart)
     window.addEventListener('growfin:select-product', handleSelectProduct)
+    window.addEventListener('growfin:add-to-cart', handleAddToCart)
     document.addEventListener('click', handleClick)
 
     return () => {
       window.removeEventListener('growfin:open-cart', handleOpenCart)
       window.removeEventListener('growfin:select-product', handleSelectProduct)
+      window.removeEventListener('growfin:add-to-cart', handleAddToCart)
       document.removeEventListener('click', handleClick)
     }
-  }, [])
+  }, [addItem])
 
   const branding = (tenant.brandingContent as Record<string, unknown> | null) || {}
   const rawWa =
@@ -62,6 +104,7 @@ export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps
     tenant.phone ||
     ''
 
+  const fulfillmentModes = resolveFulfillmentModes(tenant.category, tenant.themeConfig)
   return (
     <>
       <MobileCartBar onOpenCart={() => setIsCartOpen(true)} />
@@ -72,6 +115,7 @@ export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps
           name: tenant.name,
           phone: tenant.phone,
           waNumber: rawWa,
+          fulfillmentModes,
         }}
       />
       <ProductCustomizationDialog
@@ -86,3 +130,15 @@ export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps
     </>
   )
 }
+
+export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps) {
+  const tenantId = tenant.id || 'default'
+
+  return (
+    <StorefrontCartProvider tenantId={tenantId}>
+      <StorefrontClientIslandsContent tenant={tenant} />
+    </StorefrontCartProvider>
+  )
+}
+
+

@@ -60,21 +60,60 @@ export interface TenantContactInfo {
 }
 
 export interface BuildOrderSummaryParams {
-  cartItems: CartLineItem[]
+  cartItems?: CartLineItem[]
+  items?: CartLineItem[]
   fulfillment: FulfillmentInput
   tenant: TenantContactInfo
 }
 
+export type CartInput =
+  | CartLineItem[]
+  | { items: CartLineItem[] }
+  | { cartItems: CartLineItem[] }
+
 /**
  * Compiles a formatted multi-line WhatsApp order summary and encodes a click-to-chat wa.me URL.
+ * Supports both positional buildOrderSummary(cart, fulfillment, tenant) and single-object
+ * buildOrderSummary({ cartItems, fulfillment, tenant }).
  */
-export function buildOrderSummary(params: {
-  cartItems: CartLineItem[]
-  fulfillment: FulfillmentInput
-  tenant: TenantContactInfo
-}): { message: string; waUrl: string } {
-  const { cartItems, fulfillment, tenant } = params
+export function buildOrderSummary(
+  params: BuildOrderSummaryParams,
+): { message: string; waUrl: string }
+export function buildOrderSummary(
+  cart: CartInput,
+  fulfillment: FulfillmentInput,
+  tenant: TenantContactInfo,
+): { message: string; waUrl: string }
+export function buildOrderSummary(
+  first: BuildOrderSummaryParams | CartInput,
+  second?: FulfillmentInput,
+  third?: TenantContactInfo,
+): { message: string; waUrl: string } {
+  let cartItems: CartLineItem[] = []
+  let fulfillment: FulfillmentInput
+  let tenant: TenantContactInfo
 
+  if (second !== undefined && third !== undefined) {
+    // Positional signature: buildOrderSummary(cart, fulfillment, tenant)
+    if (Array.isArray(first)) {
+      cartItems = first
+    } else if (first && typeof first === 'object') {
+      const candidate = first as Record<string, unknown>
+      if (Array.isArray(candidate.cartItems)) {
+        cartItems = candidate.cartItems as CartLineItem[]
+      } else if (Array.isArray(candidate.items)) {
+        cartItems = candidate.items as CartLineItem[]
+      }
+    }
+    fulfillment = second
+    tenant = third
+  } else {
+    // Single object signature: buildOrderSummary({ cartItems, fulfillment, tenant })
+    const obj = first as BuildOrderSummaryParams
+    cartItems = obj.cartItems ?? obj.items ?? []
+    fulfillment = obj.fulfillment
+    tenant = obj.tenant
+  }
   const lines: string[] = [`Halo ${tenant.name}, saya ingin memesan:`, '']
 
   let orderTotal = 0

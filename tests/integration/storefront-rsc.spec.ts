@@ -10,7 +10,6 @@ import { ExpiredSiteScreen } from '@/components/storefront/expired-screen'
 import { db } from '@/db'
 import { tenants } from '@/db/schema/tenants'
 import { persistGeneratedWebsite } from '@/lib/generator/persistence'
-import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 
 vi.mock('next/navigation', () => ({
@@ -207,7 +206,7 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
 
       const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
       expect(element).toBeDefined()
-      expect(element.type).toBe(StorefrontCartProvider)
+      expect(element.type).not.toBe(ExpiredSiteScreen)
 
       const markup = renderToStaticMarkup(element)
       expect(markup).toContain('Kopi Senja Nusantara')
@@ -221,7 +220,7 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       createdTenantIds.push(persisted.tenant.id)
       const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
       expect(element).toBeDefined()
-      expect(element.type).toBe(StorefrontCartProvider)
+      expect(element.type).not.toBe(ExpiredSiteScreen)
 
       const markup = renderToStaticMarkup(element)
       expect(markup).toContain('Kopi Senja Nusantara')

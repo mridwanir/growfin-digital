@@ -2,17 +2,7 @@
  * Pure integer currency formatting and discount calculation in Indonesian Rupiah (IDR).
  */
 
-/**
- * Formats an integer amount (in IDR) into a storefront currency display string. Examples: 25000 ->
- * "Rp 25.000", -5000 -> "-Rp 5.000", 0 -> "Rp 0"
- */
-export function formatCurrency(amount: number): string {
-  if (!Number.isFinite(amount)) return 'Rp 0'
-  const isNegative = amount < 0
-  const absoluteValue = Math.abs(Math.round(amount))
-  const formatted = absoluteValue.toLocaleString('id-ID')
-  return isNegative ? `-Rp ${formatted}` : `Rp ${formatted}`
-}
+export { formatCurrency } from '@/lib/storefront/cart/domain'
 
 /**
  * Determines whether a valid strikethrough discount exists. Returns true ONLY when originalPrice >

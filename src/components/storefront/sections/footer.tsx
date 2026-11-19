@@ -8,6 +8,7 @@ import {
   Phone,
   Share2,
 } from 'lucide-react'
+import { normalizeWaNumber } from '@/lib/storefront/whatsapp'
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -55,8 +56,7 @@ export function Footer({ tenant, className }: FooterSectionProps) {
     (branding['waNumber'] as string) ||
     tenant.phone ||
     ''
-  const cleanWa = rawWa.replace(/[^0-9]/g, '')
-  const waNumber = cleanWa.startsWith('0') ? `62${cleanWa.slice(1)}` : cleanWa
+  const waNumber = normalizeWaNumber(rawWa)
   const waUrl = waNumber ? `https://wa.me/${waNumber}` : null
 
   const facebookUrl =

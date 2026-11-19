@@ -543,6 +543,57 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       expect(message).toContain('Total: Rp 0')
     })
+    it('supports positional call buildOrderSummary(cartItems, fulfillment, tenant)', () => {
+      const fulfillment: FulfillmentInput = {
+        mode: 'TAKEAWAY',
+        customerName: 'Budi Hartono',
+      }
+
+      const { message, waUrl } = buildOrderSummary(mockCartItems, fulfillment, mockTenant)
+
+      expect(message).toContain('Halo Kopi Artisan Nusantara, saya ingin memesan:')
+      expect(message).toContain('*Kopi Susu Aren* (x2)')
+      expect(message).toContain('*Croissant Butter* (x1)')
+      expect(message).toContain('Total: Rp 72.000')
+      expect(message).toContain('Metode: Takeaway (Bungkus)')
+      expect(waUrl).toContain('https://wa.me/6281234567890?text=')
+    })
+
+    it('supports positional call with cart state object { items: CartLineItem[] }', () => {
+      const fulfillment: FulfillmentInput = {
+        mode: 'PICKUP',
+        customerName: 'Siti Rahma',
+      }
+
+      const { message, waUrl } = buildOrderSummary(
+        { items: mockCartItems },
+        fulfillment,
+        mockTenant,
+      )
+
+      expect(message).toContain('Total: Rp 72.000')
+      expect(message).toContain('Metode: Pickup (Ambil Sendiri)')
+      expect(waUrl).toContain('https://wa.me/6281234567890?text=')
+    })
+
+    it('supports single-object call with items alias { items, fulfillment, tenant }', () => {
+      const fulfillment: FulfillmentInput = {
+        mode: 'DELIVERY',
+        customerName: 'Agus Pratama',
+        address: 'Jl. Merdeka No. 10',
+      }
+
+      const { message, waUrl } = buildOrderSummary({
+        items: mockCartItems,
+        fulfillment,
+        tenant: mockTenant,
+      })
+
+      expect(message).toContain('Total: Rp 72.000')
+      expect(message).toContain('Metode: Delivery (Pengiriman)')
+      expect(message).toContain('Alamat: Jl. Merdeka No. 10')
+      expect(waUrl).toContain('https://wa.me/6281234567890?text=')
+    })
   })
 
   describe('formatCurrency helper', () => {

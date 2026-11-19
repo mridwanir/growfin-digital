@@ -42,6 +42,10 @@ export function ProductCatalogRoot({
           productId: product.id,
           quantity: 1,
         })
+      } else if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('growfin:add-to-cart', { detail: product }),
+        )
       }
     },
     [cartActions],
@@ -55,7 +59,7 @@ export function ProductCatalogRoot({
     }
   }, [])
 
-  const onAddToCart = explicitOnAddToCart ?? (cartActions ? defaultOnAddToCart : undefined)
+  const onAddToCart = explicitOnAddToCart ?? defaultOnAddToCart
   const onSelect = explicitOnSelect ?? defaultOnSelect
 
   const setActiveCategory = useCallback(

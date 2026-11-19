@@ -13,6 +13,7 @@ import {
 } from '@/components/storefront/sections'
 import { DynamicThemeProvider } from '@/components/storefront/theme'
 import { isSectionVisible } from '@/lib/section-utils'
+import { resolveArchetype } from '@/lib/storefront/archetype'
 
 export function BaseStorefrontLayout({
   tenant,
@@ -78,7 +79,9 @@ export function BaseStorefrontLayout({
                   <div>
                     <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
                       {branding.menuTitle ||
-                        (tenant.category === 'retail' ? 'Katalog Produk' : 'Menu Pilihan')}
+                        (resolveArchetype(tenant.category) === 'retail'
+                          ? 'Katalog Produk'
+                          : 'Menu Pilihan')}
                     </h2>
                     {branding.menuDescription && (
                       <p className="text-muted-foreground mt-1 text-sm">

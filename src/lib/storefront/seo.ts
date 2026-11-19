@@ -16,10 +16,10 @@ function getFnbBusinessType(cat: string): string {
 
 export function getLocalBusinessType(
   category: string = '',
-  templateType: StorefrontArchetype = 'retail',
+  archetype: StorefrontArchetype = 'retail',
 ): string {
   const cat = category.toLowerCase()
-  if (templateType === 'fnb') return getFnbBusinessType(cat)
+  if (archetype === 'fnb') return getFnbBusinessType(cat)
   return 'Store'
 }
 
@@ -97,7 +97,7 @@ export function buildSiteMetadata(tenant: Tenant): Metadata {
 
 export function buildLocalBusinessJsonLd(
   tenant: Tenant,
-  templateType: StorefrontArchetype = 'retail',
+  archetype: StorefrontArchetype = 'retail',
 ) {
   const { logoUrl, ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant)
   const branding = (tenant.brandingContent as BrandingContent | null) || {}
@@ -111,7 +111,7 @@ export function buildLocalBusinessJsonLd(
   return {
     name: tenant.name,
     '@context': 'https://schema.org',
-    '@type': getLocalBusinessType(tenant.category, templateType),
+    '@type': getLocalBusinessType(tenant.category, archetype),
     description,
     image: ogImageUrl,
     logo: logoUrl,

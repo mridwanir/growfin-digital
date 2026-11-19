@@ -9,7 +9,6 @@ import {
 } from '@/components/storefront'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { env } from '@/lib/env'
-import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 import { resolveArchetype } from '@/lib/storefront/seo'
 
@@ -80,11 +79,9 @@ export default async function DemoPage({ params }: DemoPageProps) {
   const LayoutComponent = getStorefrontLayout(tenant.themeConfig?.layoutId, archetype)
 
   return (
-    <StorefrontCartProvider tenantId={tenant.id}>
-      <LayoutComponent tenant={tenant} categories={categories} products={products}>
-        <StorefrontClientIslands tenant={tenant} />
-        <GrowfinWatermark />
-      </LayoutComponent>
-    </StorefrontCartProvider>
+    <LayoutComponent tenant={tenant} categories={categories} products={products}>
+      <StorefrontClientIslands tenant={tenant} />
+      <GrowfinWatermark />
+    </LayoutComponent>
   )
 }

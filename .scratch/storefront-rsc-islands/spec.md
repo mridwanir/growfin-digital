@@ -1,6 +1,6 @@
 # Storefront React Server Component (RSC) Islands Architecture & Headless Commerce Engine
 
-Status: ready-for-agent
+Status: resolved
 
 ## Problem Statement
 

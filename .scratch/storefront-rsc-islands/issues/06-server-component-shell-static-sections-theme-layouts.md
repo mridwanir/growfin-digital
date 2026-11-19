@@ -4,7 +4,7 @@
 
 **Blocked by:** 04: Shadcn-Style Compound Catalog Components
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Static storefront display sections (`Hero`, `Gallery`, `Reviews`, `OperatingHours`, `Footer`) are implemented as pure React Server Components with zero client JavaScript bundle impact.
 - [ ] The dynamic theme provider (`DynamicThemeProvider`) is refactored into a pure Server Component that computes CSS variables and renders inline styles without `'use client'`.

@@ -4,7 +4,7 @@
 
 **Blocked by:** 05: Unified Customization Dialog, Cart Drawer & Mobile Dock, 06: Server Component Shell, Static Sections & Theme Layouts
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Route handlers for `/site/[slug]` and `/demo/[slug]` are updated to pass normalized Drizzle database records directly to the RSC storefront shell and layouts.
 - [ ] The legacy data adapter (`src/lib/storefront/mapper.ts`) and `BusinessDemo` legacy contract are permanently deleted from the codebase.

@@ -120,9 +120,14 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
     it('generates site metadata with canonical URL and OpenGraph for published tenant', async () => {
       const persisted = await persistGeneratedWebsite(mockWebsiteData)
       createdTenantIds.push(persisted.tenant.id)
-      await db.update(tenants).set({ status: 'published' }).where(eq(tenants.id, persisted.tenant.id))
+      await db
+        .update(tenants)
+        .set({ status: 'published' })
+        .where(eq(tenants.id, persisted.tenant.id))
 
-      const meta = await generateSiteMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      const meta = await generateSiteMetadata({
+        params: Promise.resolve({ slug: persisted.tenant.slug }),
+      })
       expect(meta.description).toContain('Kopi Terbaik Sejak 2020')
       expect(meta.openGraph).toBeDefined()
       expect(meta.title).toEqual({
@@ -135,7 +140,9 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       const persisted = await persistGeneratedWebsite(mockWebsiteData)
       createdTenantIds.push(persisted.tenant.id)
 
-      const meta = await generateSiteMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      const meta = await generateSiteMetadata({
+        params: Promise.resolve({ slug: persisted.tenant.slug }),
+      })
       expect(meta.title).toBe('Site Not Found')
     })
 
@@ -144,7 +151,9 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       createdTenantIds.push(persisted.tenant.id)
       await db.update(tenants).set({ status: 'locked' }).where(eq(tenants.id, persisted.tenant.id))
 
-      const meta = await generateSiteMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      const meta = await generateSiteMetadata({
+        params: Promise.resolve({ slug: persisted.tenant.slug }),
+      })
       expect(meta.robots).toEqual({ follow: false, index: false })
       expect(meta.title).toContain('Masa Pembaruan Layanan')
     })
@@ -153,7 +162,9 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       const persisted = await persistGeneratedWebsite(mockWebsiteData)
       createdTenantIds.push(persisted.tenant.id)
 
-      const meta = await generateDemoMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      const meta = await generateDemoMetadata({
+        params: Promise.resolve({ slug: persisted.tenant.slug }),
+      })
       expect(meta.title).toBe('Preview: Kopi Senja Nusantara | Growfin Digital')
       expect(meta.description).toContain('Kopi Terbaik Sejak 2020')
     })
@@ -191,7 +202,7 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000)
       await db
         .update(tenants)
-        .set({ status: 'published', siteActiveUntil: pastDate })
+        .set({ siteActiveUntil: pastDate, status: 'published' })
         .where(eq(tenants.id, persisted.tenant.id))
 
       const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
@@ -202,7 +213,10 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
     it('renders storefront successfully on SitePage for published tenant with RSC islands', async () => {
       const persisted = await persistGeneratedWebsite(mockWebsiteData)
       createdTenantIds.push(persisted.tenant.id)
-      await db.update(tenants).set({ status: 'published' }).where(eq(tenants.id, persisted.tenant.id))
+      await db
+        .update(tenants)
+        .set({ status: 'published' })
+        .where(eq(tenants.id, persisted.tenant.id))
 
       const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
       expect(element).toBeDefined()

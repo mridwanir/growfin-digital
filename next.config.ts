@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+
 import path from 'node:path'
 
 import '@/lib/env'
@@ -36,26 +37,24 @@ const nextConfig: NextConfig = {
       },
       ...(process.env.AWS_ENDPOINT_URL_S3
         ? [
-          (() => {
-            try {
-              const url = new URL(process.env.AWS_ENDPOINT_URL_S3)
-              return {
-                hostname: url.hostname,
-                protocol: url.protocol.replace(':', '') as 'http' | 'https',
+            (() => {
+              try {
+                const url = new URL(process.env.AWS_ENDPOINT_URL_S3)
+                return {
+                  hostname: url.hostname,
+                  protocol: url.protocol.replace(':', '') as 'http' | 'https',
+                }
+              } catch {
+                return null
               }
-            } catch {
-              return null
-            }
-          })(),
-        ].filter((p): p is { hostname: string; protocol: 'http' | 'https' } => p !== null)
+            })(),
+          ].filter((p): p is { hostname: string; protocol: 'http' | 'https' } => p !== null)
         : []),
     ],
   },
 
   turbopack: {
-    root: process.cwd().includes('worktrees')
-      ? path.resolve(process.cwd(), '../..')
-      : undefined,
+    root: process.cwd().includes('worktrees') ? path.resolve(process.cwd(), '../..') : undefined,
     rules: {
       '*.css': {
         as: '*.css',

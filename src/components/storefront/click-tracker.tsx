@@ -22,14 +22,14 @@ export function GlobalClickTracker({ businessId }: GlobalClickTrackerProps) {
       lastTrackedTime = now
 
       fetch('/api/analytics/track', {
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        method: 'POST',
         body: JSON.stringify({
           business_id: businessId,
           event_type: 'whatsapp_click',
           visitor_id: visitorId,
         }),
-        headers: { 'Content-Type': 'application/json' },
-        keepalive: true,
-        method: 'POST',
       }).catch(err => console.error('Failed to track click', err))
     }
 
@@ -78,14 +78,14 @@ export function GlobalClickTracker({ businessId }: GlobalClickTrackerProps) {
     document.addEventListener('submit', handleSubmit)
 
     fetch('/api/analytics/track', {
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      method: 'POST',
       body: JSON.stringify({
         business_id: businessId,
         event_type: 'page_view',
         visitor_id: visitorId,
       }),
-      headers: { 'Content-Type': 'application/json' },
-      keepalive: true,
-      method: 'POST',
     }).catch(err => console.error('Failed to track pageview', err))
 
     return () => {

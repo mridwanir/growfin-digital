@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
+
+import type { ProductWithVariants } from '@/components/storefront/catalog'
 import type { Category } from '@/db/schema/catalog'
 import type { Tenant } from '@/db/schema/tenants'
-import type { ProductWithVariants } from '@/components/storefront/catalog'
 
 export interface StorefrontLayoutProps {
   tenant: Tenant

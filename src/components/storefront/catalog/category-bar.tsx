@@ -24,7 +24,8 @@ const categoryBarVariants = cva(
       },
       variant: {
         ghost: 'text-muted-foreground hover:bg-muted/60 hover:text-foreground rounded-lg',
-        pills: 'text-muted-foreground bg-muted hover:bg-muted/80 hover:text-foreground rounded-full',
+        pills:
+          'text-muted-foreground bg-muted hover:bg-muted/80 hover:text-foreground rounded-full',
         tabs: 'text-muted-foreground hover:text-foreground hover:border-muted rounded-none border-b-2 border-transparent px-3 pb-2',
       },
     },

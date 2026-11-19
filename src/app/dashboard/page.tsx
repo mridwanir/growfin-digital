@@ -1,12 +1,4 @@
-import {
-  ExternalLink,
-  MapPin,
-  Package,
-  Phone,
-  PlusCircle,
-  Settings,
-  Store,
-} from 'lucide-react'
+import { ExternalLink, MapPin, Package, Phone, PlusCircle, Settings, Store } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
@@ -70,7 +62,7 @@ async function MerchantOverview() {
         )
       default:
         return (
-          <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+          <span className="bg-muted text-muted-foreground inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium">
             FREE DEMO
           </span>
         )
@@ -83,8 +75,8 @@ async function MerchantOverview() {
         <div>
           <h1 className="font-heading text-3xl font-bold tracking-tight">Merchant Dashboard</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Selamat datang, {session.user.name || session.user.email}. Kelola profil toko dan katalog
-            produk Anda.
+            Selamat datang, {session.user.name || session.user.email}. Kelola profil toko dan
+            katalog produk Anda.
           </p>
         </div>
 
@@ -111,7 +103,8 @@ async function MerchantOverview() {
             <Store className="text-muted-foreground size-12 stroke-1" />
             <h3 className="font-heading mt-4 text-base font-semibold">Belum Ada Website</h3>
             <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-              Anda belum memiliki website toko aktif. Buat website instan dalam 30 detik untuk bisnis Anda.
+              Anda belum memiliki website toko aktif. Buat website instan dalam 30 detik untuk
+              bisnis Anda.
             </p>
             <Link className={buttonVariants({ className: 'mt-6' })} href="/">
               Mulai Buat Website
@@ -133,7 +126,7 @@ async function MerchantOverview() {
                         {getStatusBadge(tenant.status)}
                         {getTierBadge(tenant.packageTier)}
                       </div>
-                      <span className="text-muted-foreground truncate text-xs font-mono">
+                      <span className="text-muted-foreground truncate font-mono text-xs">
                         {tenant.slug}
                       </span>
                     </div>

@@ -1,13 +1,8 @@
-import type { Tenant, BrandingContent } from '@/db/schema/tenants'
+import type { BrandingContent, Tenant } from '@/db/schema/tenants'
 
 import { cn } from 'cn'
-import {
-  ExternalLink,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Share2,
-} from 'lucide-react'
+import { ExternalLink, MapPin, MessageCircle, Phone, Share2 } from 'lucide-react'
+
 import { normalizeWaNumber } from '@/lib/storefront/whatsapp'
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -52,10 +47,7 @@ export function Footer({ tenant, className }: FooterSectionProps) {
     null
 
   const rawWa =
-    branding.socialLinks?.whatsapp?.url ||
-    (branding['waNumber'] as string) ||
-    tenant.phone ||
-    ''
+    branding.socialLinks?.whatsapp?.url || (branding['waNumber'] as string) || tenant.phone || ''
   const waNumber = normalizeWaNumber(rawWa)
   const waUrl = waNumber ? `https://wa.me/${waNumber}` : null
 
@@ -73,84 +65,82 @@ export function Footer({ tenant, className }: FooterSectionProps) {
 
   return (
     <footer
+      data-slot="storefront-footer"
       id="footer"
       className={cn(
-        'border-t border-border/60 bg-muted/30 py-12 text-muted-foreground sm:py-16',
+        'border-border/60 bg-muted/30 text-muted-foreground border-t py-12 sm:py-16',
         className,
       )}
-      data-slot="storefront-footer"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 pb-12 sm:grid-cols-2 md:grid-cols-12 md:gap-8">
           <div className="space-y-4 md:col-span-5">
-            <h3 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
+            <h3 className="text-foreground text-xl font-extrabold tracking-tight sm:text-2xl">
               {name}
             </h3>
             {tagline && (
-              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-                {tagline}
-              </p>
+              <p className="text-muted-foreground max-w-md text-sm leading-relaxed">{tagline}</p>
             )}
 
             {hasSocials && (
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 {instagramUrl && (
                   <a
-                    href={instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label="Instagram"
-                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-primary flex size-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    href={instagramUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <InstagramIcon className="h-4 w-4" />
+                    <InstagramIcon className="size-4" />
                   </a>
                 )}
 
                 {waUrl && (
                   <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label="WhatsApp"
-                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-emerald-600 flex h-10 w-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    className="border-border/60 bg-card hover:bg-accent text-foreground flex size-10 items-center justify-center rounded-xl border shadow-xs transition-colors hover:text-emerald-600"
+                    href={waUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <MessageCircle className="size-4" />
                   </a>
                 )}
 
                 {googleMapsUrl && (
                   <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label="Google Maps"
-                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-blue-600 flex h-10 w-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    className="border-border/60 bg-card hover:bg-accent text-foreground flex size-10 items-center justify-center rounded-xl border shadow-xs transition-colors hover:text-blue-600"
+                    href={googleMapsUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <MapPin className="h-4 w-4" />
+                    <MapPin className="size-4" />
                   </a>
                 )}
 
                 {facebookUrl && (
                   <a
-                    href={facebookUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label="Facebook"
-                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-primary flex size-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    href={facebookUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <Share2 className="h-4 w-4" />
+                    <Share2 className="size-4" />
                   </a>
                 )}
 
                 {tiktokUrl && (
                   <a
-                    href={tiktokUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     aria-label="TikTok"
-                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    className="border-border/60 bg-card hover:bg-accent text-foreground hover:text-primary flex size-10 items-center justify-center rounded-xl border shadow-xs transition-colors"
+                    href={tiktokUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <ExternalLink className="h-4 w-4" />
+                    <ExternalLink className="size-4" />
                   </a>
                 )}
               </div>
@@ -158,32 +148,32 @@ export function Footer({ tenant, className }: FooterSectionProps) {
           </div>
 
           <div className="space-y-3 md:col-span-3">
-            <h4 className="text-xs font-bold tracking-wider text-foreground uppercase">
+            <h4 className="text-foreground text-xs font-bold tracking-wider uppercase">
               Navigasi Halaman
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#hero" className="hover:text-foreground transition-colors">
+                <a className="hover:text-foreground transition-colors" href="#hero">
                   Beranda
                 </a>
               </li>
               <li>
-                <a href="#catalog" className="hover:text-foreground transition-colors">
+                <a className="hover:text-foreground transition-colors" href="#catalog">
                   Katalog & Menu
                 </a>
               </li>
               <li>
-                <a href="#gallery" className="hover:text-foreground transition-colors">
+                <a className="hover:text-foreground transition-colors" href="#gallery">
                   Galeri Foto
                 </a>
               </li>
               <li>
-                <a href="#reviews" className="hover:text-foreground transition-colors">
+                <a className="hover:text-foreground transition-colors" href="#reviews">
                   Ulasan Pelanggan
                 </a>
               </li>
               <li>
-                <a href="#operating-hours" className="hover:text-foreground transition-colors">
+                <a className="hover:text-foreground transition-colors" href="#operating-hours">
                   Jam Operasional
                 </a>
               </li>
@@ -191,13 +181,13 @@ export function Footer({ tenant, className }: FooterSectionProps) {
           </div>
 
           <div className="space-y-3 md:col-span-4">
-            <h4 className="text-xs font-bold tracking-wider text-foreground uppercase">
+            <h4 className="text-foreground text-xs font-bold tracking-wider uppercase">
               Alamat & Kontak
             </h4>
             <div className="space-y-2 text-sm leading-relaxed">
               {address && (
                 <p className="flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                  <MapPin className="text-muted-foreground mt-0.5 size-4 shrink-0" />
                   <span>
                     {address}
                     {city ? `, ${city}` : ''}
@@ -206,20 +196,20 @@ export function Footer({ tenant, className }: FooterSectionProps) {
               )}
               {phone && (
                 <p className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <Phone className="text-muted-foreground size-4 shrink-0" />
                   <span>{phone}</span>
                 </p>
               )}
               {googleMapsUrl && (
                 <div className="pt-2">
                   <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="text-primary hover:text-primary/80 inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
+                    href={googleMapsUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <span>Petunjuk Arah Google Maps</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
+                    <ExternalLink className="size-3.5" />
                   </a>
                 </div>
               )}
@@ -227,8 +217,10 @@ export function Footer({ tenant, className }: FooterSectionProps) {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 text-xs sm:flex-row">
-          <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>
+        <div className="border-border/60 flex flex-col items-center justify-between gap-4 border-t pt-8 text-xs sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} {name}. All rights reserved.
+          </p>
           <p className="text-muted-foreground/80">Powered by Growfin Digital</p>
         </div>
       </div>

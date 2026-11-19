@@ -22,17 +22,17 @@ export function DynamicThemeProvider({
   const palette = generateThemePalette(themeColor)
 
   const themeStyle = {
-    '--brand-primary': palette.primary,
+    '--brand-dark': palette.dark,
     '--brand-hover': palette.hover,
     '--brand-light': palette.light,
-    '--brand-dark': palette.dark,
+    '--brand-primary': palette.primary,
     ...explicitStyle,
   } as CSSProperties
 
   return (
     <Component
-      style={themeStyle}
       className={cn('selection:bg-brand-primary/30 min-h-screen font-sans', className)}
+      style={themeStyle}
     >
       {children}
     </Component>

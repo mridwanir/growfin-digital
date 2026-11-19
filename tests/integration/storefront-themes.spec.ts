@@ -14,24 +14,16 @@ import {
   formatCurrency,
   StorefrontCartProvider,
 } from '@/lib/storefront/cart'
-import {
-  buildOrderSummary,
-  FulfillmentSchema,
-  normalizeWaNumber,
-} from '@/lib/storefront/whatsapp'
+import { buildOrderSummary, FulfillmentSchema, normalizeWaNumber } from '@/lib/storefront/whatsapp'
 
 // ---------------------------------------------------------------------------
 // Relational Drizzle Fixtures
 // ---------------------------------------------------------------------------
 
 const mockFnbTenant: Tenant = {
+  id: 'tenant-fnb-1',
+  name: 'Kopi Artisan Nusantara',
   address: 'Jl. Riau No. 55',
-  brandingContent: {
-    heroImage: 'https://images.unsplash.com/photo-coffee',
-    iconEmoji: '☕',
-    tagline: 'Secangkir Cerita Tiap Hari',
-    themeColor: '#d97706',
-  },
   category: 'Coffee Shop & Cafe',
   city: 'Bandung',
   createdAt: new Date(),
@@ -39,27 +31,31 @@ const mockFnbTenant: Tenant = {
   domainActiveUntil: null,
   fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?cid=123',
-  id: 'tenant-fnb-1',
-  name: 'Kopi Artisan Nusantara',
-  operatingHours: {
-    closeTime: '22:00',
-    isOpen: true,
-    openTime: '08:00',
-    raw: '08:00 - 22:00',
-  },
   organizationId: null,
   packageTier: 'instant',
   phone: '081234567890',
   siteActiveUntil: null,
   slug: 'kopi-artisan-nusantara',
   status: 'published',
+  updatedAt: new Date(),
+  userId: null,
+  brandingContent: {
+    heroImage: 'https://images.unsplash.com/photo-coffee',
+    iconEmoji: '☕',
+    tagline: 'Secangkir Cerita Tiap Hari',
+    themeColor: '#d97706',
+  },
+  operatingHours: {
+    closeTime: '22:00',
+    isOpen: true,
+    openTime: '08:00',
+    raw: '08:00 - 22:00',
+  },
   themeConfig: {
     fbType: 'DINE_IN',
     layoutId: 'fnb-theme-classic',
     themeColor: '#d97706',
   },
-  updatedAt: new Date(),
-  userId: null,
 }
 
 const mockFnbCategories: Category[] = [
@@ -81,10 +77,10 @@ const mockFnbCategories: Category[] = [
 
 const mockFnbProducts: ProductWithVariants[] = [
   {
-    basePrice: 20000,
-    categoryId: 'cat-fnb-1',
     id: 'prod-fnb-1',
     name: 'Kopi Susu Aren',
+    basePrice: 20000,
+    categoryId: 'cat-fnb-1',
     originalPrice: 25000,
     sortOrder: 0,
     tenantId: mockFnbTenant.id,
@@ -92,11 +88,11 @@ const mockFnbProducts: ProductWithVariants[] = [
       {
         id: 'var-fnb-1',
         name: 'Ukuran',
+        required: true,
         options: [
           { id: 'opt-fnb-reg', label: 'Regular', priceModifier: 0, sortOrder: 0 },
           { id: 'opt-fnb-lrg', label: 'Large', priceModifier: 5000, sortOrder: 1 },
         ],
-        required: true,
       },
     ],
   },
@@ -104,16 +100,16 @@ const mockFnbProducts: ProductWithVariants[] = [
 
 const mockRetailTenant: Tenant = {
   ...mockFnbTenant,
+  id: 'tenant-retail-1',
+  name: 'Urban Streetwear Bandung',
+  category: 'Clothing & Fashion',
+  slug: 'urban-streetwear-bandung',
   brandingContent: {
     heroImage: 'https://images.unsplash.com/photo-fashion',
     iconEmoji: '🛍️',
     tagline: 'Modern Streetwear Collective',
     themeColor: '#09090b',
   },
-  category: 'Clothing & Fashion',
-  id: 'tenant-retail-1',
-  name: 'Urban Streetwear Bandung',
-  slug: 'urban-streetwear-bandung',
   themeConfig: {
     layoutId: 'retail-theme-urban',
     themeColor: '#09090b',
@@ -132,10 +128,10 @@ const mockRetailCategories: Category[] = [
 
 const mockRetailProducts: ProductWithVariants[] = [
   {
-    basePrice: 150000,
-    categoryId: 'cat-ret-1',
     id: 'prod-ret-1',
     name: 'Overdose Boxy Tee',
+    basePrice: 150000,
+    categoryId: 'cat-ret-1',
     originalPrice: 180000,
     sortOrder: 0,
     tenantId: mockRetailTenant.id,
@@ -143,11 +139,11 @@ const mockRetailProducts: ProductWithVariants[] = [
       {
         id: 'var-ret-1',
         name: 'Size',
+        required: true,
         options: [
           { id: 'opt-ret-m', label: 'M', priceModifier: 0, sortOrder: 0 },
           { id: 'opt-ret-xl', label: 'XL', priceModifier: 10000, sortOrder: 1 },
         ],
-        required: true,
       },
     ],
   },
@@ -169,7 +165,7 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
 
     it('generates deterministic composite hash for cart item stacking', () => {
       const hash1 = buildCartItemHash('prod-1', { Color: 'Black', Size: 'L' }, ['Box'])
-      const hash2 = buildCartItemHash('prod-1', { Size: 'L', Color: 'Black' }, ['Box'])
+      const hash2 = buildCartItemHash('prod-1', { Color: 'Black', Size: 'L' }, ['Box'])
       const hash3 = buildCartItemHash('prod-1', { Color: 'Black', Size: 'M' }, ['Box'])
 
       expect(hash1).toBe(hash2)
@@ -181,8 +177,8 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
 
       // Add 1 Regular Kopi Susu
       store.getState().addItem({
-        basePrice: 20000,
         name: 'Kopi Susu Aren',
+        basePrice: 20000,
         productId: 'prod-fnb-1',
         quantity: 1,
         selectedVariants: { Ukuran: 'Regular' },
@@ -193,8 +189,8 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
 
       // Add identical item -> stacks to quantity 2
       store.getState().addItem({
-        basePrice: 20000,
         name: 'Kopi Susu Aren',
+        basePrice: 20000,
         productId: 'prod-fnb-1',
         quantity: 1,
         selectedVariants: { Ukuran: 'Regular' },
@@ -205,8 +201,8 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
 
       // Add Large Kopi Susu -> separate line item
       store.getState().addItem({
-        basePrice: 20000,
         name: 'Kopi Susu Aren',
+        basePrice: 20000,
         productId: 'prod-fnb-1',
         quantity: 1,
         selectedVariants: { Ukuran: 'Large' },
@@ -336,9 +332,9 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
       const result = buildOrderSummary({
         cartItems: [
           {
-            basePrice: 20000,
             id: 'item-1',
             name: 'Kopi Susu Aren',
+            basePrice: 20000,
             productId: 'prod-1',
             quantity: 2,
             selectedVariants: { Ukuran: 'Large' },

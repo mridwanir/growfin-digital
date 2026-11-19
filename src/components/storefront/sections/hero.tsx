@@ -1,7 +1,8 @@
-import type { Tenant, BrandingContent, OperatingHours } from '@/db/schema/tenants'
+import type { BrandingContent, OperatingHours, Tenant } from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 import { ArrowRight, MessageCircle, ShoppingBag } from 'lucide-react'
+
 import { normalizeWaNumber } from '@/lib/storefront/whatsapp'
 
 export interface HeroSectionProps {
@@ -35,10 +36,7 @@ export function Hero({
   const hoursText = operatingHours.raw || `${openTime} - ${closeTime}`
 
   const rawWa =
-    branding.socialLinks?.whatsapp?.url ||
-    (branding['waNumber'] as string) ||
-    tenant.phone ||
-    ''
+    branding.socialLinks?.whatsapp?.url || (branding['waNumber'] as string) || tenant.phone || ''
   const waNumber = normalizeWaNumber(rawWa)
   const waUrl = waNumber
     ? `https://wa.me/${waNumber}?text=Halo%20${encodeURIComponent(name)},%20saya%20tertarik%20dengan%20produk%20Anda.`
@@ -47,16 +45,16 @@ export function Hero({
   // Operational Badge component
   const operationalBadge = (
     <div
-      className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md shadow-xs"
+      className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs backdrop-blur-md"
       data-slot="operational-badge"
     >
-      <span className="relative flex h-2 w-2">
+      <span className="relative flex size-2">
         {isOpen && (
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
         )}
         <span
           className={cn(
-            'relative inline-flex h-2 w-2 rounded-full',
+            'relative inline-flex size-2 rounded-full',
             isOpen ? 'bg-emerald-500' : 'bg-rose-500',
           )}
         />
@@ -67,16 +65,16 @@ export function Hero({
 
   const lightOperationalBadge = (
     <div
-      className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/70 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-xs"
+      className="border-border/60 bg-muted/70 text-foreground inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-semibold shadow-xs"
       data-slot="operational-badge"
     >
-      <span className="relative flex h-2 w-2">
+      <span className="relative flex size-2">
         {isOpen && (
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
         )}
         <span
           className={cn(
-            'relative inline-flex h-2 w-2 rounded-full',
+            'relative inline-flex size-2 rounded-full',
             isOpen ? 'bg-emerald-500' : 'bg-rose-500',
           )}
         />
@@ -88,9 +86,9 @@ export function Hero({
   if (variant === 'split') {
     return (
       <section
-        id="hero"
-        className={cn('relative w-full overflow-hidden bg-background py-12 md:py-20', className)}
+        className={cn('bg-background relative w-full overflow-hidden py-12 md:py-20', className)}
         data-slot="storefront-hero"
+        id="hero"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -99,17 +97,17 @@ export function Hero({
               <div className="flex items-center gap-4">
                 {logoUrl ? (
                   <img
-                    src={logoUrl}
                     alt={name}
-                    className="h-16 w-16 rounded-2xl border border-border object-cover shadow-sm"
+                    className="border-border size-16 rounded-2xl border object-cover shadow-sm"
+                    src={logoUrl}
                   />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-2xl font-bold text-primary-foreground shadow-sm">
+                  <div className="bg-primary text-primary-foreground flex size-16 items-center justify-center rounded-2xl text-2xl font-bold shadow-sm">
                     {iconEmoji || name.charAt(0)}
                   </div>
                 )}
                 <div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                  <h1 className="text-foreground text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
                     {name}
                   </h1>
                   {tagline && (
@@ -128,33 +126,33 @@ export function Hero({
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <a
+                  className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold shadow-md transition-all hover:-translate-y-0.5 hover:opacity-90"
                   href={`#${catalogAnchorId}`}
-                  className="bg-primary text-primary-foreground hover:opacity-90 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold shadow-md transition-all hover:-translate-y-0.5"
                 >
-                  <ShoppingBag className="h-4 w-4" />
+                  <ShoppingBag className="size-4" />
                   <span>Lihat Produk & Menu</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="size-4" />
                 </a>
                 {waUrl && (
                   <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="border-border bg-card text-card-foreground hover:bg-accent inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-semibold shadow-xs transition-all hover:-translate-y-0.5"
+                    href={waUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <MessageCircle className="size-4" />
                     <span>WhatsApp</span>
                   </a>
                 )}
               </div>
             </div>
 
-            <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl border border-border/60 shadow-xl lg:aspect-square">
+            <div className="border-border/60 relative aspect-4/3 w-full overflow-hidden rounded-3xl border shadow-xl lg:aspect-square">
               <img
-                src={heroImageUrl}
                 alt={name}
-                className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                className="size-full object-cover transition-transform duration-700 hover:scale-105"
                 loading="eager"
+                src={heroImageUrl}
               />
             </div>
           </div>
@@ -166,20 +164,15 @@ export function Hero({
   // Default / Centered / Bold
   return (
     <header
+      data-slot="storefront-hero"
       id="hero"
       className={cn(
         'relative flex min-h-[480px] w-full items-center justify-center overflow-hidden py-20 text-white md:min-h-[580px]',
         className,
       )}
-      data-slot="storefront-hero"
     >
       <div className="absolute inset-0 z-0">
-        <img
-          src={heroImageUrl}
-          alt={name}
-          className="h-full w-full object-cover"
-          loading="eager"
-        />
+        <img alt={name} className="size-full object-cover" loading="eager" src={heroImageUrl} />
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
       </div>
 
@@ -189,12 +182,12 @@ export function Hero({
         <div className="mb-6 flex flex-col items-center gap-4">
           {logoUrl ? (
             <img
-              src={logoUrl}
               alt={name}
-              className="h-20 w-20 rounded-full border-2 border-white/60 object-cover shadow-xl"
+              className="size-20 rounded-full border-2 border-white/60 object-cover shadow-xl"
+              src={logoUrl}
             />
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/60 bg-white/20 text-3xl font-bold backdrop-blur-md shadow-xl">
+            <div className="flex size-20 items-center justify-center rounded-full border-2 border-white/60 bg-white/20 text-3xl font-bold shadow-xl backdrop-blur-md">
               {iconEmoji || name.charAt(0)}
             </div>
           )}
@@ -202,34 +195,30 @@ export function Hero({
             {name}
           </h1>
           {tagline && (
-            <p className="max-w-xl text-lg font-medium text-stone-200 sm:text-xl">
-              {tagline}
-            </p>
+            <p className="max-w-xl text-lg font-medium text-stone-200 sm:text-xl">{tagline}</p>
           )}
         </div>
 
         {description && description !== tagline && (
-          <p className="mb-8 max-w-lg text-sm text-stone-300 sm:text-base">
-            {description}
-          </p>
+          <p className="mb-8 max-w-lg text-sm text-stone-300 sm:text-base">{description}</p>
         )}
 
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
+            className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:opacity-90"
             href={`#${catalogAnchorId}`}
-            className="bg-primary text-primary-foreground hover:opacity-90 inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-semibold shadow-lg transition-all hover:-translate-y-0.5"
           >
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingBag className="size-5" />
             <span>Lihat Menu & Katalog</span>
           </a>
           {waUrl && (
             <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-white/90 px-6 py-3.5 text-base font-semibold text-stone-900 shadow-lg backdrop-blur-md transition-all hover:-translate-y-0.5 hover:bg-white"
+              href={waUrl}
+              rel="noopener noreferrer"
+              target="_blank"
             >
-              <MessageCircle className="h-5 w-5" />
+              <MessageCircle className="size-5" />
               <span>WhatsApp</span>
             </a>
           )}

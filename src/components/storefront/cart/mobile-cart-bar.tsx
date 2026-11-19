@@ -2,11 +2,7 @@
 
 import { ShoppingBagIcon } from 'lucide-react'
 
-import {
-  formatCurrency,
-  useCartItemCount,
-  useCartTotal,
-} from '@/lib/storefront/cart'
+import { formatCurrency, useCartItemCount, useCartTotal } from '@/lib/storefront/cart'
 
 import { componentRenderCache } from './cache'
 
@@ -25,7 +21,7 @@ export function MobileCartBar(props: MobileCartBarProps) {
 
   const barElement = (
     <div
-      className="pointer-events-none fixed bottom-0 inset-x-0 z-40 p-4 md:hidden"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 p-4 md:hidden"
       data-slot="mobile-cart-bar"
     >
       <div className="pointer-events-auto mx-auto max-w-md">
@@ -48,9 +44,7 @@ export function MobileCartBar(props: MobileCartBarProps) {
               <div className="font-bold">{formatCurrency(total)}</div>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-sm font-semibold">
-            Lihat Keranjang
-          </div>
+          <div className="flex items-center gap-1 text-sm font-semibold">Lihat Keranjang</div>
         </button>
       </div>
     </div>

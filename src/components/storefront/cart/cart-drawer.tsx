@@ -24,8 +24,8 @@ export interface StorefrontCartDrawerProps {
   onOpenChange: (open: boolean) => void
   open: boolean
   tenant: {
-    fulfillmentModes?: ReadonlyArray<'DELIVERY' | 'DINE_IN' | 'PICKUP' | 'TAKEAWAY'>
     name: string
+    fulfillmentModes?: ReadonlyArray<'DELIVERY' | 'DINE_IN' | 'PICKUP' | 'TAKEAWAY'>
     phone?: string | null
     waNumber?: string | null
   }
@@ -195,9 +195,9 @@ function StorefrontCartDrawerContent(
                 const itemKey = item.hash || item.id
                 return (
                   <div
+                    key={itemKey}
                     className="border-border bg-background flex flex-col gap-2 rounded-xl border p-3.5 shadow-2xs"
                     data-slot="cart-item-row"
-                    key={itemKey}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="text-foreground text-sm leading-snug font-semibold">
@@ -292,18 +292,18 @@ function StorefrontCartDrawerContent(
                             : 'Delivery'
                     return (
                       <button
-                        className={cn(
-                          'rounded-lg border px-3 py-2 text-center text-xs font-medium transition-colors',
-                          isSelected
-                            ? 'border-primary bg-primary text-primary-foreground font-semibold'
-                            : 'border-border bg-background text-foreground hover:bg-muted',
-                        )}
                         key={mode}
                         type="button"
                         onClick={() => {
                           setFulfillmentMode(mode)
                           setErrors({})
                         }}
+                        className={cn(
+                          'rounded-lg border px-3 py-2 text-center text-xs font-medium transition-colors',
+                          isSelected
+                            ? 'border-primary bg-primary text-primary-foreground font-semibold'
+                            : 'border-border bg-background text-foreground hover:bg-muted',
+                        )}
                       >
                         {modeLabel}
                       </button>
@@ -321,10 +321,6 @@ function StorefrontCartDrawerContent(
                   Nama Pemesan <span className="text-destructive">*</span>
                 </label>
                 <input
-                  className={cn(
-                    'bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none',
-                    errors.customerName ? 'border-destructive' : 'border-border',
-                  )}
                   id="cart-customer-name"
                   placeholder="Nama Anda"
                   type="text"
@@ -339,6 +335,10 @@ function StorefrontCartDrawerContent(
                       })
                     }
                   }}
+                  className={cn(
+                    'bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none',
+                    errors.customerName ? 'border-destructive' : 'border-border',
+                  )}
                 />
                 {errors.customerName && (
                   <p className="text-destructive text-xs">{errors.customerName}</p>
@@ -355,10 +355,6 @@ function StorefrontCartDrawerContent(
                     Nomor Meja <span className="text-destructive">*</span>
                   </label>
                   <input
-                    className={cn(
-                      'bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none',
-                      errors.tableNumber ? 'border-destructive' : 'border-border',
-                    )}
                     id="cart-table-number"
                     placeholder="Contoh: Meja 12"
                     type="text"
@@ -373,6 +369,10 @@ function StorefrontCartDrawerContent(
                         })
                       }
                     }}
+                    className={cn(
+                      'bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none',
+                      errors.tableNumber ? 'border-destructive' : 'border-border',
+                    )}
                   />
                   {errors.tableNumber && (
                     <p className="text-destructive text-xs">{errors.tableNumber}</p>
@@ -390,10 +390,6 @@ function StorefrontCartDrawerContent(
                     Alamat Pengiriman <span className="text-destructive">*</span>
                   </label>
                   <textarea
-                    className={cn(
-                      'bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none',
-                      errors.address ? 'border-destructive' : 'border-border',
-                    )}
                     id="cart-delivery-address"
                     placeholder="Alamat pengiriman lengkap"
                     rows={2}
@@ -408,6 +404,10 @@ function StorefrontCartDrawerContent(
                         })
                       }
                     }}
+                    className={cn(
+                      'bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none',
+                      errors.address ? 'border-destructive' : 'border-border',
+                    )}
                   />
                   {errors.address && <p className="text-destructive text-xs">{errors.address}</p>}
                 </div>

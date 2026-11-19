@@ -1,12 +1,15 @@
+import type { CartLineItem } from './cart/domain'
+
 import { z } from 'zod'
 
-import { formatCurrency, type CartLineItem } from './cart/domain'
+import { formatCurrency } from './cart/domain'
 
 export { type CartLineItem } from './cart/domain'
 
 /**
  * Normalizes phone numbers to international WhatsApp format without leading + sign or punctuation.
- * Converts local Indonesian formats (08..., +628..., 628..., +62 08...) to clean 628... click-to-chat format.
+ * Converts local Indonesian formats (08..., +628..., 628..., +62 08...) to clean 628...
+ * click-to-chat format.
  */
 export function normalizeWaNumber(phone?: string | null): string {
   if (!phone) return ''
@@ -26,27 +29,27 @@ export function normalizeWaNumber(phone?: string | null): string {
 }
 
 /**
- * Strict Zod discriminated union schema for storefront checkout fulfillment details.
- * Supports DINE_IN, TAKEAWAY, PICKUP, and DELIVERY modes.
+ * Strict Zod discriminated union schema for storefront checkout fulfillment details. Supports
+ * DINE_IN, TAKEAWAY, PICKUP, and DELIVERY modes.
  */
 export const FulfillmentSchema = z.discriminatedUnion('mode', [
   z.object({
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
     mode: z.literal('DINE_IN'),
     tableNumber: z.string().trim().min(1, 'Nomor meja wajib diisi'),
-    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
   }),
   z.object({
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
     mode: z.literal('TAKEAWAY'),
-    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
   }),
   z.object({
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
     mode: z.literal('PICKUP'),
-    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
   }),
   z.object({
-    mode: z.literal('DELIVERY'),
     address: z.string().trim().min(5, 'Alamat pengiriman lengkap wajib diisi'),
     customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
+    mode: z.literal('DELIVERY'),
   }),
 ])
 
@@ -66,19 +69,17 @@ export interface BuildOrderSummaryParams {
   tenant: TenantContactInfo
 }
 
-export type CartInput =
-  | CartLineItem[]
-  | { items: CartLineItem[] }
-  | { cartItems: CartLineItem[] }
+export type CartInput = CartLineItem[] | { items: CartLineItem[] } | { cartItems: CartLineItem[] }
 
 /**
  * Compiles a formatted multi-line WhatsApp order summary and encodes a click-to-chat wa.me URL.
  * Supports both positional buildOrderSummary(cart, fulfillment, tenant) and single-object
  * buildOrderSummary({ cartItems, fulfillment, tenant }).
  */
-export function buildOrderSummary(
-  params: BuildOrderSummaryParams,
-): { message: string; waUrl: string }
+export function buildOrderSummary(params: BuildOrderSummaryParams): {
+  message: string
+  waUrl: string
+}
 export function buildOrderSummary(
   cart: CartInput,
   fulfillment: FulfillmentInput,

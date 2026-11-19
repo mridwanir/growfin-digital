@@ -1,4 +1,4 @@
-import type { Tenant, BrandingContent } from '@/db/schema/tenants'
+import type { BrandingContent, Tenant } from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 import { Camera } from 'lucide-react'
@@ -38,7 +38,9 @@ export function Gallery({
 
   const sectionTitle = title || branding.galleryTitle || 'Galeri Foto'
   const sectionDescription =
-    description || branding.galleryDescription || 'Suasana dan dokumentasi terbaik dari tempat kami.'
+    description ||
+    branding.galleryDescription ||
+    'Suasana dan dokumentasi terbaik dari tempat kami.'
 
   // Extract lookbook items from branding or defaults
   let displayItems: LookbookItemData[] = []
@@ -73,17 +75,17 @@ export function Gallery({
 
   return (
     <section
-      id="gallery"
       className={cn('w-full py-12 md:py-20', className)}
       data-slot="storefront-gallery"
+      id="gallery"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <div className="text-primary inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase">
-            <Camera className="h-3.5 w-3.5" />
+            <Camera className="size-3.5" />
             <span>Dokumentasi & Suasana</span>
           </div>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="text-foreground mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
             {sectionTitle}
           </h2>
           {sectionDescription && (
@@ -99,18 +101,18 @@ export function Gallery({
               <div
                 key={idx}
                 className={cn(
-                  'group relative overflow-hidden rounded-2xl border border-border/40 bg-muted shadow-xs transition-all hover:shadow-md',
+                  'group border-border/40 bg-muted relative overflow-hidden rounded-2xl border shadow-xs transition-all hover:shadow-md',
                   idx === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-square',
                 )}
               >
                 <img
-                  src={item.imageUrl}
                   alt={item.caption || `Foto galeri ${idx + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
+                  src={item.imageUrl}
                 />
                 {item.caption && (
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 via-black/30 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <p className="text-xs font-medium text-white">{item.caption}</p>
                   </div>
                 )}
@@ -122,13 +124,13 @@ export function Gallery({
             {displayItems.slice(0, 6).map((item, idx) => (
               <div
                 key={idx}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-border/40 bg-muted shadow-xs"
+                className="group border-border/40 bg-muted relative aspect-square overflow-hidden rounded-xl border shadow-xs"
               >
                 <img
-                  src={item.imageUrl}
                   alt={item.caption || `Foto galeri ${idx + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
+                  src={item.imageUrl}
                 />
               </div>
             ))}
@@ -138,16 +140,16 @@ export function Gallery({
             {displayItems.slice(0, 6).map((item, idx) => (
               <div
                 key={idx}
-                className="group relative aspect-4/3 overflow-hidden rounded-2xl border border-border/40 bg-muted shadow-xs transition-all duration-300 hover:shadow-md"
+                className="group border-border/40 bg-muted relative aspect-4/3 overflow-hidden rounded-2xl border shadow-xs transition-all duration-300 hover:shadow-md"
               >
                 <img
-                  src={item.imageUrl}
                   alt={item.caption || `Foto galeri ${idx + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
+                  src={item.imageUrl}
                 />
                 {item.caption && (
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-4">
+                  <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 via-black/20 to-transparent p-4">
                     <p className="text-xs font-semibold text-white drop-shadow-xs">
                       {item.caption}
                     </p>

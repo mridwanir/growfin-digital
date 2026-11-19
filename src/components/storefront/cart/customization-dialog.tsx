@@ -105,8 +105,8 @@ function ProductCustomizationDialogContent(
   const handleSubmit = (event?: { preventDefault?: () => void }) => {
     event?.preventDefault?.()
     addItem({
-      basePrice: product.basePrice,
       name: product.name,
+      basePrice: product.basePrice,
       notes: notes.trim() ? notes.trim() : undefined,
       productId: product.id,
       quantity,
@@ -187,9 +187,9 @@ function ProductCustomizationDialogContent(
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {product.imageGallery.map(imgUrl => (
                   <img
+                    key={imgUrl}
                     alt={`${product.name} gallery`}
                     className="border-border size-16 shrink-0 rounded-lg border object-cover"
-                    key={imgUrl}
                     src={imgUrl}
                   />
                 ))}
@@ -200,7 +200,7 @@ function ProductCustomizationDialogContent(
             {product.variants && product.variants.length > 0 && (
               <div className="border-border space-y-4 border-t pt-2">
                 {product.variants.map(variant => (
-                  <div className="space-y-2" key={variant.id || variant.name}>
+                  <div key={variant.id || variant.name} className="space-y-2">
                     <div className="text-foreground text-sm font-semibold">
                       {variant.name}
                       {variant.required && <span className="text-destructive ml-1">*</span>}
@@ -210,12 +210,6 @@ function ProductCustomizationDialogContent(
                         const isSelected = selectedVariants[variant.name] === option.label
                         return (
                           <button
-                            className={cn(
-                              'rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors',
-                              isSelected
-                                ? 'border-primary bg-primary text-primary-foreground'
-                                : 'border-border bg-background hover:bg-muted text-foreground',
-                            )}
                             key={option.id || option.label}
                             type="button"
                             onClick={() =>
@@ -224,6 +218,12 @@ function ProductCustomizationDialogContent(
                                 [variant.name]: option.label,
                               }))
                             }
+                            className={cn(
+                              'rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors',
+                              isSelected
+                                ? 'border-primary bg-primary text-primary-foreground'
+                                : 'border-border bg-background hover:bg-muted text-foreground',
+                            )}
                           >
                             <span>{option.label}</span>
                             {option.priceModifier > 0 && (
@@ -249,15 +249,15 @@ function ProductCustomizationDialogContent(
                     const isSelected = selectedAddons.includes(addon.name)
                     return (
                       <button
+                        key={addon.id || addon.name}
+                        type="button"
+                        onClick={() => handleToggleAddon(addon.name)}
                         className={cn(
                           'flex w-full items-center justify-between rounded-lg border p-3 text-left text-sm transition-colors',
                           isSelected
                             ? 'border-primary bg-primary/10 text-foreground'
                             : 'border-border bg-background hover:bg-muted text-foreground',
                         )}
-                        key={addon.id || addon.name}
-                        type="button"
-                        onClick={() => handleToggleAddon(addon.name)}
                       >
                         <span className="font-medium">{addon.name}</span>
                         <span className="text-muted-foreground font-medium">

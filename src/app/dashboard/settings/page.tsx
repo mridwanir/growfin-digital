@@ -35,8 +35,7 @@ async function SettingsContent({ searchParams }: SettingsPageProps) {
   }
 
   const { tenant: selectedTenantId } = await searchParams
-  const activeTenantMeta =
-    tenantList.find(t => t.id === selectedTenantId) || tenantList[0]
+  const activeTenantMeta = tenantList.find(t => t.id === selectedTenantId) || tenantList[0]
 
   const fullSettings = await getTenantSettings(activeTenantMeta.id, session.user.id)
   if (!fullSettings) return null

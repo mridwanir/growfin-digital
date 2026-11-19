@@ -22,13 +22,7 @@ import {
   UrbanLayout,
   VibrantLayout,
 } from '@/components/storefront/layouts'
-import {
-  Footer,
-  Gallery,
-  Hero,
-  OperatingHours,
-  Reviews,
-} from '@/components/storefront/sections'
+import { Footer, Gallery, Hero, OperatingHours, Reviews } from '@/components/storefront/sections'
 import { DynamicThemeProvider } from '@/components/storefront/theme'
 
 // ---------------------------------------------------------------------------
@@ -38,40 +32,35 @@ import { DynamicThemeProvider } from '@/components/storefront/theme'
 const mockTenant: Tenant = {
   id: '00000000-0000-0000-0000-000000000001',
   name: 'Kopi Artisan Senopati',
-  slug: 'kopi-artisan-senopati',
-  category: 'fnb',
-  status: 'published',
-  packageTier: 'pro',
   address: 'Jl. Senopati No. 42, Kebayoran Baru',
+  category: 'fnb',
   city: 'Jakarta Selatan',
-  phone: '081234567890',
-  googleMapsUrl: 'https://maps.google.com/?cid=12345',
+  createdAt: new Date('2026-01-01T00:00:00Z'),
   customDomain: null,
   domainActiveUntil: null,
-  siteActiveUntil: null,
   fomoExpiresAt: null,
-  userId: null,
+  googleMapsUrl: 'https://maps.google.com/?cid=12345',
   organizationId: null,
-  createdAt: new Date('2026-01-01T00:00:00Z'),
+  packageTier: 'pro',
+  phone: '081234567890',
+  siteActiveUntil: null,
+  slug: 'kopi-artisan-senopati',
+  status: 'published',
   updatedAt: new Date('2026-01-01T00:00:00Z'),
+  userId: null,
   brandingContent: {
-    heroTitle: 'Kopi Artisan Terbaik di Senopati',
-    heroSubtitle: 'Biji kopi pilihan Nusantara dipanggang segar setiap pagi.',
-    heroImageUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb',
-    logoUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd',
-    tagline: 'Secangkir Ketenangan di Tengah Hiruk Pikuk Ibu Kota',
-    iconEmoji: '☕',
-    galleryTitle: 'Suasana & Seduhan Kami',
     galleryDescription: 'Tempat ideal untuk berbincang santai atau bekerja produktif.',
-    menuTitle: 'Menu Unggulan',
+    galleryTitle: 'Suasana & Seduhan Kami',
+    heroImageUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb',
+    heroSubtitle: 'Biji kopi pilihan Nusantara dipanggang segar setiap pagi.',
+    heroTitle: 'Kopi Artisan Terbaik di Senopati',
+    iconEmoji: '☕',
+    logoUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd',
     menuDescription: 'Racikan kopi spesial dan pastry lezat buatan kami.',
-    reviewsTitle: 'Ulasan Pecinta Kopi',
+    menuTitle: 'Menu Unggulan',
     reviewsDescription: 'Pengalaman nyata dari pengunjung setia kami.',
-    socialLinks: {
-      instagram: { active: true, url: 'https://instagram.com/kopiartisan' },
-      whatsapp: { active: true, url: 'https://wa.me/6281234567890' },
-      facebook: { active: true, url: 'https://facebook.com/kopiartisan' },
-    },
+    reviewsTitle: 'Ulasan Pecinta Kopi',
+    tagline: 'Secangkir Ketenangan di Tengah Hiruk Pikuk Ibu Kota',
     lookbook: [
       {
         caption: 'Manual Brew Bar',
@@ -96,26 +85,31 @@ const mockTenant: Tenant = {
         time: '1 minggu lalu',
       },
     ],
+    socialLinks: {
+      facebook: { active: true, url: 'https://facebook.com/kopiartisan' },
+      instagram: { active: true, url: 'https://instagram.com/kopiartisan' },
+      whatsapp: { active: true, url: 'https://wa.me/6281234567890' },
+    },
   },
   operatingHours: {
+    closeTime: '22:00',
     isOpen: true,
     openTime: '07:00',
-    closeTime: '22:00',
     raw: '07:00 - 22:00 WIB',
     schedules: [
-      { day: 'Senin', open: '07:00', close: '22:00', closed: false },
-      { day: 'Selasa', open: '07:00', close: '22:00', closed: false },
-      { day: 'Rabu', open: '07:00', close: '22:00', closed: false },
-      { day: 'Kamis', open: '07:00', close: '22:00', closed: false },
-      { day: 'Jumat', open: '07:00', close: '23:00', closed: false },
-      { day: 'Sabtu', open: '07:00', close: '23:00', closed: false },
-      { day: 'Minggu', open: '08:00', close: '21:00', closed: false },
+      { close: '22:00', closed: false, day: 'Senin', open: '07:00' },
+      { close: '22:00', closed: false, day: 'Selasa', open: '07:00' },
+      { close: '22:00', closed: false, day: 'Rabu', open: '07:00' },
+      { close: '22:00', closed: false, day: 'Kamis', open: '07:00' },
+      { close: '23:00', closed: false, day: 'Jumat', open: '07:00' },
+      { close: '23:00', closed: false, day: 'Sabtu', open: '07:00' },
+      { close: '21:00', closed: false, day: 'Minggu', open: '08:00' },
     ],
   },
   themeConfig: {
-    themeColor: '#059669',
-    layoutId: 'classic',
     fontFamily: 'font-serif',
+    layoutId: 'classic',
+    themeColor: '#059669',
   },
 }
 
@@ -140,14 +134,14 @@ const mockProducts: ProductWithVariants[] = [
   {
     id: 'prod-latte',
     name: 'Caffe Latte Double Shot',
-    description: 'Espresso ganda dengan susu steam lembut bertekstur microfoam halus.',
     basePrice: 35000,
-    originalPrice: 40000,
-    stock: 50,
     categoryId: 'cat-coffee',
+    description: 'Espresso ganda dengan susu steam lembut bertekstur microfoam halus.',
     imageUrl: 'https://images.unsplash.com/photo-1541167760496-1628856ab772',
     isActive: true,
+    originalPrice: 40000,
     sortOrder: 0,
+    stock: 50,
     variants: [
       {
         id: 'var-milk',
@@ -163,13 +157,13 @@ const mockProducts: ProductWithVariants[] = [
   {
     id: 'prod-croissant',
     name: 'Almond Butter Croissant',
-    description: 'Croissant renyah berlapis mentega Prancis dengan isian pasta almond gurih.',
     basePrice: 28000,
-    stock: 25,
     categoryId: 'cat-pastry',
+    description: 'Croissant renyah berlapis mentega Prancis dengan isian pasta almond gurih.',
     imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a',
     isActive: true,
     sortOrder: 1,
+    stock: 25,
   },
 ]
 
@@ -196,9 +190,9 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       it(`renders F&B layout "${name}" to static HTML without crashing`, () => {
         const html = renderToStaticMarkup(
           <LayoutComponent
-            tenant={mockTenant}
             categories={mockCategories}
             products={mockProducts}
+            tenant={mockTenant}
           />,
         )
 
@@ -238,9 +232,9 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       it(`renders Retail layout "${name}" to static HTML without crashing`, () => {
         const html = renderToStaticMarkup(
           <LayoutComponent
-            tenant={retailTenant}
             categories={mockCategories}
             products={mockProducts}
+            tenant={retailTenant}
           />,
         )
 
@@ -254,7 +248,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
   // -------------------------------------------------------------------------
   // 2. Theme Registry & Resolver
   // -------------------------------------------------------------------------
-  describe('THEME_LAYOUTS Registry & getStorefrontLayout', () => {
+  describe('tHEME_LAYOUTS Registry & getStorefrontLayout', () => {
     it('registers all 13 themes in the lookup dictionary', () => {
       expect(THEME_LAYOUTS['classic']).toBe(ClassicLayout)
       expect(THEME_LAYOUTS['modern']).toBe(ModernLayout)
@@ -283,7 +277,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
   // -------------------------------------------------------------------------
   // 3. Dynamic Section Ordering (sectionOrder)
   // -------------------------------------------------------------------------
-  describe('Dynamic Section Ordering (sectionOrder)', () => {
+  describe('dynamic Section Ordering (sectionOrder)', () => {
     it('respects tenant custom section order', () => {
       const customTenant: Tenant = {
         ...mockTenant,
@@ -294,11 +288,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       }
 
       const html = renderToStaticMarkup(
-        <ClassicLayout
-          tenant={customTenant}
-          categories={mockCategories}
-          products={mockProducts}
-        />,
+        <ClassicLayout categories={mockCategories} products={mockProducts} tenant={customTenant} />,
       )
 
       const reviewsIndex = html.indexOf('data-slot="storefront-reviews"')
@@ -318,7 +308,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
   // -------------------------------------------------------------------------
   // 4. Section Suppression (hiddenSections)
   // -------------------------------------------------------------------------
-  describe('Section Suppression (hiddenSections)', () => {
+  describe('section Suppression (hiddenSections)', () => {
     it('omits hidden sections when configured in themeConfig.hiddenSections', () => {
       const suppressedTenant: Tenant = {
         ...mockTenant,
@@ -330,9 +320,9 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
 
       const html = renderToStaticMarkup(
         <ModernLayout
-          tenant={suppressedTenant}
           categories={mockCategories}
           products={mockProducts}
+          tenant={suppressedTenant}
         />,
       )
 
@@ -353,9 +343,9 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
 
       const html = renderToStaticMarkup(
         <UrbanLayout
-          tenant={aliasSuppressedTenant}
           categories={mockCategories}
           products={mockProducts}
+          tenant={aliasSuppressedTenant}
         />,
       )
 
@@ -374,11 +364,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
     }
 
     const retailHtml = renderToStaticMarkup(
-      <ModernLayout
-        tenant={retailTenant}
-        categories={mockCategories}
-        products={mockProducts}
-      />,
+      <ModernLayout categories={mockCategories} products={mockProducts} tenant={retailTenant} />,
     )
     expect(retailHtml).toContain('Katalog Produk')
 
@@ -392,21 +378,16 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
     }
 
     const fnbHtml = renderToStaticMarkup(
-      <ModernLayout
-        tenant={fnbTenant}
-        categories={mockCategories}
-        products={mockProducts}
-      />,
+      <ModernLayout categories={mockCategories} products={mockProducts} tenant={fnbTenant} />,
     )
     expect(fnbHtml).toContain('Menu Pilihan')
   })
 
-
   // -------------------------------------------------------------------------
   // 5. Pure Server Static Sections In Isolation
   // -------------------------------------------------------------------------
-  describe('Static Server Sections', () => {
-    it('Hero renders tenant identity, cover, operational badge, and CTAs', () => {
+  describe('static Server Sections', () => {
+    it('hero renders tenant identity, cover, operational badge, and CTAs', () => {
       const html = renderToStaticMarkup(<Hero tenant={mockTenant} />)
 
       expect(html).toContain('Kopi Artisan Senopati')
@@ -416,7 +397,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('Lihat Menu &amp; Katalog')
       expect(html).toContain('https://wa.me/6281234567890')
     })
-    it('Hero uses normalizeWaNumber to handle complex phone formats', () => {
+    it('hero uses normalizeWaNumber to handle complex phone formats', () => {
       const customPhoneTenant: Tenant = {
         ...mockTenant,
         phone: '+62 0812-3456-7890',
@@ -429,7 +410,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('https://wa.me/6281234567890?text=')
     })
 
-    it('Hero renders closed state when tenant operatingHours.isOpen is false', () => {
+    it('hero renders closed state when tenant operatingHours.isOpen is false', () => {
       const closedTenant: Tenant = {
         ...mockTenant,
         operatingHours: {
@@ -443,7 +424,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).not.toContain('Buka Sekarang')
     })
 
-    it('Gallery renders lookbook photo grid and captions', () => {
+    it('gallery renders lookbook photo grid and captions', () => {
       const html = renderToStaticMarkup(<Gallery tenant={mockTenant} />)
 
       expect(html).toContain('data-slot="storefront-gallery"')
@@ -452,7 +433,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('Espresso Machine')
     })
 
-    it('Reviews renders customer testimonials, ratings, and Google Maps link', () => {
+    it('reviews renders customer testimonials, ratings, and Google Maps link', () => {
       const html = renderToStaticMarkup(<Reviews tenant={mockTenant} />)
 
       expect(html).toContain('data-slot="storefront-reviews"')
@@ -464,7 +445,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('rel="noopener noreferrer"')
     })
 
-    it('OperatingHours renders weekly schedule and business address', () => {
+    it('operatingHours renders weekly schedule and business address', () => {
       const html = renderToStaticMarkup(<OperatingHours tenant={mockTenant} />)
 
       expect(html).toContain('data-slot="storefront-operating-hours"')
@@ -475,7 +456,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('081234567890')
     })
 
-    it('Footer renders copyright, tenant info, address, and target="_blank" social links', () => {
+    it('footer renders copyright, tenant info, address, and target="_blank" social links', () => {
       const html = renderToStaticMarkup(<Footer tenant={mockTenant} />)
 
       expect(html).toContain('data-slot="storefront-footer"')
@@ -490,7 +471,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
       expect(html).toContain('target="_blank"')
       expect(html).toContain('rel="noopener noreferrer"')
     })
-    it('Footer uses normalizeWaNumber to handle complex phone formats', () => {
+    it('footer uses normalizeWaNumber to handle complex phone formats', () => {
       const customPhoneTenant: Tenant = {
         ...mockTenant,
         phone: '+62 0812-3456-7890',
@@ -507,7 +488,7 @@ describe('Server Component Shell, Static Sections & Theme Layouts (Ticket 06)', 
   // -------------------------------------------------------------------------
   // 6. DynamicThemeProvider Pure Server Component
   // -------------------------------------------------------------------------
-  describe('DynamicThemeProvider (Server Component)', () => {
+  describe('dynamicThemeProvider (Server Component)', () => {
     it('generates brand color CSS variables as inline style without client hooks', () => {
       const html = renderToStaticMarkup(
         <DynamicThemeProvider themeColor="#10b981">

@@ -24,13 +24,13 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
 
       <div className="relative z-10 w-full max-w-md rounded-3xl border border-[#262633] bg-[#14141A] p-8 text-center shadow-2xl sm:p-10">
         {/* Icon Header */}
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#00b894]/30 bg-[#00b894]/10 text-[#00b894] shadow-inner">
-          <RefreshCw className="h-8 w-8 text-[#00b894]" />
+        <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl border border-[#00b894]/30 bg-[#00b894]/10 text-[#00b894] shadow-inner">
+          <RefreshCw className="size-8 text-[#00b894]" />
         </div>
 
         {/* Business Title Badge */}
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-white/5 bg-[#262633]/60 px-3 py-1 text-xs font-semibold text-gray-300">
-          <Store className="h-3.5 w-3.5 text-[#00b894]" />
+          <Store className="size-3.5 text-[#00b894]" />
           <span>{displayTitle}</span>
         </div>
 
@@ -48,18 +48,18 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
         {/* Action Button */}
         <div className="space-y-3">
           <Link
-            href="/dashboard"
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00b894] px-5 py-3.5 text-sm font-black text-black shadow-lg transition-all hover:bg-[#00e0b8] hover:shadow-emerald-500/20 active:scale-95"
+            href="/dashboard"
           >
             <span>Masuk ke Dashboard Growfin</span>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="size-4" />
           </Link>
 
           <a
-            href={`https://wa.me/${supportWa}?text=${encodeURIComponent(`Halo Growfin, saya ingin bertanya tentang perpanjangan website ${displayTitle}`)}`}
-            target="_blank"
-            rel="noreferrer"
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#262633] bg-transparent px-4 py-2.5 text-xs font-bold text-gray-400 transition-all hover:bg-[#1C1C26] hover:text-white"
+            href={`https://wa.me/${supportWa}?text=${encodeURIComponent(`Halo Growfin, saya ingin bertanya tentang perpanjangan website ${displayTitle}`)}`}
+            rel="noreferrer"
+            target="_blank"
           >
             <span>Bantuan Layanan (WhatsApp)</span>
           </a>
@@ -67,7 +67,7 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
 
         {/* Footer info */}
         <div className="mt-8 flex items-center justify-center gap-1.5 border-t border-[#262633] pt-6 text-[11px] text-[#8E8EA0]">
-          <ShieldCheck className="h-3.5 w-3.5 text-[#00b894]" />
+          <ShieldCheck className="size-3.5 text-[#00b894]" />
           <span>Growfin Digital Platform UMKM</span>
         </div>
       </div>

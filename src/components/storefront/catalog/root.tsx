@@ -7,6 +7,7 @@ import type {
 } from './types'
 
 import { useCallback, useMemo, useState } from 'react'
+
 import { useOptionalCartActions } from '@/lib/storefront/cart'
 
 import { ProductCatalogContext } from './context'
@@ -37,15 +38,13 @@ export function ProductCatalogRoot({
     (product: ProductWithVariants) => {
       if (cartActions) {
         cartActions.addItem({
-          basePrice: product.basePrice,
           name: product.name,
+          basePrice: product.basePrice,
           productId: product.id,
           quantity: 1,
         })
       } else if (typeof window !== 'undefined') {
-        window.dispatchEvent(
-          new CustomEvent('growfin:add-to-cart', { detail: product }),
-        )
+        window.dispatchEvent(new CustomEvent('growfin:add-to-cart', { detail: product }))
       }
     },
     [cartActions],
@@ -53,9 +52,7 @@ export function ProductCatalogRoot({
 
   const defaultOnSelect = useCallback((product: ProductWithVariants) => {
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('growfin:select-product', { detail: product }),
-      )
+      window.dispatchEvent(new CustomEvent('growfin:select-product', { detail: product }))
     }
   }, [])
 
@@ -115,8 +112,8 @@ export function ProductCatalogRoot({
 
         const matchesNestedCategory = product.category
           ? product.category.id === activeCategory ||
-          product.category.slug === activeCategory ||
-          product.category.name.toLowerCase() === activeCategory.toLowerCase()
+            product.category.slug === activeCategory ||
+            product.category.name.toLowerCase() === activeCategory.toLowerCase()
           : false
 
         if (!matchesDirectCategoryId && !matchesFoundCategory && !matchesNestedCategory) {

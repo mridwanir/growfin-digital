@@ -4,15 +4,14 @@ import type { StorefrontArchetype } from './archetype'
 import type { BrandingContent, OperatingHours, Tenant } from '@/db/schema/tenants'
 
 import { env } from '@/lib/env'
-export { type StorefrontArchetype, resolveArchetype } from './archetype'
 
+export { resolveArchetype, type StorefrontArchetype } from './archetype'
 
 function getFnbBusinessType(cat: string): string {
   if (cat.includes('cafe') || cat.includes('kopi')) return 'CafeOrCoffeeShop'
   if (cat.includes('bakery') || cat.includes('roti')) return 'Bakery'
   return 'Restaurant'
 }
-
 
 export function getLocalBusinessType(
   category: string = '',
@@ -103,10 +102,7 @@ export function buildLocalBusinessJsonLd(
   const branding = (tenant.brandingContent as BrandingContent | null) || {}
   const operatingHours = (tenant.operatingHours as OperatingHours | null) || {}
 
-  const description =
-    branding.tagline ||
-    branding.heroSubtitle ||
-    `Website resmi ${tenant.name}`
+  const description = branding.tagline || branding.heroSubtitle || `Website resmi ${tenant.name}`
 
   return {
     name: tenant.name,
@@ -127,23 +123,23 @@ export function buildLocalBusinessJsonLd(
     ...(tenant.googleMapsUrl ? { hasMap: tenant.googleMapsUrl } : {}),
     ...(operatingHours.openTime && operatingHours.closeTime
       ? {
-        openingHoursSpecification: [
-          {
-            '@type': 'OpeningHoursSpecification',
-            closes: operatingHours.closeTime,
-            opens: operatingHours.openTime,
-            dayOfWeek: [
-              'Monday',
-              'Tuesday',
-              'Wednesday',
-              'Thursday',
-              'Friday',
-              'Saturday',
-              'Sunday',
-            ],
-          },
-        ],
-      }
+          openingHoursSpecification: [
+            {
+              '@type': 'OpeningHoursSpecification',
+              closes: operatingHours.closeTime,
+              opens: operatingHours.openTime,
+              dayOfWeek: [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+                'Sunday',
+              ],
+            },
+          ],
+        }
       : {}),
   }
 }

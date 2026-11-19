@@ -1,18 +1,14 @@
+import type { CartLineItem } from '@/lib/storefront/cart/domain'
+import type { FulfillmentData, FulfillmentInput } from '@/lib/storefront/whatsapp'
+
 import { describe, expect, it } from 'vitest'
 
 import {
   buildCartItemHash,
   calculateItemSubtotal,
   formatCurrency,
-  type CartLineItem,
 } from '@/lib/storefront/cart/domain'
-import {
-  buildOrderSummary,
-  FulfillmentSchema,
-  normalizeWaNumber,
-  type FulfillmentData,
-  type FulfillmentInput,
-} from '@/lib/storefront/whatsapp'
+import { buildOrderSummary, FulfillmentSchema, normalizeWaNumber } from '@/lib/storefront/whatsapp'
 
 describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
   describe('calculateItemSubtotal', () => {
@@ -65,7 +61,7 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
     })
 
     it('handles non-finite basePrice or modifiers defensively', () => {
-      expect(calculateItemSubtotal(NaN, [NaN], [{ price: NaN }])).toBe(0)
+      expect(calculateItemSubtotal(Number.NaN, [Number.NaN], [{ price: Number.NaN }])).toBe(0)
     })
   })
 
@@ -78,9 +74,9 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('generates identical hash regardless of variant key insertion order', () => {
       const hashA = buildCartItemHash('prod-1', {
+        Ice: 'Normal',
         Size: 'Large',
         Sugar: 'Less',
-        Ice: 'Normal',
       })
       const hashB = buildCartItemHash('prod-1', {
         Ice: 'Normal',
@@ -169,13 +165,13 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
     })
   })
 
-  describe('FulfillmentSchema', () => {
-    describe('DINE_IN mode', () => {
+  describe('fulfillmentSchema', () => {
+    describe('dINE_IN mode', () => {
       it('validates valid DINE_IN input', () => {
         const result = FulfillmentSchema.safeParse({
+          customerName: 'Budi Santoso',
           mode: 'DINE_IN',
           tableNumber: '12A',
-          customerName: 'Budi Santoso',
         })
         expect(result.success).toBe(true)
         if (result.success && result.data.mode === 'DINE_IN') {
@@ -186,9 +182,9 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       it('rejects empty or whitespace-only tableNumber', () => {
         const result = FulfillmentSchema.safeParse({
+          customerName: 'Budi Santoso',
           mode: 'DINE_IN',
           tableNumber: '   ',
-          customerName: 'Budi Santoso',
         })
         expect(result.success).toBe(false)
         if (!result.success) {
@@ -199,9 +195,9 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       it('rejects missing or empty customerName', () => {
         const result = FulfillmentSchema.safeParse({
+          customerName: '',
           mode: 'DINE_IN',
           tableNumber: '12',
-          customerName: '',
         })
         expect(result.success).toBe(false)
         if (!result.success) {
@@ -211,11 +207,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
       })
     })
 
-    describe('TAKEAWAY mode', () => {
+    describe('tAKEAWAY mode', () => {
       it('validates valid TAKEAWAY input', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'TAKEAWAY',
           customerName: 'Siti Rahma',
+          mode: 'TAKEAWAY',
         })
         expect(result.success).toBe(true)
         if (result.success) {
@@ -226,8 +222,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       it('rejects missing or whitespace customerName', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'TAKEAWAY',
           customerName: '   ',
+          mode: 'TAKEAWAY',
         })
         expect(result.success).toBe(false)
         if (!result.success) {
@@ -237,11 +233,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
       })
     })
 
-    describe('PICKUP mode', () => {
+    describe('pICKUP mode', () => {
       it('validates valid PICKUP input', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'PICKUP',
           customerName: 'Ahmad Faiz',
+          mode: 'PICKUP',
         })
         expect(result.success).toBe(true)
         if (result.success) {
@@ -252,8 +248,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       it('rejects missing customerName', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'PICKUP',
           customerName: '',
+          mode: 'PICKUP',
         })
         expect(result.success).toBe(false)
         if (!result.success) {
@@ -263,12 +259,12 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
       })
     })
 
-    describe('DELIVERY mode', () => {
+    describe('dELIVERY mode', () => {
       it('validates valid DELIVERY input with address >= 5 characters', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'DELIVERY',
           address: 'Jl. Riau No. 45, Bandung',
           customerName: 'Dewi Lestari',
+          mode: 'DELIVERY',
         })
         expect(result.success).toBe(true)
         if (result.success && result.data.mode === 'DELIVERY') {
@@ -279,9 +275,9 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       it('rejects address shorter than 5 characters', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'DELIVERY',
           address: 'Jl.',
           customerName: 'Dewi Lestari',
+          mode: 'DELIVERY',
         })
         expect(result.success).toBe(false)
         if (!result.success) {
@@ -292,9 +288,9 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       it('rejects missing customerName in DELIVERY mode', () => {
         const result = FulfillmentSchema.safeParse({
-          mode: 'DELIVERY',
           address: 'Jl. Dipati Ukur No. 10',
           customerName: '  ',
+          mode: 'DELIVERY',
         })
         expect(result.success).toBe(false)
         if (!result.success) {
@@ -305,16 +301,16 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
     })
     it('rejects DELIVERY with completely missing address', () => {
       const result = FulfillmentSchema.safeParse({
-        mode: 'DELIVERY',
         customerName: 'Dewi Lestari',
+        mode: 'DELIVERY',
       })
       expect(result.success).toBe(false)
     })
 
     it('rejects unrecognized fulfillment mode', () => {
       const result = FulfillmentSchema.safeParse({
-        mode: 'DRIVE_THRU',
         customerName: 'Test Customer',
+        mode: 'DRIVE_THRU',
       })
       expect(result.success).toBe(false)
     })
@@ -330,34 +326,34 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
     const mockCartItems: CartLineItem[] = [
       {
         id: 'hash-1',
-        productId: 'prod-1',
         name: 'Kopi Susu Aren',
         basePrice: 20000,
-        quantity: 2,
-        selectedVariants: {
-          Ukuran: 'Large',
-          Suhu: 'Less Ice',
-        },
-        selectedAddons: ['Extra Shot', 'Oat Milk'],
         notes: 'Jangan terlalu manis',
+        productId: 'prod-1',
+        quantity: 2,
+        selectedAddons: ['Extra Shot', 'Oat Milk'],
         subtotal: 54000,
+        selectedVariants: {
+          Suhu: 'Less Ice',
+          Ukuran: 'Large',
+        },
       },
       {
         id: 'hash-2',
-        productId: 'prod-2',
         name: 'Croissant Butter',
         basePrice: 18000,
+        productId: 'prod-2',
         quantity: 1,
-        selectedVariants: {},
         selectedAddons: [],
+        selectedVariants: {},
         subtotal: 18000,
       },
     ]
 
     it('compiles order summary message and wa.me URL for DINE_IN fulfillment', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'DINE_IN',
         customerName: 'Budi Hartono',
+        mode: 'DINE_IN',
         tableNumber: 'Meja 05',
       }
 
@@ -390,14 +386,16 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
       // Verification of wa.me URL
       expect(waUrl.startsWith('https://wa.me/6281234567890?text=')).toBe(true)
-      const decodedParam = decodeURIComponent(waUrl.replace('https://wa.me/6281234567890?text=', ''))
+      const decodedParam = decodeURIComponent(
+        waUrl.replace('https://wa.me/6281234567890?text=', ''),
+      )
       expect(decodedParam).toBe(message)
     })
 
     it('compiles order summary for TAKEAWAY fulfillment', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'TAKEAWAY',
         customerName: 'Siti Aminah',
+        mode: 'TAKEAWAY',
       }
 
       const { message, waUrl } = buildOrderSummary({
@@ -413,8 +411,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('compiles order summary for PICKUP fulfillment', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'PICKUP',
         customerName: 'Ferry Salim',
+        mode: 'PICKUP',
       }
 
       const { message, waUrl } = buildOrderSummary({
@@ -430,9 +428,9 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('compiles order summary for DELIVERY fulfillment with delivery address', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'DELIVERY',
-        customerName: 'Rina Nose',
         address: 'Jl. Surya Sumantri No. 88, Sukajadi',
+        customerName: 'Rina Nose',
+        mode: 'DELIVERY',
       }
 
       const { message, waUrl } = buildOrderSummary({
@@ -449,8 +447,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('falls back to tenant.phone if tenant.waNumber is undefined', () => {
       const fulfillment: FulfillmentData = {
-        mode: 'TAKEAWAY',
         customerName: 'Anton',
+        mode: 'TAKEAWAY',
       }
 
       const { waUrl } = buildOrderSummary({
@@ -467,8 +465,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('handles empty cart gracefully with 0 total', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'TAKEAWAY',
         customerName: 'Test Empty',
+        mode: 'TAKEAWAY',
       }
 
       const { message, waUrl } = buildOrderSummary({
@@ -482,8 +480,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
     })
     it('handles tenant with neither waNumber nor phone gracefully', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'TAKEAWAY',
         customerName: 'No Contact',
+        mode: 'TAKEAWAY',
       }
 
       const { waUrl } = buildOrderSummary({
@@ -499,23 +497,23 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('omits notes line when customer notes are whitespace-only', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'TAKEAWAY',
         customerName: 'Dewi',
+        mode: 'TAKEAWAY',
       }
 
       const { message } = buildOrderSummary({
+        fulfillment,
+        tenant: mockTenant,
         cartItems: [
           {
             id: 'h1',
-            productId: 'p1',
             name: 'Kopi',
-            quantity: 1,
             notes: '    ',
+            productId: 'p1',
+            quantity: 1,
             subtotal: 15000,
           },
         ],
-        fulfillment,
-        tenant: mockTenant,
       })
 
       expect(message).not.toContain('Catatan:')
@@ -523,30 +521,30 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('handles cart item with missing or non-number subtotal', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'TAKEAWAY',
         customerName: 'Dewi',
+        mode: 'TAKEAWAY',
       }
 
       const { message } = buildOrderSummary({
+        fulfillment,
+        tenant: mockTenant,
         cartItems: [
           {
             id: 'h1',
-            productId: 'p1',
             name: 'Kopi',
+            productId: 'p1',
             quantity: 1,
             subtotal: undefined as unknown as number,
           },
         ],
-        fulfillment,
-        tenant: mockTenant,
       })
 
       expect(message).toContain('Total: Rp 0')
     })
     it('supports positional call buildOrderSummary(cartItems, fulfillment, tenant)', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'TAKEAWAY',
         customerName: 'Budi Hartono',
+        mode: 'TAKEAWAY',
       }
 
       const { message, waUrl } = buildOrderSummary(mockCartItems, fulfillment, mockTenant)
@@ -561,8 +559,8 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('supports positional call with cart state object { items: CartLineItem[] }', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'PICKUP',
         customerName: 'Siti Rahma',
+        mode: 'PICKUP',
       }
 
       const { message, waUrl } = buildOrderSummary(
@@ -578,14 +576,14 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
 
     it('supports single-object call with items alias { items, fulfillment, tenant }', () => {
       const fulfillment: FulfillmentInput = {
-        mode: 'DELIVERY',
-        customerName: 'Agus Pratama',
         address: 'Jl. Merdeka No. 10',
+        customerName: 'Agus Pratama',
+        mode: 'DELIVERY',
       }
 
       const { message, waUrl } = buildOrderSummary({
-        items: mockCartItems,
         fulfillment,
+        items: mockCartItems,
         tenant: mockTenant,
       })
 
@@ -604,7 +602,7 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
       expect(formatCurrency(-5000)).toBe('-Rp 5.000')
     })
     it('handles non-finite amounts by returning Rp 0', () => {
-      expect(formatCurrency(NaN)).toBe('Rp 0')
+      expect(formatCurrency(Number.NaN)).toBe('Rp 0')
       expect(formatCurrency(Infinity)).toBe('Rp 0')
       expect(formatCurrency(-Infinity)).toBe('Rp 0')
     })

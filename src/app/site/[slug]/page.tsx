@@ -13,11 +13,7 @@ import {
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { PACKAGE_LIMITS } from '@/lib/site-config'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
-import {
-  buildLocalBusinessJsonLd,
-  buildSiteMetadata,
-  resolveArchetype,
-} from '@/lib/storefront/seo'
+import { buildLocalBusinessJsonLd, buildSiteMetadata, resolveArchetype } from '@/lib/storefront/seo'
 
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
@@ -91,7 +87,7 @@ export default async function SitePage({ params }: SitePageProps) {
         type="application/ld+json"
       />
       <GlobalClickTracker businessId={tenant.id} />
-      <LayoutComponent tenant={tenant} categories={categories} products={products}>
+      <LayoutComponent categories={categories} products={products} tenant={tenant}>
         <StorefrontClientIslands tenant={tenant} />
         {!tierLimits.removeBranding && <GrowfinWatermark />}
       </LayoutComponent>

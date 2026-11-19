@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 
 import {
   FNB_FULFILLMENT_MODES,
-  RETAIL_FULFILLMENT_MODES,
   resolveFulfillmentModes,
+  RETAIL_FULFILLMENT_MODES,
   StorefrontClientIslands,
 } from '@/components/storefront/client-islands'
 import { StorefrontCartProvider } from '@/lib/storefront/cart'
@@ -17,10 +17,10 @@ describe('StorefrontClientIslands Component', () => {
     name: 'Kopi Senja',
     category: 'Cafe & Coffee Shop',
     phone: '081234567890',
+    themeConfig: {},
     brandingContent: {
       waNumber: '6281234567890',
     },
-    themeConfig: {},
   }
 
   const retailTenant = {
@@ -28,10 +28,10 @@ describe('StorefrontClientIslands Component', () => {
     name: 'Boutique Cantik',
     category: 'Fashion & Retail',
     phone: '081298765432',
+    themeConfig: {},
     brandingContent: {
       waNumber: '6281298765432',
     },
-    themeConfig: {},
   }
 
   describe('resolveFulfillmentModes', () => {
@@ -50,12 +50,14 @@ describe('StorefrontClientIslands Component', () => {
     it('returns custom fulfillment modes when configured in themeConfig.fulfillmentModes', () => {
       const customModes = ['TAKEAWAY', 'DELIVERY'] as const
       expect(
-        resolveFulfillmentModes('Cafe & Coffee Shop', { fulfillmentModes: customModes as unknown as string[] }),
+        resolveFulfillmentModes('Cafe & Coffee Shop', {
+          fulfillmentModes: customModes as unknown as string[],
+        }),
       ).toEqual(customModes)
     })
   })
 
-  describe('StorefrontClientIslands rendering', () => {
+  describe('storefrontClientIslands rendering', () => {
     it('wraps islands inside StorefrontCartProvider with tenantId', () => {
       const providerElement = StorefrontClientIslands({ tenant: fnbTenant }) as ReactElement<{
         children: ReactElement

@@ -13,7 +13,7 @@ const updateCategorySchema = z.object({
 })
 
 interface RouteParams {
-  params: Promise<{ id: string; categoryId: string; }>
+  params: Promise<{ id: string; categoryId: string }>
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {

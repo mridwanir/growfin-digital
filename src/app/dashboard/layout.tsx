@@ -20,7 +20,10 @@ async function DashboardGuard({ children }: { children: ReactNode }) {
       <header className="border-border/60 bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-40 border-b backdrop-blur">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-6">
-            <Link className="flex items-center gap-2 font-bold tracking-tight text-lg" href="/dashboard">
+            <Link
+              className="flex items-center gap-2 text-lg font-bold tracking-tight"
+              href="/dashboard"
+            >
               <span className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg text-xs font-black">
                 G
               </span>

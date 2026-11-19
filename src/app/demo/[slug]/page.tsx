@@ -45,12 +45,12 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
 
   return {
     description,
+    title: `Preview: ${clientName} | Growfin Digital`,
     openGraph: {
       description,
       images: [{ alt: clientName, url: imageUrl }],
       title: `Preview: ${clientName} | Growfin Digital`,
     },
-    title: `Preview: ${clientName} | Growfin Digital`,
   }
 }
 
@@ -79,7 +79,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
   const LayoutComponent = getStorefrontLayout(tenant.themeConfig?.layoutId, archetype)
 
   return (
-    <LayoutComponent tenant={tenant} categories={categories} products={products}>
+    <LayoutComponent categories={categories} products={products} tenant={tenant}>
       <StorefrontClientIslands tenant={tenant} />
       <GrowfinWatermark />
     </LayoutComponent>

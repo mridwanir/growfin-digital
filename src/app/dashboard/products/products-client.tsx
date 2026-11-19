@@ -119,7 +119,10 @@ export function ProductsClient({
       const data = await res.json()
       setCategories(categories.map(c => (c.id === catId ? data.category : c)))
       setEditingCategoryId(null)
-      setFeedback({ type: 'success', message: `Kategori berhasil diubah menjadi "${data.category.name}"` })
+      setFeedback({
+        type: 'success',
+        message: `Kategori berhasil diubah menjadi "${data.category.name}"`,
+      })
       router.refresh()
     } catch (err: unknown) {
       setFeedback({
@@ -255,7 +258,14 @@ export function ProductsClient({
       {
         name: '',
         clientKey: `v-${Date.now()}-${Math.random()}`,
-        options: [{ clientKey: `o-${Date.now()}-${Math.random()}`, label: '', priceModifier: 0, sortOrder: 0 }],
+        options: [
+          {
+            clientKey: `o-${Date.now()}-${Math.random()}`,
+            label: '',
+            priceModifier: 0,
+            sortOrder: 0,
+          },
+        ],
         required: false,
       },
     ])
@@ -376,10 +386,16 @@ export function ProductsClient({
       const resData = await res.json()
       if (editingProductId) {
         setProducts(products.map(p => (p.id === editingProductId ? resData.product : p)))
-        setFeedback({ type: 'success', message: `Produk "${resData.product.name}" berhasil diperbarui` })
+        setFeedback({
+          type: 'success',
+          message: `Produk "${resData.product.name}" berhasil diperbarui`,
+        })
       } else {
         setProducts([resData.product, ...products])
-        setFeedback({ type: 'success', message: `Produk "${resData.product.name}" berhasil ditambahkan` })
+        setFeedback({
+          type: 'success',
+          message: `Produk "${resData.product.name}" berhasil ditambahkan`,
+        })
       }
 
       setIsFormOpen(false)
@@ -396,10 +412,9 @@ export function ProductsClient({
 
   const handleDeleteProduct = async (prodId: string, prodName: string) => {
     try {
-      const res = await fetch(
-        `/api/dashboard/tenants/${selectedTenantId}/products/${prodId}`,
-        { method: 'DELETE' },
-      )
+      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/products/${prodId}`, {
+        method: 'DELETE',
+      })
       if (!res.ok) throw new Error('Gagal menghapus produk')
 
       setProducts(products.filter(p => p.id !== prodId))
@@ -475,7 +490,8 @@ export function ProductsClient({
             <CardTitle>Kategori Produk</CardTitle>
           </div>
           <CardDescription>
-            Kelompokkan menu atau produk toko Anda ke dalam kategori (misal: Makanan, Minuman, Pakaian, Aksesoris).
+            Kelompokkan menu atau produk toko Anda ke dalam kategori (misal: Makanan, Minuman,
+            Pakaian, Aksesoris).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -623,7 +639,7 @@ export function ProductsClient({
                 ? 'Tidak ada produk yang cocok dengan pencarian atau filter kategori Anda.'
                 : 'Belum ada produk yang ditambahkan ke toko ini.'}
             </p>
-            {(!searchQuery && selectedCategoryFilter === 'all') && (
+            {!searchQuery && selectedCategoryFilter === 'all' && (
               <Button className="mt-6" onClick={openNewProductForm}>
                 <PlusCircle className="mr-2 size-4" />
                 Tambah Produk Pertama
@@ -635,27 +651,25 @@ export function ProductsClient({
             {filteredProducts.map(prod => {
               const categoryObj = categories.find(c => c.id === prod.categoryId)
               return (
-                <Card key={prod.id} className="flex flex-col justify-between overflow-hidden shadow-sm">
+                <Card
+                  key={prod.id}
+                  className="flex flex-col justify-between overflow-hidden shadow-sm"
+                >
                   <div>
                     {prod.imageUrl ? (
-                      <div className="relative h-44 w-full bg-muted">
-                        <Image
-                          fill
-                          alt={prod.name}
-                          className="object-cover"
-                          src={prod.imageUrl}
-                        />
+                      <div className="bg-muted relative h-44 w-full">
+                        <Image fill alt={prod.name} className="object-cover" src={prod.imageUrl} />
                       </div>
                     ) : (
-                      <div className="flex h-32 w-full items-center justify-center bg-muted text-muted-foreground">
+                      <div className="bg-muted text-muted-foreground flex h-32 w-full items-center justify-center">
                         <ImageIcon className="size-8 stroke-1" />
                       </div>
                     )}
 
-                    <div className="p-4 space-y-2">
+                    <div className="space-y-2 p-4">
                       <div className="flex items-center justify-between gap-2">
                         {categoryObj ? (
-                          <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                          <span className="bg-primary/10 text-primary inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium">
                             {categoryObj.name}
                           </span>
                         ) : (
@@ -663,27 +677,28 @@ export function ProductsClient({
                         )}
 
                         <span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${prod.isActive
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                            : 'bg-muted text-muted-foreground'
-                            }`}
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                            prod.isActive
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                              : 'bg-muted text-muted-foreground'
+                          }`}
                         >
                           {prod.isActive ? 'Aktif' : 'Nonaktif'}
                         </span>
                       </div>
 
-                      <h4 className="font-heading font-semibold text-base leading-snug line-clamp-1">
+                      <h4 className="font-heading line-clamp-1 text-base leading-snug font-semibold">
                         {prod.name}
                       </h4>
 
                       {prod.description && (
-                        <p className="text-muted-foreground text-xs line-clamp-2">
+                        <p className="text-muted-foreground line-clamp-2 text-xs">
                           {prod.description}
                         </p>
                       )}
 
                       <div className="flex items-baseline gap-2 pt-1">
-                        <span className="font-bold text-base text-primary">
+                        <span className="text-primary text-base font-bold">
                           Rp {prod.basePrice.toLocaleString('id-ID')}
                         </span>
                         {prod.originalPrice && prod.originalPrice > prod.basePrice && (
@@ -714,7 +729,7 @@ export function ProductsClient({
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between border-t p-3 bg-muted/30">
+                  <div className="bg-muted/30 flex items-center justify-between border-t p-3">
                     <span className="text-muted-foreground text-xs">
                       {prod.stock !== null ? `Stok: ${prod.stock}` : 'Stok tak terbatas'}
                     </span>
@@ -749,15 +764,16 @@ export function ProductsClient({
 
       {/* Section 3: Add / Edit Product Modal Drawer */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-background border-border my-8 w-full max-w-2xl rounded-xl border p-6 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm">
+          <div className="bg-background border-border my-8 w-full max-w-2xl space-y-6 rounded-xl border p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b pb-4">
               <div>
                 <h3 className="font-heading text-lg font-bold">
                   {editingProductId ? 'Edit Produk' : 'Tambah Produk Baru'}
                 </h3>
                 <p className="text-muted-foreground text-xs">
-                  Targeted updates disimpan secara aman ke database Postgres tanpa menimpa data toko lain.
+                  Targeted updates disimpan secara aman ke database Postgres tanpa menimpa data toko
+                  lain.
                 </p>
               </div>
               <button
@@ -854,7 +870,7 @@ export function ProductsClient({
               <div className="flex items-center gap-2">
                 <input
                   checked={isActive}
-                  className="size-4 rounded border-gray-300 text-primary"
+                  className="text-primary size-4 rounded border-gray-300"
                   id="isActiveToggle"
                   type="checkbox"
                   onChange={e => setIsActive(e.target.checked)}
@@ -865,7 +881,7 @@ export function ProductsClient({
               </div>
 
               {/* Media Uploader */}
-              <div className="space-y-2 rounded-lg border p-4 bg-muted/20">
+              <div className="bg-muted/20 space-y-2 rounded-lg border p-4">
                 <Label className="text-sm font-semibold">Foto Produk</Label>
                 <MediaUploader
                   currentImageUrl={imageUrl}
@@ -877,10 +893,10 @@ export function ProductsClient({
                   }}
                 />
                 {imageUrl && (
-                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                    <span className="truncate max-w-sm">{imageUrl}</span>
+                  <div className="text-muted-foreground mt-2 flex items-center justify-between text-xs">
+                    <span className="max-w-sm truncate">{imageUrl}</span>
                     <button
-                      className="text-destructive hover:underline ml-2"
+                      className="text-destructive ml-2 hover:underline"
                       type="button"
                       onClick={() => {
                         setImageUrl('')
@@ -896,42 +912,41 @@ export function ProductsClient({
               {/* ========================================================= */}
               {/* VARIANT BUILDER INTERFACE                                  */}
               {/* ========================================================= */}
-              <div className="space-y-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
+              <div className="border-primary/20 bg-primary/5 space-y-4 rounded-xl border p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-heading font-semibold text-sm">
+                    <h4 className="font-heading text-sm font-semibold">
                       Variant Builder (Pilihan Varian)
                     </h4>
                     <p className="text-muted-foreground text-xs">
-                      Tambahkan variasi seperti Ukuran, Rasa, atau Warna dengan modifier harga (+ / -).
+                      Tambahkan variasi seperti Ukuran, Rasa, atau Warna dengan modifier harga (+ /
+                      -).
                     </p>
                   </div>
 
-                  <Button
-                    size="sm"
-                    type="button"
-                    variant="outline"
-                    onClick={handleAddVariantGroup}
-                  >
+                  <Button size="sm" type="button" variant="outline" onClick={handleAddVariantGroup}>
                     <Plus className="mr-1.5 size-3.5" />
                     Tambah Varian
                   </Button>
                 </div>
 
                 {formVariants.length === 0 ? (
-                  <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
-                    Belum ada kelompok varian untuk produk ini. Klik &quot;Tambah Varian&quot; jika produk memiliki ukuran atau opsi.
+                  <div className="text-muted-foreground rounded-lg border border-dashed p-4 text-center text-xs">
+                    Belum ada kelompok varian untuk produk ini. Klik &quot;Tambah Varian&quot; jika
+                    produk memiliki ukuran atau opsi.
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {formVariants.map((variant, vIdx) => (
                       <div
                         key={variant.clientKey || `var-${vIdx}`}
-                        className="bg-background rounded-lg border p-4 space-y-3 shadow-xs"
+                        className="bg-background space-y-3 rounded-lg border p-4 shadow-xs"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex-1 space-y-1">
-                            <Label className="text-xs font-semibold">Nama Varian (misal: Ukuran / Warna)</Label>
+                            <Label className="text-xs font-semibold">
+                              Nama Varian (misal: Ukuran / Warna)
+                            </Label>
                             <Input
                               className="h-8 text-sm"
                               placeholder="Contoh: Ukuran, Warna, Es Batu"
@@ -953,7 +968,7 @@ export function ProductsClient({
                         <div className="flex items-center gap-2">
                           <input
                             checked={variant.required}
-                            className="size-3.5 rounded border-gray-300 text-primary"
+                            className="text-primary size-3.5 rounded border-gray-300"
                             id={`req-${vIdx}`}
                             type="checkbox"
                             onChange={e => handleUpdateVariantRequired(vIdx, e.target.checked)}
@@ -964,23 +979,26 @@ export function ProductsClient({
                         </div>
 
                         {/* Options list inside variant */}
-                        <div className="space-y-2 pt-2 border-t">
-                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="space-y-2 border-t pt-2">
+                          <div className="text-muted-foreground flex items-center justify-between text-xs">
                             <span>Opsi Pilihan Varian</span>
                             <span>Modifier Harga (IDR)</span>
                           </div>
 
                           {variant.options.map((opt, oIdx) => (
-                            <div key={opt.clientKey || `opt-${oIdx}`} className="flex items-center gap-2">
+                            <div
+                              key={opt.clientKey || `opt-${oIdx}`}
+                              className="flex items-center gap-2"
+                            >
                               <Input
-                                className="h-8 text-xs flex-1"
+                                className="h-8 flex-1 text-xs"
                                 placeholder="Misal: Regular / XL"
                                 value={opt.label}
                                 onChange={e => handleUpdateOptionLabel(vIdx, oIdx, e.target.value)}
                               />
 
                               <div className="relative w-36">
-                                <span className="absolute left-2.5 top-2 text-[11px] text-muted-foreground">
+                                <span className="text-muted-foreground absolute top-2 left-2.5 text-[11px]">
                                   Rp
                                 </span>
                                 <Input
@@ -988,7 +1006,9 @@ export function ProductsClient({
                                   placeholder="0"
                                   type="number"
                                   value={opt.priceModifier}
-                                  onChange={e => handleUpdateOptionModifier(vIdx, oIdx, e.target.value)}
+                                  onChange={e =>
+                                    handleUpdateOptionModifier(vIdx, oIdx, e.target.value)
+                                  }
                                 />
                               </div>
 
@@ -1003,7 +1023,7 @@ export function ProductsClient({
                           ))}
 
                           <Button
-                            className="text-xs h-7 mt-1 text-primary"
+                            className="text-primary mt-1 h-7 text-xs"
                             size="sm"
                             type="button"
                             variant="ghost"
@@ -1019,7 +1039,7 @@ export function ProductsClient({
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t">
+              <div className="flex items-center justify-end gap-3 border-t pt-4">
                 <Button
                   disabled={isSubmitting}
                   type="button"

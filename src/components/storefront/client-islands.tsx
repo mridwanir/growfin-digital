@@ -20,10 +20,7 @@ export const FNB_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = [
   'TAKEAWAY',
   'DELIVERY',
 ]
-export const RETAIL_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = [
-  'PICKUP',
-  'DELIVERY',
-]
+export const RETAIL_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = ['PICKUP', 'DELIVERY']
 
 export function resolveFulfillmentModes(
   category?: string | null,
@@ -38,16 +35,16 @@ export function resolveFulfillmentModes(
 }
 export interface StorefrontClientIslandsProps {
   tenant:
-  | Tenant
-  | {
-    brandingContent?: Record<string, unknown> | null
-    category?: string | null
-    id?: string
-    name: string
-    phone?: string | null
-    themeConfig?: ThemeConfig | Record<string, unknown> | null
-    [key: string]: unknown
-  }
+    | Tenant
+    | {
+        id?: string
+        name: string
+        [key: string]: unknown
+        brandingContent?: Record<string, unknown> | null
+        category?: string | null
+        phone?: string | null
+        themeConfig?: ThemeConfig | Record<string, unknown> | null
+      }
 }
 
 function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps) {
@@ -68,8 +65,8 @@ function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps
       const customEvent = e as CustomEvent<ProductWithVariants>
       if (customEvent.detail) {
         addItem({
-          basePrice: customEvent.detail.basePrice,
           name: customEvent.detail.name,
+          basePrice: customEvent.detail.basePrice,
           productId: customEvent.detail.id,
           quantity: 1,
         })
@@ -99,7 +96,7 @@ function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps
 
   const branding = (tenant.brandingContent as Record<string, unknown> | null) || {}
   const rawWa =
-    ((branding.socialLinks as Record<string, { url?: string }> | undefined)?.whatsapp?.url) ||
+    (branding.socialLinks as Record<string, { url?: string }> | undefined)?.whatsapp?.url ||
     (branding.waNumber as string | undefined) ||
     tenant.phone ||
     ''
@@ -113,9 +110,9 @@ function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps
         onOpenChange={setIsCartOpen}
         tenant={{
           name: tenant.name,
+          fulfillmentModes,
           phone: tenant.phone,
           waNumber: rawWa,
-          fulfillmentModes,
         }}
       />
       <ProductCustomizationDialog
@@ -140,5 +137,3 @@ export function StorefrontClientIslands({ tenant }: StorefrontClientIslandsProps
     </StorefrontCartProvider>
   )
 }
-
-

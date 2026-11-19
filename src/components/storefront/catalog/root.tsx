@@ -7,6 +7,7 @@ import type {
 } from './types'
 
 import { useCallback, useMemo, useState } from 'react'
+import { useOptionalCartActions } from '@/lib/storefront/cart'
 
 import { ProductCatalogContext } from './context'
 
@@ -19,8 +20,8 @@ export function ProductCatalogRoot({
   searchQuery: controlledSearch,
   defaultSearchQuery = '',
   onSearchQueryChange,
-  onAddToCart,
-  onSelect,
+  onAddToCart: explicitOnAddToCart,
+  onSelect: explicitOnSelect,
   allCategoryLabel = 'Semua',
   className,
   children,
@@ -30,6 +31,32 @@ export function ProductCatalogRoot({
 
   const activeCategory = controlledCategory !== undefined ? controlledCategory : internalCategory
   const searchQuery = controlledSearch !== undefined ? controlledSearch : internalSearch
+  const cartActions = useOptionalCartActions()
+
+  const defaultOnAddToCart = useCallback(
+    (product: ProductWithVariants) => {
+      if (cartActions) {
+        cartActions.addItem({
+          basePrice: product.basePrice,
+          name: product.name,
+          productId: product.id,
+          quantity: 1,
+        })
+      }
+    },
+    [cartActions],
+  )
+
+  const defaultOnSelect = useCallback((product: ProductWithVariants) => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('growfin:select-product', { detail: product }),
+      )
+    }
+  }, [])
+
+  const onAddToCart = explicitOnAddToCart ?? (cartActions ? defaultOnAddToCart : undefined)
+  const onSelect = explicitOnSelect ?? defaultOnSelect
 
   const setActiveCategory = useCallback(
     (cat: string) => {
@@ -84,8 +111,8 @@ export function ProductCatalogRoot({
 
         const matchesNestedCategory = product.category
           ? product.category.id === activeCategory ||
-            product.category.slug === activeCategory ||
-            product.category.name.toLowerCase() === activeCategory.toLowerCase()
+          product.category.slug === activeCategory ||
+          product.category.name.toLowerCase() === activeCategory.toLowerCase()
           : false
 
         if (!matchesDirectCategoryId && !matchesFoundCategory && !matchesNestedCategory) {

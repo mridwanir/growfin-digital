@@ -1,10 +1,9 @@
-import { Store, ArrowRight, ShieldCheck, RefreshCw } from 'lucide-react'
+import { ArrowRight, RefreshCw, ShieldCheck, Store } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
 
 import { siteConfig } from '@/lib/site-config'
 
-interface ExpiredSiteScreenProps {
+export interface ExpiredSiteScreenProps {
   businessName?: string
 }
 
@@ -39,10 +38,10 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
           Masa Pembaruan Layanan
         </h1>
 
-        {/* Polite Visitor Message */}
+        {/* Visitor Message */}
         <p className="mb-8 text-sm leading-relaxed text-slate-300">
-          Website <strong className="font-extrabold text-white">{displayTitle}</strong> Sedang Dalam
-          Masa Pembaruan Layanan. Jika Anda adalah pemilik bisnis ini, silakan masuk ke Dashboard
+          Website <strong className="font-extrabold text-white">{displayTitle}</strong> sedang dalam
+          masa pembaruan layanan. Jika Anda adalah pemilik bisnis ini, silakan masuk ke Dashboard
           Growfin untuk memperpanjang masa aktif.
         </p>
 

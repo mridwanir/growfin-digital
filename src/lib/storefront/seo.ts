@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 
-import type { StorefrontArchetype } from './mapper'
-import type { Tenant } from '@/db/schema/tenants'
-import type { BusinessDemo } from '@/lib/types'
+import type { StorefrontArchetype } from './archetype'
+import type { BrandingContent, OperatingHours, Tenant } from '@/db/schema/tenants'
 
 import { env } from '@/lib/env'
+export { type StorefrontArchetype, resolveArchetype } from './archetype'
+
 
 function getFnbBusinessType(cat: string): string {
   if (cat.includes('cafe') || cat.includes('kopi')) return 'CafeOrCoffeeShop'
@@ -96,44 +97,41 @@ export function buildSiteMetadata(tenant: Tenant): Metadata {
 
 export function buildLocalBusinessJsonLd(
   tenant: Tenant,
-  client: BusinessDemo,
-  templateType: StorefrontArchetype,
+  templateType: StorefrontArchetype = 'retail',
 ) {
   const { logoUrl, ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant)
+  const branding = (tenant.brandingContent as BrandingContent | null) || {}
+  const operatingHours = (tenant.operatingHours as OperatingHours | null) || {}
+
+  const description =
+    branding.tagline ||
+    branding.heroSubtitle ||
+    `Website resmi ${tenant.name}`
 
   return {
-    name: client.name,
+    name: tenant.name,
     '@context': 'https://schema.org',
     '@type': getLocalBusinessType(tenant.category, templateType),
-    description: client.tagline || `Website resmi ${client.name}`,
+    description,
     image: ogImageUrl,
     logo: logoUrl,
     priceRange: '$$',
-    telephone: client.phone || client.waNumber || undefined,
+    telephone: tenant.phone || undefined,
     url: siteUrl,
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'ID',
-      addressLocality: client.city || 'Indonesia',
-      streetAddress: client.address || `${client.city}, Indonesia`,
+      addressLocality: tenant.city || 'Indonesia',
+      streetAddress: tenant.address || (tenant.city ? `${tenant.city}, Indonesia` : 'Indonesia'),
     },
-    ...(client.googleMapsUrl ? { hasMap: client.googleMapsUrl } : {}),
-    ...(client.rating && client.reviewCount
-      ? {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: client.rating,
-          reviewCount: client.reviewCount,
-        },
-      }
-      : {}),
-    ...(client.openTime && client.closeTime
+    ...(tenant.googleMapsUrl ? { hasMap: tenant.googleMapsUrl } : {}),
+    ...(operatingHours.openTime && operatingHours.closeTime
       ? {
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
-            closes: client.closeTime,
-            opens: client.openTime,
+            closes: operatingHours.closeTime,
+            opens: operatingHours.openTime,
             dayOfWeek: [
               'Monday',
               'Tuesday',

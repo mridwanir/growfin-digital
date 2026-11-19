@@ -4,12 +4,12 @@
 
 **Blocked by:** 05: Unified Customization Dialog, Cart Drawer & Mobile Dock, 06: Server Component Shell, Static Sections & Theme Layouts
 
-**Status:** claimed
+**Status:** completed
 
-- [ ] Route handlers for `/site/[slug]` and `/demo/[slug]` are updated to pass normalized Drizzle database records directly to the RSC storefront shell and layouts.
-- [ ] The legacy data adapter (`src/lib/storefront/mapper.ts`) and `BusinessDemo` legacy contract are permanently deleted from the codebase.
-- [ ] The obsolete `src/components/demo/` directory is permanently deleted.
-- [ ] Integration tests in `tests/integration/storefront-rsc.spec.ts` are updated to assert on the new RSC output, metadata generation, and publication status enforcement.
-- [ ] Integration tests in `tests/integration/storefront-themes.spec.ts` are updated to assert on the new compound catalog and layout components using relational Drizzle fixtures.
-- [ ] The obsolete test file `tests/integration/storefront-mapper.spec.ts` is deleted.
-- [ ] The full test suite (`pnpm test`), type check (`pnpm typecheck`), and production build (`pnpm build`) pass cleanly with zero errors or warnings.
+- [x] Route handlers for `/site/[slug]` and `/demo/[slug]` are updated to pass normalized Drizzle database records directly to the RSC storefront shell and layouts.
+- [x] The legacy data adapter (`src/lib/storefront/mapper.ts`) and `BusinessDemo` legacy contract are permanently deleted from the codebase.
+- [x] The obsolete `src/components/demo/` directory is permanently deleted.
+- [x] Integration tests in `tests/integration/storefront-rsc.spec.ts` are updated to assert on the new RSC output, metadata generation, and publication status enforcement.
+- [x] Integration tests in `tests/integration/storefront-themes.spec.ts` are updated to assert on the new compound catalog and layout components using relational Drizzle fixtures.
+- [x] The obsolete test file `tests/integration/storefront-mapper.spec.ts` is deleted.
+- [x] The full test suite (`pnpm test`), type check (`pnpm typecheck`), and production build (`pnpm build`) pass cleanly with zero errors or warnings.

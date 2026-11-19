@@ -47,8 +47,8 @@ export interface ProductWithVariants {
   createdAt?: Date | string
   updatedAt?: Date | string
   variants?: CatalogProductVariant[]
-  addons?: CatalogAddon[]
-  specifications?: CatalogSpecification[]
+  addons?: CatalogAddon[] | null
+  specifications?: CatalogSpecification[] | null
   category?: Category | null
 }
 

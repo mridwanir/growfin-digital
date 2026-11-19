@@ -1,150 +1,230 @@
-import type { BusinessDemo, MenuItem } from '@/lib/types'
+import type { ProductWithVariants } from '@/components/storefront/catalog'
+import type { Category } from '@/db/schema/catalog'
+import type { Tenant } from '@/db/schema/tenants'
 
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
-import { FnbDemoClient } from '@/components/demo/fnb-demo-client'
-import { RetailDemoClient } from '@/components/demo/retail-demo-client'
-import { calculateItemPrice, formatVariantOptionDisplay, stackCartItem } from '@/lib/catalog'
+import { getStorefrontLayout } from '@/components/storefront/layouts'
+import {
+  buildCartItemHash,
+  calculateItemSubtotal,
+  createCartStore,
+  formatCurrency,
+  StorefrontCartProvider,
+} from '@/lib/storefront/cart'
+import {
+  buildOrderSummary,
+  FulfillmentSchema,
+  normalizeWaNumber,
+} from '@/lib/storefront/whatsapp'
 
-const mockFnbClient: BusinessDemo = {
-  name: 'Kopi Artisan Nusantara',
+// ---------------------------------------------------------------------------
+// Relational Drizzle Fixtures
+// ---------------------------------------------------------------------------
+
+const mockFnbTenant: Tenant = {
   address: 'Jl. Riau No. 55',
-  categories: ['Coffee', 'Snacks'],
+  brandingContent: {
+    heroImage: 'https://images.unsplash.com/photo-coffee',
+    iconEmoji: '☕',
+    tagline: 'Secangkir Cerita Tiap Hari',
+    themeColor: '#d97706',
+  },
   category: 'Coffee Shop & Cafe',
   city: 'Bandung',
+  createdAt: new Date(),
+  customDomain: null,
+  domainActiveUntil: null,
+  fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?cid=123',
-  hours: '08:00 - 22:00',
-  iconEmoji: '☕',
-  package_tier: 'pro-basic',
-  phone: '081234567890',
-  rating: 4.9,
-  reviewCount: 120,
-  tagline: 'Secangkir Cerita Tiap Hari',
-  themeColor: '#d97706',
-  waNumber: '6281234567890',
-  marketing: {
-    promoLabel: 'Diskon 20%',
-    usps: [{ desc: '100% Arabika', title: 'Biji Pilihan' }],
+  id: 'tenant-fnb-1',
+  name: 'Kopi Artisan Nusantara',
+  operatingHours: {
+    closeTime: '22:00',
+    isOpen: true,
+    openTime: '08:00',
+    raw: '08:00 - 22:00',
   },
-  menu: [
-    {
-      id: 1,
-      name: 'Kopi Susu Aren',
-      category: 'Coffee',
-      desc: 'Espresso segar dengan gula aren',
-      price: '20000',
-      variants: [
-        {
-          name: 'Ukuran',
-          options: [
-            { label: 'Regular', priceModifier: 0 },
-            { label: 'Large', priceModifier: 5000 },
-          ],
-        },
-      ],
-    },
-  ],
-  reviews: [
-    {
-      authorName: 'Budi Santoso',
-      rating: 5,
-      text: 'Kopi terenak di Bandung!',
-    },
-  ],
+  organizationId: null,
+  packageTier: 'instant',
+  phone: '081234567890',
+  siteActiveUntil: null,
+  slug: 'kopi-artisan-nusantara',
+  status: 'published',
+  themeConfig: {
+    fbType: 'DINE_IN',
+    layoutId: 'fnb-theme-classic',
+    themeColor: '#d97706',
+  },
+  updatedAt: new Date(),
+  userId: null,
 }
 
-const mockRetailClient: BusinessDemo = {
-  ...mockFnbClient,
-  name: 'Urban Streetwear Bandung',
+const mockFnbCategories: Category[] = [
+  {
+    id: 'cat-fnb-1',
+    name: 'Coffee',
+    slug: 'coffee',
+    sortOrder: 0,
+    tenantId: mockFnbTenant.id,
+  },
+  {
+    id: 'cat-fnb-2',
+    name: 'Snacks',
+    slug: 'snacks',
+    sortOrder: 1,
+    tenantId: mockFnbTenant.id,
+  },
+]
+
+const mockFnbProducts: ProductWithVariants[] = [
+  {
+    basePrice: 20000,
+    categoryId: 'cat-fnb-1',
+    id: 'prod-fnb-1',
+    name: 'Kopi Susu Aren',
+    originalPrice: 25000,
+    sortOrder: 0,
+    tenantId: mockFnbTenant.id,
+    variants: [
+      {
+        id: 'var-fnb-1',
+        name: 'Ukuran',
+        options: [
+          { id: 'opt-fnb-reg', label: 'Regular', priceModifier: 0, sortOrder: 0 },
+          { id: 'opt-fnb-lrg', label: 'Large', priceModifier: 5000, sortOrder: 1 },
+        ],
+        required: true,
+      },
+    ],
+  },
+]
+
+const mockRetailTenant: Tenant = {
+  ...mockFnbTenant,
+  brandingContent: {
+    heroImage: 'https://images.unsplash.com/photo-fashion',
+    iconEmoji: '🛍️',
+    tagline: 'Modern Streetwear Collective',
+    themeColor: '#09090b',
+  },
   category: 'Clothing & Fashion',
-  themeColor: '#09090b',
-  menu: [
-    {
-      id: 101,
-      name: 'Overdose Boxy Tee',
-      category: 'T-Shirts',
-      desc: 'Heavyweight cotton t-shirt',
-      originalPrice: 199000,
-      price: '149000',
-      variants: [
-        {
-          name: 'Size',
-          options: [
-            { label: 'M', priceModifier: 0 },
-            { label: 'XL', priceModifier: 15000 },
-          ],
-        },
-      ],
-    },
-  ],
+  id: 'tenant-retail-1',
+  name: 'Urban Streetwear Bandung',
+  slug: 'urban-streetwear-bandung',
+  themeConfig: {
+    layoutId: 'retail-theme-urban',
+    themeColor: '#09090b',
+  },
 }
 
+const mockRetailCategories: Category[] = [
+  {
+    id: 'cat-ret-1',
+    name: 'Apparel',
+    slug: 'apparel',
+    sortOrder: 0,
+    tenantId: mockRetailTenant.id,
+  },
+]
 
-describe('storefront theme rendering, catalog & variant ordering (seam 3)', () => {
-  describe('catalog variant selection & cart math', () => {
-    it('calculates item subtotal accurately with variant price modifiers', () => {
+const mockRetailProducts: ProductWithVariants[] = [
+  {
+    basePrice: 150000,
+    categoryId: 'cat-ret-1',
+    id: 'prod-ret-1',
+    name: 'Overdose Boxy Tee',
+    originalPrice: 180000,
+    sortOrder: 0,
+    tenantId: mockRetailTenant.id,
+    variants: [
+      {
+        id: 'var-ret-1',
+        name: 'Size',
+        options: [
+          { id: 'opt-ret-m', label: 'M', priceModifier: 0, sortOrder: 0 },
+          { id: 'opt-ret-xl', label: 'XL', priceModifier: 10000, sortOrder: 1 },
+        ],
+        required: true,
+      },
+    ],
+  },
+]
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+describe('storefront theme rendering, compound catalog & cart domain (seam 3)', () => {
+  describe('cart math, variant stacking & pure domain logic', () => {
+    it('calculates item subtotal accurately with variant price modifiers in integer IDR', () => {
       const basePrice = 20000
-      const regularPrice = calculateItemPrice(basePrice, [{ label: 'Regular', priceModifier: 0 }])
-      expect(regularPrice).toBe(20000)
-
-      const largePrice = calculateItemPrice(basePrice, [{ label: 'Large', priceModifier: 5000 }])
-      expect(largePrice).toBe(25000)
-
-      const negativeModifierPrice = calculateItemPrice(basePrice, [
-        { label: 'Hemat', priceModifier: -3000 },
-      ])
-      expect(negativeModifierPrice).toBe(17000)
+      expect(calculateItemSubtotal(basePrice, [0], [], 1)).toBe(20000)
+      expect(calculateItemSubtotal(basePrice, [5000], [], 1)).toBe(25000)
+      expect(calculateItemSubtotal(basePrice, [-3000], [], 1)).toBe(17000)
+      expect(calculateItemSubtotal(basePrice, [5000], [{ price: 3000 }], 2)).toBe(56000)
     })
 
-    it('stacks identical cart items and separates different variant selections', () => {
-      const product: MenuItem = mockFnbClient.menu[0]
-      const cart: any[] = []
+    it('generates deterministic composite hash for cart item stacking', () => {
+      const hash1 = buildCartItemHash('prod-1', { Color: 'Black', Size: 'L' }, ['Box'])
+      const hash2 = buildCartItemHash('prod-1', { Size: 'L', Color: 'Black' }, ['Box'])
+      const hash3 = buildCartItemHash('prod-1', { Color: 'Black', Size: 'M' }, ['Box'])
 
-      // Add 1 Regular
-      const regularItem = {
-        id: 'cart-1',
-        product,
-        quantity: 1,
-        selectedAddons: [],
-        selectedVariants: { Ukuran: { label: 'Regular', priceModifier: 0 } },
-        totalPrice: 20000,
-      }
-      const cartAfterFirst = stackCartItem(cart, regularItem)
-      expect(cartAfterFirst).toHaveLength(1)
-      expect(cartAfterFirst[0].quantity).toBe(1)
-
-      // Add another identical Regular -> stacks to quantity 2
-      const cartAfterSecond = stackCartItem(cartAfterFirst, regularItem)
-      expect(cartAfterSecond).toHaveLength(1)
-      expect(cartAfterSecond[0].quantity).toBe(2)
-
-      // Add Large -> does not stack, appends as distinct line item
-      const largeItem = {
-        id: 'cart-2',
-        product,
-        quantity: 1,
-        selectedAddons: [],
-        selectedVariants: { Ukuran: { label: 'Large', priceModifier: 5000 } },
-        totalPrice: 25000,
-      }
-      const cartAfterThird = stackCartItem(cartAfterSecond, largeItem)
-      expect(cartAfterThird).toHaveLength(2)
-      expect(cartAfterThird[1].quantity).toBe(1)
+      expect(hash1).toBe(hash2)
+      expect(hash1).not.toBe(hash3)
     })
 
-    it('formats variant option display strings for receipts and WhatsApp messages', () => {
-      expect(formatVariantOptionDisplay('Ukuran', { label: 'Large', priceModifier: 5000 })).toBe(
-        'Ukuran: Large (+Rp 5.000)',
-      )
-      expect(formatVariantOptionDisplay('Ukuran', { label: 'Regular', priceModifier: 0 })).toBe(
-        'Ukuran: Regular',
-      )
+    it('stacks identical items and separates distinct variants in tenant cart store', () => {
+      const store = createCartStore('test-tenant')
+
+      // Add 1 Regular Kopi Susu
+      store.getState().addItem({
+        basePrice: 20000,
+        name: 'Kopi Susu Aren',
+        productId: 'prod-fnb-1',
+        quantity: 1,
+        selectedVariants: { Ukuran: 'Regular' },
+        unitPrice: 20000,
+      })
+      expect(store.getState().items).toHaveLength(1)
+      expect(store.getState().items[0]?.quantity).toBe(1)
+
+      // Add identical item -> stacks to quantity 2
+      store.getState().addItem({
+        basePrice: 20000,
+        name: 'Kopi Susu Aren',
+        productId: 'prod-fnb-1',
+        quantity: 1,
+        selectedVariants: { Ukuran: 'Regular' },
+        unitPrice: 20000,
+      })
+      expect(store.getState().items).toHaveLength(1)
+      expect(store.getState().items[0]?.quantity).toBe(2)
+
+      // Add Large Kopi Susu -> separate line item
+      store.getState().addItem({
+        basePrice: 20000,
+        name: 'Kopi Susu Aren',
+        productId: 'prod-fnb-1',
+        quantity: 1,
+        selectedVariants: { Ukuran: 'Large' },
+        unitPrice: 25000,
+      })
+      expect(store.getState().items).toHaveLength(2)
+      expect(store.getState().items[1]?.quantity).toBe(1)
+    })
+
+    it('formats integer IDR prices accurately without floating-point artifacts', () => {
+      expect(formatCurrency(25000)).toBe('Rp 25.000')
+      expect(formatCurrency(1500000)).toBe('Rp 1.500.000')
+      expect(formatCurrency(0)).toBe('Rp 0')
+      expect(formatCurrency(-5000)).toBe('-Rp 5.000')
     })
   })
 
-  describe('fnb visual themes rendering', () => {
+  describe('fnb visual themes rendering with compound catalog', () => {
     const fnbThemes = [
       'fnb-theme-classic',
       'fnb-theme-modern',
@@ -157,20 +237,33 @@ describe('storefront theme rendering, catalog & variant ordering (seam 3)', () =
 
     for (const theme of fnbThemes) {
       it(`renders FnB theme variant "${theme}" without crashing`, () => {
+        const LayoutComponent = getStorefrontLayout(theme, 'fnb')
         const markup = renderToStaticMarkup(
-          React.createElement(FnbDemoClient, {
-            client: mockFnbClient,
-            themeVariant: theme,
-          }),
+          React.createElement(
+            StorefrontCartProvider,
+            { tenantId: mockFnbTenant.id },
+            React.createElement(LayoutComponent, {
+              categories: mockFnbCategories,
+              products: mockFnbProducts,
+              tenant: {
+                ...mockFnbTenant,
+                themeConfig: {
+                  ...mockFnbTenant.themeConfig,
+                  layoutId: theme,
+                },
+              },
+            }),
+          ),
         )
 
         expect(markup).toContain('Kopi Artisan Nusantara')
         expect(markup).toContain('Kopi Susu Aren')
+        expect(markup).toContain('data-slot="storefront-layout-shell"')
       })
     }
   })
 
-  describe('retail visual themes rendering', () => {
+  describe('retail visual themes rendering with compound catalog', () => {
     const retailThemes = [
       'retail-theme-urban',
       'retail-theme-editorial',
@@ -182,30 +275,94 @@ describe('storefront theme rendering, catalog & variant ordering (seam 3)', () =
 
     for (const theme of retailThemes) {
       it(`renders Retail theme variant "${theme}" without crashing`, () => {
+        const LayoutComponent = getStorefrontLayout(theme, 'retail')
         const markup = renderToStaticMarkup(
-          React.createElement(RetailDemoClient, {
-            client: mockRetailClient,
-            themeVariant: theme,
-          }),
+          React.createElement(
+            StorefrontCartProvider,
+            { tenantId: mockRetailTenant.id },
+            React.createElement(LayoutComponent, {
+              categories: mockRetailCategories,
+              products: mockRetailProducts,
+              tenant: {
+                ...mockRetailTenant,
+                themeConfig: {
+                  ...mockRetailTenant.themeConfig,
+                  layoutId: theme,
+                },
+              },
+            }),
+          ),
         )
 
         expect(markup).toContain('Urban Streetwear Bandung')
         expect(markup).toContain('Overdose Boxy Tee')
+        expect(markup).toContain('data-slot="storefront-layout-shell"')
       })
     }
   })
 
+  describe('headless WhatsApp order generation & fulfillment validation', () => {
+    it('normalizes local Indonesian phone numbers to clean international format', () => {
+      expect(normalizeWaNumber('081234567890')).toBe('6281234567890')
+      expect(normalizeWaNumber('+6281234567890')).toBe('6281234567890')
+      expect(normalizeWaNumber('6281234567890')).toBe('6281234567890')
+      expect(normalizeWaNumber('+62 0812-3456-7890')).toBe('6281234567890')
+    })
 
-  describe('whatsApp link integration', () => {
-    it('generates properly formatted WhatsApp ordering link with catalog items', () => {
-      const waNumber = mockFnbClient.waNumber
-      const encodedMessage = encodeURIComponent(
-        `Halo ${mockFnbClient.name}, saya ingin memesan:\n1. Kopi Susu Aren (x2)\nTotal: Rp 40.000`,
-      )
-      const expectedUrl = `https://wa.me/${waNumber}?text=${encodedMessage}`
+    it('validates fulfillment payloads using discriminated union schema', () => {
+      const validDineIn = FulfillmentSchema.safeParse({
+        customerName: 'Budi',
+        mode: 'DINE_IN',
+        tableNumber: 'Meja 05',
+      })
+      expect(validDineIn.success).toBe(true)
 
-      expect(expectedUrl).toContain('wa.me/6281234567890')
-      expect(decodeURIComponent(expectedUrl)).toContain('Halo Kopi Artisan Nusantara')
+      const invalidDineIn = FulfillmentSchema.safeParse({
+        customerName: 'Budi',
+        mode: 'DINE_IN',
+        tableNumber: '',
+      })
+      expect(invalidDineIn.success).toBe(false)
+
+      const validDelivery = FulfillmentSchema.safeParse({
+        address: 'Jl. Riau No. 12, Bandung',
+        customerName: 'Siti',
+        mode: 'DELIVERY',
+      })
+      expect(validDelivery.success).toBe(true)
+    })
+
+    it('generates properly formatted WhatsApp ordering link with catalog items and fulfillment', () => {
+      const result = buildOrderSummary({
+        cartItems: [
+          {
+            basePrice: 20000,
+            id: 'item-1',
+            name: 'Kopi Susu Aren',
+            productId: 'prod-1',
+            quantity: 2,
+            selectedVariants: { Ukuran: 'Large' },
+            subtotal: 50000,
+            unitPrice: 25000,
+          },
+        ],
+        fulfillment: {
+          customerName: 'Budi Santoso',
+          mode: 'DINE_IN',
+          tableNumber: 'Meja 07',
+        },
+        tenant: {
+          name: mockFnbTenant.name,
+          phone: mockFnbTenant.phone,
+        },
+      })
+
+      expect(result.waUrl).toContain('https://wa.me/6281234567890?text=')
+      expect(result.message).toContain('Kopi Artisan Nusantara')
+      expect(result.message).toContain('Kopi Susu Aren')
+      expect(result.message).toContain('Dine In')
+      expect(result.message).toContain('Meja 07')
+      expect(result.message).toContain('Rp 50.000')
     })
   })
 })

@@ -4,13 +4,12 @@ import { useEffect } from 'react'
 
 import { getVisitorId } from '@/lib/analytics'
 
-interface GlobalClickTrackerProps {
+export interface GlobalClickTrackerProps {
   businessId: string
 }
 
 export function GlobalClickTracker({ businessId }: GlobalClickTrackerProps) {
   useEffect(() => {
-    // Generate/retrieve persistent visitor ID from localStorage
     const visitorId = getVisitorId()
     let lastTrackedTime = 0
     const DEBOUNCE_MS = 1500
@@ -18,20 +17,19 @@ export function GlobalClickTracker({ businessId }: GlobalClickTrackerProps) {
     const trackClick = () => {
       const now = Date.now()
       if (now - lastTrackedTime < DEBOUNCE_MS) {
-        return // Ignore duplicate clicks within cooldown period
+        return
       }
       lastTrackedTime = now
 
-      // Fire and forget analytics event with keepalive
       fetch('/api/analytics/track', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        keepalive: true,
         body: JSON.stringify({
           business_id: businessId,
           event_type: 'whatsapp_click',
           visitor_id: visitorId,
         }),
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        method: 'POST',
       }).catch(err => console.error('Failed to track click', err))
     }
 
@@ -39,14 +37,12 @@ export function GlobalClickTracker({ businessId }: GlobalClickTrackerProps) {
       const target = e.target as HTMLElement
       if (!target) return
 
-      // 1. Explicit data-track="whatsapp" attribute check
       const trackAttrElement = target.closest('[data-track="whatsapp"]')
       if (trackAttrElement) {
         trackClick()
         return
       }
 
-      // 2. Fallback anchor or button checking
       const closestElement = target.closest('a, button')
       if (!closestElement) return
 
@@ -81,16 +77,15 @@ export function GlobalClickTracker({ businessId }: GlobalClickTrackerProps) {
     document.addEventListener('click', handleClick)
     document.addEventListener('submit', handleSubmit)
 
-    // Initial page view track with keepalive
     fetch('/api/analytics/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      keepalive: true,
       body: JSON.stringify({
         business_id: businessId,
         event_type: 'page_view',
         visitor_id: visitorId,
       }),
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      method: 'POST',
     }).catch(err => console.error('Failed to track pageview', err))
 
     return () => {

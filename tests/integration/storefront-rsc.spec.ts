@@ -1,13 +1,16 @@
 import type { GeneratedWebsiteData } from '@/lib/generator/schema'
 
 import { eq } from 'drizzle-orm'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import DemoPage from '@/app/demo/[slug]/page'
-import SitePage from '@/app/site/[slug]/page'
+import DemoPage, { generateMetadata as generateDemoMetadata } from '@/app/demo/[slug]/page'
+import SitePage, { generateMetadata as generateSiteMetadata } from '@/app/site/[slug]/page'
+import { ExpiredSiteScreen } from '@/components/storefront/expired-screen'
 import { db } from '@/db'
 import { tenants } from '@/db/schema/tenants'
 import { persistGeneratedWebsite } from '@/lib/generator/persistence'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 
 vi.mock('next/navigation', () => ({
@@ -80,74 +83,163 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
     }
     createdTenantIds.length = 0
   })
-  it('returns null for non-existent slug in getStorefrontDataBySlug', async () => {
-    const data = await getStorefrontDataBySlug('non-existent-tenant-xyz')
-    expect(data).toBeNull()
+
+  describe('data Loader Seam', () => {
+    it('returns null for non-existent slug in getStorefrontDataBySlug', async () => {
+      const data = await getStorefrontDataBySlug('non-existent-tenant-xyz')
+      expect(data).toBeNull()
+    })
+
+    it('queries tenant, categories, and products with variants by slug', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      const slug = persisted.tenant.slug
+
+      const data = await getStorefrontDataBySlug(slug)
+      expect(data).not.toBeNull()
+      expect(data?.tenant.name).toBe('Kopi Senja Nusantara')
+      expect(data?.categories.length).toBeGreaterThan(0)
+      const product = data?.products[0]
+      expect(product).toBeDefined()
+      expect(product?.variants?.length).toBeGreaterThan(0)
+    })
+
+    it('queries tenant by customDomain', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      const customDomain = `custom-${persisted.tenant.slug}.com`
+
+      await db.update(tenants).set({ customDomain }).where(eq(tenants.id, persisted.tenant.id))
+
+      const data = await getStorefrontDataBySlug(customDomain)
+      expect(data).not.toBeNull()
+      expect(data?.tenant.id).toBe(persisted.tenant.id)
+    })
   })
 
-  it('queries tenant, categories, and products with variants by slug', async () => {
-    const persisted = await persistGeneratedWebsite(mockWebsiteData)
-    createdTenantIds.push(persisted.tenant.id)
-    const slug = persisted.tenant.slug
+  describe('metadata Generation Seam', () => {
+    it('generates site metadata with canonical URL and OpenGraph for published tenant', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      await db.update(tenants).set({ status: 'published' }).where(eq(tenants.id, persisted.tenant.id))
 
-    const data = await getStorefrontDataBySlug(slug)
-    expect(data).not.toBeNull()
-    expect(data?.tenant.name).toBe('Kopi Senja Nusantara')
-    expect(data?.categories.length).toBeGreaterThan(0)
-    const product = data?.products[0]
-    expect(product).toBeDefined()
-    expect(product?.variants?.length).toBeGreaterThan(0)
+      const meta = await generateSiteMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(meta.description).toContain('Kopi Terbaik Sejak 2020')
+      expect(meta.openGraph).toBeDefined()
+      expect(meta.title).toEqual({
+        default: 'Kopi Senja Nusantara | Website Resmi',
+        template: '%s | Kopi Senja Nusantara',
+      })
+    })
+
+    it('returns Site Not Found metadata for draft tenant on site route', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+
+      const meta = await generateSiteMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(meta.title).toBe('Site Not Found')
+    })
+
+    it('returns maintenance robots noindex for locked tenant', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      await db.update(tenants).set({ status: 'locked' }).where(eq(tenants.id, persisted.tenant.id))
+
+      const meta = await generateSiteMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(meta.robots).toEqual({ follow: false, index: false })
+      expect(meta.title).toContain('Masa Pembaruan Layanan')
+    })
+
+    it('generates preview metadata on demo route for draft tenant', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+
+      const meta = await generateDemoMetadata({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(meta.title).toBe('Preview: Kopi Senja Nusantara | Growfin Digital')
+      expect(meta.description).toContain('Kopi Terbaik Sejak 2020')
+    })
   })
 
-  it('queries tenant by customDomain', async () => {
-    const persisted = await persistGeneratedWebsite(mockWebsiteData)
-    createdTenantIds.push(persisted.tenant.id)
-    const customDomain = `custom-${persisted.tenant.slug}.com`
+  describe('publication Status & RSC Route Enforcement', () => {
+    it('triggers notFound() when SitePage encounters non-existent tenant', async () => {
+      await expect(
+        SitePage({ params: Promise.resolve({ slug: 'ghost-tenant-404' }) }),
+      ).rejects.toThrow('NEXT_NOT_FOUND')
+    })
 
-    await db.update(tenants).set({ customDomain }).where(eq(tenants.id, persisted.tenant.id))
+    it('triggers notFound() on SitePage when tenant is still draft status', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
 
-    const data = await getStorefrontDataBySlug(customDomain)
-    expect(data).not.toBeNull()
-    expect(data?.tenant.id).toBe(persisted.tenant.id)
-  })
+      await expect(
+        SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) }),
+      ).rejects.toThrow('NEXT_NOT_FOUND')
+    })
 
-  it('triggers notFound() when SitePage encounters non-existent tenant', async () => {
-    await expect(
-      SitePage({ params: Promise.resolve({ slug: 'ghost-tenant-404' }) }),
-    ).rejects.toThrow('NEXT_NOT_FOUND')
-  })
+    it('renders ExpiredSiteScreen on SitePage when tenant is locked', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      await db.update(tenants).set({ status: 'locked' }).where(eq(tenants.id, persisted.tenant.id))
 
-  it('triggers notFound() on SitePage when tenant is still draft status', async () => {
-    const persisted = await persistGeneratedWebsite(mockWebsiteData)
-    createdTenantIds.push(persisted.tenant.id)
-    // Persisted website defaults to status='draft'
-    await expect(
-      SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) }),
-    ).rejects.toThrow('NEXT_NOT_FOUND')
-  })
+      const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(element).toBeDefined()
+      expect(element.type).toBe(ExpiredSiteScreen)
+    })
 
-  it('renders ExpiredSiteScreen on SitePage when tenant is locked', async () => {
-    const persisted = await persistGeneratedWebsite(mockWebsiteData)
-    createdTenantIds.push(persisted.tenant.id)
-    await db.update(tenants).set({ status: 'locked' }).where(eq(tenants.id, persisted.tenant.id))
+    it('renders ExpiredSiteScreen on SitePage when siteActiveUntil is in the past', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000)
+      await db
+        .update(tenants)
+        .set({ status: 'published', siteActiveUntil: pastDate })
+        .where(eq(tenants.id, persisted.tenant.id))
 
-    const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
-    expect(element).toBeDefined()
-  })
+      const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(element).toBeDefined()
+      expect(element.type).toBe(ExpiredSiteScreen)
+    })
 
-  it('renders storefront successfully on SitePage for published tenant', async () => {
-    const persisted = await persistGeneratedWebsite(mockWebsiteData)
-    createdTenantIds.push(persisted.tenant.id)
-    await db.update(tenants).set({ status: 'published' }).where(eq(tenants.id, persisted.tenant.id))
+    it('renders storefront successfully on SitePage for published tenant with RSC islands', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      await db.update(tenants).set({ status: 'published' }).where(eq(tenants.id, persisted.tenant.id))
 
-    const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
-    expect(element).toBeDefined()
-  })
+      const element = await SitePage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(element).toBeDefined()
+      expect(element.type).toBe(StorefrontCartProvider)
 
-  it('renders preview storefront successfully on DemoPage for draft tenant', async () => {
-    const persisted = await persistGeneratedWebsite(mockWebsiteData)
-    createdTenantIds.push(persisted.tenant.id)
-    const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
-    expect(element).toBeDefined()
+      const markup = renderToStaticMarkup(element)
+      expect(markup).toContain('Kopi Senja Nusantara')
+      expect(markup).toContain('Kopi Susu Gula Aren')
+      expect(markup).toContain('application/ld+json')
+      expect(markup).toContain('CafeOrCoffeeShop')
+    })
+
+    it('renders preview storefront successfully on DemoPage for draft tenant', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(element).toBeDefined()
+      expect(element.type).toBe(StorefrontCartProvider)
+
+      const markup = renderToStaticMarkup(element)
+      expect(markup).toContain('Kopi Senja Nusantara')
+      expect(markup).toContain('Kopi Susu Gula Aren')
+    })
+
+    it('renders ExpiredSiteScreen on DemoPage when fomoExpiresAt has passed for draft tenant', async () => {
+      const persisted = await persistGeneratedWebsite(mockWebsiteData)
+      createdTenantIds.push(persisted.tenant.id)
+      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000)
+      await db
+        .update(tenants)
+        .set({ fomoExpiresAt: pastDate, status: 'draft' })
+        .where(eq(tenants.id, persisted.tenant.id))
+
+      const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
+      expect(element).toBeDefined()
+      expect(element.type).toBe(ExpiredSiteScreen)
+    })
   })
 })

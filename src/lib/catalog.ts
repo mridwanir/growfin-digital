@@ -1,4 +1,4 @@
-import type { MenuItem, MenuItemVariant, SpecificationItem, VariantOption } from './types'
+import type { SpecificationItem, VariantOption } from './types'
 
 /**
  * Normalizes a variant option which may be either a structured VariantOption or a legacy formatted
@@ -58,63 +58,6 @@ export function parseNumericPrice(val: number | string | null | undefined): numb
 }
 
 /**
- * Normalizes product metadata, guaranteeing structured VariantOption[] inside variants, parsed
- * numeric originalPrice (or undefined), and sanitized imageGallery/specifications.
- */
-function parseProductStock(stockVal: unknown): number | undefined {
-  if (typeof stockVal === 'number' && Number.isFinite(stockVal)) return stockVal
-  if (typeof stockVal === 'string' && stockVal.trim() !== '') {
-    const num = Number(stockVal)
-    if (Number.isFinite(num)) return num
-  }
-  return undefined
-}
-
-function parseProductGallery(gallery: unknown): string[] | undefined {
-  if (!Array.isArray(gallery)) return undefined
-  return gallery
-    .filter((img): img is string => typeof img === 'string' && img.trim().length > 0)
-    .slice(0, 5)
-}
-
-function parseProductVariants(variants: unknown): MenuItemVariant[] | undefined {
-  if (!Array.isArray(variants)) return undefined
-  return variants.map(v => ({
-    name: String(v.name || '').trim(),
-    options: Array.isArray(v.options) ? v.options.map(normalizeVariantOption) : [],
-  }))
-}
-
-export function normalizeProduct(item: Partial<MenuItem> | null | undefined): MenuItem {
-  const base = item || {}
-  const originalPrice = parseNumericPrice(base.originalPrice)
-  const stock = parseProductStock(base.stock)
-  const imageGallery = parseProductGallery(base.imageGallery)
-  const specifications = Array.isArray(base.specifications)
-    ? getValidSpecifications(base.specifications)
-    : undefined
-  const variants = parseProductVariants(base.variants)
-
-  return {
-    id: typeof base.id === 'number' ? base.id : Number(base.id) || 0,
-    name: String(base.name || ''),
-    desc: String(base.desc || ''),
-    price: base.price !== undefined ? String(base.price) : '0',
-    ...(originalPrice !== undefined ? { originalPrice } : {}),
-    ...(stock !== undefined ? { stock } : {}),
-    ...(imageGallery !== undefined ? { imageGallery } : {}),
-    ...(specifications !== undefined ? { specifications } : {}),
-    ...(base.tag !== undefined ? { tag: base.tag } : {}),
-    ...(base.category !== undefined ? { category: base.category } : {}),
-    ...(base.imageUrl !== undefined ? { imageUrl: base.imageUrl } : {}),
-    ...(base.imagePublicId !== undefined ? { imagePublicId: base.imagePublicId } : {}),
-    ...(base.duration !== undefined ? { duration: base.duration } : {}),
-    ...(variants !== undefined ? { variants } : {}),
-    ...(base.addons !== undefined ? { addons: base.addons } : {}),
-  }
-}
-
-/**
  * Calculates item subtotal price using pure numeric addition.
  */
 export function calculateItemPrice(
@@ -122,19 +65,18 @@ export function calculateItemPrice(
   selectedVariants: (VariantOption | string)[] = [],
   selectedAddons: { price: number }[] = [],
 ): number {
-  const base = parseNumericPrice(basePrice) ?? 0
+  const parsedBase = parseNumericPrice(basePrice) || 0
 
-  const variantSum = (selectedVariants || []).reduce((acc, opt) => {
-    const normalized = normalizeVariantOption(opt)
-    return acc + (Number(normalized.priceModifier) || 0)
+  const variantSum = selectedVariants.reduce((sum, v) => {
+    const opt = normalizeVariantOption(v)
+    return sum + (opt.priceModifier || 0)
   }, 0)
 
-  const addonSum = (selectedAddons || []).reduce((acc, addon) => {
-    return acc + (Number(addon?.price) || 0)
+  const addonSum = selectedAddons.reduce((sum, a) => {
+    return sum + (Number(a.price) || 0)
   }, 0)
 
-  const total = Math.round(base + variantSum + addonSum)
-  return total < 0 ? 0 : total
+  return Math.max(0, parsedBase + variantSum + addonSum)
 }
 
 /**
@@ -142,14 +84,10 @@ export function calculateItemPrice(
  * price.
  */
 export function hasValidDiscount(price: number | string, originalPrice?: number | string): boolean {
-  const curr = parseNumericPrice(price)
-  const orig = parseNumericPrice(originalPrice)
-
-  if (curr === undefined || orig === undefined) {
-    return false
-  }
-
-  return orig > curr
+  const p = parseNumericPrice(price)
+  const op = parseNumericPrice(originalPrice)
+  if (p === undefined || op === undefined) return false
+  return op > p
 }
 
 /**
@@ -159,18 +97,10 @@ export function getDiscountPercentage(
   price: number | string,
   originalPrice?: number | string,
 ): number {
-  if (!hasValidDiscount(price, originalPrice)) {
-    return 0
-  }
-
-  const curr = parseNumericPrice(price)!
-  const orig = parseNumericPrice(originalPrice)!
-
-  if (orig <= 0) {
-    return 0
-  }
-
-  return Math.round(((orig - curr) / orig) * 100)
+  if (!hasValidDiscount(price, originalPrice)) return 0
+  const p = parseNumericPrice(price)!
+  const op = parseNumericPrice(originalPrice)!
+  return Math.round(((op - p) / op) * 100)
 }
 
 /**
@@ -182,42 +112,41 @@ export function buildCartItemHash(
   selectedVariants: Record<string, string | VariantOption> = {},
   selectedAddons: string[] = [],
 ): string {
-  const safeVariants = selectedVariants || {}
-  const sortedVariantKeys = Object.keys(safeVariants).sort()
+  const sortedVariants = Object.keys(selectedVariants)
+    .sort()
+    .map(key => {
+      const val = selectedVariants[key]
+      const label = typeof val === 'object' && val !== null ? val.label : String(val)
+      return `${key}:${label}`
+    })
+    .join('|')
 
-  const variantSegments = sortedVariantKeys.map(key => {
-    const val = safeVariants[key]
-    const normalized = normalizeVariantOption(val)
-    return `${key}:${normalized.label}:${normalized.priceModifier}`
-  })
+  const sortedAddons = [...selectedAddons].sort().join('|')
 
-  const safeAddons = Array.isArray(selectedAddons) ? selectedAddons : []
-  const sortedAddons = [...safeAddons].map(a => String(a).trim()).sort()
-
-  return `${String(productId)}::variants=[${variantSegments.join(',')}]::addons=[${sortedAddons.join(',')}]`
+  return `${productId}__vars:${sortedVariants}__addons:${sortedAddons}`
 }
 
 /**
  * Formats a variant option for display in UI or WhatsApp receipt, cleanly itemizing surcharges only
- * when priceModifier > 0. Examples:
- *
- * - "Ukuran: Regular" (for priceModifier <= 0)
- * - "Ukuran: Large (+Rp 5.000)" (for priceModifier > 0)
+ * when non-zero.
  */
 export function formatVariantOptionDisplay(
   variantName: string,
   option: string | VariantOption | null | undefined,
 ): string {
-  if (!option) {
-    return variantName
-  }
   const normalized = normalizeVariantOption(option)
-  if (!normalized.label) {
-    return variantName
-  }
+  if (!normalized.label) return ''
+
   if (normalized.priceModifier > 0) {
-    return `${variantName}: ${normalized.label} (+Rp ${normalized.priceModifier.toLocaleString('id-ID')})`
+    const formattedPrice = `Rp ${normalized.priceModifier.toLocaleString('id-ID')}`
+    return `${variantName}: ${normalized.label} (+${formattedPrice})`
   }
+
+  if (normalized.priceModifier < 0) {
+    const formattedPrice = `Rp ${Math.abs(normalized.priceModifier).toLocaleString('id-ID')}`
+    return `${variantName}: ${normalized.label} (-${formattedPrice})`
+  }
+
   return `${variantName}: ${normalized.label}`
 }
 
@@ -228,10 +157,11 @@ export function formatVariantOptionDisplay(
 export function formatVariantReceiptLine(
   selectedVariants: Record<string, string | VariantOption> = {},
 ): string {
-  const safeVariants = selectedVariants || {}
-  const entries = Object.entries(safeVariants)
-  if (entries.length === 0) return ''
-  return entries.map(([k, v]) => formatVariantOptionDisplay(k, v)).join(', ')
+  const lines = Object.entries(selectedVariants)
+    .map(([key, val]) => formatVariantOptionDisplay(key, val))
+    .filter(Boolean)
+
+  return lines.join(', ')
 }
 
 /**
@@ -242,55 +172,20 @@ export function stackCartItem<T extends { id: string; quantity: number; totalPri
   cart: T[],
   item: T,
 ): T[] {
-  const existingIndex = cart.findIndex(i => i.id === item.id)
+  const existingIndex = cart.findIndex(c => c.id === item.id)
+
   if (existingIndex >= 0) {
-    return cart.map((i, idx) =>
-      idx === existingIndex
-        ? {
-            ...i,
-            quantity: i.quantity + item.quantity,
-            totalPrice: i.totalPrice + item.totalPrice,
-          }
-        : i,
-    )
-  }
-  return [...cart, item]
-}
-
-/**
- * Extracts gallery image URLs from a product item up to 5 photos. Falls back to product.imageUrl,
- * then fallbackImage, or empty array.
- */
-export function getProductGalleryImages(
-  product?: Partial<MenuItem> | null,
-  fallbackImage?: string,
-): string[] {
-  if (!product && !fallbackImage) {
-    return []
-  }
-
-  if (product && Array.isArray(product.imageGallery)) {
-    const valid = product.imageGallery
-      .filter((img): img is string => typeof img === 'string' && img.trim().length > 0)
-      .slice(0, 5)
-    if (valid.length > 0) {
-      return valid
+    const updated = [...cart]
+    const existing = updated[existingIndex]
+    updated[existingIndex] = {
+      ...existing,
+      quantity: existing.quantity + item.quantity,
+      totalPrice: existing.totalPrice + item.totalPrice,
     }
+    return updated
   }
 
-  if (
-    product?.imageUrl &&
-    typeof product.imageUrl === 'string' &&
-    product.imageUrl.trim().length > 0
-  ) {
-    return [product.imageUrl.trim()]
-  }
-
-  if (fallbackImage && typeof fallbackImage === 'string' && fallbackImage.trim().length > 0) {
-    return [fallbackImage.trim()]
-  }
-
-  return []
+  return [...cart, { ...item }]
 }
 
 /**
@@ -311,59 +206,3 @@ export function getValidSpecifications(
     }))
     .filter(s => s.label.length > 0 && s.value.length > 0)
 }
-
-/**
- * Checks whether a product has at least one valid specification row.
- */
-export function hasSpecifications(product?: Partial<MenuItem> | null): boolean {
-  if (!product || !product.specifications) {
-    return false
-  }
-  return getValidSpecifications(product.specifications).length > 0
-}
-
-/**
- * Normalizes an AI-generated or inbound metadata payload, ensuring:
- *
- * 1. Reviews have valid integer ratings clamped between 1 and 5.
- * 2. Menu/products items are unified under `metadata.menu` and each product is fully normalized via
- *    `normalizeProduct`.
- */
-export function normalizeGeneratedMetadata<T extends Record<string, unknown>>(
-  metadata: T | null | undefined,
-): T & { menu: MenuItem[] } {
-  const result: Record<string, unknown> =
-    metadata && typeof metadata === 'object' ? { ...metadata } : {}
-
-  if (Array.isArray(result.reviews)) {
-    result.reviews = result.reviews.map(rev => {
-      if (rev && typeof rev === 'object') {
-        const ratingCandidate = 'rating' in rev ? rev.rating : 5
-        const ratingNum = Number(ratingCandidate)
-        const safeRating = Number.isFinite(ratingNum) ? Math.round(ratingNum) : 5
-        return {
-          ...rev,
-          rating: Math.max(1, Math.min(5, safeRating)),
-        }
-      }
-      return rev
-    })
-  }
-
-  const rawMenu = Array.isArray(result.menu)
-    ? result.menu
-    : Array.isArray(result.products)
-      ? result.products
-      : null
-
-  result.menu = rawMenu
-    ? rawMenu.map(item =>
-        item && typeof item === 'object'
-          ? normalizeProduct(item as Partial<MenuItem>)
-          : normalizeProduct({}),
-      )
-    : []
-
-  return result as unknown as T & { menu: MenuItem[] }
-}
-export { sanitizeMenuItem, sanitizeMenuItems, type TierSanitizerOptions } from './tier-sanitizer'

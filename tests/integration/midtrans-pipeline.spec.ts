@@ -7,8 +7,8 @@ import { POST as checkoutHandler } from '@/app/api/checkout/route'
 import { GET as verifyGetHandler, POST as verifyPostHandler } from '@/app/api/checkout/verify/route'
 import { POST as notificationHandler } from '@/app/api/midtrans/notification/route'
 import SitePage from '@/app/site/[slug]/page'
-import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider'
-import { ExpiredSiteScreen } from '@/components/demo/ExpiredSiteScreen'
+import { ExpiredSiteScreen } from '@/components/storefront/expired-screen'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { db } from '@/db'
 import { orders } from '@/db/schema/orders'
 import { tenants } from '@/db/schema/tenants'
@@ -482,8 +482,8 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
       })
 
       expect(renderedPage).toBeDefined()
-      // Assert it is not ExpiredSiteScreen (DynamicThemeProvider is the root wrapper for active storefronts)
-      expect(renderedPage.type).toBe(DynamicThemeProvider)
+      // Assert it is not ExpiredSiteScreen (StorefrontCartProvider is the root wrapper for active storefronts)
+      expect(renderedPage.type).toBe(StorefrontCartProvider)
     })
 
     it('renders ExpiredSiteScreen on SitePage when paid website siteActiveUntil has passed', async () => {

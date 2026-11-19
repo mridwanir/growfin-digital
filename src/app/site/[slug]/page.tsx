@@ -4,15 +4,21 @@ import type { PackageTier } from '@/lib/site-config'
 
 import { notFound } from 'next/navigation'
 
-import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider'
-import { ExpiredSiteScreen } from '@/components/demo/ExpiredSiteScreen'
-import { GlobalClickTracker } from '@/components/demo/GlobalClickTracker'
-import { GrowfinWatermark } from '@/components/demo/GrowfinWatermark'
+import {
+  ExpiredSiteScreen,
+  GlobalClickTracker,
+  GrowfinWatermark,
+  StorefrontClientIslands,
+} from '@/components/storefront'
+import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { PACKAGE_LIMITS } from '@/lib/site-config'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
-import { mapTenantToBusinessDemo, resolveArchetype } from '@/lib/storefront/mapper'
-import { renderStorefrontArchetype } from '@/lib/storefront/renderer'
-import { buildLocalBusinessJsonLd, buildSiteMetadata } from '@/lib/storefront/seo'
+import {
+  buildLocalBusinessJsonLd,
+  buildSiteMetadata,
+  resolveArchetype,
+} from '@/lib/storefront/seo'
 
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
@@ -58,7 +64,7 @@ export default async function SitePage({ params }: SitePageProps) {
     notFound()
   }
 
-  const { tenant } = data
+  const { categories, products, tenant } = data
   const now = new Date()
   const isLocked = tenant.status === 'locked'
   const isExpired = Boolean(tenant.siteActiveUntil && new Date(tenant.siteActiveUntil) < now)
@@ -71,28 +77,25 @@ export default async function SitePage({ params }: SitePageProps) {
     notFound()
   }
 
-  const templateType = resolveArchetype(tenant.category)
-  const genericClient = mapTenantToBusinessDemo(data)
+  const archetype = resolveArchetype(tenant.category)
+  const LayoutComponent = getStorefrontLayout(tenant.themeConfig?.layoutId, archetype)
 
   const activeTier: PackageTier = (tenant.packageTier as PackageTier) || 'instan'
   const tierLimits = PACKAGE_LIMITS[activeTier] || PACKAGE_LIMITS.instan
 
-  const jsonLd = buildLocalBusinessJsonLd(tenant, genericClient, templateType)
-  const demoComponent = renderStorefrontArchetype(
-    templateType,
-    genericClient,
-    tenant.themeConfig?.layoutId,
-  )
+  const jsonLd = buildLocalBusinessJsonLd(tenant, archetype)
 
   return (
-    <DynamicThemeProvider themeColor={genericClient.themeColor}>
+    <StorefrontCartProvider tenantId={tenant.id}>
       <script
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
       />
       <GlobalClickTracker businessId={tenant.id} />
-      {demoComponent}
-      {!tierLimits.removeBranding && <GrowfinWatermark />}
-    </DynamicThemeProvider>
+      <LayoutComponent tenant={tenant} categories={categories} products={products}>
+        <StorefrontClientIslands tenant={tenant} />
+        {!tierLimits.removeBranding && <GrowfinWatermark />}
+      </LayoutComponent>
+    </StorefrontCartProvider>
   )
 }

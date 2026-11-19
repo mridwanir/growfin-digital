@@ -52,6 +52,20 @@ export function useCartActions() {
   }, [store])
 }
 
+export function useOptionalCartActions() {
+  const store = useContext(CartStoreContext)
+  return useMemo(() => {
+    if (!store) return null
+    const { addItem, clearCart, removeItem, updateQuantity } = store.getState()
+    return {
+      addItem,
+      clearCart,
+      removeItem,
+      updateQuantity,
+    }
+  }, [store])
+}
+
 export function useCartStoreApi(): CartStore {
   const store = useContext(CartStoreContext)
   if (!store) {

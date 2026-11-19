@@ -28,7 +28,6 @@ import { userInNeonAuth } from '@/db/schema/auth'
 import { tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
-import { mapTenantToBusinessDemo } from '@/lib/storefront/mapper'
 
 describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)', () => {
   const testUserId1 = '11111111-1111-4111-8111-111111111111'
@@ -505,15 +504,12 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
       expect(liveTee!.variants).toHaveLength(1)
       expect(liveTee!.variants?.[0]?.options).toHaveLength(2)
 
-      // 4. Verify storefront adapter transforms it seamlessly
-      const businessDemo = mapTenantToBusinessDemo(storefrontData!)
-      expect(businessDemo.phone).toBe('08999888777')
-      expect(businessDemo.address).toBe('Jl. Reflection No. 99, Jakarta')
-      const demoProduct = businessDemo.menu.find(p => p.name === 'Live Reflection Tee')
-      expect(demoProduct).toBeDefined()
-      expect(demoProduct!.price).toBe('Rp 125.000')
-      expect(demoProduct!.variants).toBeDefined()
-      expect(demoProduct!.variants?.[0]?.options).toHaveLength(2)
+      // 4. Verify storefront loader yields normalized relational data directly
+      expect(storefrontData!.tenant.phone).toBe('08999888777')
+      expect(storefrontData!.tenant.address).toBe('Jl. Reflection No. 99, Jakarta')
+      expect(liveTee!.name).toBe('Live Reflection Tee')
+      expect(liveTee!.basePrice).toBe(125000)
+      expect(liveTee!.variants?.[0]?.options).toHaveLength(2)
     })
   })
 })

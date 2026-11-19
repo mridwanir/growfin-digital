@@ -6,7 +6,7 @@ import { env } from '@/lib/env'
 import { generateWithGemini } from '@/lib/generator/gemini'
 import { persistGeneratedWebsite } from '@/lib/generator/persistence'
 import { generateInputSchema } from '@/lib/generator/schema'
-import { resolveArchetype } from '@/lib/storefront/mapper'
+import { resolveArchetype } from '@/lib/storefront/archetype'
 
 export async function POST(request: NextRequest) {
   try {

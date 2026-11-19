@@ -2,13 +2,16 @@ import type { Metadata } from 'next'
 
 import { notFound } from 'next/navigation'
 
-import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider'
-import { ExpiredSiteScreen } from '@/components/demo/ExpiredSiteScreen'
-import { GrowfinWatermark } from '@/components/demo/GrowfinWatermark'
+import {
+  ExpiredSiteScreen,
+  GrowfinWatermark,
+  StorefrontClientIslands,
+} from '@/components/storefront'
+import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { env } from '@/lib/env'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
-import { mapTenantToBusinessDemo, resolveArchetype } from '@/lib/storefront/mapper'
-import { renderStorefrontArchetype } from '@/lib/storefront/renderer'
+import { resolveArchetype } from '@/lib/storefront/seo'
 
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
@@ -43,12 +46,12 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
 
   return {
     description,
-    title: `Preview: ${clientName} | Growfin Digital`,
     openGraph: {
       description,
       images: [{ alt: clientName, url: imageUrl }],
       title: `Preview: ${clientName} | Growfin Digital`,
     },
+    title: `Preview: ${clientName} | Growfin Digital`,
   }
 }
 
@@ -60,7 +63,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
     notFound()
   }
 
-  const { tenant } = data
+  const { categories, products, tenant } = data
   const now = new Date()
   const isLocked = tenant.status === 'locked'
   const isExpired =
@@ -73,18 +76,15 @@ export default async function DemoPage({ params }: DemoPageProps) {
     return <ExpiredSiteScreen businessName={tenant.name} />
   }
 
-  const templateType = resolveArchetype(tenant.category)
-  const genericClient = mapTenantToBusinessDemo(data)
-  const demoComponent = renderStorefrontArchetype(
-    templateType,
-    genericClient,
-    tenant.themeConfig?.layoutId,
-  )
+  const archetype = resolveArchetype(tenant.category)
+  const LayoutComponent = getStorefrontLayout(tenant.themeConfig?.layoutId, archetype)
 
   return (
-    <DynamicThemeProvider themeColor={genericClient.themeColor}>
-      {demoComponent}
-      <GrowfinWatermark />
-    </DynamicThemeProvider>
+    <StorefrontCartProvider tenantId={tenant.id}>
+      <LayoutComponent tenant={tenant} categories={categories} products={products}>
+        <StorefrontClientIslands tenant={tenant} />
+        <GrowfinWatermark />
+      </LayoutComponent>
+    </StorefrontCartProvider>
   )
 }

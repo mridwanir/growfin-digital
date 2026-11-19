@@ -26,7 +26,7 @@ interface NeonAuthWebhookPayload {
   }
 }
 
-export async function verifyNeonWebhook(rawBody: string, headers: Headers): Promise<boolean> {
+async function verifyNeonWebhook(rawBody: string, headers: Headers): Promise<boolean> {
   const signature = headers.get('x-neon-signature')
   const kid = headers.get('x-neon-signature-kid')
   const timestamp = headers.get('x-neon-timestamp')

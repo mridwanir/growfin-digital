@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] All components and subdirectories under the grooming and service demo modules are deleted.
 - [ ] Legacy doctor, clinic, and practitioner TypeScript interfaces (`DoctorInfo`, `AdminInfo`, `PractitionerInfo`, `sampleChat`) are removed from the shared types module.

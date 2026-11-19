@@ -4,7 +4,7 @@
 
 **Blocked by:** 02: Headless WhatsApp & Cart Domain Engine
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Zustand is installed and configured with a store factory function (`createCartStore(tenantId)`).
 - [ ] Cart state is persisted to browser `localStorage` using key `growfin_cart_${tenantId}`, isolating cart contents across different tenant subdomains.

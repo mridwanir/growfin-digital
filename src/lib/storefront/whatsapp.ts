@@ -1,0 +1,139 @@
+import { z } from 'zod'
+
+import { formatCurrency, type CartLineItem } from './cart/domain'
+
+export { type CartLineItem } from './cart/domain'
+
+/**
+ * Normalizes phone numbers to international WhatsApp format without leading + sign or punctuation.
+ * Converts local Indonesian formats (08..., +628..., 628..., +62 08...) to clean 628... click-to-chat format.
+ */
+export function normalizeWaNumber(phone?: string | null): string {
+  if (!phone) return ''
+  let digits = phone.replace(/\D/g, '')
+  if (!digits) return ''
+
+  // Edge case: redundant 0 following Indonesian country code (+62 08...)
+  if (digits.startsWith('620')) {
+    digits = `62${digits.slice(3)}`
+  } else if (digits.startsWith('0')) {
+    digits = `62${digits.slice(1)}`
+  } else if (digits.startsWith('8')) {
+    digits = `62${digits}`
+  }
+
+  return digits
+}
+
+/**
+ * Strict Zod discriminated union schema for storefront checkout fulfillment details.
+ * Supports DINE_IN, TAKEAWAY, PICKUP, and DELIVERY modes.
+ */
+export const FulfillmentSchema = z.discriminatedUnion('mode', [
+  z.object({
+    mode: z.literal('DINE_IN'),
+    tableNumber: z.string().trim().min(1, 'Nomor meja wajib diisi'),
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
+  }),
+  z.object({
+    mode: z.literal('TAKEAWAY'),
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
+  }),
+  z.object({
+    mode: z.literal('PICKUP'),
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
+  }),
+  z.object({
+    mode: z.literal('DELIVERY'),
+    address: z.string().trim().min(5, 'Alamat pengiriman lengkap wajib diisi'),
+    customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
+  }),
+])
+
+export type FulfillmentInput = z.infer<typeof FulfillmentSchema>
+export type FulfillmentData = FulfillmentInput
+
+export interface TenantContactInfo {
+  name: string
+  phone?: string | null
+  waNumber?: string | null
+}
+
+export interface BuildOrderSummaryParams {
+  cartItems: CartLineItem[]
+  fulfillment: FulfillmentInput
+  tenant: TenantContactInfo
+}
+
+/**
+ * Compiles a formatted multi-line WhatsApp order summary and encodes a click-to-chat wa.me URL.
+ */
+export function buildOrderSummary(params: {
+  cartItems: CartLineItem[]
+  fulfillment: FulfillmentInput
+  tenant: TenantContactInfo
+}): { message: string; waUrl: string } {
+  const { cartItems, fulfillment, tenant } = params
+
+  const lines: string[] = [`Halo ${tenant.name}, saya ingin memesan:`, '']
+
+  let orderTotal = 0
+
+  if (cartItems.length > 0) {
+    cartItems.forEach((item, idx) => {
+      const itemSubtotal = typeof item.subtotal === 'number' ? item.subtotal : 0
+      orderTotal += itemSubtotal
+
+      lines.push(`${idx + 1}. *${item.name}* (x${item.quantity})`)
+
+      const variantEntries = Object.entries(item.selectedVariants || {})
+      if (variantEntries.length > 0) {
+        const variantsText = variantEntries.map(([k, v]) => `${k}: ${v}`).join(', ')
+        lines.push(`   Variasi: ${variantsText}`)
+      }
+
+      if (item.selectedAddons && item.selectedAddons.length > 0) {
+        lines.push(`   Tambahan: ${item.selectedAddons.join(', ')}`)
+      }
+
+      if (item.notes && item.notes.trim().length > 0) {
+        lines.push(`   Catatan: ${item.notes.trim()}`)
+      }
+
+      lines.push(`   Subtotal: ${formatCurrency(itemSubtotal)}`)
+      lines.push('')
+    })
+  }
+
+  lines.push(`*Total: ${formatCurrency(orderTotal)}*`)
+  lines.push('')
+  lines.push('*Data Pemesan:*')
+  lines.push(`- Nama: ${fulfillment.customerName}`)
+
+  switch (fulfillment.mode) {
+    case 'DINE_IN':
+      lines.push('- Metode: Dine In (Makan di Tempat)')
+      lines.push(`- No. Meja: ${fulfillment.tableNumber}`)
+      break
+    case 'TAKEAWAY':
+      lines.push('- Metode: Takeaway (Bungkus)')
+      break
+    case 'PICKUP':
+      lines.push('- Metode: Pickup (Ambil Sendiri)')
+      break
+    case 'DELIVERY':
+      lines.push('- Metode: Delivery (Pengiriman)')
+      lines.push(`- Alamat: ${fulfillment.address}`)
+      break
+  }
+
+  const message = lines.join('\n')
+  const rawPhone = tenant.waNumber || tenant.phone || ''
+  const normalizedPhone = normalizeWaNumber(rawPhone)
+  const encodedText = encodeURIComponent(message)
+  const waUrl = normalizedPhone
+    ? `https://wa.me/${normalizedPhone}?text=${encodedText}`
+    : `https://wa.me/?text=${encodedText}`
+
+  return { message, waUrl }
+}

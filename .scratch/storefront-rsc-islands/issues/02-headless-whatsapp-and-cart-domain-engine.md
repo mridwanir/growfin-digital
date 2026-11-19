@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Purge Legacy Grooming & Professional Services Code
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] A pure domain module is created providing cart math, hashing, phone normalization, and WhatsApp order compilation decoupled from any React UI components.
 - [ ] Cart item subtotal calculation uses pure integer arithmetic (`basePrice + sum(variantModifiers) + sum(addons)) * quantity` and handles zero, positive, and negative price modifiers accurately.

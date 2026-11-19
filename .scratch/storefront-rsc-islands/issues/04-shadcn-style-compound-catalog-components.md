@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Purge Legacy Grooming & Professional Services Code
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] A compound catalog component package is established with subcomponents: `Root`, `CategoryBar`, `Grid`, `Card`, `SearchInput`, and `Empty`.
 - [ ] Catalog components accept normalized Drizzle database models (`ProductWithVariants` and `Category`) with integer IDR pricing invariants.

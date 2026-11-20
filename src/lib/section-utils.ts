@@ -19,11 +19,24 @@ export function isSectionVisible(sectionId: string, hiddenSections?: string[]): 
     return false
   }
   if (
-    (sectionId === 'menu' || sectionId === 'katalog') &&
-    (hiddenSections.includes('menu') || hiddenSections.includes('katalog'))
+    (sectionId === 'menu' ||
+      sectionId === 'katalog' ||
+      sectionId === 'catalog' ||
+      sectionId === 'products') &&
+    (hiddenSections.includes('menu') ||
+      hiddenSections.includes('katalog') ||
+      hiddenSections.includes('catalog') ||
+      hiddenSections.includes('products'))
   ) {
     return false
   }
-
+  if (
+    (sectionId === 'hours' || sectionId === 'operatingHours' || sectionId === 'operating-hours') &&
+    (hiddenSections.includes('hours') ||
+      hiddenSections.includes('operatingHours') ||
+      hiddenSections.includes('operating-hours'))
+  ) {
+    return false
+  }
   return true
 }

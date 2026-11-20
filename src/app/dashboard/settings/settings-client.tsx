@@ -126,7 +126,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
               Pilih Toko:
             </Label>
             <select
-              className="bg-background border-input ring-offset-background h-9 rounded-md border px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1"
+              className="bg-background border-input ring-offset-background h-9 rounded-md border px-3 py-1 text-sm shadow-sm focus:ring-1 focus:outline-none"
               id="tenant-select"
               value={selectedTenantId}
               onChange={e => handleTenantChange(e.target.value)}
@@ -249,7 +249,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
             <div className="flex items-center gap-2 pt-2">
               <input
                 checked={isOpen}
-                className="size-4 rounded border-gray-300 text-primary focus:ring-primary"
+                className="text-primary focus:ring-primary size-4 rounded border-gray-300"
                 id="isOpenToggle"
                 type="checkbox"
                 onChange={e => setIsOpen(e.target.checked)}

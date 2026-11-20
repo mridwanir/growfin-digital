@@ -1,11 +1,11 @@
 const DEFAULT_FALLBACK_HEX = '#00b894'
 
-export function isValidHex(hex?: string): boolean {
+function isValidHex(hex?: string): boolean {
   if (!hex || typeof hex !== 'string') return false
   return /^#?(?:[0-9a-f]{3}){1,2}$/i.test(hex.trim())
 }
 
-export function hexToHsl(hex: string): { h: number; l: number; s: number } {
+function hexToHsl(hex: string): { h: number; l: number; s: number } {
   const safeHex = isValidHex(hex) ? hex.trim() : DEFAULT_FALLBACK_HEX
   let cleanHex = safeHex.replace(/^#/, '')
   if (cleanHex.length === 3) {
@@ -43,7 +43,7 @@ export function hexToHsl(hex: string): { h: number; l: number; s: number } {
   return { h: h * 360, l: l * 100, s: s * 100 }
 }
 
-export function hslToHex(h: number, s: number, l: number): string {
+function hslToHex(h: number, s: number, l: number): string {
   l /= 100
   const a = (s * Math.min(l, 1 - l)) / 100
   const f = (n: number) => {

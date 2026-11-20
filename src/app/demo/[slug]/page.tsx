@@ -1,15 +1,18 @@
 import type { Metadata } from 'next'
 
 import { notFound } from 'next/navigation'
+import { createElement } from 'react'
 
-import { DynamicThemeProvider } from '@/components/demo/DynamicThemeProvider'
-import { ExpiredSiteScreen } from '@/components/demo/ExpiredSiteScreen'
-import { GrowfinWatermark } from '@/components/demo/GrowfinWatermark'
+import {
+  ExpiredSiteScreen,
+  GrowfinWatermark,
+  StorefrontClientIslands,
+} from '@/components/storefront'
+import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { env } from '@/lib/env'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
-import { mapTenantToBusinessDemo, resolveArchetype } from '@/lib/storefront/mapper'
-import { renderStorefrontArchetype } from '@/lib/storefront/renderer'
-
+import { buildLocalBusinessJsonLd, resolveArchetype } from '@/lib/storefront/seo'
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
 
@@ -25,12 +28,11 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
     return { title: 'Demo Not Found' }
   }
 
-  const clientName = data.tenant.name
+  const tenantName = data.tenant.name
   const branding = (data.tenant.brandingContent as Record<string, unknown> | null) || {}
   const description =
     (branding.tagline as string) ||
-    `Preview website resmi ${clientName}. Informasi, produk, dan katalog UMKM.`
-
+    `Preview website resmi ${tenantName}. Informasi, produk, dan katalog UMKM.`
   const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN || 'growfin.my.id'
   const rawImage =
     (branding.logoUrl as string) ||
@@ -43,11 +45,11 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
 
   return {
     description,
-    title: `Preview: ${clientName} | Growfin Digital`,
+    title: `Preview: ${tenantName} | Growfin Digital`,
     openGraph: {
       description,
-      images: [{ alt: clientName, url: imageUrl }],
-      title: `Preview: ${clientName} | Growfin Digital`,
+      images: [{ alt: tenantName, url: imageUrl }],
+      title: `Preview: ${tenantName} | Growfin Digital`,
     },
   }
 }
@@ -60,7 +62,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
     notFound()
   }
 
-  const { tenant } = data
+  const { categories, products, tenant } = data
   const now = new Date()
   const isLocked = tenant.status === 'locked'
   const isExpired =
@@ -73,18 +75,20 @@ export default async function DemoPage({ params }: DemoPageProps) {
     return <ExpiredSiteScreen businessName={tenant.name} />
   }
 
-  const templateType = resolveArchetype(tenant.category)
-  const genericClient = mapTenantToBusinessDemo(data)
-  const demoComponent = renderStorefrontArchetype(
-    templateType,
-    genericClient,
-    tenant.themeConfig?.layoutId,
-  )
-
+  const archetype = resolveArchetype(tenant.category)
+  const jsonLd = buildLocalBusinessJsonLd(tenant, archetype)
   return (
-    <DynamicThemeProvider themeColor={genericClient.themeColor}>
-      {demoComponent}
-      <GrowfinWatermark />
-    </DynamicThemeProvider>
+    <StorefrontCartProvider tenantId={tenant.id}>
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
+      />
+      {createElement(
+        getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
+        { categories, products, tenant },
+        <StorefrontClientIslands tenant={tenant} />,
+        <GrowfinWatermark />,
+      )}
+    </StorefrontCartProvider>
   )
 }

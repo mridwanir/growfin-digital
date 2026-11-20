@@ -1,0 +1,5 @@
+export { Footer } from './footer'
+export { Gallery } from './gallery'
+export { Hero } from './hero'
+export { OperatingHours } from './operating-hours'
+export { Reviews } from './reviews'

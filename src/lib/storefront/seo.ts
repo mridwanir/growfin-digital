@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 
-import type { StorefrontArchetype } from './mapper'
-import type { Tenant } from '@/db/schema/tenants'
-import type { BusinessDemo } from '@/lib/types'
+import type { StorefrontArchetype } from './archetype'
+import type { BrandingContent, OperatingHours, Tenant } from '@/db/schema/tenants'
 
 import { env } from '@/lib/env'
+
+export { resolveArchetype, type StorefrontArchetype } from './archetype'
 
 function getFnbBusinessType(cat: string): string {
   if (cat.includes('cafe') || cat.includes('kopi')) return 'CafeOrCoffeeShop'
@@ -12,31 +13,16 @@ function getFnbBusinessType(cat: string): string {
   return 'Restaurant'
 }
 
-function getGroomingBusinessType(cat: string): string {
-  if (cat.includes('barber') || cat.includes('cukur')) return 'Barbershop'
-  if (cat.includes('beauty') || cat.includes('salon')) return 'BeautySalon'
-  return 'DaySpa'
-}
-
-function getServiceBusinessType(cat: string): string {
-  if (cat.includes('klinik') || cat.includes('dokter')) return 'MedicalClinic'
-  if (cat.includes('gigi') || cat.includes('dental')) return 'Dentist'
-  if (cat.includes('bengkel')) return 'AutoRepair'
-  return 'ProfessionalService'
-}
-
 export function getLocalBusinessType(
   category: string = '',
-  templateType: StorefrontArchetype = 'retail',
+  archetype: StorefrontArchetype = 'retail',
 ): string {
   const cat = category.toLowerCase()
-  if (templateType === 'fnb') return getFnbBusinessType(cat)
-  if (templateType === 'grooming') return getGroomingBusinessType(cat)
-  if (templateType === 'service') return getServiceBusinessType(cat)
+  if (archetype === 'fnb') return getFnbBusinessType(cat)
   return 'Store'
 }
 
-export function resolveStorefrontUrls(tenant: Tenant): {
+function resolveStorefrontUrls(tenant: Tenant): {
   logoUrl: string
   ogImageUrl: string
   siteUrl: string
@@ -110,44 +96,38 @@ export function buildSiteMetadata(tenant: Tenant): Metadata {
 
 export function buildLocalBusinessJsonLd(
   tenant: Tenant,
-  client: BusinessDemo,
-  templateType: StorefrontArchetype,
+  archetype: StorefrontArchetype = 'retail',
 ) {
   const { logoUrl, ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant)
+  const branding = (tenant.brandingContent as BrandingContent | null) || {}
+  const operatingHours = (tenant.operatingHours as OperatingHours | null) || {}
+
+  const description = branding.tagline || branding.heroSubtitle || `Website resmi ${tenant.name}`
 
   return {
-    name: client.name,
+    name: tenant.name,
     '@context': 'https://schema.org',
-    '@type': getLocalBusinessType(tenant.category, templateType),
-    description: client.tagline || `Website resmi ${client.name}`,
+    '@type': getLocalBusinessType(tenant.category, archetype),
+    description,
     image: ogImageUrl,
     logo: logoUrl,
     priceRange: '$$',
-    telephone: client.phone || client.waNumber || undefined,
+    telephone: tenant.phone || undefined,
     url: siteUrl,
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'ID',
-      addressLocality: client.city || 'Indonesia',
-      streetAddress: client.address || `${client.city}, Indonesia`,
+      addressLocality: tenant.city || 'Indonesia',
+      streetAddress: tenant.address || (tenant.city ? `${tenant.city}, Indonesia` : 'Indonesia'),
     },
-    ...(client.googleMapsUrl ? { hasMap: client.googleMapsUrl } : {}),
-    ...(client.rating && client.reviewCount
-      ? {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: client.rating,
-            reviewCount: client.reviewCount,
-          },
-        }
-      : {}),
-    ...(client.openTime && client.closeTime
+    ...(tenant.googleMapsUrl ? { hasMap: tenant.googleMapsUrl } : {}),
+    ...(operatingHours.openTime && operatingHours.closeTime
       ? {
           openingHoursSpecification: [
             {
               '@type': 'OpeningHoursSpecification',
-              closes: client.closeTime,
-              opens: client.openTime,
+              closes: operatingHours.closeTime,
+              opens: operatingHours.openTime,
               dayOfWeek: [
                 'Monday',
                 'Tuesday',

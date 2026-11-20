@@ -29,7 +29,7 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           exclude: [...defaultExclude, 'src/hooks/**/*.spec.ts'],
-          include: ['src/**/*.spec.{js,ts}', 'tests/**/*.spec.{js,ts}'],
+          include: ['src/**/*.spec.{js,ts,jsx,tsx}', 'tests/**/*.spec.{js,ts,jsx,tsx}'],
         },
       },
       {

@@ -28,7 +28,6 @@ import { userInNeonAuth } from '@/db/schema/auth'
 import { tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
-import { mapTenantToBusinessDemo } from '@/lib/storefront/mapper'
 
 describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)', () => {
   const testUserId1 = '11111111-1111-4111-8111-111111111111'
@@ -173,7 +172,9 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
   describe('business settings API (/api/dashboard/tenants/[id]/settings)', () => {
     it('returns 404 when user tries to access a tenant owned by someone else', async () => {
       mockMerchantSession()
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant2Id}/settings`)
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant2Id}/settings`,
+      )
       const res = await getSettingsHandler(req, { params: Promise.resolve({ id: tenant2Id }) })
 
       expect(res.status).toBe(404)
@@ -183,14 +184,18 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
 
     it('returns business settings for owned tenant', async () => {
       mockMerchantSession()
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant1Id}/settings`)
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant1Id}/settings`,
+      )
       const res = await getSettingsHandler(req, { params: Promise.resolve({ id: tenant1Id }) })
 
       expect(res.status).toBe(200)
       const json = await res.json()
       expect(json.tenant.id).toBe(tenant1Id)
       expect(json.tenant.phone).toBe('08123456789')
-      expect(json.tenant.brandingContent.socialLinks.instagram.url).toBe('https://instagram.com/original')
+      expect(json.tenant.brandingContent.socialLinks.instagram.url).toBe(
+        'https://instagram.com/original',
+      )
     })
 
     it('executes targeted updates on basic details without clobbering other JSON or relations', async () => {
@@ -210,11 +215,14 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
         },
       }
 
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant1Id}/settings`, {
-        body: JSON.stringify(updateBody),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'PATCH',
-      })
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant1Id}/settings`,
+        {
+          body: JSON.stringify(updateBody),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'PATCH',
+        },
+      )
       const res = await patchSettingsHandler(req, { params: Promise.resolve({ id: tenant1Id }) })
 
       expect(res.status).toBe(200)
@@ -224,7 +232,9 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
       expect(json.tenant.address).toBe('Jl. Sudirman Kav. 1, Jakarta')
       expect(json.tenant.city).toBe('Jakarta Pusat')
       expect(json.tenant.operatingHours.openTime).toBe('09:00')
-      expect(json.tenant.brandingContent.socialLinks.whatsapp.url).toBe('https://wa.me/628119998888')
+      expect(json.tenant.brandingContent.socialLinks.whatsapp.url).toBe(
+        'https://wa.me/628119998888',
+      )
 
       // Query directly from database to verify targeted update integrity
       const [freshTenant] = await db.select().from(tenants).where(eq(tenants.id, tenant1Id))
@@ -242,14 +252,17 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
 
     it('creates a new category under merchant tenant', async () => {
       mockMerchantSession()
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant1Id}/categories`, {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify({
-          name: 'Summer Specials',
-          sortOrder: 0,
-        }),
-      })
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant1Id}/categories`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'Summer Specials',
+            sortOrder: 0,
+          }),
+        },
+      )
       const res = await postCategoriesHandler(req, { params: Promise.resolve({ id: tenant1Id }) })
 
       expect(res.status).toBe(201)
@@ -262,7 +275,9 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
 
     it('lists all categories for tenant', async () => {
       mockMerchantSession()
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant1Id}/categories`)
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant1Id}/categories`,
+      )
       const res = await getCategoriesHandler(req, { params: Promise.resolve({ id: tenant1Id }) })
 
       expect(res.status).toBe(200)
@@ -343,11 +358,14 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
         ],
       }
 
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant1Id}/products`, {
-        body: JSON.stringify(newProductPayload),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-      })
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant1Id}/products`,
+        {
+          body: JSON.stringify(newProductPayload),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      )
       const res = await postProductsHandler(req, { params: Promise.resolve({ id: tenant1Id }) })
 
       expect(res.status).toBe(201)
@@ -367,7 +385,9 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
 
     it('lists products including variants and options for merchant tenant', async () => {
       mockMerchantSession()
-      const req = new NextRequest(`http://localhost:3000/api/dashboard/tenants/${tenant1Id}/products`)
+      const req = new NextRequest(
+        `http://localhost:3000/api/dashboard/tenants/${tenant1Id}/products`,
+      )
       const res = await getProductsHandler(req, { params: Promise.resolve({ id: tenant1Id }) })
 
       expect(res.status).toBe(200)
@@ -505,15 +525,12 @@ describe('dashboard API seam: merchant tenants overview (/api/dashboard/tenants)
       expect(liveTee!.variants).toHaveLength(1)
       expect(liveTee!.variants?.[0]?.options).toHaveLength(2)
 
-      // 4. Verify storefront adapter transforms it seamlessly
-      const businessDemo = mapTenantToBusinessDemo(storefrontData!)
-      expect(businessDemo.phone).toBe('08999888777')
-      expect(businessDemo.address).toBe('Jl. Reflection No. 99, Jakarta')
-      const demoProduct = businessDemo.menu.find(p => p.name === 'Live Reflection Tee')
-      expect(demoProduct).toBeDefined()
-      expect(demoProduct!.price).toBe('Rp 125.000')
-      expect(demoProduct!.variants).toBeDefined()
-      expect(demoProduct!.variants?.[0]?.options).toHaveLength(2)
+      // 4. Verify storefront loader yields normalized relational data directly
+      expect(storefrontData!.tenant.phone).toBe('08999888777')
+      expect(storefrontData!.tenant.address).toBe('Jl. Reflection No. 99, Jakarta')
+      expect(liveTee!.name).toBe('Live Reflection Tee')
+      expect(liveTee!.basePrice).toBe(125000)
+      expect(liveTee!.variants?.[0]?.options).toHaveLength(2)
     })
   })
 })

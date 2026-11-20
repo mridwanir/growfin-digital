@@ -4,11 +4,9 @@
   "ignore": [
     "src/db/schema/*",
     "src/components/ui/*",
-    "src/components/dashboard/**/*",
-    "src/components/demo/**/*",
     "src/lib/storage/client.ts",
     "frontend/**/*"
   ],
-  "ignoreDependencies": [],
+  "ignoreDependencies": ["@ashtrath/skills"],
   "treatConfigHintsAsErrors": true
 }

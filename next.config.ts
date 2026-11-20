@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 
+import path from 'node:path'
+
 import '@/lib/env'
 
 const nextConfig: NextConfig = {
@@ -52,6 +54,7 @@ const nextConfig: NextConfig = {
   },
 
   turbopack: {
+    root: process.cwd().includes('worktrees') ? path.resolve(process.cwd(), '../..') : undefined,
     rules: {
       '*.css': {
         as: '*.css',

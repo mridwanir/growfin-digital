@@ -3,7 +3,7 @@ import crypto from 'node:crypto'
 
 import { env } from '@/lib/env'
 
-export const s3Client = new S3Client({
+const s3Client = new S3Client({
   endpoint: env.AWS_ENDPOINT_URL_S3,
   forcePathStyle: true, // Required: Neon Object Storage uses path-style addressing
   region: env.AWS_REGION,
@@ -13,12 +13,12 @@ export const s3Client = new S3Client({
   },
 })
 
-export const DEFAULT_BUCKET = env.AWS_BUCKET_NAME || 'growfin-media'
+const DEFAULT_BUCKET = env.AWS_BUCKET_NAME || 'growfin-media'
 
 /**
  * Resolves the public CDN/HTTP URL for an object stored in Neon Object Storage.
  */
-export function getStoragePublicUrl(key: string, bucket = DEFAULT_BUCKET): string {
+function getStoragePublicUrl(key: string, bucket = DEFAULT_BUCKET): string {
   const cleanEndpoint = env.AWS_ENDPOINT_URL_S3.replace(/\/+$/, '')
   const cleanKey = key.replace(/^\/+/, '')
   return `${cleanEndpoint}/${bucket}/${cleanKey}`

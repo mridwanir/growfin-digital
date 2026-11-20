@@ -39,8 +39,7 @@ async function ProductsContent({ searchParams }: ProductsPageProps) {
   }
 
   const { tenant: selectedTenantId } = await searchParams
-  const activeTenant =
-    tenantList.find(t => t.id === selectedTenantId) || tenantList[0]
+  const activeTenant = tenantList.find(t => t.id === selectedTenantId) || tenantList[0]
 
   const [categories, products] = await Promise.all([
     getTenantCategories(activeTenant.id, session.user.id),

@@ -1,4 +1,6 @@
-import type { RelationalStorefrontInput } from './mapper'
+import type { ProductWithVariants } from '@/components/storefront/catalog'
+import type { Category } from '@/db/schema/catalog'
+import type { Tenant } from '@/db/schema/tenants'
 
 import { eq, inArray, or } from 'drizzle-orm'
 import { cache } from 'react'
@@ -6,6 +8,12 @@ import { cache } from 'react'
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { tenants } from '@/db/schema/tenants'
+
+export interface StorefrontData {
+  categories: Category[]
+  products: ProductWithVariants[]
+  tenant: Tenant
+}
 
 /**
  * Loads complete relational tenant data (tenant, categories, products, variants, options) by slug
@@ -15,7 +23,7 @@ import { tenants } from '@/db/schema/tenants'
  * RSC.
  */
 export const getStorefrontDataBySlug = cache(
-  async (slugOrDomain: string): Promise<RelationalStorefrontInput | null> => {
+  async (slugOrDomain: string): Promise<StorefrontData | null> => {
     const [tenant] = await db
       .select()
       .from(tenants)

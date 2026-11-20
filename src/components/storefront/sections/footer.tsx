@@ -3,7 +3,7 @@ import type { BrandingContent, Tenant } from '@/db/schema/tenants'
 import { cn } from 'cn'
 import { ExternalLink, MapPin, MessageCircle, Phone, Share2 } from 'lucide-react'
 
-import { normalizeWaNumber } from '@/lib/storefront/whatsapp'
+import { resolveTenantWhatsAppNumber } from '@/lib/storefront/whatsapp'
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -48,9 +48,7 @@ export function Footer({ tenant, className }: FooterSectionProps) {
     (branding['socialMedia'] as Record<string, { url?: string }> | undefined)?.instagram?.url ||
     null
 
-  const rawWa =
-    branding.socialLinks?.whatsapp?.url || (branding['waNumber'] as string) || tenant.phone || ''
-  const waNumber = normalizeWaNumber(rawWa)
+  const waNumber = resolveTenantWhatsAppNumber(tenant)
   const waUrl = waNumber ? `https://wa.me/${waNumber}` : null
 
   const facebookUrl =

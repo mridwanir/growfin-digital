@@ -7,8 +7,7 @@ import { MinusIcon, PlusIcon, XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import { calculateItemSubtotal, formatCurrency, useCartActions } from '@/lib/storefront/cart'
-
-import { componentRenderCache } from './cache'
+import { getDiscountPercentage } from '@/components/storefront/catalog/currency'
 
 export interface ProductCustomizationDialogProps {
   initialAddons?: string[]
@@ -21,28 +20,13 @@ export interface ProductCustomizationDialogProps {
 }
 
 export function ProductCustomizationDialog(props: ProductCustomizationDialogProps) {
-  const { open, product } = props
-
-  if (!open || !product) {
-    return null
-  }
-
-  return <ProductCustomizationDialogContent {...props} parentProps={props} product={product} />
-}
-
-function ProductCustomizationDialogContent(
-  props: ProductCustomizationDialogProps & {
-    parentProps: ProductCustomizationDialogProps
-    product: ProductWithVariants
-  },
-) {
   const {
     initialAddons,
     initialNotes,
     initialQuantity,
     initialVariants,
     onOpenChange,
-    parentProps,
+    open,
     product,
   } = props
 
@@ -50,7 +34,7 @@ function ProductCustomizationDialogContent(
 
   const defaultVariants = useMemo(() => {
     const defaults: Record<string, string> = {}
-    if (product.variants) {
+    if (product?.variants) {
       for (const variant of product.variants) {
         if (variant.options && variant.options.length > 0) {
           defaults[variant.name] = variant.options[0].label
@@ -58,7 +42,7 @@ function ProductCustomizationDialogContent(
       }
     }
     return defaults
-  }, [product.variants])
+  }, [product?.variants])
 
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(() => ({
     ...defaultVariants,
@@ -69,33 +53,33 @@ function ProductCustomizationDialogContent(
   const [quantity, setQuantity] = useState(() => Math.max(1, initialQuantity ?? 1))
 
   const variantModifiers = useMemo(() => {
-    return (product.variants ?? []).map(variant => {
+    return (product?.variants ?? []).map(variant => {
       const selectedLabel = selectedVariants[variant.name]
       const option = variant.options?.find(opt => opt.label === selectedLabel)
       return option?.priceModifier ?? 0
     })
-  }, [product.variants, selectedVariants])
+  }, [product?.variants, selectedVariants])
 
   const activeAddons = useMemo(() => {
-    return (product.addons ?? [])
+    return (product?.addons ?? [])
       .filter(addon => selectedAddons.includes(addon.name))
       .map(addon => ({ price: addon.price }))
-  }, [product.addons, selectedAddons])
+  }, [product?.addons, selectedAddons])
 
   const unitPrice = useMemo(() => {
-    return calculateItemSubtotal(product.basePrice, variantModifiers, activeAddons, 1)
-  }, [product.basePrice, variantModifiers, activeAddons])
+    return calculateItemSubtotal(product?.basePrice ?? 0, variantModifiers, activeAddons, 1)
+  }, [product?.basePrice, variantModifiers, activeAddons])
 
   const subtotal = useMemo(() => {
-    return calculateItemSubtotal(product.basePrice, variantModifiers, activeAddons, quantity)
-  }, [product.basePrice, variantModifiers, activeAddons, quantity])
+    return calculateItemSubtotal(product?.basePrice ?? 0, variantModifiers, activeAddons, quantity)
+  }, [product?.basePrice, variantModifiers, activeAddons, quantity])
 
-  const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.basePrice)
-  const discountPercentage =
-    hasDiscount && product.originalPrice
-      ? Math.round(((product.originalPrice - product.basePrice) / product.originalPrice) * 100)
-      : 0
+  const discountPercentage = getDiscountPercentage(product?.basePrice, product?.originalPrice)
+  const hasDiscount = discountPercentage > 0
 
+  if (!open || !product) {
+    return null
+  }
   const handleToggleAddon = (addonName: string) => {
     setSelectedAddons(prev =>
       prev.includes(addonName) ? prev.filter(name => name !== addonName) : [...prev, addonName],
@@ -335,9 +319,6 @@ function ProductCustomizationDialogContent(
       </div>
     </div>
   )
-
-  componentRenderCache.set(props, dialogElement)
-  componentRenderCache.set(parentProps, dialogElement)
 
   return dialogElement
 }

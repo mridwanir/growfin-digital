@@ -8,7 +8,12 @@ import {
   calculateItemSubtotal,
   formatCurrency,
 } from '@/lib/storefront/cart/domain'
-import { buildOrderSummary, FulfillmentSchema, normalizeWaNumber } from '@/lib/storefront/whatsapp'
+import {
+  buildOrderSummary,
+  FulfillmentSchema,
+  normalizeWaNumber,
+  resolveTenantWhatsAppNumber,
+} from '@/lib/storefront/whatsapp'
 
 describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
   describe('calculateItemSubtotal', () => {
@@ -224,6 +229,21 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
         expect(result.data.customerName).toBe('Siti Rahma')
       })
 
+      it('validates TAKEAWAY input with optional pickupPreferences', () => {
+        const result = FulfillmentSchema.safeParse({
+          customerName: 'Siti Rahma',
+          mode: 'TAKEAWAY',
+          pickupPreferences: 'Siap jam 13:00 WIB',
+        })
+        expect(result.success).toBe(true)
+        if (!result.success) {
+          throw new Error('Expected success')
+        }
+        expect(result.data.mode).toBe('TAKEAWAY')
+        const data = result.data as Extract<FulfillmentInput, { mode: 'TAKEAWAY' }>
+        expect(data.pickupPreferences).toBe('Siap jam 13:00 WIB')
+      })
+
       it('rejects missing or whitespace customerName', () => {
         const result = FulfillmentSchema.safeParse({
           customerName: '   ',
@@ -252,6 +272,21 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
         expect(result.data.customerName).toBe('Ahmad Faiz')
       })
 
+      it('validates PICKUP input with optional pickupPreferences', () => {
+        const result = FulfillmentSchema.safeParse({
+          customerName: 'Ahmad Faiz',
+          mode: 'PICKUP',
+          pickupPreferences: 'Ambil di kasir lantai 2',
+        })
+        expect(result.success).toBe(true)
+        if (!result.success) {
+          throw new Error('Expected success')
+        }
+        expect(result.data.mode).toBe('PICKUP')
+        const data = result.data as Extract<FulfillmentInput, { mode: 'PICKUP' }>
+        expect(data.pickupPreferences).toBe('Ambil di kasir lantai 2')
+      })
+
       it('rejects missing customerName', () => {
         const result = FulfillmentSchema.safeParse({
           customerName: '',
@@ -265,7 +300,6 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
         expect(messages).toContain('Nama pemesan wajib diisi')
       })
     })
-
     describe('dELIVERY mode', () => {
       it('validates valid DELIVERY input with address >= 5 characters', () => {
         const result = FulfillmentSchema.safeParse({
@@ -417,6 +451,38 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
       expect(message).toContain('Nama: Siti Aminah')
       expect(message).toMatch(/Takeaway|Bungkus/i)
       expect(waUrl).toContain('https://wa.me/6281234567890?text=')
+    })
+
+    it('includes pickup preferences in TAKEAWAY order summary when present', () => {
+      const fulfillment: FulfillmentInput = {
+        customerName: 'Siti Aminah',
+        mode: 'TAKEAWAY',
+        pickupPreferences: 'Bungkus terpisah ya',
+      }
+
+      const { message } = buildOrderSummary({
+        cartItems: [mockCartItems[0]],
+        fulfillment,
+        tenant: mockTenant,
+      })
+
+      expect(message).toContain('Preferensi: Bungkus terpisah ya')
+    })
+
+    it('includes pickup preferences in PICKUP order summary when present', () => {
+      const fulfillment: FulfillmentInput = {
+        customerName: 'Ferry Salim',
+        mode: 'PICKUP',
+        pickupPreferences: 'Ambil sore jam 17:00',
+      }
+
+      const { message } = buildOrderSummary({
+        cartItems: [mockCartItems[0]],
+        fulfillment,
+        tenant: mockTenant,
+      })
+
+      expect(message).toContain('Preferensi: Ambil sore jam 17:00')
     })
 
     it('compiles order summary for PICKUP fulfillment', () => {
@@ -616,5 +682,41 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
       expect(formatCurrency(Infinity)).toBe('Rp 0')
       expect(formatCurrency(-Infinity)).toBe('Rp 0')
     })
+  })
+})
+
+describe('resolveTenantWhatsAppNumber', () => {
+  it('resolves normalized number from branding socialLinks.whatsapp.url', () => {
+    const tenant = {
+      phone: '08999999999',
+      brandingContent: {
+        socialLinks: {
+          whatsapp: { url: '081234567890' },
+        },
+      },
+    }
+    expect(resolveTenantWhatsAppNumber(tenant)).toBe('6281234567890')
+  })
+
+  it('resolves normalized number from branding.waNumber', () => {
+    const tenant = {
+      phone: '08999999999',
+      brandingContent: {
+        waNumber: '+62 812-3456-7890',
+      },
+    }
+    expect(resolveTenantWhatsAppNumber(tenant)).toBe('6281234567890')
+  })
+
+  it('falls back to tenant.phone when branding lacks WhatsApp info', () => {
+    const tenant = {
+      phone: '081234567890',
+    }
+    expect(resolveTenantWhatsAppNumber(tenant)).toBe('6281234567890')
+  })
+
+  it('returns empty string when tenant is null or has no contact info', () => {
+    expect(resolveTenantWhatsAppNumber(null)).toBe('')
+    expect(resolveTenantWhatsAppNumber({})).toBe('')
   })
 })

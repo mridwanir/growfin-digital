@@ -6,6 +6,7 @@ import { GrowfinWatermark } from '@/components/storefront'
 import { StorefrontClientIslands } from '@/components/storefront/client-islands'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { ThemePreviewBar } from '@/components/storefront/theme-preview-bar'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import { getMockStorefrontData } from '@/lib/storefront/mock-data'
 
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
@@ -30,14 +31,16 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
   const { categories, products, selectedTheme, tenant } = getMockStorefrontData(theme)
 
   return (
-    <div className="relative min-h-screen">
-      <ThemePreviewBar currentThemeId={selectedTheme.id} />
-      {createElement(
-        getStorefrontLayout(selectedTheme.id, selectedTheme.archetype),
-        { categories, products, tenant },
-        <StorefrontClientIslands tenant={tenant} />,
-        <GrowfinWatermark />,
-      )}
-    </div>
+    <StorefrontCartProvider tenantId={tenant.id}>
+      <div className="relative min-h-screen">
+        <ThemePreviewBar currentThemeId={selectedTheme.id} />
+        {createElement(
+          getStorefrontLayout(selectedTheme.id, selectedTheme.archetype),
+          { categories, products, tenant },
+          <StorefrontClientIslands tenant={tenant} />,
+          <GrowfinWatermark />,
+        )}
+      </div>
+    </StorefrontCartProvider>
   )
 }

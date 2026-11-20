@@ -3,7 +3,7 @@ import type { BrandingContent, OperatingHours, Tenant } from '@/db/schema/tenant
 import { cn } from 'cn'
 import { ArrowRight, MessageCircle, ShoppingBag } from 'lucide-react'
 
-import { normalizeWaNumber } from '@/lib/storefront/whatsapp'
+import { resolveTenantWhatsAppNumber } from '@/lib/storefront/whatsapp'
 
 export interface HeroSectionProps {
   tenant: Tenant
@@ -35,9 +35,7 @@ export function Hero({
   const closeTime = operatingHours.closeTime || '21:00'
   const hoursText = operatingHours.raw || `${openTime} - ${closeTime}`
 
-  const rawWa =
-    branding.socialLinks?.whatsapp?.url || (branding['waNumber'] as string) || tenant.phone || ''
-  const waNumber = normalizeWaNumber(rawWa)
+  const waNumber = resolveTenantWhatsAppNumber(tenant)
   const waUrl = waNumber
     ? `https://wa.me/${waNumber}?text=Halo%20${encodeURIComponent(name)},%20saya%20tertarik%20dengan%20produk%20Anda.`
     : undefined

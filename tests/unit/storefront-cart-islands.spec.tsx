@@ -8,7 +8,6 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
-  componentRenderCache,
   MobileCartBar,
   ProductCustomizationDialog,
   StorefrontCartDrawer,
@@ -95,11 +94,6 @@ function findElementBySlot(
   if (element.props['data-slot'] === slot) {
     return element
   }
-  const cached = componentRenderCache.get(element.props)
-  if (cached) {
-    const found = findElementBySlot(cached, slot)
-    if (found) return found
-  }
   const children = element.props.children
   if (Array.isArray(children)) {
     for (const child of children) {
@@ -110,6 +104,22 @@ function findElementBySlot(
     return findElementBySlot(children, slot)
   }
   return null
+}
+
+function renderIslandElement(element: ReactElement, cartStore: CartStore): ReactElement {
+  let captured: ReactElement | null = null
+  function Capture() {
+    if (React.isValidElement(element) && typeof element.type === 'function') {
+      captured = (element.type as (props: unknown) => ReactElement | null)(element.props)
+    }
+    return captured
+  }
+  renderToStaticMarkup(
+    <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+      <Capture />
+    </StorefrontCartProvider>,
+  )
+  return captured!
 }
 
 // ---------------------------------------------------------------------------
@@ -218,24 +228,17 @@ describe('Storefront Client Islands (Ticket 05)', () => {
 
     it('customizes simple product without variants or addons', () => {
       const onOpenChange = vi.fn()
-      let rendered: ReactElement | null = null
-      function SimpleDialogCapture() {
-        rendered = (
-          <ProductCustomizationDialog
-            initialQuantity={3}
-            open={true}
-            product={mockSimpleProduct}
-            onOpenChange={onOpenChange}
-          />
-        )
-        return rendered
-      }
-
-      const markup = renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <SimpleDialogCapture />
-        </StorefrontCartProvider>,
+      const rendered = renderIslandElement(
+        <ProductCustomizationDialog
+          initialQuantity={3}
+          open={true}
+          product={mockSimpleProduct}
+          onOpenChange={onOpenChange}
+        />,
+        cartStore,
       )
+
+      const markup = renderToStaticMarkup(rendered)
 
       expect(markup).toContain('Donat Cokelat')
       expect(markup).toContain(formatCurrency(36000)) // 12000 * 3
@@ -255,29 +258,18 @@ describe('Storefront Client Islands (Ticket 05)', () => {
 
     it('dispatches addItem to store and closes dialog on submission', () => {
       const onOpenChange = vi.fn()
-
-      let rendered: ReactElement | null = null
-      function DialogCapture() {
-        rendered = (
-          <ProductCustomizationDialog
-            initialAddons={['Ekstra Shot']}
-            initialNotes="Kurangi es batu"
-            initialQuantity={2}
-            initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
-            open={true}
-            product={mockProductWithVariants}
-            onOpenChange={onOpenChange}
-          />
-        )
-        return rendered
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <DialogCapture />
-        </StorefrontCartProvider>,
+      const rendered = renderIslandElement(
+        <ProductCustomizationDialog
+          initialAddons={['Ekstra Shot']}
+          initialNotes="Kurangi es batu"
+          initialQuantity={2}
+          initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
+          open={true}
+          product={mockProductWithVariants}
+          onOpenChange={onOpenChange}
+        />,
+        cartStore,
       )
-
       const submitBtn = findElementBySlot(rendered, 'customization-submit-button')
       expect(submitBtn).toBeDefined()
       submitBtn?.props?.onClick?.({ preventDefault: vi.fn() })
@@ -319,27 +311,17 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       expect(cartStore.getState().items[0].quantity).toBe(1)
 
       // Add identical configuration: qty 2 -> should stack to 3
-      let renderedIdentical: ReactElement | null = null
-      function IdenticalCapture() {
-        renderedIdentical = (
-          <ProductCustomizationDialog
-            initialAddons={[]}
-            initialQuantity={2}
-            initialVariants={{ Suhu: 'Dingin', Ukuran: 'Regular' }}
-            open={true}
-            product={mockProductWithVariants}
-            onOpenChange={vi.fn()}
-          />
-        )
-        return renderedIdentical
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <IdenticalCapture />
-        </StorefrontCartProvider>,
+      const renderedIdentical = renderIslandElement(
+        <ProductCustomizationDialog
+          initialAddons={[]}
+          initialQuantity={2}
+          initialVariants={{ Suhu: 'Dingin', Ukuran: 'Regular' }}
+          open={true}
+          product={mockProductWithVariants}
+          onOpenChange={vi.fn()}
+        />,
+        cartStore,
       )
-
       const submitIdentical = findElementBySlot(renderedIdentical, 'customization-submit-button')
       submitIdentical?.props?.onClick?.({ preventDefault: vi.fn() })
 
@@ -349,27 +331,17 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       expect(itemsAfterStack[0].subtotal).toBe(60000)
 
       // Add distinct configuration: Large, Dingin, Ekstra Shot -> should create separate line item
-      let renderedDistinct: ReactElement | null = null
-      function DistinctCapture() {
-        renderedDistinct = (
-          <ProductCustomizationDialog
-            initialAddons={['Ekstra Shot']}
-            initialQuantity={1}
-            initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
-            open={true}
-            product={mockProductWithVariants}
-            onOpenChange={vi.fn()}
-          />
-        )
-        return renderedDistinct
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <DistinctCapture />
-        </StorefrontCartProvider>,
+      const renderedDistinct = renderIslandElement(
+        <ProductCustomizationDialog
+          initialAddons={['Ekstra Shot']}
+          initialQuantity={1}
+          initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
+          open={true}
+          product={mockProductWithVariants}
+          onOpenChange={vi.fn()}
+        />,
+        cartStore,
       )
-
       const submitDistinct = findElementBySlot(renderedDistinct, 'customization-submit-button')
       submitDistinct?.props?.onClick?.({ preventDefault: vi.fn() })
 
@@ -397,19 +369,12 @@ describe('Storefront Client Islands (Ticket 05)', () => {
 
     it('renders clean empty cart state when cart contains zero items', () => {
       const onOpenChange = vi.fn()
-      let rendered: ReactElement | null = null
-      function DrawerCapture() {
-        rendered = (
-          <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={onOpenChange} />
-        )
-        return rendered
-      }
-
-      const markup = renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <DrawerCapture />
-        </StorefrontCartProvider>,
+      const rendered = renderIslandElement(
+        <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={onOpenChange} />,
+        cartStore,
       )
+
+      const markup = renderToStaticMarkup(rendered)
 
       expect(markup).toContain('Keranjang Belanja Kosong')
       expect(markup).toContain('Belum ada produk')
@@ -460,16 +425,9 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         unitPrice: 20000,
       })
 
-      let rendered: ReactElement | null = null
-      function DrawerCapture() {
-        rendered = <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={vi.fn()} />
-        return rendered
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <DrawerCapture />
-        </StorefrontCartProvider>,
+      const rendered = renderIslandElement(
+        <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={vi.fn()} />,
+        cartStore,
       )
 
       const incBtn = findElementBySlot(rendered, 'cart-item-increment')
@@ -498,25 +456,16 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       })
 
       // Test DINE_IN with missing fields
-      let renderedDineIn: ReactElement | null = null
-      function DineInCapture() {
-        renderedDineIn = (
-          <StorefrontCartDrawer
-            initialCustomerName=""
-            initialFulfillmentMode="DINE_IN"
-            initialTableNumber=""
-            open={true}
-            tenant={mockTenant}
-            onOpenChange={vi.fn()}
-          />
-        )
-        return renderedDineIn
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <DineInCapture />
-        </StorefrontCartProvider>,
+      const renderedDineIn = renderIslandElement(
+        <StorefrontCartDrawer
+          initialCustomerName=""
+          initialFulfillmentMode="DINE_IN"
+          initialTableNumber=""
+          open={true}
+          tenant={mockTenant}
+          onOpenChange={vi.fn()}
+        />,
+        cartStore,
       )
 
       const checkoutBtn = findElementBySlot(renderedDineIn, 'cart-checkout-button')
@@ -582,25 +531,16 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         unitPrice: 29000,
       })
 
-      let rendered: ReactElement | null = null
-      function ValidCheckoutCapture() {
-        rendered = (
-          <StorefrontCartDrawer
-            initialCustomerName="Ahmad Reza"
-            initialFulfillmentMode="DINE_IN"
-            initialTableNumber="Meja 12"
-            open={true}
-            tenant={mockTenant}
-            onOpenChange={vi.fn()}
-          />
-        )
-        return rendered
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <ValidCheckoutCapture />
-        </StorefrontCartProvider>,
+      const rendered = renderIslandElement(
+        <StorefrontCartDrawer
+          initialCustomerName="Ahmad Reza"
+          initialFulfillmentMode="DINE_IN"
+          initialTableNumber="Meja 12"
+          open={true}
+          tenant={mockTenant}
+          onOpenChange={vi.fn()}
+        />,
+        cartStore,
       )
 
       const checkoutBtn = findElementBySlot(rendered, 'cart-checkout-button')
@@ -623,6 +563,48 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       expect(decodedText).toContain('Total: Rp 58.000')
       expect(decodedText).toContain('Nama: Ahmad Reza')
       expect(decodedText).toContain('No. Meja: Meja 12')
+    })
+
+    it('includes pickup preferences in WhatsApp order summary when mode is TAKEAWAY or PICKUP', () => {
+      const windowOpenSpy = vi.fn()
+      globalThis.window = {
+        open: windowOpenSpy,
+      } as unknown as Window & typeof globalThis
+
+      cartStore.getState().addItem({
+        name: 'Donat Cokelat',
+        basePrice: 12000,
+        productId: 'prod-snack-1',
+        quantity: 2,
+        subtotal: 24000,
+        unitPrice: 12000,
+      })
+
+      const renderedTakeaway = renderIslandElement(
+        <StorefrontCartDrawer
+          initialCustomerName="Siti Nurhaliza"
+          initialFulfillmentMode="TAKEAWAY"
+          initialPickupPreferences="Ambil jam 15.00 sore"
+          open={true}
+          tenant={mockTenant}
+          onOpenChange={vi.fn()}
+        />,
+        cartStore,
+      )
+
+      const markup = renderToStaticMarkup(renderedTakeaway)
+      expect(markup).toContain('Preferensi Pengambilan')
+      expect(markup).toContain('Ambil jam 15.00 sore')
+
+      const checkoutBtn = findElementBySlot(renderedTakeaway, 'cart-checkout-button')
+      expect(checkoutBtn).toBeDefined()
+      checkoutBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+
+      expect(windowOpenSpy).toHaveBeenCalledTimes(1)
+      const calledUrl = windowOpenSpy.mock.calls[0][0] as string
+      const decodedText = decodeURIComponent(calledUrl.split('?text=')[1])
+      expect(decodedText).toContain('- Metode: Takeaway (Bungkus)')
+      expect(decodedText).toContain('- Preferensi: Ambil jam 15.00 sore')
     })
   })
 
@@ -673,17 +655,7 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         subtotal: 20000,
       })
 
-      let rendered: ReactElement | null = null
-      function MobileBarCapture() {
-        rendered = <MobileCartBar onOpenCart={onOpenCart} />
-        return rendered
-      }
-
-      renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <MobileBarCapture />
-        </StorefrontCartProvider>,
-      )
+      const rendered = renderIslandElement(<MobileCartBar onOpenCart={onOpenCart} />, cartStore)
 
       const openButton = findElementBySlot(rendered, 'mobile-cart-open')
       expect(openButton).toBeDefined()

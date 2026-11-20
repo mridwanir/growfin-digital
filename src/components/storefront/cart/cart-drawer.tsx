@@ -13,15 +13,14 @@ import {
 } from '@/lib/storefront/cart'
 import { buildOrderSummary, FulfillmentSchema } from '@/lib/storefront/whatsapp'
 
-import { componentRenderCache } from './cache'
-
 export interface StorefrontCartDrawerProps {
   initialAddress?: string
   initialCustomerName?: string
   initialErrors?: Record<string, string>
   initialFulfillmentMode?: string
-  initialTableNumber?: string
+  initialPickupPreferences?: string
   onOpenChange: (open: boolean) => void
+  initialTableNumber?: string
   open: boolean
   tenant: {
     name: string
@@ -32,26 +31,15 @@ export interface StorefrontCartDrawerProps {
 }
 
 export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
-  if (!props.open) {
-    return null
-  }
-
-  return <StorefrontCartDrawerContent {...props} parentProps={props} />
-}
-
-function StorefrontCartDrawerContent(
-  props: StorefrontCartDrawerProps & {
-    parentProps: StorefrontCartDrawerProps
-  },
-) {
   const {
     initialAddress,
     initialCustomerName,
     initialErrors,
     initialFulfillmentMode,
+    initialPickupPreferences,
     initialTableNumber,
     onOpenChange,
-    parentProps,
+    open,
     tenant,
   } = props
 
@@ -72,8 +60,13 @@ function StorefrontCartDrawerContent(
   )
   const [customerName, setCustomerName] = useState(() => initialCustomerName ?? '')
   const [tableNumber, setTableNumber] = useState(() => initialTableNumber ?? '')
+  const [pickupPreferences, setPickupPreferences] = useState(() => initialPickupPreferences ?? '')
   const [address, setAddress] = useState(() => initialAddress ?? '')
   const [errors, setErrors] = useState<Record<string, string>>(() => initialErrors ?? {})
+
+  if (!open) {
+    return null
+  }
 
   const handleIncrement = (itemKey: string, fallbackQty: number) => {
     const currentItem = store
@@ -100,10 +93,18 @@ function StorefrontCartDrawerContent(
         fulfillmentPayload = { customerName, mode: 'DINE_IN', tableNumber }
         break
       case 'TAKEAWAY':
-        fulfillmentPayload = { customerName, mode: 'TAKEAWAY' }
+        fulfillmentPayload = {
+          customerName,
+          mode: 'TAKEAWAY',
+          ...(pickupPreferences.trim() ? { pickupPreferences: pickupPreferences.trim() } : {}),
+        }
         break
       case 'PICKUP':
-        fulfillmentPayload = { customerName, mode: 'PICKUP' }
+        fulfillmentPayload = {
+          customerName,
+          mode: 'PICKUP',
+          ...(pickupPreferences.trim() ? { pickupPreferences: pickupPreferences.trim() } : {}),
+        }
         break
       case 'DELIVERY':
         fulfillmentPayload = { address, customerName, mode: 'DELIVERY' }
@@ -379,6 +380,26 @@ function StorefrontCartDrawerContent(
                   )}
                 </div>
               )}
+              {/* Pickup Preferences for TAKEAWAY and PICKUP */}
+              {(fulfillmentMode === 'TAKEAWAY' || fulfillmentMode === 'PICKUP') && (
+                <div className="space-y-1">
+                  <label
+                    className="text-foreground text-xs font-semibold"
+                    htmlFor="cart-pickup-preferences"
+                  >
+                    Preferensi Pengambilan <span className="text-muted-foreground font-normal">(opsional)</span>
+                  </label>
+                  <input
+                    className="bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary border-border w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                    id="cart-pickup-preferences"
+                    placeholder="Contoh: Diambil jam 14.00, tanpa sedotan"
+                    type="text"
+                    value={pickupPreferences}
+                    onChange={e => setPickupPreferences(e.target.value)}
+                  />
+                </div>
+              )}
+
 
               {/* Address for DELIVERY */}
               {fulfillmentMode === 'DELIVERY' && (
@@ -436,9 +457,6 @@ function StorefrontCartDrawerContent(
       </div>
     </div>
   )
-
-  componentRenderCache.set(props, drawerElement)
-  componentRenderCache.set(parentProps, drawerElement)
 
   return drawerElement
 }

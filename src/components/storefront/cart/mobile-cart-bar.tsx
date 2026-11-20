@@ -4,8 +4,6 @@ import { ShoppingBagIcon } from 'lucide-react'
 
 import { formatCurrency, useCartItemCount, useCartTotal } from '@/lib/storefront/cart'
 
-import { componentRenderCache } from './cache'
-
 export interface MobileCartBarProps {
   onOpenCart: () => void
 }
@@ -49,8 +47,6 @@ export function MobileCartBar(props: MobileCartBarProps) {
       </div>
     </div>
   )
-
-  componentRenderCache.set(props, barElement)
 
   return barElement
 }

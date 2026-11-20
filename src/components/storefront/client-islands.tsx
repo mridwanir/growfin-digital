@@ -13,18 +13,20 @@ import {
 import { StorefrontCartProvider, useCartActions } from '@/lib/storefront/cart'
 import { resolveFulfillmentModes } from '@/lib/storefront/fulfillment'
 
+import { resolveTenantWhatsAppNumber } from '@/lib/storefront/whatsapp'
+
 export interface StorefrontClientIslandsProps {
   tenant:
-    | Tenant
-    | {
-        id?: string
-        name: string
-        [key: string]: unknown
-        brandingContent?: Record<string, unknown> | null
-        category?: string | null
-        phone?: string | null
-        themeConfig?: ThemeConfig | Record<string, unknown> | null
-      }
+  | Tenant
+  | {
+    id?: string
+    name: string
+    [key: string]: unknown
+    brandingContent?: Record<string, unknown> | null
+    category?: string | null
+    phone?: string | null
+    themeConfig?: ThemeConfig | Record<string, unknown> | null
+  }
 }
 
 function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps) {
@@ -74,13 +76,7 @@ function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps
     }
   }, [addItem])
 
-  const branding = (tenant.brandingContent as Record<string, unknown> | null) || {}
-  const rawWa =
-    (branding.socialLinks as Record<string, { url?: string }> | undefined)?.whatsapp?.url ||
-    (branding.waNumber as string | undefined) ||
-    tenant.phone ||
-    ''
-
+  const waNumber = resolveTenantWhatsAppNumber(tenant)
   const fulfillmentModes = resolveFulfillmentModes(tenant.category, tenant.themeConfig)
   return (
     <>
@@ -92,7 +88,7 @@ function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps
           name: tenant.name,
           fulfillmentModes,
           phone: tenant.phone,
-          waNumber: rawWa,
+          waNumber,
         }}
       />
       <ProductCustomizationDialog

@@ -27,6 +27,30 @@ export function normalizeWaNumber(phone?: string | null): string {
 }
 
 /**
+ * Resolves and normalizes a tenant's WhatsApp contact number from branding content,
+ * explicit waNumber, or fallback phone number.
+ */
+export function resolveTenantWhatsAppNumber(
+  tenant?: {
+    brandingContent?: unknown
+    phone?: string | null
+    waNumber?: string | null
+  } | null,
+): string {
+  if (!tenant) return ''
+  const branding = (tenant.brandingContent as Record<string, unknown> | null) || {}
+  const socialLinks = branding.socialLinks as Record<string, { url?: string }> | undefined
+  const rawWa =
+    socialLinks?.whatsapp?.url ||
+    (branding.waNumber as string | undefined) ||
+    (branding['waNumber'] as string | undefined) ||
+    tenant.waNumber ||
+    tenant.phone ||
+    ''
+  return normalizeWaNumber(rawWa)
+}
+
+/**
  * Strict Zod discriminated union schema for storefront checkout fulfillment details. Supports
  * DINE_IN, TAKEAWAY, PICKUP, and DELIVERY modes.
  */
@@ -39,10 +63,12 @@ export const FulfillmentSchema = z.discriminatedUnion('mode', [
   z.object({
     customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
     mode: z.literal('TAKEAWAY'),
+    pickupPreferences: z.string().trim().optional(),
   }),
   z.object({
     customerName: z.string().trim().min(1, 'Nama pemesan wajib diisi'),
     mode: z.literal('PICKUP'),
+    pickupPreferences: z.string().trim().optional(),
   }),
   z.object({
     address: z.string().trim().min(5, 'Alamat pengiriman lengkap wajib diisi'),
@@ -88,31 +114,7 @@ export function buildOrderSummary(
   second?: FulfillmentInput,
   third?: TenantContactInfo,
 ): { message: string; waUrl: string } {
-  let cartItems: CartLineItem[] = []
-  let fulfillment: FulfillmentInput
-  let tenant: TenantContactInfo
-
-  if (second !== undefined && third !== undefined) {
-    // Positional signature: buildOrderSummary(cart, fulfillment, tenant)
-    if (Array.isArray(first)) {
-      cartItems = first
-    } else if (first && typeof first === 'object') {
-      const candidate = first as Record<string, unknown>
-      if (Array.isArray(candidate.cartItems)) {
-        cartItems = candidate.cartItems as CartLineItem[]
-      } else if (Array.isArray(candidate.items)) {
-        cartItems = candidate.items as CartLineItem[]
-      }
-    }
-    fulfillment = second
-    tenant = third
-  } else {
-    // Single object signature: buildOrderSummary({ cartItems, fulfillment, tenant })
-    const obj = first as BuildOrderSummaryParams
-    cartItems = obj.cartItems ?? obj.items ?? []
-    fulfillment = obj.fulfillment
-    tenant = obj.tenant
-  }
+  const { cartItems, fulfillment, tenant } = resolveOrderSummaryArgs(first, second, third)
   const lines: string[] = [`Halo ${tenant.name}, saya ingin memesan:`, '']
 
   let orderTotal = 0
@@ -138,32 +140,11 @@ export function buildOrderSummary(
         lines.push(`   Catatan: ${item.notes.trim()}`)
       }
 
-      lines.push(`   Subtotal: ${formatCurrency(itemSubtotal)}`)
-      lines.push('')
+      lines.push(`   Subtotal: ${formatCurrency(itemSubtotal)}`, '')
     })
   }
 
-  lines.push(`*Total: ${formatCurrency(orderTotal)}*`)
-  lines.push('')
-  lines.push('*Data Pemesan:*')
-  lines.push(`- Nama: ${fulfillment.customerName}`)
-
-  switch (fulfillment.mode) {
-    case 'DINE_IN':
-      lines.push('- Metode: Dine In (Makan di Tempat)')
-      lines.push(`- No. Meja: ${fulfillment.tableNumber}`)
-      break
-    case 'TAKEAWAY':
-      lines.push('- Metode: Takeaway (Bungkus)')
-      break
-    case 'PICKUP':
-      lines.push('- Metode: Pickup (Ambil Sendiri)')
-      break
-    case 'DELIVERY':
-      lines.push('- Metode: Delivery (Pengiriman)')
-      lines.push(`- Alamat: ${fulfillment.address}`)
-      break
-  }
+  lines.push(`*Total: ${formatCurrency(orderTotal)}*`, '', ...formatFulfillmentLines(fulfillment))
 
   const message = lines.join('\n')
   const rawPhone = tenant.waNumber || tenant.phone || ''
@@ -174,4 +155,59 @@ export function buildOrderSummary(
     : `https://wa.me/?text=${encodedText}`
 
   return { message, waUrl }
+}
+
+function resolveOrderSummaryArgs(
+  first: BuildOrderSummaryParams | CartInput,
+  second?: FulfillmentInput,
+  third?: TenantContactInfo,
+): { cartItems: CartLineItem[]; fulfillment: FulfillmentInput; tenant: TenantContactInfo } {
+  if (second !== undefined && third !== undefined) {
+    let cartItems: CartLineItem[] = []
+    if (Array.isArray(first)) {
+      cartItems = first
+    } else if (first && typeof first === 'object') {
+      const candidate = first as Record<string, unknown>
+      if (Array.isArray(candidate.cartItems)) {
+        cartItems = candidate.cartItems as CartLineItem[]
+      } else if (Array.isArray(candidate.items)) {
+        cartItems = candidate.items as CartLineItem[]
+      }
+    }
+    return { cartItems, fulfillment: second, tenant: third }
+  }
+
+  const obj = first as BuildOrderSummaryParams
+  return {
+    cartItems: obj.cartItems ?? obj.items ?? [],
+    fulfillment: obj.fulfillment,
+    tenant: obj.tenant,
+  }
+}
+
+function formatFulfillmentLines(fulfillment: FulfillmentInput): string[] {
+  const lines: string[] = ['*Data Pemesan:*', `- Nama: ${fulfillment.customerName}`]
+
+  switch (fulfillment.mode) {
+    case 'DINE_IN':
+      lines.push('- Metode: Dine In (Makan di Tempat)', `- No. Meja: ${fulfillment.tableNumber}`)
+      break
+    case 'TAKEAWAY':
+      lines.push('- Metode: Takeaway (Bungkus)')
+      if (fulfillment.pickupPreferences && fulfillment.pickupPreferences.trim().length > 0) {
+        lines.push(`- Preferensi: ${fulfillment.pickupPreferences.trim()}`)
+      }
+      break
+    case 'PICKUP':
+      lines.push('- Metode: Pickup (Ambil Sendiri)')
+      if (fulfillment.pickupPreferences && fulfillment.pickupPreferences.trim().length > 0) {
+        lines.push(`- Preferensi: ${fulfillment.pickupPreferences.trim()}`)
+      }
+      break
+    case 'DELIVERY':
+      lines.push('- Metode: Delivery (Pengiriman)', `- Alamat: ${fulfillment.address}`)
+      break
+  }
+
+  return lines
 }

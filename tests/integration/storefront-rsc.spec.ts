@@ -239,6 +239,8 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       const markup = renderToStaticMarkup(element)
       expect(markup).toContain('Kopi Senja Nusantara')
       expect(markup).toContain('Kopi Susu Gula Aren')
+      expect(markup).toContain('application/ld+json')
+      expect(markup).toContain('CafeOrCoffeeShop')
     })
 
     it('renders ExpiredSiteScreen on DemoPage when fomoExpiresAt has passed for draft tenant', async () => {

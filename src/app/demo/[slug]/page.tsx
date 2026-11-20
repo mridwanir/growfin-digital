@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { notFound } from 'next/navigation'
+import { createElement } from 'react'
 
 import {
   ExpiredSiteScreen,
@@ -76,12 +77,10 @@ export default async function DemoPage({ params }: DemoPageProps) {
   }
 
   const archetype = resolveArchetype(tenant.category)
-  const LayoutComponent = getStorefrontLayout(tenant.themeConfig?.layoutId, archetype)
-
-  return (
-    <LayoutComponent categories={categories} products={products} tenant={tenant}>
-      <StorefrontClientIslands tenant={tenant} />
-      <GrowfinWatermark />
-    </LayoutComponent>
+  return createElement(
+    getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
+    { categories, products, tenant },
+    <StorefrontClientIslands tenant={tenant} />,
+    <GrowfinWatermark />,
   )
 }

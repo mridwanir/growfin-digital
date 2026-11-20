@@ -30,10 +30,7 @@ export function DynamicThemeProvider({
   } as CSSProperties
 
   return (
-    <Component
-      className={cn('selection:bg-brand-primary/30 min-h-screen font-sans', className)}
-      style={themeStyle}
-    >
+    <Component className={cn('min-h-screen font-sans', className)} style={themeStyle}>
       {children}
     </Component>
   )

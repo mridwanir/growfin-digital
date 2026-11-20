@@ -9,7 +9,7 @@ import { ElegantLayout } from './fnb/elegant'
 import { ModernLayout } from './fnb/modern'
 import { PremiumLayout } from './fnb/premium'
 import { VibrantLayout } from './fnb/vibrant'
-import { ArtisanLayout as RetailArtisanAlias, RetailArtisanLayout } from './retail/artisan'
+import { RetailArtisanLayout } from './retail/artisan'
 import { DarkLayout } from './retail/dark'
 import { EditorialLayout } from './retail/editorial'
 import { FreshLayout } from './retail/fresh'
@@ -32,19 +32,10 @@ export {
 }
 
 // 6 Retail Layouts
-export {
-  DarkLayout,
-  EditorialLayout,
-  FreshLayout,
-  RetailArtisanAlias,
-  RetailArtisanLayout,
-  TechLayout,
-  UrbanLayout,
-}
+export { DarkLayout, EditorialLayout, FreshLayout, RetailArtisanLayout, TechLayout, UrbanLayout }
 
 // Base & Types
-export { BaseStorefrontLayout } from './base-layout'
-export type { BaseStorefrontLayoutProps, StorefrontLayoutProps } from './types'
+export type { StorefrontLayoutProps } from './types'
 
 // ---------------------------------------------------------------------------
 // Layout Registry & Resolver Map

@@ -4,8 +4,6 @@ import { z } from 'zod'
 
 import { formatCurrency } from './cart/domain'
 
-export { type CartLineItem } from './cart/domain'
-
 /**
  * Normalizes phone numbers to international WhatsApp format without leading + sign or punctuation.
  * Converts local Indonesian formats (08..., +628..., 628..., +62 08...) to clean 628...

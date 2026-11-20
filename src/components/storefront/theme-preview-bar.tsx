@@ -42,12 +42,12 @@ export function ThemePreviewBar({ currentThemeId }: ThemePreviewBarProps) {
                   Storefront Theme Preview
                 </span>
                 <span
-                  style={{ backgroundColor: `${activeTheme.color}20`, color: activeTheme.color }}
                   className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
+                  style={{ backgroundColor: `${activeTheme.color}20`, color: activeTheme.color }}
                 >
                   <span
-                    style={{ backgroundColor: activeTheme.color }}
                     className="size-1.5 animate-pulse rounded-full"
+                    style={{ backgroundColor: activeTheme.color }}
                   />
                   {activeTheme.label} ({activeTheme.archetype.toUpperCase()})
                 </span>
@@ -61,9 +61,9 @@ export function ThemePreviewBar({ currentThemeId }: ThemePreviewBarProps) {
           {/* Actions & Collapse Toggle */}
           <div className="flex shrink-0 items-center gap-2">
             <button
+              className="border-border text-foreground hover:bg-muted/80 inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors"
               type="button"
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="border-border text-foreground hover:bg-muted/80 inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors"
             >
               {isCollapsed ? (
                 <>
@@ -102,8 +102,8 @@ export function ThemePreviewBar({ currentThemeId }: ThemePreviewBarProps) {
                     }`}
                   >
                     <span
-                      style={{ backgroundColor: theme.color }}
                       className="size-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: theme.color }}
                     />
                     {theme.label}
                   </Link>
@@ -130,8 +130,8 @@ export function ThemePreviewBar({ currentThemeId }: ThemePreviewBarProps) {
                     }`}
                   >
                     <span
-                      style={{ backgroundColor: theme.color }}
                       className="size-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: theme.color }}
                     />
                     {theme.label}
                   </Link>

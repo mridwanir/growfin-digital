@@ -22,7 +22,7 @@ export function getLocalBusinessType(
   return 'Store'
 }
 
-export function resolveStorefrontUrls(tenant: Tenant): {
+function resolveStorefrontUrls(tenant: Tenant): {
   logoUrl: string
   ogImageUrl: string
   siteUrl: string

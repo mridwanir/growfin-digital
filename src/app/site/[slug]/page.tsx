@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import type { PackageTier } from '@/lib/site-config'
 
 import { notFound } from 'next/navigation'
+import { createElement } from 'react'
 
 import {
   ExpiredSiteScreen,
@@ -73,7 +74,6 @@ export default async function SitePage({ params }: SitePageProps) {
   }
 
   const archetype = resolveArchetype(tenant.category)
-  const LayoutComponent = getStorefrontLayout(tenant.themeConfig?.layoutId, archetype)
 
   const activeTier: PackageTier = (tenant.packageTier as PackageTier) || 'instan'
   const tierLimits = PACKAGE_LIMITS[activeTier] || PACKAGE_LIMITS.instan
@@ -87,10 +87,12 @@ export default async function SitePage({ params }: SitePageProps) {
         type="application/ld+json"
       />
       <GlobalClickTracker businessId={tenant.id} />
-      <LayoutComponent categories={categories} products={products} tenant={tenant}>
-        <StorefrontClientIslands tenant={tenant} />
-        {!tierLimits.removeBranding && <GrowfinWatermark />}
-      </LayoutComponent>
+      {createElement(
+        getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
+        { categories, products, tenant },
+        <StorefrontClientIslands tenant={tenant} />,
+        !tierLimits.removeBranding && <GrowfinWatermark />,
+      )}
     </>
   )
 }

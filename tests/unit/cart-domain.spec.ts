@@ -174,10 +174,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           tableNumber: '12A',
         })
         expect(result.success).toBe(true)
-        if (result.success && result.data.mode === 'DINE_IN') {
-          expect(result.data.tableNumber).toBe('12A')
-          expect(result.data.customerName).toBe('Budi Santoso')
+        if (!result.success || result.data.mode !== 'DINE_IN') {
+          throw new Error('Expected DINE_IN success')
         }
+        expect(result.data.tableNumber).toBe('12A')
+        expect(result.data.customerName).toBe('Budi Santoso')
       })
 
       it('rejects empty or whitespace-only tableNumber', () => {
@@ -187,10 +188,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           tableNumber: '   ',
         })
         expect(result.success).toBe(false)
-        if (!result.success) {
-          const messages = result.error.issues.map(i => i.message)
-          expect(messages).toContain('Nomor meja wajib diisi')
+        if (result.success) {
+          throw new Error('Expected failure')
         }
+        const messages = result.error.issues.map(i => i.message)
+        expect(messages).toContain('Nomor meja wajib diisi')
       })
 
       it('rejects missing or empty customerName', () => {
@@ -200,10 +202,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           tableNumber: '12',
         })
         expect(result.success).toBe(false)
-        if (!result.success) {
-          const messages = result.error.issues.map(i => i.message)
-          expect(messages).toContain('Nama pemesan wajib diisi')
+        if (result.success) {
+          throw new Error('Expected failure')
         }
+        const messages = result.error.issues.map(i => i.message)
+        expect(messages).toContain('Nama pemesan wajib diisi')
       })
     })
 
@@ -214,10 +217,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'TAKEAWAY',
         })
         expect(result.success).toBe(true)
-        if (result.success) {
-          expect(result.data.mode).toBe('TAKEAWAY')
-          expect(result.data.customerName).toBe('Siti Rahma')
+        if (!result.success) {
+          throw new Error('Expected success')
         }
+        expect(result.data.mode).toBe('TAKEAWAY')
+        expect(result.data.customerName).toBe('Siti Rahma')
       })
 
       it('rejects missing or whitespace customerName', () => {
@@ -226,10 +230,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'TAKEAWAY',
         })
         expect(result.success).toBe(false)
-        if (!result.success) {
-          const messages = result.error.issues.map(i => i.message)
-          expect(messages).toContain('Nama pemesan wajib diisi')
+        if (result.success) {
+          throw new Error('Expected failure')
         }
+        const messages = result.error.issues.map(i => i.message)
+        expect(messages).toContain('Nama pemesan wajib diisi')
       })
     })
 
@@ -240,10 +245,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'PICKUP',
         })
         expect(result.success).toBe(true)
-        if (result.success) {
-          expect(result.data.mode).toBe('PICKUP')
-          expect(result.data.customerName).toBe('Ahmad Faiz')
+        if (!result.success) {
+          throw new Error('Expected success')
         }
+        expect(result.data.mode).toBe('PICKUP')
+        expect(result.data.customerName).toBe('Ahmad Faiz')
       })
 
       it('rejects missing customerName', () => {
@@ -252,10 +258,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'PICKUP',
         })
         expect(result.success).toBe(false)
-        if (!result.success) {
-          const messages = result.error.issues.map(i => i.message)
-          expect(messages).toContain('Nama pemesan wajib diisi')
+        if (result.success) {
+          throw new Error('Expected failure')
         }
+        const messages = result.error.issues.map(i => i.message)
+        expect(messages).toContain('Nama pemesan wajib diisi')
       })
     })
 
@@ -267,10 +274,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'DELIVERY',
         })
         expect(result.success).toBe(true)
-        if (result.success && result.data.mode === 'DELIVERY') {
-          expect(result.data.address).toBe('Jl. Riau No. 45, Bandung')
-          expect(result.data.customerName).toBe('Dewi Lestari')
+        if (!result.success || result.data.mode !== 'DELIVERY') {
+          throw new Error('Expected DELIVERY success')
         }
+        expect(result.data.address).toBe('Jl. Riau No. 45, Bandung')
+        expect(result.data.customerName).toBe('Dewi Lestari')
       })
 
       it('rejects address shorter than 5 characters', () => {
@@ -280,10 +288,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'DELIVERY',
         })
         expect(result.success).toBe(false)
-        if (!result.success) {
-          const messages = result.error.issues.map(i => i.message)
-          expect(messages).toContain('Alamat pengiriman lengkap wajib diisi')
+        if (result.success) {
+          throw new Error('Expected failure')
         }
+        const messages = result.error.issues.map(i => i.message)
+        expect(messages).toContain('Alamat pengiriman lengkap wajib diisi')
       })
 
       it('rejects missing customerName in DELIVERY mode', () => {
@@ -293,10 +302,11 @@ describe('Storefront Cart & WhatsApp Domain Engine (Issue 02)', () => {
           mode: 'DELIVERY',
         })
         expect(result.success).toBe(false)
-        if (!result.success) {
-          const messages = result.error.issues.map(i => i.message)
-          expect(messages).toContain('Nama pemesan wajib diisi')
+        if (result.success) {
+          throw new Error('Expected failure')
         }
+        const messages = result.error.issues.map(i => i.message)
+        expect(messages).toContain('Nama pemesan wajib diisi')
       })
     })
     it('rejects DELIVERY with completely missing address', () => {

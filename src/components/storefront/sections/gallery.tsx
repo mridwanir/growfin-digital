@@ -99,7 +99,7 @@ export function Gallery({
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {displayItems.map((item, idx) => (
               <div
-                key={idx}
+                key={item.imageUrl}
                 className={cn(
                   'group border-border/40 bg-muted relative overflow-hidden rounded-2xl border shadow-xs transition-all hover:shadow-md',
                   idx === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-square',
@@ -123,7 +123,7 @@ export function Gallery({
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {displayItems.slice(0, 6).map((item, idx) => (
               <div
-                key={idx}
+                key={item.imageUrl}
                 className="group border-border/40 bg-muted relative aspect-square overflow-hidden rounded-xl border shadow-xs"
               >
                 <img
@@ -139,7 +139,7 @@ export function Gallery({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {displayItems.slice(0, 6).map((item, idx) => (
               <div
-                key={idx}
+                key={item.imageUrl}
                 className="group border-border/40 bg-muted relative aspect-4/3 overflow-hidden rounded-2xl border shadow-xs transition-all duration-300 hover:shadow-md"
               >
                 <img

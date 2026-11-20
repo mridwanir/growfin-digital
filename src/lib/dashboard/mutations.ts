@@ -114,7 +114,7 @@ export async function updateTenantSettings(
   return updated ?? null
 }
 
-export function slugify(text: string): string {
+function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
@@ -204,13 +204,13 @@ export async function deleteCategory(tenantId: string, userId: string, categoryI
   return result.length > 0
 }
 
-export interface VariantOptionInput {
+interface VariantOptionInput {
   label: string
   priceModifier?: number
   sortOrder?: number
 }
 
-export interface ProductVariantInput {
+interface ProductVariantInput {
   name: string
   required?: boolean
   options: VariantOptionInput[]
@@ -347,7 +347,7 @@ export async function getTenantProducts(
 /**
  * Returns a single product by ID with variants and options.
  */
-export async function getProductById(
+async function getProductById(
   tenantId: string,
   userId: string,
   productId: string,

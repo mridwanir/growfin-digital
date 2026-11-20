@@ -14,96 +14,96 @@ export const AVAILABLE_THEMES: ThemeOption[] = [
   // F&B Themes (7)
   {
     id: 'fnb-theme-classic',
-    label: 'Classic',
     archetype: 'fnb',
-    description: 'Bistro hangat, serif klasik, card rounded-lg',
     color: '#d97706',
+    description: 'Bistro hangat, serif klasik, card rounded-lg',
+    label: 'Classic',
   },
   {
     id: 'fnb-theme-modern',
-    label: 'Modern',
     archetype: 'fnb',
-    description: 'Clean sans-serif, elevated cards, category pills',
     color: '#059669',
+    description: 'Clean sans-serif, elevated cards, category pills',
+    label: 'Modern',
   },
   {
     id: 'fnb-theme-premium',
-    label: 'Premium',
     archetype: 'fnb',
-    description: 'Luxury serif, sharp borders, ghost category bar',
     color: '#b45309',
+    description: 'Luxury serif, sharp borders, ghost category bar',
+    label: 'Premium',
   },
   {
     id: 'fnb-theme-artisan',
-    label: 'Artisan',
     archetype: 'fnb',
-    description: 'Warm cafe vibe, masonry gallery, elevated cards',
     color: '#78350f',
+    description: 'Warm cafe vibe, masonry gallery, elevated cards',
+    label: 'Artisan',
   },
   {
     id: 'fnb-theme-elegant',
-    label: 'Elegant',
     archetype: 'fnb',
-    description: 'Fine dining typography, 4-column catalog grid',
     color: '#4338ca',
+    description: 'Fine dining typography, 4-column catalog grid',
+    label: 'Elegant',
   },
   {
     id: 'fnb-theme-bold',
-    label: 'Bold',
     archetype: 'fnb',
-    description: 'High-contrast branding, bold hero, sharp borders',
     color: '#dc2626',
+    description: 'High-contrast branding, bold hero, sharp borders',
+    label: 'Bold',
   },
   {
     id: 'fnb-theme-vibrant',
-    label: 'Vibrant',
     archetype: 'fnb',
-    description: 'Energetic full-rounded cards, cheerful styling',
     color: '#ea580c',
+    description: 'Energetic full-rounded cards, cheerful styling',
+    label: 'Vibrant',
   },
 
   // Retail Themes (6)
   {
     id: 'retail-theme-urban',
-    label: 'Urban',
     archetype: 'retail',
-    description: 'Streetwear aesthetic, split hero, rounded-lg cards',
     color: '#09090b',
+    description: 'Streetwear aesthetic, split hero, rounded-lg cards',
+    label: 'Urban',
   },
   {
     id: 'retail-theme-editorial',
-    label: 'Editorial',
     archetype: 'retail',
-    description: 'High-fashion boutique, serif typography, sharp cards',
     color: '#18181b',
+    description: 'High-fashion boutique, serif typography, sharp cards',
+    label: 'Editorial',
   },
   {
     id: 'retail-theme-tech',
-    label: 'Tech',
     archetype: 'retail',
-    description: 'Gadget minimalist, compact cards, ghost tabs',
     color: '#2563eb',
+    description: 'Gadget minimalist, compact cards, ghost tabs',
+    label: 'Tech',
   },
   {
     id: 'retail-theme-dark',
-    label: 'Dark',
     archetype: 'retail',
-    description: 'Midnight theme, dark tokens, elevated cards',
     color: '#030712',
+    description: 'Midnight theme, dark tokens, elevated cards',
+    label: 'Dark',
   },
   {
     id: 'retail-theme-fresh',
-    label: 'Fresh',
     archetype: 'retail',
-    description: 'Clean organic market, full-rounded cards, pills bar',
     color: '#16a34a',
+    description: 'Clean organic market, full-rounded cards, pills bar',
+    label: 'Fresh',
   },
   {
     id: 'retail-theme-artisan',
-    label: 'Retail Artisan',
     archetype: 'retail',
-    description: 'Handcrafted goods, warm serif typography',
     color: '#854d0e',
+    description: 'Handcrafted goods, warm serif typography',
+    label: 'Retail Artisan',
   },
 ]
 
@@ -111,7 +111,7 @@ export const AVAILABLE_THEMES: ThemeOption[] = [
 // Mock Categories
 // ---------------------------------------------------------------------------
 
-export const mockFnbCategories: Category[] = [
+const mockFnbCategories: Category[] = [
   {
     id: 'cat-espresso',
     name: 'Espresso Based',
@@ -135,7 +135,7 @@ export const mockFnbCategories: Category[] = [
   },
 ]
 
-export const mockRetailCategories: Category[] = [
+const mockRetailCategories: Category[] = [
   {
     id: 'cat-tshirts',
     name: 'T-Shirts & Tops',
@@ -163,29 +163,29 @@ export const mockRetailCategories: Category[] = [
 // Mock Products (With Variants & Simple Items)
 // ---------------------------------------------------------------------------
 
-export const mockFnbProducts: ProductWithVariants[] = [
+const mockFnbProducts: ProductWithVariants[] = [
   {
     id: 'fnb-prod-1',
     name: 'Kopi Susu Gula Aren',
+    basePrice: 22000,
+    categoryId: 'cat-espresso',
+    createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 28000, // 21% off
+    sortOrder: 0,
+    stock: 50,
+    tenantId: 'mock-fnb-tenant',
+    updatedAt: new Date('2026-01-01'),
     description:
       'Espresso ganda dari biji kopi Arabika Ciwidey dengan susu segar dan sirup gula aren organik asli.',
-    basePrice: 22000,
-    originalPrice: 28000, // 21% off
-    stock: 50,
-    categoryId: 'cat-espresso',
-    imageUrl:
-      'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
     imageGallery: [
       'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
     ],
-    isActive: true,
-    sortOrder: 0,
-    duration: null,
-    tenantId: 'mock-fnb-tenant',
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
+    imageUrl:
+      'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80',
     variants: [
       {
         id: 'var-size',
@@ -294,22 +294,22 @@ export const mockFnbProducts: ProductWithVariants[] = [
   {
     id: 'fnb-prod-2',
     name: 'Manual Brew V60 Gayo',
+    basePrice: 28000,
+    categoryId: 'cat-manual-brew',
+    createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: null,
+    sortOrder: 1,
+    stock: 25,
+    tenantId: 'mock-fnb-tenant',
+    updatedAt: new Date('2026-01-01'),
     description:
       'Single origin Aceh Gayo diseduh manual dengan metode V60 pour over. Karakter floral, citrus, dan honey finish.',
-    basePrice: 28000,
-    originalPrice: null,
-    stock: 25,
-    categoryId: 'cat-manual-brew',
     imageUrl:
       'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 1,
-    duration: null,
-    tenantId: 'mock-fnb-tenant',
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
     variants: [
       {
         id: 'var-beans',
@@ -338,22 +338,22 @@ export const mockFnbProducts: ProductWithVariants[] = [
   {
     id: 'fnb-prod-3',
     name: 'Kyoto Matcha Latte',
+    basePrice: 26000,
+    categoryId: 'cat-espresso',
+    createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 30000,
+    sortOrder: 2,
+    stock: 40,
+    tenantId: 'mock-fnb-tenant',
+    updatedAt: new Date('2026-01-01'),
     description:
       'Matcha murni dari Uji, Kyoto berpadu dengan susu creamy dan sedikit pemanis madu alami.',
-    basePrice: 26000,
-    originalPrice: 30000,
-    stock: 40,
-    categoryId: 'cat-espresso',
     imageUrl:
       'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 2,
-    duration: null,
-    tenantId: 'mock-fnb-tenant',
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
     variants: [
       {
         id: 'var-matcha-temp',
@@ -382,70 +382,70 @@ export const mockFnbProducts: ProductWithVariants[] = [
   {
     id: 'fnb-prod-4',
     name: 'Artisan Butter Croissant',
-    description:
-      'Croissant khas Prancis dengan 100% butter Elle & Vire. Tekstur luar renyah berlapis dan bagian dalam lembut gurih.',
     basePrice: 18000,
-    originalPrice: 22000,
-    stock: 15,
     categoryId: 'cat-pastry',
-    imageUrl:
-      'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 3,
-    duration: null,
-    tenantId: 'mock-fnb-tenant',
     createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 22000,
+    sortOrder: 3,
+    stock: 15,
+    tenantId: 'mock-fnb-tenant',
     updatedAt: new Date('2026-01-01'),
     variants: [], // Simple product: 1-click addition
+    description:
+      'Croissant khas Prancis dengan 100% butter Elle & Vire. Tekstur luar renyah berlapis dan bagian dalam lembut gurih.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'fnb-prod-5',
     name: 'Truffle Parmesan Fries',
-    description:
-      'Kentang goreng renyah dengan aroma minyak truffle putih mewah dan taburan keju parmesan parut segar.',
     basePrice: 25000,
-    originalPrice: null,
-    stock: 30,
     categoryId: 'cat-pastry',
-    imageUrl:
-      'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 4,
-    duration: null,
-    tenantId: 'mock-fnb-tenant',
     createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: null,
+    sortOrder: 4,
+    stock: 30,
+    tenantId: 'mock-fnb-tenant',
     updatedAt: new Date('2026-01-01'),
     variants: [], // Simple product: 1-click addition
+    description:
+      'Kentang goreng renyah dengan aroma minyak truffle putih mewah dan taburan keju parmesan parut segar.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=800&q=80',
   },
 ]
 
-export const mockRetailProducts: ProductWithVariants[] = [
+const mockRetailProducts: ProductWithVariants[] = [
   {
     id: 'ret-prod-1',
     name: 'Overdose Heavyweight Boxy Tee',
+    basePrice: 165000,
+    categoryId: 'cat-tshirts',
+    createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 210000, // 21% off
+    sortOrder: 0,
+    stock: 45,
+    tenantId: 'mock-retail-tenant',
+    updatedAt: new Date('2026-01-01'),
     description:
       'Kaos siluet boxy oversized berbahan katun combed 24s heavy knit 220 GSM. Kerah tebal rib 1x1, preshrunk, sablon plastisol discharge halus.',
-    basePrice: 165000,
-    originalPrice: 210000, // 21% off
-    stock: 45,
-    categoryId: 'cat-tshirts',
-    imageUrl:
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
     imageGallery: [
       'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80',
     ],
-    isActive: true,
-    sortOrder: 0,
-    duration: null,
-    tenantId: 'mock-retail-tenant',
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
+    imageUrl:
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80',
     variants: [
       {
         id: 'var-color',
@@ -517,22 +517,22 @@ export const mockRetailProducts: ProductWithVariants[] = [
   {
     id: 'ret-prod-2',
     name: 'Technical Windbreaker Shell Jacket',
+    basePrice: 349000,
+    categoryId: 'cat-outerwear',
+    createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 429000,
+    sortOrder: 1,
+    stock: 20,
+    tenantId: 'mock-retail-tenant',
+    updatedAt: new Date('2026-01-01'),
     description:
       'Jaket anti angin & gerimis ringan dengan material ripstop nylon berteknologi DWR coating. Dilengkapi resleting YKK waterproof dan ventilasi punggung.',
-    basePrice: 349000,
-    originalPrice: 429000,
-    stock: 20,
-    categoryId: 'cat-outerwear',
     imageUrl:
       'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 1,
-    duration: null,
-    tenantId: 'mock-retail-tenant',
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
     variants: [
       {
         id: 'var-jacket-size',
@@ -568,22 +568,22 @@ export const mockRetailProducts: ProductWithVariants[] = [
   {
     id: 'ret-prod-3',
     name: 'Heavyweight Fleece Hoodie',
+    basePrice: 289000,
+    categoryId: 'cat-outerwear',
+    createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: null,
+    sortOrder: 2,
+    stock: 35,
+    tenantId: 'mock-retail-tenant',
+    updatedAt: new Date('2026-01-01'),
     description:
       'Hoodie hangat material katun fleece 330 GSM dengan double-layered hood dan saku kangguru beraksen jahitan bartack kokoh.',
-    basePrice: 289000,
-    originalPrice: null,
-    stock: 35,
-    categoryId: 'cat-outerwear',
     imageUrl:
       'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 2,
-    duration: null,
-    tenantId: 'mock-retail-tenant',
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
     variants: [
       {
         id: 'var-hoodie-size',
@@ -612,44 +612,44 @@ export const mockRetailProducts: ProductWithVariants[] = [
   {
     id: 'ret-prod-4',
     name: 'Vintage Corduroy Bucket Hat',
-    description:
-      'Bucket hat corduroy 8-wale dengan bordir logo Overdose minimalis. Nyaman dan stylish untuk aktivitas santai harian.',
     basePrice: 89000,
-    originalPrice: 119000,
-    stock: 60,
     categoryId: 'cat-accessories',
-    imageUrl:
-      'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 3,
-    duration: null,
-    tenantId: 'mock-retail-tenant',
     createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 119000,
+    sortOrder: 3,
+    stock: 60,
+    tenantId: 'mock-retail-tenant',
     updatedAt: new Date('2026-01-01'),
     variants: [], // Simple item: 1-click addition
+    description:
+      'Bucket hat corduroy 8-wale dengan bordir logo Overdose minimalis. Nyaman dan stylish untuk aktivitas santai harian.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'ret-prod-5',
     name: 'Heavy Duty Canvas Daily Tote',
-    description:
-      'Tote bag kanvas tebal 14 oz dengan saku dalam berseleting dan strap bahu ergonomis berpanjang 60 cm.',
     basePrice: 75000,
-    originalPrice: 95000,
-    stock: 80,
     categoryId: 'cat-accessories',
-    imageUrl:
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
-    imageStorageKey: null,
-    imageGallery: [],
-    isActive: true,
-    sortOrder: 4,
-    duration: null,
-    tenantId: 'mock-retail-tenant',
     createdAt: new Date('2026-01-01'),
+    duration: null,
+    imageGallery: [],
+    imageStorageKey: null,
+    isActive: true,
+    originalPrice: 95000,
+    sortOrder: 4,
+    stock: 80,
+    tenantId: 'mock-retail-tenant',
     updatedAt: new Date('2026-01-01'),
     variants: [], // Simple item: 1-click addition
+    description:
+      'Tote bag kanvas tebal 14 oz dengan saku dalam berseleting dan strap bahu ergonomis berpanjang 60 cm.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
   },
 ]
 
@@ -657,40 +657,35 @@ export const mockRetailProducts: ProductWithVariants[] = [
 // Mock Tenants
 // ---------------------------------------------------------------------------
 
-export const mockFnbTenant: Tenant = {
+const mockFnbTenant: Tenant = {
   id: 'mock-fnb-tenant',
   name: 'Kopi Artisan Nusantara',
-  slug: 'kopi-artisan',
+  address: 'Jl. Riau No. 55, Citarum, Kec. Bandung Wetan, Kota Bandung',
   category: 'Coffee Shop & Cafe',
-  status: 'published',
-  siteActiveUntil: new Date('2030-01-01'),
+  city: 'Bandung',
+  createdAt: new Date('2026-01-01'),
+  customDomain: null,
   domainActiveUntil: null,
+  fomoExpiresAt: null,
+  googleMapsUrl: 'https://maps.google.com/?cid=mock-fnb',
   operatingHours: null,
   organizationId: null,
-  fomoExpiresAt: null,
   packageTier: 'pro',
-  customDomain: null,
-  googleMapsUrl: 'https://maps.google.com/?cid=mock-fnb',
   phone: '081234567890',
-  address: 'Jl. Riau No. 55, Citarum, Kec. Bandung Wetan, Kota Bandung',
-  city: 'Bandung',
-  userId: 'mock-user-1',
-  createdAt: new Date('2026-01-01'),
+  siteActiveUntil: new Date('2030-01-01'),
+  slug: 'kopi-artisan',
+  status: 'published',
   updatedAt: new Date('2026-01-01'),
+  userId: 'mock-user-1',
   brandingContent: {
     tagline: 'Secangkir Cerita Tiap Hari',
+    themeColor: '#d97706',
     description:
       'Spesialis racikan kopi biji pilihan nusantara, manual brew pour over, dan pastry hangat yang dipanggang segar setiap pagi.',
     heroImage:
       'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=80',
     logoUrl:
       'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&q=80',
-    themeColor: '#d97706',
-    marketingUsps: [
-      { title: '100% Single Origin', desc: 'Biji kopi pilihan petani lokal Jawa Barat & Aceh' },
-      { title: 'Fresh Baked Daily', desc: 'Pastry butter Prancis dipanggang fresh tiap pagi' },
-      { title: 'Ruang Nyaman', desc: 'Area ber-AC, colokan melimpah, dan Wi-Fi cepat' },
-    ],
     lookbookImages: [
       'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80',
@@ -699,96 +694,87 @@ export const mockFnbTenant: Tenant = {
       'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=800&q=80',
     ],
-    reviews: [
-      {
-        author: 'Budi Santoso',
-        rating: 5,
-        text: 'Kopi Susu Arennya enak banget! Manisnya pas nggak bikin eneg. Tempatnya juga cocok buat WFC berjam-jam.',
-        date: '2 hari lalu',
-      },
-      {
-        author: 'Siti Rahmawati',
-        rating: 5,
-        text: 'V60 Gayo anaerobiknya juara, aromanya wangi semerbak. Baristanya ramah dan detail ngejelasin proses seduh.',
-        date: '1 minggu lalu',
-      },
-      {
-        author: 'Dimas Pratama',
-        rating: 5,
-        text: 'Croissant butter-nya garing di luar tapi lembut di dalam. Wajib coba bareng cappuccino hangatnya!',
-        date: '2 minggu lalu',
-      },
-      {
-        author: 'Jessica Amanda',
-        rating: 4,
-        text: 'Ambience tenang, playlist musiknya asik. Parkir motor dan mobil gampang.',
-        date: '1 bulan lalu',
-      },
+    marketingUsps: [
+      { desc: 'Biji kopi pilihan petani lokal Jawa Barat & Aceh', title: '100% Single Origin' },
+      { desc: 'Pastry butter Prancis dipanggang fresh tiap pagi', title: 'Fresh Baked Daily' },
+      { desc: 'Area ber-AC, colokan melimpah, dan Wi-Fi cepat', title: 'Ruang Nyaman' },
     ],
     operatingHours: {
-      text: 'Setiap Hari: 08:00 - 22:00 WIB',
-      openTime: '08:00',
       closeTime: '22:00',
+      openTime: '08:00',
+      text: 'Setiap Hari: 08:00 - 22:00 WIB',
       schedules: [
         { day: 'Senin - Jumat', hours: '08:00 - 22:00' },
         { day: 'Sabtu - Minggu', hours: '07:00 - 23:00' },
       ],
     },
+    reviews: [
+      {
+        author: 'Budi Santoso',
+        date: '2 hari lalu',
+        rating: 5,
+        text: 'Kopi Susu Arennya enak banget! Manisnya pas nggak bikin eneg. Tempatnya juga cocok buat WFC berjam-jam.',
+      },
+      {
+        author: 'Siti Rahmawati',
+        date: '1 minggu lalu',
+        rating: 5,
+        text: 'V60 Gayo anaerobiknya juara, aromanya wangi semerbak. Baristanya ramah dan detail ngejelasin proses seduh.',
+      },
+      {
+        author: 'Dimas Pratama',
+        date: '2 minggu lalu',
+        rating: 5,
+        text: 'Croissant butter-nya garing di luar tapi lembut di dalam. Wajib coba bareng cappuccino hangatnya!',
+      },
+      {
+        author: 'Jessica Amanda',
+        date: '1 bulan lalu',
+        rating: 4,
+        text: 'Ambience tenang, playlist musiknya asik. Parkir motor dan mobil gampang.',
+      },
+    ],
     socialLinks: {
       instagram: { active: true, url: 'https://instagram.com/growfin.id' },
       whatsapp: { active: true, url: 'https://wa.me/6281234567890' },
     },
   },
   themeConfig: {
+    fulfillmentModes: ['DINE_IN', 'TAKEAWAY', 'DELIVERY'],
     layoutId: 'fnb-theme-classic',
     themeColor: '#d97706',
-    fulfillmentModes: ['DINE_IN', 'TAKEAWAY', 'DELIVERY'],
   },
 }
 
-export const mockRetailTenant: Tenant = {
+const mockRetailTenant: Tenant = {
   id: 'mock-retail-tenant',
   name: 'Overdose Streetwear Co.',
-  slug: 'overdose-streetwear',
-  category: 'Clothing & Fashion',
-  status: 'published',
-  siteActiveUntil: new Date('2030-01-01'),
-  fomoExpiresAt: null,
-  packageTier: 'pro',
-  customDomain: null,
-  googleMapsUrl: 'https://maps.google.com/?cid=mock-retail',
-  phone: '081298765432',
   address: 'Jl. Trunojoyo No. 24, Citarum, Kec. Bandung Wetan, Kota Bandung',
+  category: 'Clothing & Fashion',
+  city: 'Bandung',
+  createdAt: new Date('2026-01-01'),
+  customDomain: null,
   domainActiveUntil: null,
+  fomoExpiresAt: null,
+  googleMapsUrl: 'https://maps.google.com/?cid=mock-retail',
   operatingHours: null,
   organizationId: null,
-  city: 'Bandung',
-  userId: 'mock-user-2',
-  createdAt: new Date('2026-01-01'),
+  packageTier: 'pro',
+  phone: '081298765432',
+  siteActiveUntil: new Date('2030-01-01'),
+  slug: 'overdose-streetwear',
+  status: 'published',
   updatedAt: new Date('2026-01-01'),
+  userId: 'mock-user-2',
   brandingContent: {
     tagline: 'Urban Aesthetic & Everyday Heavyweight Apparel',
+    themeColor: '#09090b',
     description:
       'Brand streetwear independen berbasis di Bandung. Menghadirkan siluet boxy kontemporer dengan bahan katun premium berstandar internasional.',
     heroImage:
       'https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=1600&q=80',
     logoUrl:
       'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80',
-    themeColor: '#09090b',
-    marketingUsps: [
-      {
-        title: 'Heavyweight Cotton',
-        desc: 'Material 24s & 16s combed bergramasi tinggi hingga 235 GSM',
-      },
-      {
-        title: 'Original Boxy Fit',
-        desc: 'Pola potongan kontemporer yang pas dan kokoh dipakai seharian',
-      },
-      {
-        title: 'Garansi Tukar Ukuran',
-        desc: 'Layanan penukaran size mudah tanpa ribet dalam 7 hari kerja',
-      },
-    ],
     lookbookImages: [
       'https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
@@ -797,41 +783,55 @@ export const mockRetailTenant: Tenant = {
       'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80',
     ],
-    reviews: [
+    marketingUsps: [
       {
-        author: 'Reza Fahlevi',
-        rating: 5,
-        text: 'Kaos boxy-nya parah sih kualitasnya, kerahnya tebel gak gampang melar abis dicuci. Packaging kardusnya juga niat banget.',
-        date: '3 hari lalu',
+        desc: 'Material 24s & 16s combed bergramasi tinggi hingga 235 GSM',
+        title: 'Heavyweight Cotton',
       },
       {
-        author: 'Nadia Putri',
-        rating: 5,
-        text: 'Technical jacket-nya keren parah! Pas dipake naik motor malem-malem anget tapi gak gerah.',
-        date: '1 minggu lalu',
+        desc: 'Pola potongan kontemporer yang pas dan kokoh dipakai seharian',
+        title: 'Original Boxy Fit',
       },
       {
-        author: 'Aditya Pratama',
-        rating: 5,
-        text: 'Tote bag kanvasnya tebel kuat nampung laptop 15 inch plus buku. Jahitan bartack rapi!',
-        date: '2 minggu lalu',
+        desc: 'Layanan penukaran size mudah tanpa ribet dalam 7 hari kerja',
+        title: 'Garansi Tukar Ukuran',
       },
     ],
     operatingHours: {
-      text: 'Senin - Minggu: 10:00 - 21:00 WIB',
-      openTime: '10:00',
       closeTime: '21:00',
+      openTime: '10:00',
       schedules: [{ day: 'Setiap Hari', hours: '10:00 - 21:00' }],
+      text: 'Senin - Minggu: 10:00 - 21:00 WIB',
     },
+    reviews: [
+      {
+        author: 'Reza Fahlevi',
+        date: '3 hari lalu',
+        rating: 5,
+        text: 'Kaos boxy-nya parah sih kualitasnya, kerahnya tebel gak gampang melar abis dicuci. Packaging kardusnya juga niat banget.',
+      },
+      {
+        author: 'Nadia Putri',
+        date: '1 minggu lalu',
+        rating: 5,
+        text: 'Technical jacket-nya keren parah! Pas dipake naik motor malem-malem anget tapi gak gerah.',
+      },
+      {
+        author: 'Aditya Pratama',
+        date: '2 minggu lalu',
+        rating: 5,
+        text: 'Tote bag kanvasnya tebel kuat nampung laptop 15 inch plus buku. Jahitan bartack rapi!',
+      },
+    ],
     socialLinks: {
       instagram: { active: true, url: 'https://instagram.com/growfin.id' },
       whatsapp: { active: true, url: 'https://wa.me/6281298765432' },
     },
   },
   themeConfig: {
+    fulfillmentModes: ['PICKUP', 'DELIVERY'],
     layoutId: 'retail-theme-urban',
     themeColor: '#09090b',
-    fulfillmentModes: ['PICKUP', 'DELIVERY'],
   },
 }
 
@@ -857,13 +857,13 @@ export function getMockStorefrontData(requestedThemeId?: string | null): MockSto
 
   const tenant: Tenant = {
     ...baseTenant,
+    brandingContent: {
+      ...(baseTenant.brandingContent as Record<string, unknown>),
+      themeColor: selectedTheme.color,
+    },
     themeConfig: {
       ...baseTenant.themeConfig,
       layoutId: selectedTheme.id,
-      themeColor: selectedTheme.color,
-    },
-    brandingContent: {
-      ...(baseTenant.brandingContent as Record<string, unknown>),
       themeColor: selectedTheme.color,
     },
   }

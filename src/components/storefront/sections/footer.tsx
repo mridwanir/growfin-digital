@@ -31,6 +31,8 @@ export interface FooterSectionProps {
   className?: string
 }
 
+const CURRENT_YEAR = new Date().getFullYear()
+
 export function Footer({ tenant, className }: FooterSectionProps) {
   const branding = (tenant.brandingContent as BrandingContent) || {}
 
@@ -219,7 +221,7 @@ export function Footer({ tenant, className }: FooterSectionProps) {
 
         <div className="border-border/60 flex flex-col items-center justify-between gap-4 border-t pt-8 text-xs sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {name}. All rights reserved.
+            © {CURRENT_YEAR} {name}. All rights reserved.
           </p>
           <p className="text-muted-foreground/80">Powered by Growfin Digital</p>
         </div>

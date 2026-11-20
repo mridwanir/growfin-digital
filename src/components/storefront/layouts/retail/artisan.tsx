@@ -17,5 +17,3 @@ export function RetailArtisanLayout(props: StorefrontLayoutProps) {
     />
   )
 }
-
-export const ArtisanLayout = RetailArtisanLayout

@@ -110,9 +110,9 @@ export function OperatingHours({
             </div>
 
             <div className="space-y-3">
-              {schedules.map((schedule, idx) => (
+              {schedules.map(schedule => (
                 <div
-                  key={idx}
+                  key={schedule.day}
                   className="hover:bg-muted/50 flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors"
                 >
                   <span className="text-foreground font-semibold">{schedule.day}</span>

@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from 'react'
 
 import type { Category } from '@/db/schema/catalog'
 
-export interface CatalogVariantOption {
+interface CatalogVariantOption {
   id?: string
   label: string
   priceModifier: number
@@ -10,7 +10,7 @@ export interface CatalogVariantOption {
   variantId?: string
 }
 
-export interface CatalogProductVariant {
+interface CatalogProductVariant {
   id?: string
   name: string
   productId?: string
@@ -18,13 +18,13 @@ export interface CatalogProductVariant {
   options?: CatalogVariantOption[]
 }
 
-export interface CatalogAddon {
+interface CatalogAddon {
   id?: string
   name: string
   price: number
 }
 
-export interface CatalogSpecification {
+interface CatalogSpecification {
   label: string
   value: string
 }

@@ -3,13 +3,13 @@ import type { ReactElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
+import { StorefrontClientIslands } from '@/components/storefront/client-islands'
+import { StorefrontCartProvider } from '@/lib/storefront/cart'
 import {
   FNB_FULFILLMENT_MODES,
   resolveFulfillmentModes,
   RETAIL_FULFILLMENT_MODES,
-  StorefrontClientIslands,
-} from '@/components/storefront/client-islands'
-import { StorefrontCartProvider } from '@/lib/storefront/cart'
+} from '@/lib/storefront/fulfillment'
 
 describe('StorefrontClientIslands Component', () => {
   const fnbTenant = {

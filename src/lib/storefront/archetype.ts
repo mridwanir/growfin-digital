@@ -1,6 +1,6 @@
 export type StorefrontArchetype = 'fnb' | 'retail'
 
-export const ARCHETYPE_KEYWORDS = {
+const ARCHETYPE_KEYWORDS = {
   fnb: [
     'cafe',
     'resto',

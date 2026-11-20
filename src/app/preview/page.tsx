@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { createElement } from 'react'
+
 import { GrowfinWatermark } from '@/components/storefront'
 import { StorefrontClientIslands } from '@/components/storefront/client-islands'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
@@ -27,15 +29,15 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
   const { theme } = await searchParams
   const { categories, products, selectedTheme, tenant } = getMockStorefrontData(theme)
 
-  const LayoutComponent = getStorefrontLayout(selectedTheme.id, selectedTheme.archetype)
-
   return (
     <div className="relative min-h-screen">
       <ThemePreviewBar currentThemeId={selectedTheme.id} />
-      <LayoutComponent categories={categories} products={products} tenant={tenant}>
-        <StorefrontClientIslands tenant={tenant} />
-        <GrowfinWatermark />
-      </LayoutComponent>
+      {createElement(
+        getStorefrontLayout(selectedTheme.id, selectedTheme.archetype),
+        { categories, products, tenant },
+        <StorefrontClientIslands tenant={tenant} />,
+        <GrowfinWatermark />,
+      )}
     </div>
   )
 }

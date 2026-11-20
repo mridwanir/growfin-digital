@@ -10,29 +10,9 @@ import {
   ProductCustomizationDialog,
   StorefrontCartDrawer,
 } from '@/components/storefront/cart'
-import { resolveArchetype } from '@/lib/storefront/archetype'
 import { StorefrontCartProvider, useCartActions } from '@/lib/storefront/cart'
+import { resolveFulfillmentModes } from '@/lib/storefront/fulfillment'
 
-export type FulfillmentMode = 'DELIVERY' | 'DINE_IN' | 'PICKUP' | 'TAKEAWAY'
-
-export const FNB_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = [
-  'DINE_IN',
-  'TAKEAWAY',
-  'DELIVERY',
-]
-export const RETAIL_FULFILLMENT_MODES: ReadonlyArray<FulfillmentMode> = ['PICKUP', 'DELIVERY']
-
-export function resolveFulfillmentModes(
-  category?: string | null,
-  themeConfig?: ThemeConfig | Record<string, unknown> | null,
-): ReadonlyArray<FulfillmentMode> {
-  const rawModes = themeConfig?.fulfillmentModes
-  if (Array.isArray(rawModes) && rawModes.length > 0) {
-    return rawModes as FulfillmentMode[]
-  }
-  const archetype = resolveArchetype(category)
-  return archetype === 'fnb' ? FNB_FULFILLMENT_MODES : RETAIL_FULFILLMENT_MODES
-}
 export interface StorefrontClientIslandsProps {
   tenant:
     | Tenant

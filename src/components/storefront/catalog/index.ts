@@ -4,7 +4,6 @@ import { useProductCatalog } from './context'
 import { formatCurrency, getDiscountPercentage, hasValidDiscount } from './currency'
 import { ProductCatalogEmpty } from './empty'
 import { ProductCatalogGrid } from './grid'
-import { hasProductCustomizations } from './helpers'
 import { ProductCatalogRoot } from './root'
 import { ProductCatalogSearchInput } from './search-input'
 
@@ -17,31 +16,10 @@ export const ProductCatalog = {
   SearchInput: ProductCatalogSearchInput,
 }
 
-export {
-  formatCurrency,
-  getDiscountPercentage,
-  hasProductCustomizations,
-  hasValidDiscount,
-  ProductCatalogCard,
-  ProductCatalogCategoryBar,
-  ProductCatalogEmpty,
-  ProductCatalogGrid,
-  ProductCatalogRoot,
-  ProductCatalogSearchInput,
-  useProductCatalog,
-}
+export { formatCurrency, getDiscountPercentage, hasValidDiscount, useProductCatalog }
 
 export type {
-  CatalogAddon,
-  CatalogProductVariant,
-  CatalogSpecification,
-  CatalogVariantOption,
   ProductCatalogCardProps,
-  ProductCatalogCategoryBarProps,
   ProductCatalogContextValue,
-  ProductCatalogEmptyProps,
-  ProductCatalogGridProps,
-  ProductCatalogRootProps,
-  ProductCatalogSearchInputProps,
   ProductWithVariants,
 } from './types'

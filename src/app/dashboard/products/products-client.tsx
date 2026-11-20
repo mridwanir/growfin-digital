@@ -258,6 +258,7 @@ export function ProductsClient({
       {
         name: '',
         clientKey: `v-${Date.now()}-${Math.random()}`,
+        required: false,
         options: [
           {
             clientKey: `o-${Date.now()}-${Math.random()}`,
@@ -266,7 +267,6 @@ export function ProductsClient({
             sortOrder: 0,
           },
         ],
-        required: false,
       },
     ])
   }

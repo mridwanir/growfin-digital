@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server'
-import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
@@ -51,13 +50,13 @@ describe('Theme Preview Sample Route (/preview)', () => {
         expect(markup).toContain(theme.label)
 
         // Verifies correct archetype brand and catalog items
-        if (theme.archetype === 'fnb') {
-          expect(markup).toContain('Kopi Artisan Nusantara')
-          expect(markup).toContain('Kopi Susu Gula Aren')
-        } else {
-          expect(markup).toContain('Overdose Streetwear Co.')
-          expect(markup).toContain('Overdose Heavyweight Boxy Tee')
-        }
+        const expectedBrand =
+          theme.archetype === 'fnb' ? 'Kopi Artisan Nusantara' : 'Overdose Streetwear Co.'
+        const expectedProduct =
+          theme.archetype === 'fnb' ? 'Kopi Susu Gula Aren' : 'Overdose Heavyweight Boxy Tee'
+
+        expect(markup).toContain(expectedBrand)
+        expect(markup).toContain(expectedProduct)
 
         // Verifies client islands and watermark are mounted
         expect(markup).toContain('data-slot="catalog-card"')

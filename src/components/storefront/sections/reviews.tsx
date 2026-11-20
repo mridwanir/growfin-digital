@@ -3,7 +3,7 @@ import type { BrandingContent, Tenant } from '@/db/schema/tenants'
 import { cn } from 'cn'
 import { ExternalLink, Heart, Star } from 'lucide-react'
 
-export interface ReviewItemData {
+interface ReviewItemData {
   authorName?: string
   name?: string
   rating: number
@@ -126,14 +126,14 @@ export function Reviews({
               : 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3',
           )}
         >
-          {displayReviews.map((review, idx) => {
+          {displayReviews.map(review => {
             const author = review.authorName || review.name || 'Pelanggan'
             const initial = author.charAt(0).toUpperCase()
             const ratingScore = Math.min(5, Math.max(1, Math.round(review.rating || 5)))
 
             return (
               <div
-                key={idx}
+                key={`${author}-${review.time || ''}-${review.text.slice(0, 16)}`}
                 data-slot="review-card"
                 className={cn(
                   'border-border/60 bg-card text-card-foreground flex flex-col justify-between rounded-2xl border p-6 shadow-xs transition-all hover:shadow-md',
@@ -155,9 +155,9 @@ export function Reviews({
                     </div>
 
                     <div className="flex gap-0.5 text-amber-500">
-                      {[...Array(5)].map((_, i) => (
+                      {Array.from({ length: 5 }).map((_, i) => (
                         <Star
-                          key={i}
+                          key={`star-${author}-${i + 1}`}
                           className={cn(
                             'size-4',
                             i < ratingScore

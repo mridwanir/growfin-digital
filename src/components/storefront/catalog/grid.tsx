@@ -31,10 +31,13 @@ const gridVariants = cva('grid w-full', {
 })
 
 export function ProductCatalogGrid({
-  cols = 4,
-  gap = 'default',
+  cardDensity,
+  cardRadius,
+  cardVariant,
   children,
   className,
+  cols = 4,
+  gap = 'default',
   ...props
 }: ProductCatalogGridProps & VariantProps<typeof gridVariants>) {
   const { filteredProducts } = useProductCatalog()
@@ -47,10 +50,15 @@ export function ProductCatalogGrid({
     renderedChildren = children
   } else {
     renderedChildren = filteredProducts.map(product => (
-      <ProductCatalogCard key={product.id} product={product} />
+      <ProductCatalogCard
+        key={product.id}
+        density={cardDensity}
+        product={product}
+        radius={cardRadius}
+        variant={cardVariant}
+      />
     ))
   }
-
   return (
     <div className={cn(gridVariants({ cols, gap }), className)} data-slot="catalog-grid" {...props}>
       {renderedChildren}

@@ -105,6 +105,9 @@ export interface ProductCatalogSearchInputProps extends Omit<
 export interface ProductCatalogGridProps extends Omit<ComponentProps<'div'>, 'children'> {
   cols?: 1 | 2 | 3 | 4
   gap?: 'sm' | 'default' | 'lg'
+  cardRadius?: 'none' | 'sm' | 'default' | 'lg' | 'full'
+  cardDensity?: 'compact' | 'default' | 'spacious'
+  cardVariant?: 'outline' | 'elevated' | 'ghost' | 'horizontal'
   children?: ReactNode | ((product: ProductWithVariants) => ReactNode)
 }
 

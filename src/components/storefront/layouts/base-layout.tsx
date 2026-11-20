@@ -82,17 +82,13 @@ export function BaseStorefrontLayout({
                   variant={categoryVariant}
                 />
 
-                <ProductCatalog.Grid cols={gridCols} gap={gridGap}>
-                  {product => (
-                    <ProductCatalog.Card
-                      key={product.id}
-                      density={cardDensity}
-                      product={product}
-                      radius={cardRadius}
-                      variant={cardVariant}
-                    />
-                  )}
-                </ProductCatalog.Grid>
+                <ProductCatalog.Grid
+                  cardDensity={cardDensity}
+                  cardRadius={cardRadius}
+                  cardVariant={cardVariant}
+                  cols={gridCols}
+                  gap={gridGap}
+                />
 
                 <ProductCatalog.Empty />
               </ProductCatalog.Root>

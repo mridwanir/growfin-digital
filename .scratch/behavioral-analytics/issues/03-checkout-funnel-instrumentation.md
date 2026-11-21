@@ -4,11 +4,11 @@
 
 **Blocked by:** 02: `trackEvent` client function and automatic page view tracking
 
-**Status:** ready-for-agent
+Status: resolved
 
-- [ ] Opening the cart drawer fires a `checkout_start` analytics event
-- [ ] Clicking the WhatsApp checkout CTA fires a `checkout_complete` analytics event
-- [ ] `checkout_complete` metadata includes contextual information (e.g., item count, fulfillment mode)
-- [ ] Every component that triggers a WhatsApp order via `window.open` calls `trackEvent` before or alongside the navigation
-- [ ] No DOM event delegation or text-content keyword matching is used for event detection
-- [ ] A complete user journey (land on storefront, open cart, complete checkout) produces three distinct analytics event rows: `page_view`, `checkout_start`, `checkout_complete`
+- [x] Opening the cart drawer fires a `checkout_start` analytics event
+- [x] Clicking the WhatsApp checkout CTA fires a `checkout_complete` analytics event
+- [x] `checkout_complete` metadata includes contextual information (e.g., item count, fulfillment mode)
+- [x] Every component that triggers a WhatsApp order via `window.open` calls `trackEvent` before or alongside the navigation
+- [x] No DOM event delegation or text-content keyword matching is used for event detection
+- [x] A complete user journey (land on storefront, open cart, complete checkout) produces three distinct analytics event rows: `page_view`, `checkout_start`, `checkout_complete`

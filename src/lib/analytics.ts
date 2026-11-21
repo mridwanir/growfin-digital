@@ -9,11 +9,11 @@ export function trackEvent(
   event: AnalyticsEvent,
   metadata?: Record<string, unknown>,
 ): void {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || !window.location) {
     return
   }
 
-  const slug = getSlugFromPathname(window.location.pathname)
+  const slug = getSlugFromPathname(window.location.pathname || '')
   if (!slug) {
     return
   }

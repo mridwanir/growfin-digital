@@ -2,7 +2,9 @@
 
 import { cn } from 'cn'
 import { MinusIcon, PlusIcon, ShoppingBagIcon, Trash2Icon, XIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+import { trackEvent } from '@/lib/analytics'
 
 import {
   formatCurrency,
@@ -63,6 +65,11 @@ export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
   const [pickupPreferences, setPickupPreferences] = useState(() => initialPickupPreferences ?? '')
   const [address, setAddress] = useState(() => initialAddress ?? '')
   const [errors, setErrors] = useState<Record<string, string>>(() => initialErrors ?? {})
+  useEffect(() => {
+    if (open) {
+      trackEvent('checkout_start')
+    }
+  }, [open])
 
   if (!open) {
     return null
@@ -131,6 +138,11 @@ export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
       cartItems: items,
       fulfillment: parseResult.data,
       tenant,
+    })
+    trackEvent('checkout_complete', {
+      fulfillmentMode: parseResult.data.mode,
+      itemCount: items.length,
+      total,
     })
 
     if (typeof window !== 'undefined' && window.open) {

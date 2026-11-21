@@ -14,6 +14,7 @@ export const env = createEnv({
   },
   server: {
     ADMIN_EMAILS: z.string().min(1),
+    ANALYTICS_HASH_SECRET: z.string().min(1),
     CRON_SECRET: z.string().min(32, { message: 'CRON_SECRET must be at least 32 characters long' }),
     EMAIL_FROM: z.string().default('Growfin Digital <auth@growfin.my.id>'),
 
@@ -43,6 +44,7 @@ export const env = createEnv({
   },
   skipValidation:
     Boolean(process.env.SKIP_ENV_VALIDATION) ||
+    process.env.NODE_ENV === 'test' ||
     process.env.npm_lifecycle_event === 'lint' ||
     process.env.npm_lifecycle_event === 'knip',
 })

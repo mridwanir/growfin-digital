@@ -1,0 +1,167 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "7e2dc33a-55ab-4d09-86e6-8a961d539469",
+  "prevIds": [
+    "085d7296-1ee4-452d-87c2-cd59969eb186"
+  ],
+  "footprints": [
+    {
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "analytics_events",
+        "event_type"
+      ],
+      "writes": [
+        "s|col|public.analytics_events.event_type",
+        "n|col|public.analytics_events.event_type",
+        "s|col|public.analytics_events.event",
+        "n|col|public.analytics_events.event"
+      ],
+      "reads": [
+        "n|tbl|public.analytics_events",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "analytics_events",
+        "acquisition"
+      ],
+      "writes": [
+        "s|col|public.analytics_events.acquisition",
+        "n|col|public.analytics_events.acquisition",
+        "e|col|public.analytics_events.acquisition"
+      ],
+      "reads": [
+        "n|tbl|public.analytics_events",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "analytics_events",
+        "visitor_hash"
+      ],
+      "writes": [
+        "s|col|public.analytics_events.visitor_hash",
+        "n|col|public.analytics_events.visitor_hash",
+        "e|col|public.analytics_events.visitor_hash"
+      ],
+      "reads": [
+        "n|tbl|public.analytics_events",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "analytics_events",
+        "analytics_events_tenant_id_event_created_at_idx"
+      ],
+      "writes": [
+        "s|idx|public.analytics_events_tenant_id_event_created_at_idx",
+        "n|idx|public.analytics_events_tenant_id_event_created_at_idx",
+        "e|idx|public.analytics_events_tenant_id_event_created_at_idx",
+        "n|rel|public.analytics_events_tenant_id_event_created_at_idx"
+      ],
+      "reads": [
+        "n|tbl|public.analytics_events",
+        "n|sch|public",
+        "n|col|public.analytics_events.tenant_id",
+        "n|col|public.analytics_events.event",
+        "n|col|public.analytics_events.created_at"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"analytics_events\",\"event_type\"]",
+      "set": {
+        "name": "event"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "analytics_events",
+        "name": "acquisition",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "analytics_events",
+        "name": "visitor_hash",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "analytics_events",
+        "name": "analytics_events_tenant_id_event_created_at_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "tenant_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "event",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "created_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    }
+  ]
+}

@@ -57,3 +57,17 @@ _Avoid_: Shipping method, order type
 **Order Summary**:
 A structured text payload itemizing cart line items, selected options, customer info, and fulfillment instructions formatted for WhatsApp click-to-chat dispatch.
 _Avoid_: Receipt, WhatsApp message, checkout payload
+
+### Analytics
+
+**Analytics Event**:
+A recorded interaction on a storefront, identified by tenant, event name, and timestamp.
+_Avoid_: Tracking event, signal, hit, beacon
+
+**Visitor Hash**:
+A daily-rotating, non-reversible server-side identifier derived from IP, user agent, tenant ID, and a secret salt. Not a persistent identity.
+_Avoid_: Visitor ID, fingerprint, session ID
+
+**Acquisition**:
+The traffic source and campaign metadata captured from UTM parameters and the HTTP Referer header on a storefront visit.
+_Avoid_: Referrer, source, attribution

@@ -4,13 +4,13 @@
 
 **Blocked by:** 01: Schema migration and tracking endpoint
 
-**Status:** ready-for-agent
+Status: resolved
 
-- [ ] Dashboard displays today's total page views per tenant
-- [ ] Dashboard displays today's unique visitor count per tenant (COUNT DISTINCT on `visitor_hash`)
-- [ ] Dashboard displays today's checkout start and checkout complete counts per tenant
-- [ ] Dashboard displays checkout conversion rate (completions / starts) per tenant
-- [ ] Dashboard displays top referrer sources per tenant, extracted from `acquisition->>'source'`
-- [ ] All metrics are computed by SQL aggregation (COUNT, COUNT DISTINCT, GROUP BY), not in-memory JavaScript
-- [ ] Metrics are scoped to the authenticated merchant's tenants only
-- [ ] Dashboard handles zero-event state gracefully (no errors, displays zeros or an empty state)
+- [x] Dashboard displays today's total page views per tenant
+- [x] Dashboard displays today's unique visitor count per tenant (COUNT DISTINCT on `visitor_hash`)
+- [x] Dashboard displays today's checkout start and checkout complete counts per tenant
+- [x] Dashboard displays checkout conversion rate (completions / starts) per tenant
+- [x] Dashboard displays top referrer sources per tenant, extracted from `acquisition->>'source'`
+- [x] All metrics are computed by SQL aggregation (COUNT, COUNT DISTINCT, GROUP BY), not in-memory JavaScript
+- [x] Metrics are scoped to the authenticated merchant's tenants only
+- [x] Dashboard handles zero-event state gracefully (no errors, displays zeros or an empty state)

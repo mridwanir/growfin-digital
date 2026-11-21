@@ -14,6 +14,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
 import { getMerchantTenants } from '@/lib/dashboard/mutations'
+import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
 import { env } from '@/lib/env'
 
 async function MerchantOverview() {
@@ -22,6 +23,13 @@ async function MerchantOverview() {
 
   const tenantList = await getMerchantTenants(session.user.id)
   const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN
+  const analyticsEntries = await Promise.all(
+    tenantList.map(async tenant => {
+      const data = await getTenantAnalyticsMetrics(tenant.id, session.user.id)
+      return [tenant.id, data] as const
+    }),
+  )
+  const analyticsByTenant = new Map(analyticsEntries)
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -135,7 +143,7 @@ async function MerchantOverview() {
                     <CardDescription>{tenant.category}</CardDescription>
                   </CardHeader>
 
-                  <CardContent className="space-y-2 text-xs">
+                  <CardContent className="space-y-3 text-xs">
                     {tenant.city && (
                       <div className="text-muted-foreground flex items-center gap-2">
                         <MapPin className="size-3.5 shrink-0" />
@@ -154,6 +162,55 @@ async function MerchantOverview() {
                         <span className="text-primary truncate">{tenant.customDomain}</span>
                       </div>
                     )}
+
+                    {(() => {
+                      const metrics = analyticsByTenant.get(tenant.id) ?? {
+                        checkoutCompletes: 0,
+                        checkoutStarts: 0,
+                        conversionRate: 0,
+                        pageViews: 0,
+                        topSources: [],
+                        uniqueVisitors: 0,
+                      }
+
+                      return (
+                        <div className="space-y-2 border-t pt-3">
+                          <div className="flex items-center justify-between text-muted-foreground font-medium">
+                            <span>Statistik Hari Ini</span>
+                            <span>{metrics.conversionRate}% konversi</span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2 text-center">
+                            <div className="rounded-md bg-muted/50 p-2">
+                              <div className="text-[10px] text-muted-foreground">Tayangan</div>
+                              <div className="text-sm font-semibold">{metrics.pageViews}</div>
+                            </div>
+                            <div className="rounded-md bg-muted/50 p-2">
+                              <div className="text-[10px] text-muted-foreground">Pengunjung Unik</div>
+                              <div className="text-sm font-semibold">{metrics.uniqueVisitors}</div>
+                            </div>
+                            <div className="rounded-md bg-muted/50 p-2">
+                              <div className="text-[10px] text-muted-foreground">Mulai Checkout</div>
+                              <div className="text-sm font-semibold">{metrics.checkoutStarts}</div>
+                            </div>
+                            <div className="rounded-md bg-muted/50 p-2">
+                              <div className="text-[10px] text-muted-foreground">Selesai Order</div>
+                              <div className="text-sm font-semibold">{metrics.checkoutCompletes}</div>
+                            </div>
+                          </div>
+
+                          <div className="text-[11px] text-muted-foreground">
+                            {metrics.topSources.length > 0 ? (
+                              <span className="truncate block">
+                                Sumber: {metrics.topSources.map(s => `${s.source} (${s.count})`).join(', ')}
+                              </span>
+                            ) : (
+                              <span>Belum ada sumber rujukan hari ini</span>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </CardContent>
 
                   <CardFooter className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">

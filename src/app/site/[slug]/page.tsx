@@ -7,7 +7,6 @@ import { createElement } from 'react'
 
 import {
   ExpiredSiteScreen,
-  GlobalClickTracker,
   GrowfinWatermark,
   StorefrontClientIslands,
 } from '@/components/storefront'
@@ -85,7 +84,6 @@ export default async function SitePage({ params }: SitePageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
       />
-      <GlobalClickTracker businessId={tenant.id} />
       {createElement(
         getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
         { categories, products, tenant },

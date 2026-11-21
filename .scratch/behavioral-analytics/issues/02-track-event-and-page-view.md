@@ -4,14 +4,14 @@
 
 **Blocked by:** 01: Schema migration and tracking endpoint
 
-**Status:** ready-for-agent
+Status: resolved
 
-- [ ] `trackEvent` function exported with a typed event union (`page_view | checkout_start | checkout_complete`) and optional metadata parameter
-- [ ] `trackEvent` reads the slug from the URL path and sends it in the request body
-- [ ] Requests are fire-and-forget with `keepalive: true`; errors are silently caught
-- [ ] No cookies, localStorage, or sessionStorage used for visitor identity
-- [ ] `<PageViewTracker>` component calls `trackEvent('page_view')` on mount
-- [ ] `<PageViewTracker>` forwards UTM query params from the current page URL to the tracking endpoint
-- [ ] `<PageViewTracker>` mounted once in the storefront layout; every storefront page under it is tracked automatically
-- [ ] `GlobalClickTracker` component and its re-export from the storefront barrel are deleted
-- [ ] Visiting a storefront page produces a `page_view` row in `analytics_events` with the correct `tenant_id`
+- [x] `trackEvent` function exported with a typed event union (`page_view | checkout_start | checkout_complete`) and optional metadata parameter
+- [x] `trackEvent` reads the slug from the URL path and sends it in the request body
+- [x] Requests are fire-and-forget with `keepalive: true`; errors are silently caught
+- [x] No cookies, localStorage, or sessionStorage used for visitor identity
+- [x] `<PageViewTracker>` component calls `trackEvent('page_view')` on mount
+- [x] `<PageViewTracker>` forwards UTM query params from the current page URL to the tracking endpoint
+- [x] `<PageViewTracker>` mounted once in the storefront layout; every storefront page under it is tracked automatically
+- [x] `GlobalClickTracker` component and its re-export from the storefront barrel are deleted
+- [x] Visiting a storefront page produces a `page_view` row in `analytics_events` with the correct `tenant_id`

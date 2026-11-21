@@ -25,8 +25,8 @@ async function MerchantOverview() {
   const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN
   const analyticsEntries = await Promise.all(
     tenantList.map(async tenant => {
-      const data = await getTenantAnalyticsMetrics(tenant.id, session.user.id)
-      return [tenant.id, data] as const
+      const tenantMetrics = await getTenantAnalyticsMetrics(tenant.id, session.user.id)
+      return [tenant.id, tenantMetrics] as const
     }),
   )
   const analyticsByTenant = new Map(analyticsEntries)

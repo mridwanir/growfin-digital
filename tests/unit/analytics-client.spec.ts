@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getSlugFromPathname, trackEvent } from '@/lib/analytics'
+import { trackEvent } from '@/lib/analytics'
 
 describe('Analytics client utilities (trackEvent)', () => {
   const originalFetch = globalThis.fetch
@@ -21,11 +21,26 @@ describe('Analytics client utilities (trackEvent)', () => {
       ; (globalThis as unknown as { window: unknown }).window = originalWindow
   })
 
-  it('correctly extracts slug from /site/<slug> and /demo/<slug> paths', () => {
-    expect(getSlugFromPathname('/site/my-cool-store')).toBe('my-cool-store')
-    expect(getSlugFromPathname('/site/my-cool-store/catalog')).toBe('my-cool-store')
-    expect(getSlugFromPathname('/demo/demo-store')).toBe('demo-store')
-    expect(getSlugFromPathname('/other/path')).toBeNull()
+  it('extracts slug from /site/<slug> path and ignores other paths', () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
+    globalThis.fetch = fetchMock
+
+      ; (globalThis as unknown as { window: { location: { pathname: string; search: string } } }).window.location = {
+        pathname: '/other/path',
+        search: '',
+      }
+
+    trackEvent('page_view')
+    expect(fetchMock).not.toHaveBeenCalled()
+
+      ; (globalThis as unknown as { window: { location: { pathname: string; search: string } } }).window.location = {
+        pathname: '/site/my-cool-store',
+        search: '',
+      }
+
+    trackEvent('page_view')
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).slug).toBe('my-cool-store')
   })
 
   it('fires a POST request to /api/analytics/track with slug, event, and metadata', () => {

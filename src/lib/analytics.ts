@@ -1,7 +1,7 @@
 export type AnalyticsEvent = 'page_view' | 'checkout_start' | 'checkout_complete'
 
-export function getSlugFromPathname(pathname: string): string | null {
-  const match = pathname.match(/^\/(?:site|demo)\/([^/?#]+)/)
+function getSlugFromPathname(pathname: string): string | null {
+  const match = pathname.match(/^\/site\/([^/?#]+)/)
   return match ? match[1] : null
 }
 

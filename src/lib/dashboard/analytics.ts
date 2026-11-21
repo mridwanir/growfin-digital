@@ -34,7 +34,7 @@ export async function getTenantAnalyticsMetrics(
     }
   }
 
-  const todayStart = new Date(`${new Date().toISOString().slice(0, 10)  }T00:00:00.000Z`)
+  const todayStart = new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`)
 
   const [metrics] = await db
     .select({

@@ -12,6 +12,13 @@ import { env } from '@/lib/env'
 const ALLOWED_EVENTS = ['page_view', 'checkout_start', 'checkout_complete'] as const
 type AllowedEvent = (typeof ALLOWED_EVENTS)[number]
 
+export interface Acquisition {
+  campaign?: string
+  medium?: string
+  referrer?: string
+  source?: string
+}
+
 interface RateLimitRecord {
   count: number
   resetAt: number
@@ -19,18 +26,16 @@ interface RateLimitRecord {
 
 const rateLimitMap = new Map<string, RateLimitRecord>()
 
-export function _resetRateLimit(): void {
-  rateLimitMap.clear()
-}
-
-export function computeVisitorHash(
+function computeVisitorHash(
   ip: string,
   userAgent: string,
   tenantId: string,
-  secret: string = env.ANALYTICS_HASH_SECRET,
-  dateStr: string = new Date().toISOString().slice(0, 10),
 ): string {
-  const dailySalt = crypto.createHmac('sha256', secret).update(dateStr).digest('hex')
+  const dateStr = new Date().toISOString().slice(0, 10)
+  const dailySalt = crypto
+    .createHmac('sha256', env.ANALYTICS_HASH_SECRET)
+    .update(dateStr)
+    .digest('hex')
   return crypto
     .createHash('sha256')
     .update(`${ip}${userAgent}${tenantId}${dailySalt}`)
@@ -40,7 +45,7 @@ export function computeVisitorHash(
 function parseAcquisition(
   request: NextRequest,
   event: string,
-): Record<string, string> | null {
+): Acquisition | null {
   if (event !== 'page_view') {
     return null
   }
@@ -51,21 +56,33 @@ function parseAcquisition(
   const utmMedium = url.searchParams.get('utm_medium')
   const utmCampaign = url.searchParams.get('utm_campaign')
 
-  if (!referer && !utmSource && !utmMedium && !utmCampaign) {
+  let externalReferrer: string | null = null
+  let referrerSource: string | null = null
+
+  if (referer) {
+    try {
+      const parsedReferer = new URL(referer)
+      const currentHost = url.host || request.headers.get('host') || ''
+      if (parsedReferer.host !== currentHost) {
+        externalReferrer = referer
+        referrerSource = parsedReferer.hostname.replace(/^www\./, '')
+      }
+    } catch {
+      externalReferrer = referer
+      referrerSource = referer
+    }
+  }
+
+  if (!externalReferrer && !utmSource && !utmMedium && !utmCampaign) {
     return null
   }
 
-  const acquisition: Record<string, string> = {}
+  const acquisition: Acquisition = {}
 
   if (utmSource) {
     acquisition.source = utmSource
-  } else if (referer) {
-    try {
-      const parsedUrl = new URL(referer)
-      acquisition.source = parsedUrl.hostname.replace(/^www\./, '')
-    } catch {
-      acquisition.source = referer
-    }
+  } else if (referrerSource) {
+    acquisition.source = referrerSource
   }
 
   if (utmMedium) {
@@ -74,8 +91,8 @@ function parseAcquisition(
   if (utmCampaign) {
     acquisition.campaign = utmCampaign
   }
-  if (referer) {
-    acquisition.referrer = referer
+  if (externalReferrer) {
+    acquisition.referrer = externalReferrer
   }
 
   return Object.keys(acquisition).length > 0 ? acquisition : null
@@ -88,14 +105,14 @@ export async function POST(request: NextRequest): Promise<Response> {
     '127.0.0.1'
 
   const now = Date.now()
-  const limit = rateLimitMap.get(ip)
-  if (!limit || now > limit.resetAt) {
+  const rateLimitRecord = rateLimitMap.get(ip)
+  if (!rateLimitRecord || now > rateLimitRecord.resetAt) {
     rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 })
   } else {
-    if (limit.count >= 60) {
+    if (rateLimitRecord.count >= 60) {
       return new NextResponse('Too Many Requests', { status: 429 })
     }
-    limit.count++
+    rateLimitRecord.count++
   }
 
   let body: {

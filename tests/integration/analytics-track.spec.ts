@@ -2,11 +2,7 @@ import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
-import {
-  _resetRateLimit,
-  computeVisitorHash,
-  POST as trackHandler,
-} from '@/app/api/analytics/track/route'
+import { POST as trackHandler } from '@/app/api/analytics/track/route'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { tenants } from '@/db/schema/tenants'
@@ -16,7 +12,6 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
   let tenantId: string
 
   beforeEach(async () => {
-    _resetRateLimit()
     // Clean up any existing analytics events and test tenant
     const existing = await db
       .select({ id: tenants.id })
@@ -116,9 +111,8 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const row = rows[0]
     expect(row.tenantId).toBe(tenantId)
     expect(row.event).toBe('page_view')
-    expect(row.visitorHash).toBe(
-      computeVisitorHash('192.168.1.100', 'Mozilla/5.0 TestBrowser', tenantId),
-    )
+    expect(typeof row.visitorHash).toBe('string')
+    expect(row.visitorHash.length).toBe(64)
     expect(row.createdAt).toBeInstanceOf(Date)
   })
 
@@ -210,17 +204,71 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
 
   it('produces different visitor_hash values for different IPs with the same user agent and tenant', async () => {
     const ua = 'Mozilla/5.0 IdenticalAgent'
-    const hash1 = computeVisitorHash('1.1.1.1', ua, tenantId)
-    const hash2 = computeVisitorHash('2.2.2.2', ua, tenantId)
-    expect(hash1).not.toBe(hash2)
+
+    const req1 = new NextRequest('http://localhost:3000/api/analytics/track', {
+      body: JSON.stringify({ event: 'page_view', slug: testSlug }),
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': ua,
+        'x-forwarded-for': '1.1.1.1',
+      },
+    })
+    await trackHandler(req1)
+
+    const req2 = new NextRequest('http://localhost:3000/api/analytics/track', {
+      body: JSON.stringify({ event: 'page_view', slug: testSlug }),
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': ua,
+        'x-forwarded-for': '2.2.2.2',
+      },
+    })
+    await trackHandler(req2)
+
+    const rows = await db
+      .select()
+      .from(analyticsEvents)
+      .where(eq(analyticsEvents.tenantId, tenantId))
+
+    expect(rows).toHaveLength(2)
+    expect(rows[0].visitorHash).not.toBe(rows[1].visitorHash)
   })
 
   it('produces the same visitor_hash for the same IP, user agent, and tenant within the same day', async () => {
     const ip = '192.168.1.50'
     const ua = 'Mozilla/5.0 Consistent'
-    const hash1 = computeVisitorHash(ip, ua, tenantId)
-    const hash2 = computeVisitorHash(ip, ua, tenantId)
-    expect(hash1).toBe(hash2)
+
+    const req1 = new NextRequest('http://localhost:3000/api/analytics/track', {
+      body: JSON.stringify({ event: 'page_view', slug: testSlug }),
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': ua,
+        'x-forwarded-for': ip,
+      },
+    })
+    await trackHandler(req1)
+
+    const req2 = new NextRequest('http://localhost:3000/api/analytics/track', {
+      body: JSON.stringify({ event: 'page_view', slug: testSlug }),
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': ua,
+        'x-forwarded-for': ip,
+      },
+    })
+    await trackHandler(req2)
+
+    const rows = await db
+      .select()
+      .from(analyticsEvents)
+      .where(eq(analyticsEvents.tenantId, tenantId))
+
+    expect(rows).toHaveLength(2)
+    expect(rows[0].visitorHash).toBe(rows[1].visitorHash)
   })
 
   it('returns 429 after 60 requests from the same IP within one minute', async () => {

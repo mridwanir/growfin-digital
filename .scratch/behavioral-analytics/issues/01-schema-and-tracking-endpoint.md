@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Drizzle schema updated: `event_type` renamed to `event`, `visitor_hash` text NOT NULL column added, `acquisition` jsonb nullable column added, `(tenant_id, event, created_at)` index added
 - [ ] Migration generated and applies cleanly

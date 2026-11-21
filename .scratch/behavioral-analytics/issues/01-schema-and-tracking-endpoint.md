@@ -4,17 +4,17 @@
 
 **Blocked by:** None (can start immediately).
 
-Status: claimed
+Status: resolved
 
-- [ ] Drizzle schema updated: `event_type` renamed to `event`, `visitor_hash` text NOT NULL column added, `acquisition` jsonb nullable column added, `(tenant_id, event, created_at)` index added
-- [ ] Migration generated and applies cleanly
-- [ ] `ANALYTICS_HASH_SECRET` env var documented and required at startup
-- [ ] Route handler returns 400 when `slug` or `event` is missing from the request body
-- [ ] Route handler returns 400 when `event` is not in the allowed union (`page_view`, `checkout_start`, `checkout_complete`)
-- [ ] Route handler returns 400 when `slug` does not match any tenant
-- [ ] Route handler returns 204 and inserts a row with correct `tenant_id`, `event`, `visitor_hash`, `created_at`, and `event_data` for a valid request
-- [ ] `visitor_hash` differs for different IPs with the same user agent and tenant
-- [ ] `visitor_hash` is identical for the same IP, user agent, and tenant within the same day
-- [ ] `acquisition` populated when Referer and/or UTM params are present, null otherwise
-- [ ] Rate limiter returns 429 after 60 requests from the same IP within one minute
-- [ ] All acceptance criteria verified by integration tests in the `tests/integration/` directory
+- [x] Drizzle schema updated: `event_type` renamed to `event`, `visitor_hash` text NOT NULL column added, `acquisition` jsonb nullable column added, `(tenant_id, event, created_at)` index added
+- [x] Migration generated and applies cleanly
+- [x] `ANALYTICS_HASH_SECRET` env var documented and required at startup
+- [x] Route handler returns 400 when `slug` or `event` is missing from the request body
+- [x] Route handler returns 400 when `event` is not in the allowed union (`page_view`, `checkout_start`, `checkout_complete`)
+- [x] Route handler returns 400 when `slug` does not match any tenant
+- [x] Route handler returns 204 and inserts a row with correct `tenant_id`, `event`, `visitor_hash`, `created_at`, and `event_data` for a valid request
+- [x] `visitor_hash` differs for different IPs with the same user agent and tenant
+- [x] `visitor_hash` is identical for the same IP, user agent, and tenant within the same day
+- [x] `acquisition` populated when Referer and/or UTM params are present, null otherwise
+- [x] Rate limiter returns 429 after 60 requests from the same IP within one minute
+- [x] All acceptance criteria verified by integration tests in the `tests/integration/` directory

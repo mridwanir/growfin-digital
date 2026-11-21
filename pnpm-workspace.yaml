@@ -9,6 +9,10 @@ minimumReleaseAgeExcludePrune: true
 packages:
   - '.'
 
+skills:
+  dirs:
+    - .agents/skills
+
 # TODO: Migrate to named catalogs
 # catalogMode: prefer
 # catalogs:

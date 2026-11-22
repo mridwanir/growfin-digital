@@ -15,3 +15,11 @@ Single-context layout (`GLOSSARY.md` + `docs/adr/` at the repo root). See `docs/
 ### Next.js docs
 
 The installed `next` package bundles documentation in `node_modules/next/dist/docs/`. Consult it before writing or modifying Next.js routes, server actions, caching, or configuration.
+
+### Coding standards
+
+Consult `CODING_STANDARDS.md` before writing or modifying components, Server Actions, route handlers, Drizzle schemas, or client state.
+
+### Testing standards
+
+Consult `docs/TESTING_STANDARDS.md` before writing or modifying unit, integration, or browser component tests.

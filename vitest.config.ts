@@ -1,5 +1,7 @@
 import nextEnv from '@next/env'
 import react from '@vitejs/plugin-react'
+import { playwright } from '@vitest/browser-playwright'
+import { fileURLToPath } from 'node:url'
 import { defaultExclude, defineConfig } from 'vitest/config'
 
 const { loadEnvConfig } = nextEnv
@@ -33,10 +35,25 @@ export default defineConfig({
         },
       },
       {
+        define: {
+          'process.env': {},
+        },
+        resolve: {
+          alias: {
+            'next/image': fileURLToPath(
+              new URL('./src/components/storefront/__fixtures__/mock-image.tsx', import.meta.url),
+            ),
+          },
+        },
         test: {
           name: 'components',
-          environment: 'node',
-          include: ['src/**/*.spec.tsx'],
+          include: ['src/components/**/*.spec.tsx'],
+          browser: {
+            enabled: true,
+            headless: true,
+            instances: [{ browser: 'chromium' }],
+            provider: playwright(),
+          },
         },
       },
       {

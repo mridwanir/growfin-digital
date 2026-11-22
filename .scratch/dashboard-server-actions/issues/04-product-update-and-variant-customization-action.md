@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Product creation and deletion Server Actions and client transition
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] The dashboard actions module exports a typed Server Action for updating products and variant options
 - [ ] The update action validates merchant authentication and ensures the target product belongs to a tenant owned by the merchant

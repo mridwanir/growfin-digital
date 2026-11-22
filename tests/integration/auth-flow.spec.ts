@@ -1,15 +1,18 @@
 import { NextRequest } from 'next/server'
 import { describe, expect, it, vi } from 'vitest'
 
-import { GET as getAdminApi } from '@/app/api/admin/route'
 import { POST as authWebhook } from '@/app/api/auth/webhook/route'
-import { GET as getDashboardApi } from '@/app/api/dashboard/route'
 import { auth } from '@/lib/auth/server'
+import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
+import * as dashboardMutations from '@/lib/dashboard/mutations'
 import { resend } from '@/lib/email/resend'
-import { env } from '@/lib/env'
+
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}))
 
 describe('End-to-End Passwordless Auth Integration Flow', () => {
-  it('executes full passwordless lifecycle: request OTP -> webhook delivery -> receive session -> access protected routes', async () => {
+  it('executes passwordless auth webhook delivery and allows merchant settings mutation', async () => {
     // 1. Webhook delivers OTP email via Resend
     const resendSpy = vi.spyOn(resend.emails, 'send').mockResolvedValueOnce({
       data: { id: 'email_msg_999' },
@@ -53,7 +56,7 @@ describe('End-to-End Passwordless Auth Integration Flow', () => {
       }),
     )
 
-    // 2. Verified session allows merchant into dashboard
+    // 2. Verified merchant session allows mutating settings via updateTenantSettingsAction
     const merchantSession = {
       session: {
         id: 'sess_flow_merchant',
@@ -78,54 +81,48 @@ describe('End-to-End Passwordless Auth Integration Flow', () => {
       error: null,
     })
 
-    const dashboardReq = new NextRequest('http://localhost:3000/api/dashboard')
-    const dashboardRes = await getDashboardApi(dashboardReq)
-    expect(dashboardRes.status).toBe(200)
-    const dashboardData = await dashboardRes.json()
-    expect(dashboardData.user.email).toBe('merchant.flow@growfin.my.id')
-
-    // 3. Merchant is rejected from /api/admin with 403 Forbidden
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: merchantSession,
-      error: null,
-    })
-
-    const adminReq = new NextRequest('http://localhost:3000/api/admin')
-    const adminForbiddenRes = await getAdminApi(adminReq)
-    expect(adminForbiddenRes.status).toBe(403)
-    const adminForbiddenData = await adminForbiddenRes.json()
-    expect(adminForbiddenData.error).toContain('Admin access required')
-
-    // 4. Super admin is admitted to /api/admin with 200 OK
-    const adminEmail = env.ADMIN_EMAILS.split(',')[0].trim()
-    const adminSession = {
-      session: {
-        id: 'sess_flow_admin',
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 86400000),
-        token: 'token_admin_xyz',
-        updatedAt: new Date(),
-        userId: 'user_flow_admin',
-      },
-      user: {
-        id: 'user_flow_admin',
-        name: 'Platform Administrator',
-        createdAt: new Date(),
-        email: adminEmail,
-        emailVerified: true,
-        updatedAt: new Date(),
-      },
+    const mockUpdatedTenant = {
+      id: 'tenant_flow_123',
+      name: 'Flow Merchant Store',
+      address: 'Jl. Merdeka No. 45',
+      brandingContent: null,
+      category: 'F&B',
+      city: 'Jakarta Pusat',
+      createdAt: new Date(),
+      customDomain: null,
+      domainActiveUntil: null,
+      fomoExpiresAt: null,
+      googleMapsUrl: null,
+      operatingHours: null,
+      organizationId: null,
+      packageTier: 'free' as const,
+      phone: '081234567890',
+      siteActiveUntil: null,
+      slug: 'flow-merchant-store',
+      status: 'published' as const,
+      themeConfig: {},
+      updatedAt: new Date(),
+      userId: 'user_flow_merchant',
     }
 
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: adminSession,
-      error: null,
+    const mutationSpy = vi
+      .spyOn(dashboardMutations, 'updateTenantSettings')
+      .mockResolvedValueOnce(mockUpdatedTenant)
+
+    const actionResult = await updateTenantSettingsAction('tenant_flow_123', {
+      address: 'Jl. Merdeka No. 45',
+      city: 'Jakarta Pusat',
+      phone: '081234567890',
     })
 
-    const adminAllowedRes = await getAdminApi(adminReq)
-    expect(adminAllowedRes.status).toBe(200)
-    const adminAllowedData = await adminAllowedRes.json()
-    expect(adminAllowedData.admin).toBe(true)
-    expect(adminAllowedData.user.email).toBe(adminEmail)
+    expect(actionResult).toEqual({
+      data: mockUpdatedTenant,
+      success: true,
+    })
+    expect(mutationSpy).toHaveBeenCalledWith('tenant_flow_123', 'user_flow_merchant', {
+      address: 'Jl. Merdeka No. 45',
+      city: 'Jakarta Pusat',
+      phone: '081234567890',
+    })
   })
 })

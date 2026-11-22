@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 
 import { MediaUploader } from '@/components/dashboard/media-uploader'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -27,6 +27,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  createProductAction,
+  createProductCategoryAction,
+  deleteProductAction,
+  deleteProductCategoryAction,
+  updateProductAction,
+  updateProductCategoryAction,
+} from '@/lib/dashboard/actions'
 
 interface CategoryItem {
   id: string
@@ -94,42 +102,63 @@ export function ProductsClient({
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
     null,
   )
+  const [categoryFieldErrors, setCategoryFieldErrors] = useState<
+    Record<string, string[] | undefined>
+  >({})
+  const [productFieldErrors, setProductFieldErrors] = useState<
+    Record<string, string[] | undefined>
+  >({})
   // Category inline state
   const [newCategoryName, setNewCategoryName] = useState('')
-  const [isAddingCategory, setIsAddingCategory] = useState(false)
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
   const [editingCategoryName, setEditingCategoryName] = useState('')
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null)
+  const [isCategoryPending, startCategoryTransition] = useTransition()
 
   const handleStartEditCategory = (cat: CategoryItem) => {
     setEditingCategoryId(cat.id)
     setEditingCategoryName(cat.name)
   }
 
-  const handleSaveEditCategory = async (catId: string) => {
+  const handleSaveEditCategory = (catId: string) => {
     if (!editingCategoryName.trim()) return
 
-    try {
-      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/categories/${catId}`, {
-        body: JSON.stringify({ name: editingCategoryName.trim() }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'PATCH',
-      })
-      if (!res.ok) throw new Error('Gagal memperbarui kategori')
+    setFeedback(null)
+    setCategoryFieldErrors({})
+    setActiveCategoryId(catId)
+    startCategoryTransition(async () => {
+      try {
+        const res = await updateProductCategoryAction(selectedTenantId, catId, {
+          name: editingCategoryName.trim(),
+        })
+        if (!res.success) {
+          if (res.fieldErrors) {
+            setCategoryFieldErrors(res.fieldErrors)
+          }
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal memperbarui kategori',
+          })
+          return
+        }
 
-      const data = await res.json()
-      setCategories(categories.map(c => (c.id === catId ? data.category : c)))
-      setEditingCategoryId(null)
-      setFeedback({
-        type: 'success',
-        message: `Kategori berhasil diubah menjadi "${data.category.name}"`,
-      })
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal memperbarui kategori',
-      })
-    }
+        setCategoryFieldErrors({})
+        setCategories(prev => prev.map(c => (c.id === catId ? res.data : c)))
+        setEditingCategoryId(null)
+        setEditingCategoryName('')
+        setFeedback({
+          type: 'success',
+          message: `Kategori berhasil diubah menjadi "${res.data.name}"`,
+        })
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal memperbarui kategori',
+        })
+      } finally {
+        setActiveCategoryId(null)
+      }
+    })
   }
 
   // Search and Filter
@@ -152,61 +181,81 @@ export function ProductsClient({
   const [imageStorageKey, setImageStorageKey] = useState('')
   const [formVariants, setFormVariants] = useState<ProductVariantItem[]>([])
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isProductPending, startProductTransition] = useTransition()
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
 
   const handleTenantChange = (tenantId: string) => {
     router.push(`/dashboard/products?tenant=${tenantId}`)
   }
 
   // --- Category Actions ---
-  const handleAddCategory = async (e: React.FormEvent) => {
+  const handleAddCategory = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newCategoryName.trim()) return
 
-    setIsAddingCategory(true)
     setFeedback(null)
-    try {
-      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/categories`, {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify({
+    setCategoryFieldErrors({})
+    setActiveCategoryId(null)
+    startCategoryTransition(async () => {
+      try {
+        const res = await createProductCategoryAction(selectedTenantId, {
           name: newCategoryName.trim(),
           sortOrder: categories.length,
-        }),
-      })
+        })
 
-      if (!res.ok) throw new Error('Gagal menambahkan kategori')
-      const data = await res.json()
-      setCategories([...categories, data.category])
-      setNewCategoryName('')
-      setFeedback({ type: 'success', message: `Kategori "${data.category.name}" berhasil dibuat` })
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal menambahkan kategori',
-      })
-    } finally {
-      setIsAddingCategory(false)
-    }
+        if (!res.success) {
+          if (res.fieldErrors) {
+            setCategoryFieldErrors(res.fieldErrors)
+          }
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal menambahkan kategori',
+          })
+          return
+        }
+
+        setCategoryFieldErrors({})
+        setCategories(prev => [...prev, res.data])
+        setNewCategoryName('')
+        setFeedback({ type: 'success', message: `Kategori "${res.data.name}" berhasil dibuat` })
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal menambahkan kategori',
+        })
+      }
+    })
   }
 
-  const handleDeleteCategory = async (catId: string, catName: string) => {
-    try {
-      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/categories/${catId}`, {
-        method: 'DELETE',
-      })
-      if (!res.ok) throw new Error('Gagal menghapus kategori')
+  const handleDeleteCategory = (catId: string, catName: string) => {
+    setFeedback(null)
+    setActiveCategoryId(catId)
+    startCategoryTransition(async () => {
+      try {
+        const res = await deleteProductCategoryAction(selectedTenantId, catId)
 
-      setCategories(categories.filter(c => c.id !== catId))
-      setFeedback({ type: 'success', message: `Kategori "${catName}" berhasil dihapus` })
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal menghapus kategori',
-      })
-    }
+        if (!res.success) {
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal menghapus kategori',
+          })
+          return
+        }
+
+        setCategories(prev => prev.filter(c => c.id !== catId))
+        setProducts(prev =>
+          prev.map(p => (p.categoryId === catId ? { ...p, categoryId: null } : p)),
+        )
+        setFeedback({ type: 'success', message: `Kategori "${catName}" berhasil dihapus` })
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal menghapus kategori',
+        })
+      } finally {
+        setActiveCategoryId(null)
+      }
+    })
   }
 
   // --- Product Form Handlers ---
@@ -222,6 +271,7 @@ export function ProductsClient({
     setImageUrl('')
     setImageStorageKey('')
     setFormVariants([])
+    setProductFieldErrors({})
     setIsFormOpen(true)
   }
 
@@ -249,6 +299,7 @@ export function ProductsClient({
         })),
       })),
     )
+    setProductFieldErrors({})
     setIsFormOpen(true)
   }
 
@@ -363,69 +414,99 @@ export function ProductsClient({
       variants: cleanedVariants,
     }
 
-    setIsSubmitting(true)
-    setFeedback(null)
+    if (editingProductId) {
+      setFeedback(null)
+      setProductFieldErrors({})
+      startProductTransition(async () => {
+        try {
+          const res = await updateProductAction(selectedTenantId, editingProductId, payload)
+          if (!res.success) {
+            if (res.fieldErrors) {
+              setProductFieldErrors(res.fieldErrors)
+            }
+            setFeedback({
+              type: 'error',
+              message: res.error || 'Gagal menyimpan produk',
+            })
+            return
+          }
 
-    try {
-      const url = editingProductId
-        ? `/api/dashboard/tenants/${selectedTenantId}/products/${editingProductId}`
-        : `/api/dashboard/tenants/${selectedTenantId}/products`
-      const method = editingProductId ? 'PATCH' : 'POST'
+          setProductFieldErrors({})
 
-      const res = await fetch(url, {
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json' },
-        method,
+          setProducts(prev => prev.map(p => (p.id === res.data.id ? res.data : p)))
+          setFeedback({
+            type: 'success',
+            message: `Produk "${res.data.name}" berhasil diperbarui`,
+          })
+          setIsFormOpen(false)
+        } catch (err: unknown) {
+          setFeedback({
+            type: 'error',
+            message: err instanceof Error ? err.message : 'Gagal menyimpan produk',
+          })
+        }
       })
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => null)
-        throw new Error(errorData?.error || 'Gagal menyimpan produk')
-      }
-
-      const resData = await res.json()
-      if (editingProductId) {
-        setProducts(products.map(p => (p.id === editingProductId ? resData.product : p)))
-        setFeedback({
-          type: 'success',
-          message: `Produk "${resData.product.name}" berhasil diperbarui`,
-        })
-      } else {
-        setProducts([resData.product, ...products])
-        setFeedback({
-          type: 'success',
-          message: `Produk "${resData.product.name}" berhasil ditambahkan`,
-        })
-      }
-
-      setIsFormOpen(false)
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal menyimpan produk',
-      })
-    } finally {
-      setIsSubmitting(false)
+      return
     }
+
+    setFeedback(null)
+    setProductFieldErrors({})
+    startProductTransition(async () => {
+      try {
+        const res = await createProductAction(selectedTenantId, payload)
+        if (!res.success) {
+          if (res.fieldErrors) {
+            setProductFieldErrors(res.fieldErrors)
+          }
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal membuat produk',
+          })
+          return
+        }
+
+        setProductFieldErrors({})
+
+        setProducts(prev => [res.data, ...prev])
+        setFeedback({
+          type: 'success',
+          message: `Produk "${res.data.name}" berhasil ditambahkan`,
+        })
+        setIsFormOpen(false)
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal membuat produk',
+        })
+      }
+    })
   }
 
-  const handleDeleteProduct = async (prodId: string, prodName: string) => {
-    try {
-      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/products/${prodId}`, {
-        method: 'DELETE',
-      })
-      if (!res.ok) throw new Error('Gagal menghapus produk')
+  const handleDeleteProduct = (prodId: string, prodName: string) => {
+    setFeedback(null)
+    setDeletingProductId(prodId)
+    startProductTransition(async () => {
+      try {
+        const res = await deleteProductAction(selectedTenantId, prodId)
+        if (!res.success) {
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal menghapus produk',
+          })
+          return
+        }
 
-      setProducts(products.filter(p => p.id !== prodId))
-      setFeedback({ type: 'success', message: `Produk "${prodName}" berhasil dihapus` })
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal menghapus produk',
-      })
-    }
+        setProducts(prev => prev.filter(p => p.id !== prodId))
+        setFeedback({ type: 'success', message: `Produk "${prodName}" berhasil dihapus` })
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal menghapus produk',
+        })
+      } finally {
+        setDeletingProductId(null)
+      }
+    })
   }
 
   // Filtered Products
@@ -498,12 +579,13 @@ export function ProductsClient({
           <form className="flex gap-2" onSubmit={handleAddCategory}>
             <Input
               className="max-w-md"
+              disabled={isCategoryPending && !activeCategoryId}
               placeholder="Nama Kategori Baru..."
               value={newCategoryName}
               onChange={e => setNewCategoryName(e.target.value)}
             />
-            <Button disabled={isAddingCategory || !newCategoryName.trim()} type="submit">
-              {isAddingCategory ? (
+            <Button disabled={isCategoryPending || !newCategoryName.trim()} type="submit">
+              {isCategoryPending && !activeCategoryId ? (
                 <Loader2 className="mr-2 size-4 animate-spin" />
               ) : (
                 <Plus className="mr-2 size-4" />
@@ -511,6 +593,9 @@ export function ProductsClient({
               Tambah Kategori
             </Button>
           </form>
+          {categoryFieldErrors.name && (
+            <p className="text-destructive text-xs">{categoryFieldErrors.name.join(', ')}</p>
+          )}
 
           <div className="flex flex-wrap gap-2 pt-2">
             {categories.length === 0 ? (
@@ -528,22 +613,32 @@ export function ProductsClient({
                       <Input
                         autoFocus
                         className="h-7 w-32 px-2 text-xs"
+                        disabled={isCategoryPending && activeCategoryId === cat.id}
                         value={editingCategoryName}
                         onChange={e => setEditingCategoryName(e.target.value)}
                       />
                       <button
-                        className="text-primary hover:text-primary/80 p-0.5"
+                        className="text-primary hover:text-primary/80 p-0.5 disabled:opacity-50"
+                        disabled={isCategoryPending || !editingCategoryName.trim()}
                         title="Simpan Kategori"
                         type="button"
                         onClick={() => handleSaveEditCategory(cat.id)}
                       >
-                        <Check className="size-3.5" />
+                        {isCategoryPending && activeCategoryId === cat.id ? (
+                          <Loader2 className="size-3.5 animate-spin" />
+                        ) : (
+                          <Check className="size-3.5" />
+                        )}
                       </button>
                       <button
-                        className="text-muted-foreground hover:text-foreground p-0.5"
+                        className="text-muted-foreground hover:text-foreground p-0.5 disabled:opacity-50"
+                        disabled={isCategoryPending}
                         title="Batal"
                         type="button"
-                        onClick={() => setEditingCategoryId(null)}
+                        onClick={() => {
+                          setEditingCategoryId(null)
+                          setEditingCategoryName('')
+                        }}
                       >
                         <X className="size-3.5" />
                       </button>
@@ -558,7 +653,8 @@ export function ProductsClient({
                   >
                     <span className="font-medium">{cat.name}</span>
                     <button
-                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+                      disabled={isCategoryPending}
                       title="Edit Nama Kategori"
                       type="button"
                       onClick={() => handleStartEditCategory(cat)}
@@ -566,12 +662,17 @@ export function ProductsClient({
                       <Edit2 className="size-3" />
                     </button>
                     <button
-                      className="text-muted-foreground hover:text-destructive transition-colors"
+                      className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
+                      disabled={isCategoryPending}
                       title="Hapus Kategori"
                       type="button"
                       onClick={() => handleDeleteCategory(cat.id, cat.name)}
                     >
-                      <X className="size-3.5" />
+                      {isCategoryPending && activeCategoryId === cat.id ? (
+                        <Loader2 className="size-3.5 animate-spin" />
+                      ) : (
+                        <X className="size-3.5" />
+                      )}
                     </button>
                   </div>
                 )
@@ -746,12 +847,17 @@ export function ProductsClient({
                       </Button>
                       <Button
                         className="text-destructive hover:bg-destructive/10"
+                        disabled={isProductPending}
                         size="sm"
                         title="Hapus Produk"
                         variant="ghost"
                         onClick={() => handleDeleteProduct(prod.id, prod.name)}
                       >
-                        <Trash2 className="size-3.5" />
+                        {isProductPending && deletingProductId === prod.id ? (
+                          <Loader2 className="size-3.5 animate-spin" />
+                        ) : (
+                          <Trash2 className="size-3.5" />
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -795,6 +901,9 @@ export function ProductsClient({
                   value={name}
                   onChange={e => setName(e.target.value)}
                 />
+                {productFieldErrors.name && (
+                  <p className="text-destructive text-xs">{productFieldErrors.name.join(', ')}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -813,6 +922,11 @@ export function ProductsClient({
                       </option>
                     ))}
                   </select>
+                  {productFieldErrors.categoryId && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.categoryId.join(', ')}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -825,6 +939,11 @@ export function ProductsClient({
                     value={stock}
                     onChange={e => setStock(e.target.value)}
                   />
+                  {productFieldErrors.stock && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.stock.join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -840,6 +959,11 @@ export function ProductsClient({
                     value={basePrice}
                     onChange={e => setBasePrice(e.target.value)}
                   />
+                  {productFieldErrors.basePrice && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.basePrice.join(', ')}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -852,6 +976,11 @@ export function ProductsClient({
                     value={originalPrice}
                     onChange={e => setOriginalPrice(e.target.value)}
                   />
+                  {productFieldErrors.originalPrice && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.originalPrice.join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -865,6 +994,11 @@ export function ProductsClient({
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                 />
+                {productFieldErrors.description && (
+                  <p className="text-destructive text-xs">
+                    {productFieldErrors.description.join(', ')}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-2">
@@ -1041,15 +1175,15 @@ export function ProductsClient({
 
               <div className="flex items-center justify-end gap-3 border-t pt-4">
                 <Button
-                  disabled={isSubmitting}
+                  disabled={isProductPending}
                   type="button"
                   variant="outline"
                   onClick={() => setIsFormOpen(false)}
                 >
                   Batal
                 </Button>
-                <Button disabled={isSubmitting} type="submit">
-                  {isSubmitting ? (
+                <Button disabled={isProductPending} type="submit">
+                  {isProductPending ? (
                     <>
                       <Loader2 className="mr-2 size-4 animate-spin" />
                       Menyimpan...

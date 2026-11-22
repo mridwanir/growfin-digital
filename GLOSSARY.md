@@ -10,6 +10,10 @@ This glossary defines the ubiquitous language for Growfin Digital's multi-tenant
 A merchant business entity with a dedicated slug, subscription tier, branding, and operational configuration.
 _Avoid_: Store, shop, merchant account, client
 
+**Merchant**:
+An authenticated user who owns and manages one or more tenants through the merchant dashboard.
+_Avoid_: Seller, vendor, business owner, shopkeeper
+
 **Storefront**:
 The public, visitor-facing website rendered dynamically at `<slug>.growfin.my.id` or on a custom mapped domain.
 _Avoid_: Demo site, website preview, site page
@@ -27,6 +31,10 @@ _Avoid_: Skin, template, design
 **Product**:
 A saleable item or service offering belonging to a tenant, defined with an integer base price in Indonesian Rupiah (IDR).
 _Avoid_: Menu item, article, inventory item
+
+**Product Category**:
+An organizational grouping for products within a tenant's catalog, supporting display ordering and storefront navigation.
+_Avoid_: Department, menu section, collection, category
 
 **Product Variant**:
 A customizable group of options for a product (such as Size, Ice Level, or Storage Capacity).

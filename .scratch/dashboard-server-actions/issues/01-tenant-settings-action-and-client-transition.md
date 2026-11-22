@@ -4,16 +4,16 @@
 
 **Blocked by:** None, can start immediately.
 
-Status: claimed
+Status: resolved
 
-- [ ] A dedicated dashboard actions module exports a typed Server Action for updating tenant settings
-- [ ] The action verifies active merchant sessions using a shared internal authorization helper
-- [ ] The action rejects unauthenticated requests with an authorization failure result object
-- [ ] The action rejects merchants attempting to modify tenants owned by another user with a not found or forbidden failure
-- [ ] The action validates inputs against the tenant settings schema, returning validation error messages on invalid input
-- [ ] Valid submissions execute targeted row updates on the tenant record in the database
-- [ ] The action calls path revalidation for the settings page on success and returns a success result object
-- [ ] The tenant settings client component calls the Server Action inside a React transition callback
-- [ ] The tenant settings form disables submit buttons and indicates saving state during transition execution
-- [ ] The tenant settings form displays inline error alerts on failure and success banners on completion
-- [ ] Integration tests exercise the action directly, asserting authorization guards, tenant isolation, validation failures, and database persistence
+- [x] A dedicated dashboard actions module exports a typed Server Action for updating tenant settings
+- [x] The action verifies active merchant sessions using a shared internal authorization helper
+- [x] The action rejects unauthenticated requests with an authorization failure result object
+- [x] The action rejects merchants attempting to modify tenants owned by another user with a not found or forbidden failure
+- [x] The action validates inputs against the tenant settings schema, returning validation error messages on invalid input
+- [x] Valid submissions execute targeted row updates on the tenant record in the database
+- [x] The action calls path revalidation for the settings page on success and returns a success result object
+- [x] The tenant settings client component calls the Server Action inside a React transition callback
+- [x] The tenant settings form disables submit buttons and indicates saving state during transition execution
+- [x] The tenant settings form displays inline error alerts on failure and success banners on completion
+- [x] Integration tests exercise the action directly, asserting authorization guards, tenant isolation, validation failures, and database persistence

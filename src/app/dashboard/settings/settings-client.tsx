@@ -2,13 +2,14 @@
 
 import { AlertCircle, CheckCircle2, Clock, Loader2, MapPin, Save, Share2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
 
 interface TenantOption {
   id: string
@@ -63,7 +64,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
   const [tiktok, setTiktok] = useState(social.tiktok?.url || '')
   const [facebook, setFacebook] = useState(social.facebook?.url || '')
 
-  const [isSaving, setIsSaving] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -72,49 +73,38 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
     router.push(`/dashboard/settings?tenant=${tenantId}`)
   }
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSaving(true)
     setSuccessMessage('')
     setErrorMessage('')
 
-    try {
-      const payload = {
-        address: address.trim() || null,
-        city: city.trim() || null,
-        phone: phone.trim() || null,
-        operatingHours: {
-          closeTime,
-          isOpen,
-          openTime,
-          raw: hoursRaw.trim() || `${openTime} - ${closeTime}`,
-        },
-        socialLinks: {
-          facebook: { active: Boolean(facebook.trim()), url: facebook.trim() },
-          instagram: { active: Boolean(instagram.trim()), url: instagram.trim() },
-          tiktok: { active: Boolean(tiktok.trim()), url: tiktok.trim() },
-          whatsapp: { active: Boolean(whatsapp.trim()), url: whatsapp.trim() },
-        },
-      }
+    const payload = {
+      address: address.trim() || null,
+      city: city.trim() || null,
+      phone: phone.trim() || null,
+      operatingHours: {
+        closeTime,
+        isOpen,
+        openTime,
+        raw: hoursRaw.trim() || `${openTime} - ${closeTime}`,
+      },
+      socialLinks: {
+        facebook: { active: Boolean(facebook.trim()), url: facebook.trim() },
+        instagram: { active: Boolean(instagram.trim()), url: instagram.trim() },
+        tiktok: { active: Boolean(tiktok.trim()), url: tiktok.trim() },
+        whatsapp: { active: Boolean(whatsapp.trim()), url: whatsapp.trim() },
+      },
+    }
 
-      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/settings`, {
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'PATCH',
-      })
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => null)
-        throw new Error(errorData?.error || 'Gagal menyimpan pengaturan')
+    startTransition(async () => {
+      const res = await updateTenantSettingsAction(selectedTenantId, payload)
+      if (!res.success) {
+        setErrorMessage(res.error || 'Gagal menyimpan pengaturan')
+        return
       }
 
       setSuccessMessage('Pengaturan toko berhasil disimpan!')
-      router.refresh()
-    } catch (err: unknown) {
-      setErrorMessage(err instanceof Error ? err.message : 'Terjadi kesalahan saat menyimpan')
-    } finally {
-      setIsSaving(false)
-    }
+    })
   }
 
   return (
@@ -316,8 +306,8 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
         </Card>
 
         <div className="flex items-center justify-end gap-3 pt-2">
-          <Button className="min-w-32" disabled={isSaving} type="submit">
-            {isSaving ? (
+          <Button className="min-w-32" disabled={isPending} type="submit">
+            {isPending ? (
               <>
                 <Loader2 className="mr-2 size-4 animate-spin" />
                 Menyimpan...

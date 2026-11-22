@@ -1,4 +1,4 @@
-Status: ready-for-agent
+Status: resolved
 
 # Dashboard Server Actions and internal route handler deprecation
 

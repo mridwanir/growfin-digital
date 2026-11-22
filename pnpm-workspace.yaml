@@ -19,8 +19,10 @@ skills:
 
 allowBuilds:
   esbuild: true
+  simple-git-hooks: true
   sharp: false
   unrs-resolver: false
+
 minimumReleaseAgeExclude:
   - playwright-core@1.65.0
   - '@ashtrath/skills@0.1.0'

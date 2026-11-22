@@ -7,6 +7,7 @@
     "build": "run-s db:migrate build:next",
     "build:local": "run-p db-server:memory build:next --race",
     "build:next": "next build",
+    "ci": "run-s -c lint knip typecheck test",
     "db-server:file": "pglite-server --max-connections=10 --db=.temp/db --run 'pnpm run db:migrate'",
     "db-server:memory": "pglite-server --max-connections=10 --run 'pnpm run db:migrate'",
     "db:generate": "drizzle-kit generate",
@@ -20,6 +21,7 @@
     "knip": "knip --cache",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
+    "prepare": "simple-git-hooks && skills sync -y",
     "start": "next start",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
@@ -58,13 +60,26 @@
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "^1.0.0-rc.5",
     "knip": "^6.44.1",
+    "nano-staged": "^1.0.2",
     "npm-run-all2": "^9.0.4",
     "oxfmt": "^0.76.0",
     "oxlint": "^1.91.0",
     "oxlint-tailwindcss": "^1.17.1",
+    "simple-git-hooks": "^2.14.0",
+    "skills": "^1.9.0",
     "tailwindcss": "^4",
     "typescript": "^7",
     "vitest": "^5.1.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpx nano-staged",
+    "pre-push": "pnpm run ci"
+  },
+  "nano-staged": {
+    "*.{js,ts,tsx,json,css,md,yaml}": [
+      "oxfmt --write --no-error-on-unmatched-pattern",
+      "oxlint --fix --deny-warnings"
+    ]
   },
   "devEngines": {
     "packageManager": {

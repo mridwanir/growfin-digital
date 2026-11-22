@@ -1,12 +1,7 @@
 {
   "$schema": "./node_modules/knip/schema.json",
-  "entry": ["src/app/**/*.{js,jsx,ts,tsx}", "src/db/index.ts"],
-  "ignore": [
-    "src/db/schema/*",
-    "src/components/ui/*",
-    "src/lib/storage/client.ts",
-    "frontend/**/*"
-  ],
+  "entry": ["src/**/*.{js,jsx,ts,tsx}"],
+  "ignore": ["frontend/**/*"],
   "ignoreDependencies": ["@ashtrath/skills"],
   "treatConfigHintsAsErrors": true
 }

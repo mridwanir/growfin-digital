@@ -14,6 +14,8 @@ import {
   updateTenantSettingsAction,
 } from '@/lib/dashboard/actions'
 
+import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
+
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
@@ -30,10 +32,7 @@ describe('Route Protection & Authorization Seam', () => {
   describe('server Actions Authorization Seam', () => {
     describe('unauthenticated requests (null session)', () => {
       beforeEach(() => {
-        vi.spyOn(auth, 'getSession').mockResolvedValue({
-          data: null,
-          error: null,
-        })
+        vi.spyOn(auth, 'getSession').mockResolvedValue(createUnauthenticatedSession())
       })
 
       it('rejects updateTenantSettingsAction with Unauthorized error', async () => {
@@ -81,27 +80,14 @@ describe('Route Protection & Authorization Seam', () => {
 
     describe('requests with missing session user or user id', () => {
       beforeEach(() => {
-        vi.spyOn(auth, 'getSession').mockResolvedValue({
-          error: null,
-          data: {
-            session: {
-              id: 'sess-invalid',
-              createdAt: new Date(),
-              expiresAt: new Date(),
-              token: 'tok-invalid',
-              updatedAt: new Date(),
-              userId: '',
-            },
-            user: {
-              id: '',
-              name: 'Missing User',
-              createdAt: new Date(),
-              email: 'missing@example.com',
-              emailVerified: false,
-              updatedAt: new Date(),
-            },
-          },
-        })
+        vi.spyOn(auth, 'getSession').mockResolvedValue(
+          createMerchantSession({
+            name: 'Missing User',
+            email: 'missing@example.com',
+            emailVerified: false,
+            userId: '',
+          }),
+        )
       })
 
       it('rejects updateTenantSettingsAction when user id is empty', async () => {
@@ -151,10 +137,7 @@ describe('Route Protection & Authorization Seam', () => {
   describe('remaining Protected Route Handlers', () => {
     describe('POST /api/storage/upload', () => {
       it('returns 401 Unauthorized for unauthenticated requests', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-          data: null,
-          error: null,
-        })
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
         const req = new NextRequest('http://localhost:3000/api/storage/upload', {
           method: 'POST',
@@ -167,21 +150,7 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('returns 401 Unauthorized when session user is missing', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-          error: null,
-          data: {
-            user: null as unknown as { id: string },
-            session: {
-              id: 'sess-1',
-              createdAt: new Date(),
-              expiresAt: new Date(),
-              token: 'tok-1',
-              updatedAt: new Date(),
-              userId: '',
-            },
-          },
-        })
-
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ user: null }))
         const req = new NextRequest('http://localhost:3000/api/storage/upload', {
           method: 'POST',
         })
@@ -195,10 +164,7 @@ describe('Route Protection & Authorization Seam', () => {
 
     describe('POST /api/storage/delete', () => {
       it('returns 401 Unauthorized for unauthenticated requests', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-          data: null,
-          error: null,
-        })
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
         const req = new NextRequest('http://localhost:3000/api/storage/delete', {
           body: JSON.stringify({ key: 'test.jpg' }),
@@ -213,21 +179,7 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('returns 401 Unauthorized when session user is missing', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-          error: null,
-          data: {
-            user: null as unknown as { id: string },
-            session: {
-              id: 'sess-1',
-              createdAt: new Date(),
-              expiresAt: new Date(),
-              token: 'tok-1',
-              updatedAt: new Date(),
-              userId: '',
-            },
-          },
-        })
-
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ user: null }))
         const req = new NextRequest('http://localhost:3000/api/storage/delete', {
           body: JSON.stringify({ key: 'test.jpg' }),
           headers: { 'Content-Type': 'application/json' },

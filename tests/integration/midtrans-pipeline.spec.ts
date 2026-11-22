@@ -1,3 +1,5 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import crypto from 'node:crypto'
@@ -13,6 +15,8 @@ import { orders } from '@/db/schema/orders'
 import { tenants } from '@/db/schema/tenants'
 import { env } from '@/lib/env'
 
+import { createTestTenant } from '../fixtures/tenant-fixture'
+
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND')
@@ -20,7 +24,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
-  const createdTenantIds: string[] = []
+  const activeFixtures: TestTenantFixture[] = []
   const serverKey = env.MIDTRANS_SERVER_KEY
 
   const generateSignature = (orderId: string, statusCode: string, grossAmount: string) => {
@@ -35,11 +39,10 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
   })
 
   afterEach(async () => {
-    for (const id of createdTenantIds) {
-      await db.delete(orders).where(eq(orders.tenantId, id))
-      await db.delete(tenants).where(eq(tenants.id, id))
+    for (const fixture of activeFixtures) {
+      await fixture.cleanup()
     }
-    createdTenantIds.length = 0
+    activeFixtures.length = 0
   })
 
   describe('1. Checkout Token Generation (/api/checkout)', () => {
@@ -70,17 +73,14 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
     })
 
     it('inserts a pending order and returns Midtrans Snap token on valid request', async () => {
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Toko Kopi Test',
-          category: 'Cafe & Coffee Shop',
-          packageTier: 'free',
-          slug: `toko-kopi-test-${Date.now()}`,
-          status: 'draft',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Toko Kopi Test',
+        category: 'Cafe & Coffee Shop',
+        packageTier: 'free',
+        status: 'draft',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const req = new NextRequest('http://localhost:3000/api/checkout', {
         headers: { 'Content-Type': 'application/json' },
@@ -168,17 +168,14 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
     })
 
     it('activates tenant and marks order paid on valid signed settlement notification', async () => {
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Warung Barokah',
-          category: 'Cafe & Coffee Shop',
-          packageTier: 'free',
-          slug: `warung-barokah-${Date.now()}`,
-          status: 'draft',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Warung Barokah',
+        category: 'Cafe & Coffee Shop',
+        packageTier: 'free',
+        status: 'draft',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const [testOrder] = await db
         .insert(orders)
@@ -232,17 +229,14 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
     })
 
     it('is idempotent: duplicate settlement notifications do not error or corrupt state', async () => {
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Warung Idempotent',
-          category: 'Cafe & Coffee Shop',
-          packageTier: 'free',
-          slug: `warung-idempotent-${Date.now()}`,
-          status: 'draft',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Warung Idempotent',
+        category: 'Cafe & Coffee Shop',
+        packageTier: 'free',
+        status: 'draft',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const [testOrder] = await db
         .insert(orders)
@@ -302,16 +296,14 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
     })
 
     it('marks order expired or failed without publishing tenant on failure status', async () => {
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Warung Expired',
-          category: 'Cafe & Coffee Shop',
-          slug: `warung-expired-${Date.now()}`,
-          status: 'draft',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Warung Expired',
+        category: 'Cafe & Coffee Shop',
+        packageTier: 'free',
+        status: 'draft',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const [testOrder] = await db
         .insert(orders)
@@ -361,16 +353,13 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
     })
 
     it('returns paid status via GET polling when order is already paid', async () => {
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Toko Polling Test',
-          category: 'Cafe & Coffee Shop',
-          slug: `toko-polling-${Date.now()}`,
-          status: 'published',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Toko Polling Test',
+        category: 'Cafe & Coffee Shop',
+        status: 'published',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const [testOrder] = await db
         .insert(orders)
@@ -393,16 +382,13 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
     })
 
     it('verifies pending order via POST, querying Midtrans status and activating tenant', async () => {
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Toko Post Verify',
-          category: 'Cafe & Coffee Shop',
-          slug: `toko-post-verify-${Date.now()}`,
-          status: 'draft',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Toko Post Verify',
+        category: 'Cafe & Coffee Shop',
+        status: 'draft',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const [testOrder] = await db
         .insert(orders)
@@ -438,26 +424,23 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
   describe('4. Storefront Rendering for Paid, Published Websites', () => {
     it('renders published paid tenant without trial lockouts or expired demo banners', async () => {
       const oneYearFuture = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Resto Sukses Berbayar',
-          category: 'Cafe & Coffee Shop',
-          packageTier: 'instant',
-          siteActiveUntil: oneYearFuture,
-          slug: `resto-sukses-${Date.now()}`,
-          status: 'published',
-          brandingContent: {
-            heroTitle: 'Selamat Datang',
-            tagline: 'Kelezatan Asli Nusantara',
-          },
-          themeConfig: {
-            fbType: 'DINE_IN',
-            layoutId: 'fnb-theme-classic',
-          },
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Resto Sukses Berbayar',
+        category: 'Cafe & Coffee Shop',
+        packageTier: 'instant',
+        siteActiveUntil: oneYearFuture,
+        status: 'published',
+        brandingContent: {
+          heroTitle: 'Selamat Datang',
+          tagline: 'Kelezatan Asli Nusantara',
+        },
+        themeConfig: {
+          fbType: 'DINE_IN',
+          layoutId: 'fnb-theme-classic',
+        },
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const renderedPage = await SitePage({
         params: Promise.resolve({ slug: testTenant.slug }),
@@ -470,18 +453,15 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
 
     it('renders ExpiredSiteScreen on SitePage when paid website siteActiveUntil has passed', async () => {
       const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000)
-      const [testTenant] = await db
-        .insert(tenants)
-        .values({
-          name: 'Resto Kadaluarsa',
-          category: 'Cafe & Coffee Shop',
-          packageTier: 'instant',
-          siteActiveUntil: pastDate,
-          slug: `resto-kadaluarsa-${Date.now()}`,
-          status: 'published',
-        })
-        .returning()
-      createdTenantIds.push(testTenant.id)
+      const fixture = await createTestTenant({
+        name: 'Resto Kadaluarsa',
+        category: 'Cafe & Coffee Shop',
+        packageTier: 'instant',
+        siteActiveUntil: pastDate,
+        status: 'published',
+      })
+      activeFixtures.push(fixture)
+      const testTenant = fixture.tenant
 
       const renderedPage = await SitePage({
         params: Promise.resolve({ slug: testTenant.slug }),

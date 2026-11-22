@@ -5,6 +5,8 @@ import { isAdminEmail, parseAdminEmails, requireAdminSession } from '@/lib/auth/
 import { auth } from '@/lib/auth/server'
 import { env } from '@/lib/env'
 
+import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
+
 vi.mock('next/navigation', () => ({
   redirect: vi.fn((url: string) => {
     throw new Error(`NEXT_REDIRECT:${url}`)
@@ -45,10 +47,7 @@ describe('Admin Authorization Guard', () => {
   })
   describe('requireAdminSession', () => {
     it('redirects to /login if user is unauthenticated', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: null,
-        error: null,
-      })
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
       vi.mocked(redirect).mockClear()
       await expect(requireAdminSession()).rejects.toThrow('NEXT_REDIRECT:/login')
@@ -56,27 +55,12 @@ describe('Admin Authorization Guard', () => {
     })
 
     it('redirects to /dashboard if user email is not an authorized admin', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        error: null,
-        data: {
-          session: {
-            id: 'sess_1',
-            createdAt: new Date(),
-            expiresAt: new Date(),
-            token: 'tok_1',
-            updatedAt: new Date(),
-            userId: 'user_1',
-          },
-          user: {
-            id: 'user_1',
-            name: 'Merchant',
-            createdAt: new Date(),
-            email: 'regular_merchant@example.com',
-            emailVerified: true,
-            updatedAt: new Date(),
-          },
-        },
-      })
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+        createMerchantSession({
+          name: 'Merchant',
+          email: 'regular_merchant@example.com',
+        }),
+      )
 
       vi.mocked(redirect).mockClear()
       await expect(requireAdminSession()).rejects.toThrow('NEXT_REDIRECT:/dashboard')
@@ -85,32 +69,15 @@ describe('Admin Authorization Guard', () => {
 
     it('returns the session if user email is an authorized admin', async () => {
       const adminEmail = env.ADMIN_EMAILS.split(',')[0].trim()
-      const mockSession = {
-        session: {
-          id: 'sess_admin_1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok_admin_1',
-          updatedAt: new Date(),
-          userId: 'admin_user_1',
-        },
-        user: {
-          id: 'admin_user_1',
-          name: 'Super Admin',
-          createdAt: new Date(),
-          email: adminEmail,
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      }
-
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
+      const adminSession = createMerchantSession({
+        name: 'Super Admin',
+        email: adminEmail,
       })
 
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(adminSession)
+
       const result = await requireAdminSession()
-      expect(result).toEqual(mockSession)
+      expect(result).toEqual(adminSession.data)
     })
   })
 })

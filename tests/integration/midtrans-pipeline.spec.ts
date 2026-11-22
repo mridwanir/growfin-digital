@@ -12,7 +12,6 @@ import { db } from '@/db'
 import { orders } from '@/db/schema/orders'
 import { tenants } from '@/db/schema/tenants'
 import { env } from '@/lib/env'
-import * as midtransClient from '@/lib/midtrans/client'
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {
@@ -82,11 +81,6 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
         })
         .returning()
       createdTenantIds.push(testTenant.id)
-
-      vi.spyOn(midtransClient, 'createSnapTransaction').mockResolvedValueOnce({
-        redirectUrl: 'https://app.sandbox.midtrans.com/snap/v2/vtweb/snap-token-mock-12345',
-        token: 'snap-token-mock-12345',
-      })
 
       const req = new NextRequest('http://localhost:3000/api/checkout', {
         headers: { 'Content-Type': 'application/json' },
@@ -419,17 +413,6 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
           tenantId: testTenant.id,
         })
         .returning()
-
-      vi.spyOn(midtransClient, 'fetchMidtransStatus').mockResolvedValueOnce({
-        fraud_status: 'accept',
-        gross_amount: '299000.00',
-        order_id: testOrder.id,
-        payment_type: 'gopay',
-        status_code: '200',
-        status_message: 'Success',
-        transaction_id: 'midtrans-post-verify-123',
-        transaction_status: 'settlement',
-      })
 
       const req = new NextRequest('http://localhost:3000/api/checkout/verify', {
         headers: { 'Content-Type': 'application/json' },

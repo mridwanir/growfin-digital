@@ -4,11 +4,11 @@
 
 **Blocked by:** 04: In-memory PGlite test database and programmatic migration setup
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] Mock Service Worker is configured for Node within a dedicated test setup file attached strictly to the integration test project.
-- [ ] Discrete MSW request handlers intercept outgoing HTTP requests for external endpoints including payment gateways, AI generators, and authentication key servers.
-- [ ] Network mocks reset handlers between tests and terminate cleanly upon suite completion.
-- [ ] Ad-hoc global fetch spies are replaced with MSW network interception.
-- [ ] Spies on internal database mutations and database transaction runners are removed from Server Action test suites.
-- [ ] Server Actions execute database mutations directly against the in-memory database and return observable action results.
+- [x] Mock Service Worker is configured for Node within a dedicated test setup file attached strictly to the integration test project.
+- [x] Discrete MSW request handlers intercept outgoing HTTP requests for external endpoints including payment gateways, AI generators, and authentication key servers.
+- [x] Network mocks reset handlers between tests and terminate cleanly upon suite completion.
+- [x] Ad-hoc global fetch spies are replaced with MSW network interception.
+- [x] Spies on internal database mutations and database transaction runners are removed from Server Action test suites.
+- [x] Server Actions execute database mutations directly against the in-memory database and return observable action results.

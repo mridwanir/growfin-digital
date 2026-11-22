@@ -1,6 +1,7 @@
 import type { GeneratedWebsiteData } from '@/lib/generator/schema'
 
 import { eq } from 'drizzle-orm'
+import { http, HttpResponse } from 'msw'
 import { NextRequest } from 'next/server'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -8,8 +9,10 @@ import { POST as generateHandler } from '@/app/api/generate/route'
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { tenants } from '@/db/schema/tenants'
-import * as geminiModule from '@/lib/generator/gemini'
+import { persistGeneratedWebsite } from '@/lib/generator/persistence'
 import { generatedWebsiteSchema } from '@/lib/generator/schema'
+
+import { server } from './setup'
 
 const mockGeminiOutput: GeneratedWebsiteData = generatedWebsiteSchema.parse({
   business: {
@@ -86,7 +89,22 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
   })
 
   it('generates a complete website and persists complete relational rows in an atomic transaction', async () => {
-    vi.spyOn(geminiModule, 'generateWithGemini').mockResolvedValueOnce(mockGeminiOutput)
+    server.use(
+      http.post(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+        () => {
+          return HttpResponse.json({
+            candidates: [
+              {
+                content: {
+                  parts: [{ text: JSON.stringify(mockGeminiOutput) }],
+                },
+              },
+            ],
+          })
+        },
+      ),
+    )
 
     const request = new NextRequest('http://localhost:3000/api/generate', {
       headers: { 'Content-Type': 'application/json' },
@@ -191,12 +209,35 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
   })
 
   it('rolls back database transaction and creates zero orphaned records when persistence fails mid-transaction', async () => {
-    vi.spyOn(geminiModule, 'generateWithGemini').mockResolvedValueOnce(mockGeminiOutput)
-
-    // Simulate database failure during transaction execution by inserting duplicate or throwing
-    vi.spyOn(db, 'transaction').mockImplementationOnce(async () => {
-      throw new Error('Database connection terminated unexpectedly')
-    })
+    const failingData: GeneratedWebsiteData = {
+      ...mockGeminiOutput,
+      business: {
+        ...mockGeminiOutput.business,
+        name: 'Kopi Rollback Test',
+      },
+      products: [
+        {
+          ...mockGeminiOutput.products[0],
+          name: null as unknown as string,
+        },
+      ],
+    }
+    server.use(
+      http.post(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+        () => {
+          return HttpResponse.json({
+            candidates: [
+              {
+                content: {
+                  parts: [{ text: JSON.stringify(failingData) }],
+                },
+              },
+            ],
+          })
+        },
+      ),
+    )
 
     const request = new NextRequest('http://localhost:3000/api/generate', {
       headers: { 'Content-Type': 'application/json' },
@@ -219,8 +260,13 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
   })
 
   it('returns 500 when Gemini generation fails', async () => {
-    vi.spyOn(geminiModule, 'generateWithGemini').mockRejectedValueOnce(
-      new Error('Google Gemini API quota exceeded'),
+    server.use(
+      http.post(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+        () => {
+          return new HttpResponse('Google Gemini API quota exceeded', { status: 429 })
+        },
+      ),
     )
 
     const request = new NextRequest('http://localhost:3000/api/generate', {
@@ -239,41 +285,21 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
   })
 
   it('verifies actual Postgres transaction rollback in persistGeneratedWebsite when products insert fails', async () => {
-    const rollbackData = generatedWebsiteSchema.parse({
+    const rollbackData: GeneratedWebsiteData = {
       ...mockGeminiOutput,
       business: {
         ...mockGeminiOutput.business,
         name: 'Atomic Rollback Verification Store',
       },
-    })
+      products: [
+        {
+          ...mockGeminiOutput.products[0],
+          name: null as unknown as string,
+        },
+      ],
+    }
 
-    const { persistGeneratedWebsite } = await import('@/lib/generator/persistence')
-
-    // Intercept tx inside db.transaction to make the products insert fail after tenant was inserted
-    const realTransaction = db.transaction.bind(db)
-    vi.spyOn(db, 'transaction').mockImplementationOnce(async callback => {
-      return realTransaction(async tx => {
-        const realInsert = tx.insert.bind(tx)
-        let tenantInserted = false
-
-        vi.spyOn(tx, 'insert').mockImplementation((table: any) => {
-          if (table === products && tenantInserted) {
-            throw new Error('Database disk full or constraint failure during products insert')
-          }
-          const builder = realInsert(table)
-          if (table === tenants) {
-            tenantInserted = true
-          }
-          return builder
-        })
-
-        return callback(tx)
-      })
-    })
-
-    await expect(persistGeneratedWebsite(rollbackData, db)).rejects.toThrow(
-      'Database disk full or constraint failure during products insert',
-    )
+    await expect(persistGeneratedWebsite(rollbackData, db)).rejects.toThrow()
 
     // Assert the tenant record was rolled back from Postgres and does NOT exist
     const persisted = await db

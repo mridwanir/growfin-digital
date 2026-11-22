@@ -1,7 +1,10 @@
-import { describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it } from 'vitest'
 
 import { buildGeminiPrompt, generateWithGemini } from '@/lib/generator/gemini'
 import { generateInputSchema, generateTenantSlug } from '@/lib/generator/schema'
+
+import { server } from './setup'
 
 describe('Gemini Generator & Schema Unit / Integration Seam', () => {
   describe('generateTenantSlug', () => {
@@ -82,24 +85,26 @@ describe('Gemini Generator & Schema Unit / Integration Seam', () => {
           },
         ],
       }
-
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          candidates: [
-            {
-              content: {
-                parts: [
-                  {
-                    text: JSON.stringify(mockGeminiJson),
+      server.use(
+        http.post(
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+          () => {
+            return HttpResponse.json({
+              candidates: [
+                {
+                  content: {
+                    parts: [
+                      {
+                        text: JSON.stringify(mockGeminiJson),
+                      },
+                    ],
                   },
-                ],
-              },
-            },
-          ],
-        }),
-      } as Response)
-
+                },
+              ],
+            })
+          },
+        ),
+      )
       const result = await generateWithGemini({ name: 'Toko Elektronik Makmur' })
       expect(result.business.name).toBe('Toko Elektronik Makmur')
       expect(result.products[0].basePrice).toBe(15000000)
@@ -107,11 +112,16 @@ describe('Gemini Generator & Schema Unit / Integration Seam', () => {
     })
 
     it('throws error when Gemini API returns non-ok status', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        ok: false,
-        status: 429,
-        text: async () => 'Resource has been exhausted (e.g. check quota)',
-      } as Response)
+      server.use(
+        http.post(
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+          () => {
+            return new HttpResponse('Resource has been exhausted (e.g. check quota)', {
+              status: 429,
+            })
+          },
+        ),
+      )
 
       await expect(generateWithGemini({ name: 'Toko Test' })).rejects.toThrow(
         'Google Gemini API error (429)',
@@ -119,19 +129,22 @@ describe('Gemini Generator & Schema Unit / Integration Seam', () => {
     })
 
     it('throws error when Gemini returns empty or non-JSON candidate content', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          candidates: [
-            {
-              content: {
-                parts: [{ text: 'NOT VALID JSON' }],
-              },
-            },
-          ],
-        }),
-      } as Response)
-
+      server.use(
+        http.post(
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+          () => {
+            return HttpResponse.json({
+              candidates: [
+                {
+                  content: {
+                    parts: [{ text: 'NOT VALID JSON' }],
+                  },
+                },
+              ],
+            })
+          },
+        ),
+      )
       await expect(generateWithGemini({ name: 'Toko Test' })).rejects.toThrow(
         'Failed to parse Gemini JSON output',
       )

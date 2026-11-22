@@ -1,3 +1,5 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -5,32 +7,25 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { POST as trackHandler } from '@/app/api/analytics/track/route'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { tenants } from '@/db/schema/tenants'
+
+import { createTestTenant } from '../fixtures/tenant-fixture'
 
 describe('Checkout funnel analytics integration', () => {
-  const storeSlug = 'funnel-test-store'
+  let fixture: TestTenantFixture
+  let storeSlug: string
   let tenantId: string
 
   beforeAll(async () => {
-    await db.delete(tenants).where(eq(tenants.slug, storeSlug))
-
-    const [tenant] = await db
-      .insert(tenants)
-      .values({
-        name: 'Funnel Test Store',
-        category: 'Food & Beverage',
-        slug: storeSlug,
-        status: 'published',
-      })
-      .returning()
-    tenantId = tenant.id
+    fixture = await createTestTenant({
+      name: 'Funnel Test Store',
+      category: 'Food & Beverage',
+    })
+    storeSlug = fixture.slug
+    tenantId = fixture.tenantId
   })
 
   afterAll(async () => {
-    if (tenantId) {
-      await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
-      await db.delete(tenants).where(eq(tenants.id, tenantId))
-    }
+    await fixture?.cleanup()
   })
 
   it('tracks checkout_start event when cart drawer opens', async () => {

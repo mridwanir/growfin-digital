@@ -4,11 +4,11 @@
 
 **Blocked by:** 05: Mock Service Worker network interception and internal mutation spy removal
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] A centralized tenant fixture factory creates isolated tenant records with UUID-based slugs and returns an explicit cleanup function.
-- [ ] Integration test suites execute tenant cleanup in teardown hooks, deleting child relational records before deleting tenant rows.
-- [ ] A centralized authentication session fixture factory generates typed session mocks for merchant and customer testing.
-- [ ] Hardcoded store slugs across integration test suites are migrated to unique fixture-generated slugs.
-- [ ] The testing standards documentation is updated to document the three-tier architecture, browser component testing standards, MSW boundaries, and fixture isolation rules.
-- [ ] The full test command executes all unit, component, and integration test suites green.
+- [x] A centralized tenant fixture factory creates isolated tenant records with UUID-based slugs and returns an explicit cleanup function.
+- [x] Integration test suites execute tenant cleanup in teardown hooks, deleting child relational records before deleting tenant rows.
+- [x] A centralized authentication session fixture factory generates typed session mocks for merchant and customer testing.
+- [x] Hardcoded store slugs across integration test suites are migrated to unique fixture-generated slugs.
+- [x] The testing standards documentation is updated to document the three-tier architecture, browser component testing standards, MSW boundaries, and fixture isolation rules.
+- [x] The full test command executes all unit, component, and integration test suites green.

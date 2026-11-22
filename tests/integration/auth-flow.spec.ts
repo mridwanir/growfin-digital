@@ -1,3 +1,5 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import crypto from 'node:crypto'
@@ -11,13 +13,17 @@ import { auth } from '@/lib/auth/server'
 import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
 import { resend } from '@/lib/email/resend'
 
+import { createMerchantSession } from '../fixtures/session-fixture'
+import { createTestTenant } from '../fixtures/tenant-fixture'
+
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
 describe('End-to-End Passwordless Auth Integration Flow', () => {
   const userId = crypto.randomUUID()
-  const tenantId = crypto.randomUUID()
+  let tenantFixture: TestTenantFixture
+  let tenantId: string
 
   beforeAll(async () => {
     await db.insert(userInNeonAuth).values({
@@ -27,21 +33,20 @@ describe('End-to-End Passwordless Auth Integration Flow', () => {
       emailVerified: true,
     })
 
-    await db.insert(tenants).values({
-      id: tenantId,
+    tenantFixture = await createTestTenant({
       name: 'Flow Merchant Store',
       address: 'Jl. Merdeka No. 10',
       category: 'F&B',
       city: 'Jakarta Pusat',
       phone: '081234567890',
-      slug: `flow-merchant-store-${Date.now()}`,
       status: 'published',
       userId,
     })
+    tenantId = tenantFixture.tenantId
   })
 
   afterAll(async () => {
-    await db.delete(tenants).where(eq(tenants.id, tenantId))
+    await tenantFixture?.cleanup()
     await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, userId))
   })
 
@@ -90,29 +95,13 @@ describe('End-to-End Passwordless Auth Integration Flow', () => {
     )
 
     // 2. Verified merchant session allows mutating settings via updateTenantSettingsAction
-    const merchantSession = {
-      session: {
-        id: 'sess_flow_merchant',
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 86400000),
-        token: 'token_merchant_abc',
-        updatedAt: new Date(),
-        userId,
-      },
-      user: {
-        id: userId,
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({
         name: 'Merchant Flow User',
-        createdAt: new Date(),
         email: 'merchant.flow@growfin.my.id',
-        emailVerified: true,
-        updatedAt: new Date(),
-      },
-    }
-
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: merchantSession,
-      error: null,
-    })
+        userId,
+      }),
+    )
 
     const actionResult = await updateTenantSettingsAction(tenantId, {
       address: 'Jl. Merdeka No. 45',

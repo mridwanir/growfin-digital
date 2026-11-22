@@ -6,27 +6,14 @@ import { POST as deleteRouteHandler } from '@/app/api/storage/delete/route'
 import { POST as uploadRouteHandler } from '@/app/api/storage/upload/route'
 import { auth } from '@/lib/auth/server'
 
-describe('Storage API Seam (/api/storage)', () => {
-  const mockUser = {
-    id: 'user_merchant_123',
-    name: 'Merchant User',
-    createdAt: new Date(),
-    email: 'merchant@growfin.my.id',
-    emailVerified: true,
-    updatedAt: new Date(),
-  }
+import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
 
-  const mockSession = {
-    user: mockUser,
-    session: {
-      id: 'sess_123',
-      createdAt: new Date(),
-      expiresAt: new Date(Date.now() + 86400000),
-      token: 'token_123',
-      updatedAt: new Date(),
-      userId: mockUser.id,
-    },
-  }
+describe('Storage API Seam (/api/storage)', () => {
+  const mockMerchantSession = createMerchantSession({
+    name: 'Merchant User',
+    email: 'merchant@growfin.my.id',
+    userId: 'user_merchant_123',
+  })
 
   beforeEach(() => {
     vi.restoreAllMocks()
@@ -38,10 +25,7 @@ describe('Storage API Seam (/api/storage)', () => {
 
   describe('POST /api/storage/upload', () => {
     it('returns 401 Unauthorized when user is not authenticated', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: null,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
       const formData = new FormData()
       formData.append(
@@ -61,10 +45,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 400 Bad Request when no file is provided', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const formData = new FormData()
       const request = new NextRequest('http://localhost:3000/api/storage/upload', {
@@ -79,10 +60,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 400 Bad Request when file is not an image', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const formData = new FormData()
       formData.append(
@@ -102,10 +80,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 400 Bad Request when file exceeds size limit (e.g. > 5MB)', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const largeBuffer = new Uint8Array(6 * 1024 * 1024)
       const formData = new FormData()
@@ -123,10 +98,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('uploads valid image to S3 bucket and returns url, key, and publicId', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const sendSpy = vi.spyOn(S3Client.prototype, 'send').mockResolvedValueOnce({} as any)
 
@@ -158,10 +130,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 500 when S3 upload fails', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       vi.spyOn(S3Client.prototype, 'send').mockRejectedValueOnce(
         new Error('S3 connection timed out'),
@@ -187,10 +156,7 @@ describe('Storage API Seam (/api/storage)', () => {
 
   describe('POST /api/storage/delete', () => {
     it('returns 401 Unauthorized when user is not authenticated', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: null,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
       const request = new NextRequest('http://localhost:3000/api/storage/delete', {
         body: JSON.stringify({ key: 'uploads/hero/test.png' }),
@@ -205,10 +171,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 400 Bad Request when key or public_id is missing', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const request = new NextRequest('http://localhost:3000/api/storage/delete', {
         body: JSON.stringify({}),
@@ -223,10 +186,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 400 Bad Request when key contains path traversal characters', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const request = new NextRequest('http://localhost:3000/api/storage/delete', {
         body: JSON.stringify({ key: '../system/secret.key' }),
@@ -241,10 +201,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('deletes object from S3 bucket and returns success with deleted key', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const sendSpy = vi.spyOn(S3Client.prototype, 'send').mockResolvedValueOnce({} as any)
 
@@ -270,10 +227,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('accepts legacy public_id or storageKey payload fields', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       const sendSpy = vi.spyOn(S3Client.prototype, 'send').mockResolvedValueOnce({} as any)
 
@@ -295,10 +249,7 @@ describe('Storage API Seam (/api/storage)', () => {
     })
 
     it('returns 500 when S3 deletion fails', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(mockMerchantSession)
 
       vi.spyOn(S3Client.prototype, 'send').mockRejectedValueOnce(new Error('S3 access denied'))
 
@@ -317,10 +268,7 @@ describe('Storage API Seam (/api/storage)', () => {
 
   describe('end-to-end S3 object lifecycle', () => {
     it('uploads a test image file, confirms S3 object persistence, and verifies clean deletion from storage', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValue({
-        data: mockSession,
-        error: null,
-      } as any)
+      vi.spyOn(auth, 'getSession').mockResolvedValue(mockMerchantSession)
 
       const storageBucket = new Map<string, { body: Buffer; contentType: string }>()
 

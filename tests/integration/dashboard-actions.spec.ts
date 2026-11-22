@@ -1,3 +1,5 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import crypto from 'node:crypto'
@@ -5,7 +7,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
-import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
+import { categories, products } from '@/db/schema/catalog'
 import { tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import {
@@ -18,6 +20,9 @@ import {
   updateTenantSettingsAction,
 } from '@/lib/dashboard/actions'
 
+import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
+import { createTestTenant } from '../fixtures/tenant-fixture'
+
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
@@ -25,30 +30,7 @@ vi.mock('next/cache', () => ({
 const mockUserId = crypto.randomUUID()
 const mockTenantId = crypto.randomUUID()
 let seededCategoryId: string
-
-function createMockSession(userId: string = mockUserId, email: string = 'merchant@example.com') {
-  return {
-    error: null,
-    data: {
-      session: {
-        id: 'sess-1',
-        createdAt: new Date(),
-        expiresAt: new Date(),
-        token: 'tok-1',
-        updatedAt: new Date(),
-        userId,
-      },
-      user: {
-        id: userId,
-        name: 'Merchant Test',
-        createdAt: new Date(),
-        email,
-        emailVerified: true,
-        updatedAt: new Date(),
-      },
-    },
-  }
-}
+let tenantFixture: TestTenantFixture
 
 beforeAll(async () => {
   await db.insert(userInNeonAuth).values({
@@ -58,14 +40,13 @@ beforeAll(async () => {
     emailVerified: true,
   })
 
-  await db.insert(tenants).values({
+  tenantFixture = await createTestTenant({
     id: mockTenantId,
     name: 'Test Store',
     address: 'Jl. Senopati No. 10',
     category: 'Retail & Fashion',
     city: 'Jakarta Selatan',
     phone: '08123456789',
-    slug: `test-store-actions-${Date.now()}`,
     status: 'published',
     userId: mockUserId,
     brandingContent: {
@@ -94,11 +75,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await db.delete(variantOptions)
-  await db.delete(productVariants)
-  await db.delete(products).where(eq(products.tenantId, mockTenantId))
-  await db.delete(categories).where(eq(categories.tenantId, mockTenantId))
-  await db.delete(tenants).where(eq(tenants.id, mockTenantId))
+  await tenantFixture?.cleanup()
   await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, mockUserId))
 })
 
@@ -108,10 +85,7 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await updateTenantSettingsAction(mockTenantId, {
       address: 'Jl. Merdeka No. 1',
@@ -125,27 +99,7 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('rejects unauthenticated requests when session user id is missing', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: '',
-        },
-        user: {
-          id: '',
-          name: 'Anonymous',
-          createdAt: new Date(),
-          email: 'anon@example.com',
-          emailVerified: false,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
     const result = await updateTenantSettingsAction(mockTenantId, {
       address: 'Jl. Merdeka No. 1',
@@ -159,7 +113,9 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const invalidInput = {
       address: 99999,
@@ -181,7 +137,9 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('rejects modification of tenant owned by another user or non-existent tenant', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await updateTenantSettingsAction(crypto.randomUUID(), {
       address: 'Jl. Sudirman No. 10',
@@ -197,7 +155,9 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('updates tenant settings, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const payload = {
       address: 'Jl. Senopati No. 42',
@@ -240,10 +200,7 @@ describe('createProductCategoryAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await createProductCategoryAction(mockTenantId, { name: 'Makanan' })
 
@@ -255,7 +212,9 @@ describe('createProductCategoryAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await createProductCategoryAction(mockTenantId, {
       name: '',
@@ -274,7 +233,9 @@ describe('createProductCategoryAction seam', () => {
   })
 
   it('rejects creation when tenant is not found or forbidden', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await createProductCategoryAction(crypto.randomUUID(), { name: 'Minuman' })
 
@@ -286,7 +247,9 @@ describe('createProductCategoryAction seam', () => {
   })
 
   it('creates category, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const payload = {
       name: 'Minuman Segar',
@@ -313,10 +276,7 @@ describe('updateProductCategoryAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await updateProductCategoryAction(mockTenantId, crypto.randomUUID(), {
       name: 'Makanan Baru',
@@ -330,7 +290,9 @@ describe('updateProductCategoryAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await updateProductCategoryAction(mockTenantId, crypto.randomUUID(), {
       name: '',
@@ -349,7 +311,9 @@ describe('updateProductCategoryAction seam', () => {
   })
 
   it('rejects update when category or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await updateProductCategoryAction(mockTenantId, crypto.randomUUID(), {
       name: 'Makanan Edit',
@@ -363,7 +327,9 @@ describe('updateProductCategoryAction seam', () => {
   })
 
   it('updates category, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const [testCat] = await db
       .insert(categories)
@@ -401,10 +367,7 @@ describe('deleteProductCategoryAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await deleteProductCategoryAction(mockTenantId, crypto.randomUUID())
 
@@ -416,7 +379,9 @@ describe('deleteProductCategoryAction seam', () => {
   })
 
   it('rejects deletion when category or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await deleteProductCategoryAction(mockTenantId, crypto.randomUUID())
 
@@ -428,7 +393,9 @@ describe('deleteProductCategoryAction seam', () => {
   })
 
   it('deletes category, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const [cat] = await db
       .insert(categories)
@@ -459,10 +426,7 @@ describe('createProductAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await createProductAction(mockTenantId, {
       name: 'Test Product',
@@ -477,20 +441,7 @@ describe('createProductAction seam', () => {
   })
 
   it('rejects unauthenticated requests when session user id is missing', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        user: null as unknown as { id: string },
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: '',
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
     const result = await createProductAction(mockTenantId, {
       name: 'Test Product',
@@ -505,7 +456,9 @@ describe('createProductAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await createProductAction(mockTenantId, {
       name: '',
@@ -530,7 +483,9 @@ describe('createProductAction seam', () => {
   })
 
   it('rejects creation when tenant is not found or forbidden', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await createProductAction(crypto.randomUUID(), {
       name: 'Nasi Goreng',
@@ -545,7 +500,9 @@ describe('createProductAction seam', () => {
   })
 
   it('creates product, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const payload = {
       name: 'Nasi Goreng Spesial',
@@ -597,10 +554,7 @@ describe('deleteProductAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await deleteProductAction(mockTenantId, crypto.randomUUID())
 
@@ -612,20 +566,7 @@ describe('deleteProductAction seam', () => {
   })
 
   it('rejects unauthenticated requests when session user id is missing', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        user: null as unknown as { id: string },
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: '',
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
     const result = await deleteProductAction(mockTenantId, crypto.randomUUID())
 
@@ -637,7 +578,9 @@ describe('deleteProductAction seam', () => {
   })
 
   it('rejects deletion when product or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await deleteProductAction(mockTenantId, crypto.randomUUID())
 
@@ -649,7 +592,9 @@ describe('deleteProductAction seam', () => {
   })
 
   it('deletes product, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const [prod] = await db
       .insert(products)
@@ -679,10 +624,7 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: null,
-      error: null,
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
     const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
       name: 'Updated Product',
@@ -697,20 +639,7 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects unauthenticated requests when session user id is missing', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        user: null as unknown as { id: string },
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: '',
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
     const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
       name: 'Updated Product',
@@ -725,7 +654,9 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
       name: '',
@@ -750,7 +681,9 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects invalid variant option labels and non-integer price modifiers', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
       variants: [
@@ -775,7 +708,9 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects modification when product or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
       name: 'Nasi Goreng Mercon',
@@ -790,7 +725,9 @@ describe('updateProductAction seam', () => {
   })
 
   it('updates product and variants atomically, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ userId: mockUserId }),
+    )
 
     const [prod] = await db
       .insert(products)

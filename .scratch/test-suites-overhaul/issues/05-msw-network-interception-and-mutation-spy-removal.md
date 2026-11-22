@@ -4,7 +4,7 @@
 
 **Blocked by:** 04: In-memory PGlite test database and programmatic migration setup
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Mock Service Worker is configured for Node within a dedicated test setup file attached strictly to the integration test project.
 - [ ] Discrete MSW request handlers intercept outgoing HTTP requests for external endpoints including payment gateways, AI generators, and authentication key servers.

@@ -4,7 +4,7 @@
 
 **Blocked by:** 05: Mock Service Worker network interception and internal mutation spy removal
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] A centralized tenant fixture factory creates isolated tenant records with UUID-based slugs and returns an explicit cleanup function.
 - [ ] Integration test suites execute tenant cleanup in teardown hooks, deleting child relational records before deleting tenant rows.

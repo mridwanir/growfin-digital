@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Tenant settings Server Action and client transition
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] The dashboard actions module exports typed Server Actions for creating, updating, and deleting product categories
 - [ ] Each category action extracts and verifies the active merchant session using the shared authorization helper

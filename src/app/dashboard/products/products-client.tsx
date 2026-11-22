@@ -33,6 +33,7 @@ import {
   deleteCategoryAction,
   deleteProductAction,
   updateCategoryAction,
+  updateProductAction,
 } from '@/lib/dashboard/actions'
 
 interface CategoryItem {
@@ -169,10 +170,8 @@ export function ProductsClient({
   const [imageStorageKey, setImageStorageKey] = useState('')
   const [formVariants, setFormVariants] = useState<ProductVariantItem[]>([])
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isProductPending, startProductTransition] = useTransition()
   const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
-  const isFormPending = isSubmitting || isProductPending
 
   const handleTenantChange = (tenantId: string) => {
     router.push(`/dashboard/products?tenant=${tenantId}`)
@@ -395,39 +394,31 @@ export function ProductsClient({
     }
 
     if (editingProductId) {
-      setIsSubmitting(true)
       setFeedback(null)
+      startProductTransition(async () => {
+        try {
+          const res = await updateProductAction(selectedTenantId, editingProductId, payload)
+          if (!res.success) {
+            setFeedback({
+              type: 'error',
+              message: res.error || 'Gagal menyimpan produk',
+            })
+            return
+          }
 
-      try {
-        const url = `/api/dashboard/tenants/${selectedTenantId}/products/${editingProductId}`
-        const res = await fetch(url, {
-          body: JSON.stringify(payload),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'PATCH',
-        })
-
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => null)
-          throw new Error(errorData?.error || 'Gagal menyimpan produk')
+          setProducts(prev => prev.map(p => (p.id === res.data.id ? res.data : p)))
+          setFeedback({
+            type: 'success',
+            message: `Produk "${res.data.name}" berhasil diperbarui`,
+          })
+          setIsFormOpen(false)
+        } catch (err: unknown) {
+          setFeedback({
+            type: 'error',
+            message: err instanceof Error ? err.message : 'Gagal menyimpan produk',
+          })
         }
-
-        const resData = await res.json()
-        setProducts(prev => prev.map(p => (p.id === editingProductId ? resData.product : p)))
-        setFeedback({
-          type: 'success',
-          message: `Produk "${resData.product.name}" berhasil diperbarui`,
-        })
-
-        setIsFormOpen(false)
-        router.refresh()
-      } catch (err: unknown) {
-        setFeedback({
-          type: 'error',
-          message: err instanceof Error ? err.message : 'Gagal menyimpan produk',
-        })
-      } finally {
-        setIsSubmitting(false)
-      }
+      })
       return
     }
 
@@ -1120,15 +1111,15 @@ export function ProductsClient({
 
               <div className="flex items-center justify-end gap-3 border-t pt-4">
                 <Button
-                  disabled={isFormPending}
+                  disabled={isProductPending}
                   type="button"
                   variant="outline"
                   onClick={() => setIsFormOpen(false)}
                 >
                   Batal
                 </Button>
-                <Button disabled={isFormPending} type="submit">
-                  {isFormPending ? (
+                <Button disabled={isProductPending} type="submit">
+                  {isProductPending ? (
                     <>
                       <Loader2 className="mr-2 size-4 animate-spin" />
                       Menyimpan...

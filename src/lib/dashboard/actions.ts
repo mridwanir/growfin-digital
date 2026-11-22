@@ -14,6 +14,7 @@ import {
   deleteCategory,
   deleteProduct,
   updateCategory,
+  updateProduct,
   updateTenantSettings,
 } from '@/lib/dashboard/mutations'
 
@@ -102,6 +103,22 @@ const variantSchema = z.object({
 const createProductSchema = z.object({
   name: z.string().min(1, 'Product name is required'),
   basePrice: z.number().int().min(0, 'Base price must be a non-negative integer'),
+  categoryId: z.string().uuid().nullable().optional(),
+  description: z.string().nullable().optional(),
+  duration: z.number().int().nullable().optional(),
+  imageGallery: z.array(z.string()).optional(),
+  imageStorageKey: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  isActive: z.boolean().optional(),
+  originalPrice: z.number().int().nullable().optional(),
+  sortOrder: z.number().int().optional(),
+  stock: z.number().int().nullable().optional(),
+  variants: z.array(variantSchema).optional(),
+})
+
+const updateProductSchema = z.object({
+  name: z.string().min(1, 'Product name is required').optional(),
+  basePrice: z.number().int().min(0, 'Base price must be a non-negative integer').optional(),
   categoryId: z.string().uuid().nullable().optional(),
   description: z.string().nullable().optional(),
   duration: z.number().int().nullable().optional(),
@@ -272,4 +289,35 @@ export async function deleteProductAction(
   revalidatePath('/dashboard/products')
 
   return { data: { success: true }, success: true }
+}
+
+export async function updateProductAction(
+  tenantId: string,
+  productId: string,
+  input: unknown,
+): Promise<ActionResult<ProductWithVariants>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const parsed = updateProductSchema.safeParse(input)
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
+    const fieldErrors = parsed.error.flatten().fieldErrors
+    return {
+      error: firstError,
+      fieldErrors,
+      success: false,
+    }
+  }
+
+  const updated = await updateProduct(tenantId, authResult.userId, productId, parsed.data)
+  if (!updated) {
+    return { error: 'Product or tenant not found', success: false }
+  }
+
+  revalidatePath('/dashboard/products')
+
+  return { data: updated, success: true }
 }

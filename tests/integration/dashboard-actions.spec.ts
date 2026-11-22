@@ -8,6 +8,7 @@ import {
   deleteCategoryAction,
   deleteProductAction,
   updateCategoryAction,
+  updateProductAction,
   updateTenantSettingsAction,
 } from '@/lib/dashboard/actions'
 import * as dashboardMutations from '@/lib/dashboard/mutations'
@@ -1012,6 +1013,302 @@ describe('deleteProductAction seam', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toEqual({
       data: { success: true },
+      success: true,
+    })
+  })
+})
+
+describe('updateProductAction seam', () => {
+  const mockTenantId = 'tenant-456'
+  const mockUserId = 'user-123'
+  const mockProductId = 'prod-123'
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('rejects unauthenticated requests with Unauthorized error', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      data: null,
+      error: null,
+    })
+    const mutationSpy = vi.spyOn(dashboardMutations, 'updateProduct')
+
+    const result = await updateProductAction(mockTenantId, mockProductId, {
+      name: 'Updated Product',
+      basePrice: 50000,
+    })
+
+    expect(result).toEqual({
+      error: 'Unauthorized',
+      success: false,
+    })
+    expect(mutationSpy).not.toHaveBeenCalled()
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('rejects unauthenticated requests when session user id is missing', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      error: null,
+      data: {
+        user: null as unknown as { id: string },
+        session: {
+          id: 'sess-1',
+          createdAt: new Date(),
+          expiresAt: new Date(),
+          token: 'tok-1',
+          updatedAt: new Date(),
+          userId: '',
+        },
+      },
+    })
+    const mutationSpy = vi.spyOn(dashboardMutations, 'updateProduct')
+
+    const result = await updateProductAction(mockTenantId, mockProductId, {
+      name: 'Updated Product',
+      basePrice: 50000,
+    })
+
+    expect(result).toEqual({
+      error: 'Unauthorized',
+      success: false,
+    })
+    expect(mutationSpy).not.toHaveBeenCalled()
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('rejects invalid schema inputs with field error details', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      error: null,
+      data: {
+        session: {
+          id: 'sess-1',
+          createdAt: new Date(),
+          expiresAt: new Date(),
+          token: 'tok-1',
+          updatedAt: new Date(),
+          userId: mockUserId,
+        },
+        user: {
+          id: mockUserId,
+          name: 'Merchant Test',
+          createdAt: new Date(),
+          email: 'merchant@example.com',
+          emailVerified: true,
+          updatedAt: new Date(),
+        },
+      },
+    })
+    const mutationSpy = vi.spyOn(dashboardMutations, 'updateProduct')
+
+    const result = await updateProductAction(mockTenantId, mockProductId, {
+      name: '',
+      basePrice: -5000,
+      variants: [
+        {
+          name: '',
+          options: [],
+        },
+      ],
+    })
+
+    expect(result).toMatchObject({
+      error: expect.any(String),
+      success: false,
+      fieldErrors: expect.objectContaining({
+        name: expect.arrayContaining(['Product name is required']),
+        basePrice: expect.arrayContaining(['Base price must be a non-negative integer']),
+      }),
+    })
+    expect(mutationSpy).not.toHaveBeenCalled()
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('rejects invalid variant option labels and non-integer price modifiers', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      error: null,
+      data: {
+        session: {
+          id: 'sess-1',
+          createdAt: new Date(),
+          expiresAt: new Date(),
+          token: 'tok-1',
+          updatedAt: new Date(),
+          userId: mockUserId,
+        },
+        user: {
+          id: mockUserId,
+          name: 'Merchant Test',
+          createdAt: new Date(),
+          email: 'merchant@example.com',
+          emailVerified: true,
+          updatedAt: new Date(),
+        },
+      },
+    })
+    const mutationSpy = vi.spyOn(dashboardMutations, 'updateProduct')
+
+    const result = await updateProductAction(mockTenantId, mockProductId, {
+      variants: [
+        {
+          name: 'Ukuran',
+          options: [
+            {
+              label: '',
+              priceModifier: 2500.5,
+            },
+          ],
+        },
+      ],
+    })
+
+    expect(result).toMatchObject({
+      error: expect.any(String),
+      fieldErrors: expect.any(Object),
+      success: false,
+    })
+    expect(mutationSpy).not.toHaveBeenCalled()
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('rejects modification when product or tenant is not found', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      error: null,
+      data: {
+        session: {
+          id: 'sess-1',
+          createdAt: new Date(),
+          expiresAt: new Date(),
+          token: 'tok-1',
+          updatedAt: new Date(),
+          userId: mockUserId,
+        },
+        user: {
+          id: mockUserId,
+          name: 'Merchant Test',
+          createdAt: new Date(),
+          email: 'merchant@example.com',
+          emailVerified: true,
+          updatedAt: new Date(),
+        },
+      },
+    })
+    vi.spyOn(dashboardMutations, 'updateProduct').mockResolvedValueOnce(null)
+
+    const result = await updateProductAction(mockTenantId, mockProductId, {
+      name: 'Nasi Goreng Mercon',
+      basePrice: 28000,
+    })
+
+    expect(result).toEqual({
+      error: 'Product or tenant not found',
+      success: false,
+    })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('updates product and variants atomically, calls revalidatePath, and returns success result object', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      error: null,
+      data: {
+        session: {
+          id: 'sess-1',
+          createdAt: new Date(),
+          expiresAt: new Date(),
+          token: 'tok-1',
+          updatedAt: new Date(),
+          userId: mockUserId,
+        },
+        user: {
+          id: mockUserId,
+          name: 'Merchant Test',
+          createdAt: new Date(),
+          email: 'merchant@example.com',
+          emailVerified: true,
+          updatedAt: new Date(),
+        },
+      },
+    })
+
+    const mockUpdatedProduct = {
+      id: mockProductId,
+      name: 'Nasi Goreng Spesial Pedas',
+      basePrice: 32000,
+      categoryId: '123e4567-e89b-12d3-a456-426614174000',
+      createdAt: new Date(),
+      description: 'Pedas nikmat',
+      duration: null,
+      imageGallery: [],
+      imageStorageKey: 'products/img-2.jpg',
+      imageUrl: 'https://example.com/img-2.jpg',
+      isActive: true,
+      originalPrice: 40000,
+      sortOrder: 0,
+      stock: 30,
+      tenantId: mockTenantId,
+      updatedAt: new Date(),
+      variants: [
+        {
+          id: 'var-1',
+          name: 'Level Pedas',
+          productId: mockProductId,
+          required: true,
+          options: [
+            {
+              id: 'opt-1',
+              label: 'Level 5',
+              priceModifier: 3000,
+              sortOrder: 0,
+              variantId: 'var-1',
+            },
+          ],
+        },
+      ],
+    }
+
+    const mutationSpy = vi
+      .spyOn(dashboardMutations, 'updateProduct')
+      .mockResolvedValueOnce(mockUpdatedProduct)
+
+    const payload = {
+      name: 'Nasi Goreng Spesial Pedas',
+      basePrice: 32000,
+      categoryId: '123e4567-e89b-12d3-a456-426614174000',
+      description: 'Pedas nikmat',
+      imageStorageKey: 'products/img-2.jpg',
+      imageUrl: 'https://example.com/img-2.jpg',
+      isActive: true,
+      originalPrice: 40000,
+      stock: 30,
+      variants: [
+        {
+          name: 'Level Pedas',
+          required: true,
+          options: [
+            {
+              label: 'Level 5',
+              priceModifier: 3000,
+              sortOrder: 0,
+            },
+          ],
+        },
+      ],
+    }
+
+    const result = await updateProductAction(mockTenantId, mockProductId, payload)
+
+    expect(mutationSpy).toHaveBeenCalledWith(
+      mockTenantId,
+      mockUserId,
+      mockProductId,
+      expect.objectContaining({
+        name: 'Nasi Goreng Spesial Pedas',
+        basePrice: 32000,
+      }),
+    )
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
+    expect(result).toEqual({
+      data: mockUpdatedProduct,
       success: true,
     })
   })

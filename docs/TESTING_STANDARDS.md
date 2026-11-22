@@ -22,33 +22,48 @@ A test must fail for a plausible bug in behavior that a user or caller observes.
 - **Glue code**: simple passthrough handlers that delegate directly to a service. Test the service instead.
 - **Third-party code**: testing that Zod parses, React renders, or Drizzle inserts.
 
-## Three test tiers
+## Three test projects
 
-The repository runs tests across three tiers configured in `vitest.config.ts`.
+The repository runs tests across three distinct Vitest projects configured in `vitest.config.ts`.
 
 ### Tier 1 pure domain unit tests
 
-Pure domain unit tests run in Node under `tests/unit/`. They execute in under 20 milliseconds per test.
+Pure domain unit tests run in Node under `src/**/*.spec.ts`. They execute in under 20 milliseconds per test.
 
 - **Zero database dependencies and zero network calls.**
-- Test calculation logic, currency formatting, validation schemas, and state reducers directly from `src/lib/`.
-- Examples: `cart-domain.spec.ts`, `seo.spec.ts`, `analytics-client.spec.ts`.
+- Colocated directly beside the source file they verify.
+- Test calculation logic, currency formatting, validation schemas, and Zustand state stores directly in `src/lib/`.
+- Targeted via `pnpm test:unit` or `pnpm test:unit:watch`.
+- Examples: `src/lib/storefront/cart/domain.spec.ts`, `src/lib/storefront/whatsapp.spec.ts`, `src/lib/storefront/seo.spec.ts`, `src/lib/analytics.spec.ts`.
 
-### Tier 2 integration tests
+### Tier 2 colocated component tests
 
-Integration tests run in Node under `tests/integration/` against a local PostgreSQL instance powered by PGlite.
+Component tests run in Node under `src/**/*.spec.tsx`.
 
+- Colocated directly beside the component they verify under `src/components/`.
+- Assert semantic HTML, ARIA accessibility attributes, and DOM island wiring.
+- **Never mount full Next.js page shells or connect to databases.** Test full pages and routes in integration tests.
+- Targeted via `pnpm test:components`.
+- Examples: `src/components/storefront/watermark.spec.tsx`, `src/components/storefront/catalog/catalog.spec.tsx`, `src/components/storefront/cart/cart-islands.spec.tsx`.
+
+### Tier 3 integration tests
+
+Integration tests run in Node under `tests/integration/**/*.spec.ts` against PostgreSQL or PGlite.
+
+- **The only tier with external service dependencies.**
 - Test Server Actions, Route Handlers, database queries, and external webhooks end to end.
-- Exercise real database operations with isolated fixtures.
-- Examples: `dashboard-actions.spec.ts`, `checkout-funnel.spec.ts`, `midtrans-pipeline.spec.ts`.
+- Exercise real database operations with isolated tenant fixtures.
+- Targeted via `pnpm test:integration`.
+- Examples: `tests/integration/dashboard-actions.spec.ts`, `tests/integration/checkout-funnel.spec.ts`, `tests/integration/midtrans-pipeline.spec.ts`.
 
-### Tier 3 browser component tests
+### Test execution commands
 
-Browser component tests run in Vitest Playwright Chromium for `src/**/*.spec.tsx`.
-
-- **Rare, and only for the wiring.** Most UI logic belongs in a pure function or store, tested in Tier 1.
-- Test interactive client islands where real browser behavior matters: keyboard navigation, focus trap in dialogs, and DOM event wiring in `StorefrontCartDrawer` or `CustomizationDialog`.
-- **Never mount full Next.js page shells or Server Components in browser component tests.** Test pages and routing in Tier 2 integration tests.
+| Command                 | Scope                                  | Target project                                   |
+| ----------------------- | -------------------------------------- | ------------------------------------------------ |
+| `pnpm test`             | All test files across all three tiers  | `unit`, `components`, `integration`              |
+| `pnpm test:unit`        | Fast domain calculations and stores    | `unit` (`src/**/*.spec.ts`)                      |
+| `pnpm test:components`  | Component markup and client islands    | `components` (`src/**/*.spec.tsx`)               |
+| `pnpm test:integration` | End-to-end database routes and actions | `integration` (`tests/integration/**/*.spec.ts`) |
 
 ## Good tests vs bad tests
 

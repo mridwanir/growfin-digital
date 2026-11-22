@@ -230,6 +230,9 @@ importers:
       '@electric-sql/pglite-socket':
         specifier: ^0.2.18
         version: 0.2.18(@electric-sql/pglite-age@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_hashids@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_ivm@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_textsearch@0.0.17(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pg_uuidv7@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pgtap@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite-pgvector@0.0.16(@electric-sql/pglite@0.5.15))(@electric-sql/pglite@0.5.15)
+      '@next/env':
+        specifier: ^16.4.6
+        version: 16.4.6
       '@tailwindcss/turbopack':
         specifier: ^4
         version: 4.3.4
@@ -1205,6 +1208,9 @@ packages:
 
   '@next/env@16.4.5':
     resolution: {integrity: sha512-JwSPwpdkZL5VMl2jA/q+JI8MZdweAL3xmw5/tb9y/TLtmS0YXZnmYDzSihwk8xTj1OL+WM53gTqaj96yuLp6Xw==}
+
+  '@next/env@16.4.6':
+    resolution: {integrity: sha512-SunBjJ6t+oBtecS3dTjdVuMhUogP5wD/vrGL5EVuQYM1iS4O5ilL51HkiJ3sPjMzRHiCChvr4dbaSJbR7F3lxA==}
 
   '@next/swc-darwin-arm64@16.4.5':
     resolution: {integrity: sha512-W5TniBzWKASbNNwHZ/S/f1MxQUXU/LdjklVMWA0Ujbfl7SZnUzFls45hO0i/sF7Bx1jJBWp7WWmoQajXtX/O8A==}
@@ -5218,6 +5224,8 @@ snapshots:
     optional: true
 
   '@next/env@16.4.5': {}
+
+  '@next/env@16.4.6': {}
 
   '@next/swc-darwin-arm64@16.4.5':
     optional: true

@@ -24,6 +24,9 @@
     "prepare": "simple-git-hooks && skills sync -y",
     "start": "next start",
     "test": "vitest run",
+    "test:components": "vitest run -p components",
+    "test:integration": "vitest run -p integration",
+    "test:unit": "vitest run -p unit",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -50,6 +53,7 @@
     "@ashtrath/oxc-config": "^0.1.1",
     "@ashtrath/skills": "^0.1.0",
     "@electric-sql/pglite-socket": "^0.2.18",
+    "@next/env": "^16.4.6",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^26",
     "@types/pg": "^8.23.1",

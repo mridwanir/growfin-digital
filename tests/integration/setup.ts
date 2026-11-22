@@ -6,7 +6,7 @@ import { handlers } from './msw/handlers'
 export const server = setupServer(...handlers)
 
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'bypass' })
+  server.listen({ onUnhandledFrame: 'bypass' })
 })
 
 afterEach(() => {

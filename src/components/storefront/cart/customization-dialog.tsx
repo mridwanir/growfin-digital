@@ -4,10 +4,11 @@ import type { ProductWithVariants } from '@/components/storefront/catalog'
 
 import { cn } from 'cn'
 import { MinusIcon, PlusIcon, XIcon } from 'lucide-react'
+import Image from 'next/image'
 import { useMemo, useState } from 'react'
 
-import { getDiscountPercentage } from '@/components/storefront/catalog/currency'
 import { calculateItemSubtotal, formatCurrency, useCartActions } from '@/lib/storefront/cart'
+import { getDiscountPercentage } from '@/lib/storefront/currency'
 
 export interface ProductCustomizationDialogProps {
   initialAddons?: string[]
@@ -131,7 +132,13 @@ export function ProductCustomizationDialog(props: ProductCustomizationDialogProp
           {/* Product Media */}
           {product.imageUrl && (
             <div className="bg-muted relative h-56 w-full">
-              <img alt={product.name} className="size-full object-cover" src={product.imageUrl} />
+              <Image
+                fill
+                alt={product.name}
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 500px"
+                src={product.imageUrl}
+              />
               {hasDiscount && (
                 <div className="bg-destructive absolute top-3 left-3 rounded-md px-2 py-1 text-xs font-bold text-white">
                   -{discountPercentage}%
@@ -170,11 +177,13 @@ export function ProductCustomizationDialog(props: ProductCustomizationDialogProp
             {product.imageGallery && product.imageGallery.length > 0 && (
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {product.imageGallery.map(imgUrl => (
-                  <img
+                  <Image
                     key={imgUrl}
                     alt={`${product.name} gallery`}
                     className="border-border size-16 shrink-0 rounded-lg border object-cover"
+                    height={64}
                     src={imgUrl}
+                    width={64}
                   />
                 ))}
               </div>

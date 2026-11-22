@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
@@ -8,17 +8,6 @@ import {
   mockStorefrontTenant,
 } from '@/components/storefront/__fixtures__/storefront-fixtures'
 import { StorefrontClientIslands } from '@/components/storefront/client-islands'
-import {
-  FNB_FULFILLMENT_MODES,
-  resolveFulfillmentModes,
-  RETAIL_FULFILLMENT_MODES,
-} from '@/lib/storefront/fulfillment'
-
-function delay(ms: number): Promise<void> {
-  const { promise, resolve } = Promise.withResolvers<void>()
-  setTimeout(resolve, ms)
-  return promise
-}
 
 describe('StorefrontClientIslands Browser Mode Tests', () => {
   afterEach(() => {
@@ -26,29 +15,85 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
   })
 
   // =========================================================================
-  // 1. Fulfillment Mode Resolution
+  // 1. Fulfillment Mode DOM Presentation
   // =========================================================================
 
-  describe('resolveFulfillmentModes presentation helper', () => {
-    it('resolves F&B default modes [DINE_IN, TAKEAWAY, DELIVERY] for cafe/restaurant categories', () => {
-      expect(resolveFulfillmentModes('Cafe & Coffee Shop')).toEqual(FNB_FULFILLMENT_MODES)
-      expect(resolveFulfillmentModes('Restoran Padang')).toEqual(FNB_FULFILLMENT_MODES)
-      expect(resolveFulfillmentModes('Warung Kopi')).toEqual(FNB_FULFILLMENT_MODES)
-    })
+  describe('fulfillment modes presentation in cart drawer DOM', () => {
+    it('renders F&B default modes [Dine In, Takeaway, Delivery] for cafe/restaurant categories in DOM', async () => {
+      const fnbTenant = {
+        ...mockStorefrontTenant,
+        category: 'Cafe & Coffee Shop',
+        fulfillmentModes: undefined,
+        themeConfig: undefined,
+      }
 
-    it('resolves Retail default modes [PICKUP, DELIVERY] for retail categories', () => {
-      expect(resolveFulfillmentModes('Fashion & Retail')).toEqual(RETAIL_FULFILLMENT_MODES)
-      expect(resolveFulfillmentModes('Clothing Store')).toEqual(RETAIL_FULFILLMENT_MODES)
-      expect(resolveFulfillmentModes('Toko Kelontong')).toEqual(RETAIL_FULFILLMENT_MODES)
-    })
+      await render(<StorefrontClientIslands tenant={fnbTenant} />)
 
-    it('returns custom fulfillment modes when configured in themeConfig.fulfillmentModes', () => {
-      const customModes = ['TAKEAWAY', 'DELIVERY'] as const
-      expect(
-        resolveFulfillmentModes('Cafe & Coffee Shop', {
-          fulfillmentModes: customModes as unknown as string[],
+      window.dispatchEvent(
+        new CustomEvent('growfin:add-to-cart', {
+          detail: mockRetailProduct,
         }),
-      ).toEqual(customModes)
+      )
+
+      await page.getByRole('button', { name: /Buka keranjang belanja/i }).click()
+
+      await expect.element(page.getByRole('dialog')).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Dine In' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Takeaway' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Delivery' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Pickup' })).not.toBeInTheDocument()
+    })
+
+    it('renders Retail default modes [Pickup, Delivery] for retail categories in DOM', async () => {
+      const retailTenant = {
+        ...mockStorefrontTenant,
+        category: 'Fashion & Retail',
+        fulfillmentModes: undefined,
+        themeConfig: undefined,
+      }
+
+      await render(<StorefrontClientIslands tenant={retailTenant} />)
+
+      window.dispatchEvent(
+        new CustomEvent('growfin:add-to-cart', {
+          detail: mockRetailProduct,
+        }),
+      )
+
+      await page.getByRole('button', { name: /Buka keranjang belanja/i }).click()
+
+      await expect.element(page.getByRole('dialog')).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Pickup' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Delivery' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Dine In' })).not.toBeInTheDocument()
+      await expect.element(page.getByRole('button', { name: 'Takeaway' })).not.toBeInTheDocument()
+    })
+
+    it('renders custom fulfillment modes when configured in themeConfig.fulfillmentModes', async () => {
+      const customTenant = {
+        ...mockStorefrontTenant,
+        category: 'Cafe & Coffee Shop',
+        fulfillmentModes: undefined,
+        themeConfig: {
+          fulfillmentModes: ['TAKEAWAY', 'DELIVERY'],
+        },
+      }
+
+      await render(<StorefrontClientIslands tenant={customTenant} />)
+
+      window.dispatchEvent(
+        new CustomEvent('growfin:add-to-cart', {
+          detail: mockRetailProduct,
+        }),
+      )
+
+      await page.getByRole('button', { name: /Buka keranjang belanja/i }).click()
+
+      await expect.element(page.getByRole('dialog')).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Takeaway' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Delivery' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Dine In' })).not.toBeInTheDocument()
+      await expect.element(page.getByRole('button', { name: 'Pickup' })).not.toBeInTheDocument()
     })
   })
 
@@ -58,7 +103,7 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
 
   describe('storefrontClientIslands Mounting & Interactivity', () => {
     it('mounts without crashing and hides islands when cart is empty', async () => {
-      render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
+      await render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
 
       await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
       await expect
@@ -67,10 +112,7 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
     })
 
     it('shows MobileCartBar when growfin:add-to-cart event is dispatched', async () => {
-      render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
-
-      // Allow React 19 useEffect listeners to attach
-      await delay(50)
+      await render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
 
       window.dispatchEvent(
         new CustomEvent('growfin:add-to-cart', {
@@ -84,9 +126,7 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
     })
 
     it('opens cart drawer when clicking MobileCartBar and displays fulfillment options', async () => {
-      render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
-
-      await delay(50)
+      await render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
 
       window.dispatchEvent(
         new CustomEvent('growfin:add-to-cart', {
@@ -108,9 +148,7 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
     })
 
     it('opens product customization dialog when growfin:select-product is dispatched', async () => {
-      render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
-
-      await delay(50)
+      await render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
 
       window.dispatchEvent(
         new CustomEvent('growfin:select-product', {
@@ -135,18 +173,18 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
     })
 
     it('opens cart drawer when growfin:open-cart is dispatched', async () => {
-      render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
+      await render(<StorefrontClientIslands tenant={mockStorefrontTenant} />)
 
-      await delay(50)
+      await vi.waitFor(async () => {
+        window.dispatchEvent(new CustomEvent('growfin:open-cart'))
+        await expect.element(page.getByRole('dialog')).toBeVisible()
+      })
 
-      window.dispatchEvent(new CustomEvent('growfin:open-cart'))
-
-      await expect.element(page.getByRole('dialog')).toBeVisible()
       await expect.element(page.getByText('Keranjang Belanja Kosong')).toBeVisible()
     })
 
     it('opens cart drawer when clicking an external element with data-open-cart', async () => {
-      render(
+      await render(
         <div>
           <button data-open-cart type="button">
             Keranjang
@@ -172,9 +210,7 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
         },
       }
 
-      render(<StorefrontClientIslands tenant={retailTenant} />)
-
-      await delay(50)
+      await render(<StorefrontClientIslands tenant={retailTenant} />)
 
       // Add item to cart and open drawer
       window.dispatchEvent(
@@ -194,9 +230,7 @@ describe('StorefrontClientIslands Browser Mode Tests', () => {
     it('handles fallback tenantId cleanly when tenant.id is omitted', async () => {
       const { id: _, ...tenantWithoutId } = mockStorefrontTenant
 
-      render(<StorefrontClientIslands tenant={tenantWithoutId} />)
-
-      await delay(50)
+      await render(<StorefrontClientIslands tenant={tenantWithoutId} />)
 
       window.dispatchEvent(
         new CustomEvent('growfin:add-to-cart', {

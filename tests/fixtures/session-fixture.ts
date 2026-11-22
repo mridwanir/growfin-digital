@@ -33,7 +33,16 @@ export interface MockSessionResult {
   error: null
 }
 
-export function createMerchantSession(options: MockSessionOptions = {}): MockSessionResult {
+interface DefaultSessionParams {
+  getDefaultEmail: (userId: string) => string
+  name: string
+  role: string
+}
+
+function createSessionPayload(
+  options: MockSessionOptions,
+  defaults: DefaultSessionParams,
+): MockSessionResult {
   const userId = options.userId !== undefined ? options.userId : crypto.randomUUID()
   return {
     error: null,
@@ -51,41 +60,31 @@ export function createMerchantSession(options: MockSessionOptions = {}): MockSes
           ? (null as unknown as SessionData['user'])
           : {
               id: userId,
-              name: options.name ?? 'Test Merchant',
+              name: options.name ?? defaults.name,
               createdAt: new Date(),
-              email: options.email ?? `merchant-${userId.slice(0, 6)}@growfin.test`,
+              email: options.email ?? defaults.getDefaultEmail(userId),
               emailVerified: options.emailVerified ?? true,
-              role: options.role ?? 'merchant',
+              role: options.role ?? defaults.role,
               updatedAt: new Date(),
             },
     },
   }
 }
 
+export function createMerchantSession(options: MockSessionOptions = {}): MockSessionResult {
+  return createSessionPayload(options, {
+    name: 'Test Merchant',
+    role: 'merchant',
+    getDefaultEmail: userId => `merchant-${userId.slice(0, 6)}@growfin.test`,
+  })
+}
+
 export function createCustomerSession(options: MockSessionOptions = {}): MockSessionResult {
-  const userId = options.userId !== undefined ? options.userId : crypto.randomUUID()
-  return {
-    error: null,
-    data: {
-      session: {
-        id: `sess-${crypto.randomUUID()}`,
-        createdAt: new Date(),
-        expiresAt: options.expiresAt ?? new Date(Date.now() + 86400000),
-        token: `tok-${crypto.randomUUID()}`,
-        updatedAt: new Date(),
-        userId,
-      },
-      user: {
-        id: userId,
-        name: options.name ?? 'Test Customer',
-        createdAt: new Date(),
-        email: options.email ?? `customer-${userId.slice(0, 6)}@example.com`,
-        emailVerified: options.emailVerified ?? true,
-        role: options.role ?? 'customer',
-        updatedAt: new Date(),
-      },
-    },
-  }
+  return createSessionPayload(options, {
+    name: 'Test Customer',
+    role: 'customer',
+    getDefaultEmail: userId => `customer-${userId.slice(0, 6)}@example.com`,
+  })
 }
 
 export function createUnauthenticatedSession(): MockSessionResult {

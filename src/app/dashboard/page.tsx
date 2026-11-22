@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
-import { getMerchantTenants } from '@/lib/dashboard/mutations'
 import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
+import { getMerchantTenants } from '@/lib/dashboard/mutations'
 import { env } from '@/lib/env'
 
 async function MerchantOverview() {
@@ -175,34 +175,41 @@ async function MerchantOverview() {
 
                       return (
                         <div className="space-y-2 border-t pt-3">
-                          <div className="flex items-center justify-between text-muted-foreground font-medium">
+                          <div className="text-muted-foreground flex items-center justify-between font-medium">
                             <span>Statistik Hari Ini</span>
                             <span>{metrics.conversionRate}% konversi</span>
                           </div>
 
                           <div className="grid grid-cols-2 gap-2 text-center">
-                            <div className="rounded-md bg-muted/50 p-2">
-                              <div className="text-[10px] text-muted-foreground">Tayangan</div>
+                            <div className="bg-muted/50 rounded-md p-2">
+                              <div className="text-muted-foreground text-[10px]">Tayangan</div>
                               <div className="text-sm font-semibold">{metrics.pageViews}</div>
                             </div>
-                            <div className="rounded-md bg-muted/50 p-2">
-                              <div className="text-[10px] text-muted-foreground">Pengunjung Unik</div>
+                            <div className="bg-muted/50 rounded-md p-2">
+                              <div className="text-muted-foreground text-[10px]">
+                                Pengunjung Unik
+                              </div>
                               <div className="text-sm font-semibold">{metrics.uniqueVisitors}</div>
                             </div>
-                            <div className="rounded-md bg-muted/50 p-2">
-                              <div className="text-[10px] text-muted-foreground">Mulai Checkout</div>
+                            <div className="bg-muted/50 rounded-md p-2">
+                              <div className="text-muted-foreground text-[10px]">
+                                Mulai Checkout
+                              </div>
                               <div className="text-sm font-semibold">{metrics.checkoutStarts}</div>
                             </div>
-                            <div className="rounded-md bg-muted/50 p-2">
-                              <div className="text-[10px] text-muted-foreground">Selesai Order</div>
-                              <div className="text-sm font-semibold">{metrics.checkoutCompletes}</div>
+                            <div className="bg-muted/50 rounded-md p-2">
+                              <div className="text-muted-foreground text-[10px]">Selesai Order</div>
+                              <div className="text-sm font-semibold">
+                                {metrics.checkoutCompletes}
+                              </div>
                             </div>
                           </div>
 
-                          <div className="text-[11px] text-muted-foreground">
+                          <div className="text-muted-foreground text-[11px]">
                             {metrics.topSources.length > 0 ? (
-                              <span className="truncate block">
-                                Sumber: {metrics.topSources.map(s => `${s.source} (${s.count})`).join(', ')}
+                              <span className="block truncate">
+                                Sumber:{' '}
+                                {metrics.topSources.map(s => `${s.source} (${s.count})`).join(', ')}
                               </span>
                             ) : (
                               <span>Belum ada sumber rujukan hari ini</span>

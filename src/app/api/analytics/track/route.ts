@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server'
 
-import crypto from 'node:crypto'
 import { eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
+import crypto from 'node:crypto'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
@@ -26,11 +26,7 @@ interface RateLimitRecord {
 
 const rateLimitMap = new Map<string, RateLimitRecord>()
 
-function computeVisitorHash(
-  ip: string,
-  userAgent: string,
-  tenantId: string,
-): string {
+function computeVisitorHash(ip: string, userAgent: string, tenantId: string): string {
   const dateStr = new Date().toISOString().slice(0, 10)
   const dailySalt = crypto
     .createHmac('sha256', env.ANALYTICS_HASH_SECRET)
@@ -42,10 +38,7 @@ function computeVisitorHash(
     .digest('hex')
 }
 
-function parseAcquisition(
-  request: NextRequest,
-  event: string,
-): Acquisition | null {
+function parseAcquisition(request: NextRequest, event: string): Acquisition | null {
   if (event !== 'page_view') {
     return null
   }

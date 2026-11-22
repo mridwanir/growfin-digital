@@ -5,7 +5,6 @@ import { MinusIcon, PlusIcon, ShoppingBagIcon, Trash2Icon, XIcon } from 'lucide-
 import { useEffect, useMemo, useState } from 'react'
 
 import { trackEvent } from '@/lib/analytics'
-
 import {
   formatCurrency,
   useCartActions,
@@ -399,7 +398,8 @@ export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
                     className="text-foreground text-xs font-semibold"
                     htmlFor="cart-pickup-preferences"
                   >
-                    Preferensi Pengambilan <span className="text-muted-foreground font-normal">(opsional)</span>
+                    Preferensi Pengambilan{' '}
+                    <span className="text-muted-foreground font-normal">(opsional)</span>
                   </label>
                   <input
                     className="bg-background text-foreground placeholder:text-muted-foreground focus:ring-primary border-border w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
@@ -411,7 +411,6 @@ export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
                   />
                 </div>
               )}
-
 
               {/* Address for DELIVERY */}
               {fulfillmentMode === 'DELIVERY' && (

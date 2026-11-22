@@ -6,8 +6,8 @@ import { cn } from 'cn'
 import { MinusIcon, PlusIcon, XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
-import { calculateItemSubtotal, formatCurrency, useCartActions } from '@/lib/storefront/cart'
 import { getDiscountPercentage } from '@/components/storefront/catalog/currency'
+import { calculateItemSubtotal, formatCurrency, useCartActions } from '@/lib/storefront/cart'
 
 export interface ProductCustomizationDialogProps {
   initialAddons?: string[]

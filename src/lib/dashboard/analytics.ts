@@ -14,8 +14,8 @@ export interface TenantAnalyticsMetrics {
 }
 
 /**
- * Returns today's analytics metrics for a tenant owned by the given merchant user.
- * Metrics are computed strictly using SQL aggregation queries via Drizzle.
+ * Returns today's analytics metrics for a tenant owned by the given merchant user. Metrics are
+ * computed strictly using SQL aggregation queries via Drizzle.
  */
 export async function getTenantAnalyticsMetrics(
   tenantId: string,
@@ -44,12 +44,7 @@ export async function getTenantAnalyticsMetrics(
       uniqueVisitors: sql<number>`coalesce(count(distinct ${analyticsEvents.visitorHash}), 0)::int`,
     })
     .from(analyticsEvents)
-    .where(
-      and(
-        eq(analyticsEvents.tenantId, tenantId),
-        gte(analyticsEvents.createdAt, todayStart),
-      ),
-    )
+    .where(and(eq(analyticsEvents.tenantId, tenantId), gte(analyticsEvents.createdAt, todayStart)))
 
   const pageViews = Number(metrics?.pageViews ?? 0)
   const uniqueVisitors = Number(metrics?.uniqueVisitors ?? 0)

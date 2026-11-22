@@ -23,8 +23,7 @@ export const auth = createNeonAuth({
   baseUrl: env.NEON_AUTH_BASE_URL || 'https://mock.neonauth.tech/neondb/auth',
   cookies: {
     domain: getSessionCookieDomain(),
-    secret:
-      env.NEON_AUTH_COOKIE_SECRET || 'test-neon-auth-cookie-secret-at-least-32-chars',
+    secret: env.NEON_AUTH_COOKIE_SECRET || 'test-neon-auth-cookie-secret-at-least-32-chars',
   },
 })
 

@@ -5,10 +5,7 @@ function getSlugFromPathname(pathname: string): string | null {
   return match ? match[1] : null
 }
 
-export function trackEvent(
-  event: AnalyticsEvent,
-  metadata?: Record<string, unknown>,
-): void {
+export function trackEvent(event: AnalyticsEvent, metadata?: Record<string, unknown>): void {
   if (typeof window === 'undefined' || !window.location) {
     return
   }

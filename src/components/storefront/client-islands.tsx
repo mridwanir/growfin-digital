@@ -12,21 +12,20 @@ import {
 } from '@/components/storefront/cart'
 import { StorefrontCartProvider, useCartActions } from '@/lib/storefront/cart'
 import { resolveFulfillmentModes } from '@/lib/storefront/fulfillment'
-
 import { resolveTenantWhatsAppNumber } from '@/lib/storefront/whatsapp'
 
 export interface StorefrontClientIslandsProps {
   tenant:
-  | Tenant
-  | {
-    id?: string
-    name: string
-    [key: string]: unknown
-    brandingContent?: Record<string, unknown> | null
-    category?: string | null
-    phone?: string | null
-    themeConfig?: ThemeConfig | Record<string, unknown> | null
-  }
+    | Tenant
+    | {
+        id?: string
+        name: string
+        [key: string]: unknown
+        brandingContent?: Record<string, unknown> | null
+        category?: string | null
+        phone?: string | null
+        themeConfig?: ThemeConfig | Record<string, unknown> | null
+      }
 }
 
 function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps) {

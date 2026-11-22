@@ -34,15 +34,15 @@ Replace the broken tracking system with a clean, privacy-first analytics pipelin
 
 The existing Drizzle `analytics_events` table must be altered. The current schema has `event_type` and `event_data` columns but lacks `visitor_hash` and `acquisition`. The rebuilt schema:
 
-| Column | Type | Source | Notes |
-|--------|------|--------|-------|
-| `id` | `bigserial` | auto | PK |
-| `tenant_id` | `uuid` | server (slug lookup) | FK to tenants, NOT NULL, ON DELETE CASCADE |
-| `event` | `text` | client | NOT NULL. Renamed from `event_type` |
-| `visitor_hash` | `text` | server | NOT NULL. SHA-256 of IP + UA + tenant_id + daily HMAC salt |
-| `acquisition` | `jsonb` | server | Nullable. Parsed from Referer + UTM query params |
-| `event_data` | `jsonb` | client metadata | Nullable. Retained from current schema |
-| `created_at` | `timestamptz` | server DEFAULT now() | NOT NULL |
+| Column         | Type          | Source               | Notes                                                      |
+| -------------- | ------------- | -------------------- | ---------------------------------------------------------- |
+| `id`           | `bigserial`   | auto                 | PK                                                         |
+| `tenant_id`    | `uuid`        | server (slug lookup) | FK to tenants, NOT NULL, ON DELETE CASCADE                 |
+| `event`        | `text`        | client               | NOT NULL. Renamed from `event_type`                        |
+| `visitor_hash` | `text`        | server               | NOT NULL. SHA-256 of IP + UA + tenant_id + daily HMAC salt |
+| `acquisition`  | `jsonb`       | server               | Nullable. Parsed from Referer + UTM query params           |
+| `event_data`   | `jsonb`       | client metadata      | Nullable. Retained from current schema                     |
+| `created_at`   | `timestamptz` | server DEFAULT now() | NOT NULL                                                   |
 
 Indexes: `(tenant_id, created_at)` and `(tenant_id, event, created_at)`.
 

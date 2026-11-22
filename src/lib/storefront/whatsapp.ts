@@ -27,8 +27,8 @@ export function normalizeWaNumber(phone?: string | null): string {
 }
 
 /**
- * Resolves and normalizes a tenant's WhatsApp contact number from branding content,
- * explicit waNumber, or fallback phone number.
+ * Resolves and normalizes a tenant's WhatsApp contact number from branding content, explicit
+ * waNumber, or fallback phone number.
  */
 export function resolveTenantWhatsAppNumber(
   tenant?: {

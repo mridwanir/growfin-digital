@@ -4,7 +4,7 @@
 
 **Blocked by:** None, can start immediately.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] A dedicated dashboard actions module exports a typed Server Action for updating tenant settings
 - [ ] The action verifies active merchant sessions using a shared internal authorization helper

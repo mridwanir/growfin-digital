@@ -9,8 +9,9 @@ import { cn } from 'cn'
 import { PlusIcon, SlidersHorizontalIcon } from 'lucide-react'
 import Image from 'next/image'
 
+import { formatCurrency, getDiscountPercentage, hasValidDiscount } from '@/lib/storefront/currency'
+
 import { useOptionalProductCatalog } from './context'
-import { formatCurrency, getDiscountPercentage, hasValidDiscount } from './currency'
 import { hasProductCustomizations } from './helpers'
 
 const cardVariants = cva(

@@ -1,7 +1,8 @@
+import { formatCurrency, getDiscountPercentage, hasValidDiscount } from '@/lib/storefront/currency'
+
 import { ProductCatalogCard } from './card'
 import { ProductCatalogCategoryBar } from './category-bar'
 import { useProductCatalog } from './context'
-import { formatCurrency, getDiscountPercentage, hasValidDiscount } from './currency'
 import { ProductCatalogEmpty } from './empty'
 import { ProductCatalogGrid } from './grid'
 import { ProductCatalogRoot } from './root'

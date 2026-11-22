@@ -28,12 +28,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  createCategoryAction,
   createProductAction,
-  deleteCategoryAction,
+  createProductCategoryAction,
   deleteProductAction,
-  updateCategoryAction,
+  deleteProductCategoryAction,
   updateProductAction,
+  updateProductCategoryAction,
 } from '@/lib/dashboard/actions'
 
 interface CategoryItem {
@@ -128,7 +128,7 @@ export function ProductsClient({
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
-        const res = await updateCategoryAction(selectedTenantId, catId, {
+        const res = await updateProductCategoryAction(selectedTenantId, catId, {
           name: editingCategoryName.trim(),
         })
         if (!res.success) {
@@ -198,7 +198,7 @@ export function ProductsClient({
     setActiveCategoryId(null)
     startCategoryTransition(async () => {
       try {
-        const res = await createCategoryAction(selectedTenantId, {
+        const res = await createProductCategoryAction(selectedTenantId, {
           name: newCategoryName.trim(),
           sortOrder: categories.length,
         })
@@ -232,7 +232,7 @@ export function ProductsClient({
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
-        const res = await deleteCategoryAction(selectedTenantId, catId)
+        const res = await deleteProductCategoryAction(selectedTenantId, catId)
 
         if (!res.success) {
           setFeedback({

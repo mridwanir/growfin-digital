@@ -3,13 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { auth } from '@/lib/auth/server'
 import {
-  createCategoryAction,
   createProductAction,
   createProductCategoryAction,
-  deleteCategoryAction,
   deleteProductAction,
   deleteProductCategoryAction,
-  updateCategoryAction,
   updateProductAction,
   updateProductCategoryAction,
   updateTenantSettingsAction,
@@ -222,10 +219,6 @@ describe('createProductCategoryAction seam', () => {
     vi.clearAllMocks()
   })
 
-  it('aliases createCategoryAction for backward compatibility', () => {
-    expect(createCategoryAction).toBe(createProductCategoryAction)
-  })
-
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
       data: null,
@@ -315,10 +308,6 @@ describe('updateProductCategoryAction seam', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  it('aliases updateCategoryAction for backward compatibility', () => {
-    expect(updateCategoryAction).toBe(updateProductCategoryAction)
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
@@ -414,10 +403,6 @@ describe('deleteProductCategoryAction seam', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  it('aliases deleteCategoryAction for backward compatibility', () => {
-    expect(deleteCategoryAction).toBe(deleteProductCategoryAction)
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {

@@ -197,7 +197,6 @@ export async function createProductCategoryAction(
 
   return { data: created, success: true }
 }
-export const createCategoryAction = createProductCategoryAction
 
 export async function updateProductCategoryAction(
   tenantId: string,
@@ -223,7 +222,6 @@ export async function updateProductCategoryAction(
 
   return { data: updated, success: true }
 }
-export const updateCategoryAction = updateProductCategoryAction
 
 export async function deleteProductCategoryAction(
   tenantId: string,
@@ -243,7 +241,6 @@ export async function deleteProductCategoryAction(
 
   return { data: { success: true }, success: true }
 }
-export const deleteCategoryAction = deleteProductCategoryAction
 
 export async function createProductAction(
   tenantId: string,

@@ -1,132 +1,22 @@
-import type { ReactElement, ReactNode } from 'react'
-
-import type { ProductWithVariants } from '@/components/storefront/catalog'
 import type { CartStore } from '@/lib/storefront/cart'
 
-import React from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { render } from 'vitest-browser-react'
+import { page } from 'vitest/browser'
 
+import {
+  mockFnbProduct,
+  mockSimpleProduct,
+  mockStorefrontTenant,
+} from '@/components/storefront/__fixtures__/storefront-fixtures'
 import {
   MobileCartBar,
   ProductCustomizationDialog,
   StorefrontCartDrawer,
 } from '@/components/storefront/cart'
-import { createCartStore, formatCurrency, StorefrontCartProvider } from '@/lib/storefront/cart'
+import { createCartStore, StorefrontCartProvider } from '@/lib/storefront/cart'
 
-// ---------------------------------------------------------------------------
-// Test Fixtures
-// ---------------------------------------------------------------------------
-
-const mockProductWithVariants: ProductWithVariants = {
-  id: 'prod-coffee-1',
-  name: 'Kopi Susu Gula Aren',
-  basePrice: 20000,
-  description: 'Espresso dengan susu segar dan gula aren asli',
-  imageUrl: 'https://images.unsplash.com/photo-coffee',
-  originalPrice: 25000, // 20% discount
-  addons: [
-    { id: 'addon-shot', name: 'Ekstra Shot', price: 4000 },
-    { id: 'addon-jelly', name: 'Jelly Karamel', price: 3000 },
-  ],
-  imageGallery: [
-    'https://images.unsplash.com/photo-coffee-1',
-    'https://images.unsplash.com/photo-coffee-2',
-  ],
-  variants: [
-    {
-      id: 'var-size',
-      name: 'Ukuran',
-      required: true,
-      options: [
-        { id: 'opt-reg', label: 'Regular', priceModifier: 0 },
-        { id: 'opt-lrg', label: 'Large', priceModifier: 5000 },
-      ],
-    },
-    {
-      id: 'var-temp',
-      name: 'Suhu',
-      required: true,
-      options: [
-        { id: 'opt-cold', label: 'Dingin', priceModifier: 0 },
-        { id: 'opt-hot', label: 'Panas', priceModifier: 0 },
-      ],
-    },
-  ],
-}
-
-const mockSimpleProduct: ProductWithVariants = {
-  id: 'prod-snack-1',
-  name: 'Donat Cokelat',
-  basePrice: 12000,
-  description: 'Donat kentang empuk dengan meses cokelat tebal',
-  imageUrl: 'https://images.unsplash.com/photo-donut',
-  originalPrice: null,
-}
-
-const mockTenant = {
-  name: 'Kopi Artisan Senopati',
-  fulfillmentModes: ['DINE_IN', 'TAKEAWAY', 'PICKUP', 'DELIVERY'] as const,
-  phone: '081234567890',
-  waNumber: '081234567890',
-}
-
-// ---------------------------------------------------------------------------
-// Element traversal helper
-// ---------------------------------------------------------------------------
-
-interface SlotElementProps {
-  'data-slot'?: string
-  children?: ReactNode
-  onClick?: (event: unknown) => void
-  onChange?: (event: unknown) => void
-  onSubmit?: (event: unknown) => void
-  [key: string]: unknown
-}
-
-function findElementBySlot(
-  element: ReactNode,
-  slot: string,
-): ReactElement<SlotElementProps> | null {
-  if (!React.isValidElement<SlotElementProps>(element)) {
-    return null
-  }
-  if (element.props['data-slot'] === slot) {
-    return element
-  }
-  const children = element.props.children
-  if (Array.isArray(children)) {
-    for (const child of children) {
-      const found = findElementBySlot(child, slot)
-      if (found) return found
-    }
-  } else if (children) {
-    return findElementBySlot(children, slot)
-  }
-  return null
-}
-
-function renderIslandElement(element: ReactElement, cartStore: CartStore): ReactElement {
-  let captured: ReactElement | null = null
-  function Capture() {
-    if (React.isValidElement(element) && typeof element.type === 'function') {
-      captured = (element.type as (props: unknown) => ReactElement | null)(element.props)
-    }
-    return captured
-  }
-  renderToStaticMarkup(
-    <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-      <Capture />
-    </StorefrontCartProvider>,
-  )
-  return captured!
-}
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
-
-describe('Storefront Client Islands (Ticket 05)', () => {
+describe('Storefront Client Islands Browser Mode Tests', () => {
   let cartStore: CartStore
 
   beforeEach(() => {
@@ -143,108 +33,113 @@ describe('Storefront Client Islands (Ticket 05)', () => {
   // =========================================================================
 
   describe('productCustomizationDialog', () => {
-    it('returns null when open is false or product is null', () => {
-      const markupClosed = renderToStaticMarkup(
+    it('does not render dialog when open is false or product is null', async () => {
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
           <ProductCustomizationDialog
             open={false}
-            product={mockProductWithVariants}
+            product={mockFnbProduct}
             onOpenChange={vi.fn()}
           />
         </StorefrontCartProvider>,
       )
-      expect(markupClosed).toBe('')
 
-      const markupNoProduct = renderToStaticMarkup(
+      await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
+
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
           <ProductCustomizationDialog open={true} product={null} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
-      expect(markupNoProduct).toBe('')
+
+      await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
     })
 
-    it('renders product imagery, title, description, base price in IDR, and discount badge', () => {
-      const markup = renderToStaticMarkup(
+    it('renders product imagery, title, description, base price in IDR, and discount badge', async () => {
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <ProductCustomizationDialog
-            open={true}
-            product={mockProductWithVariants}
-            onOpenChange={vi.fn()}
-          />
+          <ProductCustomizationDialog open={true} product={mockFnbProduct} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markup).toContain('Kopi Susu Gula Aren')
-      expect(markup).toContain('Espresso dengan susu segar dan gula aren asli')
-      expect(markup).toContain('Rp 20.000') // base price
-      expect(markup).toContain('Rp 25.000') // strikethrough original price
-      expect(markup).toContain('-20%') // discount badge
-      expect(markup).toContain('https://images.unsplash.com/photo-coffee')
+      await expect.element(page.getByRole('dialog')).toBeVisible()
+      await expect.element(page.getByRole('heading', { name: 'Kopi Susu Gula Aren' })).toBeVisible()
+      await expect
+        .element(page.getByText('Espresso dengan susu segar dan gula aren asli'))
+        .toBeVisible()
+      await expect.element(page.getByText('Rp 20.000').first()).toBeVisible()
+      await expect.element(page.getByText('Rp 25.000')).toBeVisible()
+      await expect.element(page.getByText('-20%')).toBeVisible()
     })
 
-    it('renders variant groups, option choices, and optional addons', () => {
-      const markup = renderToStaticMarkup(
+    it('renders variant groups, option choices, and optional addons', async () => {
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <ProductCustomizationDialog
-            open={true}
-            product={mockProductWithVariants}
-            onOpenChange={vi.fn()}
-          />
+          <ProductCustomizationDialog open={true} product={mockFnbProduct} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markup).toContain('Ukuran')
-      expect(markup).toContain('Regular')
-      expect(markup).toContain('Large')
-      expect(markup).toContain('+Rp 5.000')
+      await expect.element(page.getByText(/Ukuran/)).toBeVisible()
+      await expect.element(page.getByRole('button', { name: /^Regular/i })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: /Large/i })).toBeVisible()
 
-      expect(markup).toContain('Suhu')
-      expect(markup).toContain('Dingin')
-      expect(markup).toContain('Panas')
+      await expect.element(page.getByText(/Suhu/)).toBeVisible()
+      await expect.element(page.getByRole('button', { name: /^Dingin/i })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: /^Panas/i })).toBeVisible()
 
-      expect(markup).toContain('Ekstra Shot')
-      expect(markup).toContain('+Rp 4.000')
-      expect(markup).toContain('Jelly Karamel')
-      expect(markup).toContain('+Rp 3.000')
+      await expect.element(page.getByRole('button', { name: /Ekstra Shot/i })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: /Jelly Karamel/i })).toBeVisible()
     })
 
-    it('calculates live subtotal accurately with variant modifiers, addons, and quantity', () => {
-      // Base: 20000 + Large (5000) + Ekstra Shot (4000) = 29000 * 2 = 58000
-      const markup = renderToStaticMarkup(
+    it('calculates live subtotal accurately with variant modifiers, addons, and quantity changes', async () => {
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <ProductCustomizationDialog
-            initialAddons={['Ekstra Shot']}
-            initialQuantity={2}
-            initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
-            open={true}
-            product={mockProductWithVariants}
-            onOpenChange={vi.fn()}
-          />
+          <ProductCustomizationDialog open={true} product={mockFnbProduct} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markup).toContain(formatCurrency(58000))
+      await expect.element(page.getByText('Rp 20.000').last()).toBeVisible()
+
+      // Select Large variant (+5000 -> 25000)
+      await page.getByRole('button', { name: /Large/i }).click()
+      await expect.element(page.getByText('Rp 25.000').last()).toBeVisible()
+
+      // Toggle Ekstra Shot addon (+4000 -> 29000)
+      await page.getByRole('button', { name: /Ekstra Shot/i }).click()
+      await expect.element(page.getByText('Rp 29.000')).toBeVisible()
+
+      // Increment quantity to 2 (29000 * 2 = 58000)
+      await page.getByRole('button', { name: 'Tambah jumlah' }).click()
+      await expect.element(page.getByText('Rp 58.000')).toBeVisible()
+
+      // Decrement quantity back to 1 (58000 / 2 = 29000)
+      await page.getByRole('button', { name: 'Kurangi jumlah' }).click()
+      await expect.element(page.getByText('Rp 29.000')).toBeVisible()
     })
 
-    it('customizes simple product without variants or addons', () => {
+    it('customizes simple product without variants or addons', async () => {
       const onOpenChange = vi.fn()
-      const rendered = renderIslandElement(
-        <ProductCustomizationDialog
-          initialQuantity={3}
-          open={true}
-          product={mockSimpleProduct}
-          onOpenChange={onOpenChange}
-        />,
-        cartStore,
+
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <ProductCustomizationDialog
+            open={true}
+            product={mockSimpleProduct}
+            onOpenChange={onOpenChange}
+          />
+        </StorefrontCartProvider>,
       )
 
-      const markup = renderToStaticMarkup(rendered)
+      await expect.element(page.getByRole('heading', { name: 'Donat Cokelat' })).toBeVisible()
+      await expect.element(page.getByText('Rp 12.000').last()).toBeVisible()
 
-      expect(markup).toContain('Donat Cokelat')
-      expect(markup).toContain(formatCurrency(36000)) // 12000 * 3
+      // Increment to quantity 3 (12000 * 3 = 36000)
+      await page.getByRole('button', { name: 'Tambah jumlah' }).click()
+      await page.getByRole('button', { name: 'Tambah jumlah' }).click()
+      await expect.element(page.getByText('Rp 36.000')).toBeVisible()
 
-      const submitBtn = findElementBySlot(rendered, 'customization-submit-button')
-      submitBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      // Submit
+      await page.getByRole('button', { name: 'Tambahkan ke Keranjang' }).click()
 
       expect(onOpenChange).toHaveBeenCalledWith(false)
       expect(cartStore.getState().items[0]).toMatchObject({
@@ -256,23 +151,27 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       })
     })
 
-    it('dispatches addItem to store and closes dialog on submission', () => {
+    it('dispatches addItem to store and closes dialog on submission with notes and variants', async () => {
       const onOpenChange = vi.fn()
-      const rendered = renderIslandElement(
-        <ProductCustomizationDialog
-          initialAddons={['Ekstra Shot']}
-          initialNotes="Kurangi es batu"
-          initialQuantity={2}
-          initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
-          open={true}
-          product={mockProductWithVariants}
-          onOpenChange={onOpenChange}
-        />,
-        cartStore,
+
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <ProductCustomizationDialog
+            open={true}
+            product={mockFnbProduct}
+            onOpenChange={onOpenChange}
+          />
+        </StorefrontCartProvider>,
       )
-      const submitBtn = findElementBySlot(rendered, 'customization-submit-button')
-      expect(submitBtn).toBeDefined()
-      submitBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+
+      await page.getByRole('button', { name: /Large/i }).click()
+      await page.getByRole('button', { name: /Ekstra Shot/i }).click()
+      await page.getByRole('button', { name: 'Tambah jumlah' }).click()
+
+      const notesInput = page.getByPlaceholder('Contoh: Kurangi gula, sedikit es batu...')
+      await notesInput.fill('Kurangi es batu')
+
+      await page.getByRole('button', { name: 'Tambahkan ke Keranjang' }).click()
 
       expect(onOpenChange).toHaveBeenCalledWith(false)
 
@@ -285,7 +184,7 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         productId: 'prod-coffee-1',
         quantity: 2,
         selectedAddons: ['Ekstra Shot'],
-        subtotal: 58000, // (20000 + 5000 + 4000) * 2
+        subtotal: 58000,
         unitPrice: 29000,
         selectedVariants: {
           Suhu: 'Dingin',
@@ -294,8 +193,8 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       })
     })
 
-    it('stacks identical configurations in store while separating distinct configurations', () => {
-      // First add: Regular, Dingin, no addons, qty 1
+    it('stacks identical configurations in store when submitting matching variants', async () => {
+      // First item in store: Regular, Dingin, qty 1
       cartStore.getState().addItem({
         name: 'Kopi Susu Gula Aren',
         basePrice: 20000,
@@ -310,46 +209,78 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       expect(cartStore.getState().items).toHaveLength(1)
       expect(cartStore.getState().items[0].quantity).toBe(1)
 
-      // Add identical configuration: qty 2 -> should stack to 3
-      const renderedIdentical = renderIslandElement(
-        <ProductCustomizationDialog
-          initialAddons={[]}
-          initialQuantity={2}
-          initialVariants={{ Suhu: 'Dingin', Ukuran: 'Regular' }}
-          open={true}
-          product={mockProductWithVariants}
-          onOpenChange={vi.fn()}
-        />,
-        cartStore,
+      const onOpenChange = vi.fn()
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <ProductCustomizationDialog
+            open={true}
+            product={mockFnbProduct}
+            onOpenChange={onOpenChange}
+          />
+        </StorefrontCartProvider>,
       )
-      const submitIdentical = findElementBySlot(renderedIdentical, 'customization-submit-button')
-      submitIdentical?.props?.onClick?.({ preventDefault: vi.fn() })
+
+      // Add identical config (Regular, Dingin, no addons) with quantity 2
+      await page.getByRole('button', { name: 'Tambah jumlah' }).click()
+      await page.getByRole('button', { name: 'Tambahkan ke Keranjang' }).click()
 
       const itemsAfterStack = cartStore.getState().items
       expect(itemsAfterStack).toHaveLength(1)
       expect(itemsAfterStack[0].quantity).toBe(3)
       expect(itemsAfterStack[0].subtotal).toBe(60000)
+    })
 
-      // Add distinct configuration: Large, Dingin, Ekstra Shot -> should create separate line item
-      const renderedDistinct = renderIslandElement(
-        <ProductCustomizationDialog
-          initialAddons={['Ekstra Shot']}
-          initialQuantity={1}
-          initialVariants={{ Suhu: 'Dingin', Ukuran: 'Large' }}
-          open={true}
-          product={mockProductWithVariants}
-          onOpenChange={vi.fn()}
-        />,
-        cartStore,
+    it('creates distinct line item in store when submitting different variants', async () => {
+      // Existing item: Regular, Dingin, qty 1
+      cartStore.getState().addItem({
+        name: 'Kopi Susu Gula Aren',
+        basePrice: 20000,
+        productId: 'prod-coffee-1',
+        quantity: 1,
+        selectedAddons: [],
+        selectedVariants: { Suhu: 'Dingin', Ukuran: 'Regular' },
+        subtotal: 20000,
+        unitPrice: 20000,
+      })
+
+      const onOpenChange = vi.fn()
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <ProductCustomizationDialog
+            open={true}
+            product={mockFnbProduct}
+            onOpenChange={onOpenChange}
+          />
+        </StorefrontCartProvider>,
       )
-      const submitDistinct = findElementBySlot(renderedDistinct, 'customization-submit-button')
-      submitDistinct?.props?.onClick?.({ preventDefault: vi.fn() })
+
+      // Select distinct config: Large, Dingin, Ekstra Shot
+      await page.getByRole('button', { name: /Large/i }).click()
+      await page.getByRole('button', { name: /Ekstra Shot/i }).click()
+      await page.getByRole('button', { name: 'Tambahkan ke Keranjang' }).click()
 
       const itemsAfterDistinct = cartStore.getState().items
       expect(itemsAfterDistinct).toHaveLength(2)
-      expect(itemsAfterDistinct[0].quantity).toBe(3)
+      expect(itemsAfterDistinct[0].quantity).toBe(1)
       expect(itemsAfterDistinct[1].quantity).toBe(1)
       expect(itemsAfterDistinct[1].subtotal).toBe(29000)
+    })
+
+    it('closes dialog when clicking the close button', async () => {
+      const onOpenChange = vi.fn()
+
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <ProductCustomizationDialog
+            open={true}
+            product={mockFnbProduct}
+            onOpenChange={onOpenChange}
+          />
+        </StorefrontCartProvider>,
+      )
+
+      await page.getByRole('button', { name: 'Tutup dialog kustomisasi' }).click()
+      expect(onOpenChange).toHaveBeenCalledWith(false)
     })
   })
 
@@ -358,34 +289,38 @@ describe('Storefront Client Islands (Ticket 05)', () => {
   // =========================================================================
 
   describe('storefrontCartDrawer', () => {
-    it('returns null when open is false', () => {
-      const markup = renderToStaticMarkup(
+    it('does not render drawer when open is false', async () => {
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <StorefrontCartDrawer open={false} tenant={mockTenant} onOpenChange={vi.fn()} />
+          <StorefrontCartDrawer open={false} tenant={mockStorefrontTenant} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
-      expect(markup).toBe('')
+
+      await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
     })
 
-    it('renders clean empty cart state when cart contains zero items', () => {
+    it('renders clean empty cart state when cart contains zero items', async () => {
       const onOpenChange = vi.fn()
-      const rendered = renderIslandElement(
-        <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={onOpenChange} />,
-        cartStore,
+
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <StorefrontCartDrawer
+            open={true}
+            tenant={mockStorefrontTenant}
+            onOpenChange={onOpenChange}
+          />
+        </StorefrontCartProvider>,
       )
 
-      const markup = renderToStaticMarkup(rendered)
+      await expect.element(page.getByRole('dialog')).toBeVisible()
+      await expect.element(page.getByText('Keranjang Belanja Kosong')).toBeVisible()
+      await expect.element(page.getByText(/Belum ada produk di keranjang Anda/)).toBeVisible()
 
-      expect(markup).toContain('Keranjang Belanja Kosong')
-      expect(markup).toContain('Belum ada produk')
-
-      const closeEmptyBtn = findElementBySlot(rendered, 'cart-empty-close')
-      expect(closeEmptyBtn).toBeDefined()
-      closeEmptyBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      await page.getByRole('button', { name: 'Mulai Belanja' }).click()
       expect(onOpenChange).toHaveBeenCalledWith(false)
     })
 
-    it('renders line items with variants, addons, notes, quantity, and total amount', () => {
+    it('renders line items with variants, addons, notes, quantity, and total amount', async () => {
       cartStore.getState().addItem({
         name: 'Kopi Susu Gula Aren',
         basePrice: 20000,
@@ -398,22 +333,23 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         unitPrice: 29000,
       })
 
-      const markup = renderToStaticMarkup(
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={vi.fn()} />
+          <StorefrontCartDrawer open={true} tenant={mockStorefrontTenant} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markup).toContain('Kopi Susu Gula Aren')
-      expect(markup).toContain('Ukuran: Large')
-      expect(markup).toContain('Suhu: Dingin')
-      expect(markup).toContain('Ekstra Shot')
-      expect(markup).toContain('Less sugar')
-      expect(markup).toContain('Rp 58.000') // item subtotal
-      expect(markup).toContain('2') // item quantity
+      await expect.element(page.getByText('Kopi Susu Gula Aren')).toBeVisible()
+      await expect.element(page.getByText('Ukuran: Large')).toBeVisible()
+      await expect.element(page.getByText('Suhu: Dingin')).toBeVisible()
+      await expect.element(page.getByText('Ekstra Shot')).toBeVisible()
+      await expect.element(page.getByText('Less sugar')).toBeVisible()
+      await expect.element(page.getByText('Rp 58.000').first()).toBeVisible()
+      await expect.element(page.getByText('Rp 58.000').last()).toBeVisible()
+      await expect.element(page.getByText('Total Pesanan')).toBeVisible()
     })
 
-    it('line item steppers call updateQuantity and remove button calls removeItem', () => {
+    it('line item steppers call updateQuantity and remove button calls removeItem', async () => {
       cartStore.getState().addItem({
         name: 'Kopi Susu Gula Aren',
         basePrice: 20000,
@@ -425,28 +361,29 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         unitPrice: 20000,
       })
 
-      const rendered = renderIslandElement(
-        <StorefrontCartDrawer open={true} tenant={mockTenant} onOpenChange={vi.fn()} />,
-        cartStore,
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <StorefrontCartDrawer open={true} tenant={mockStorefrontTenant} onOpenChange={vi.fn()} />
+        </StorefrontCartProvider>,
       )
 
-      const incBtn = findElementBySlot(rendered, 'cart-item-increment')
-      expect(incBtn).toBeDefined()
-      incBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      // Increment
+      await page.getByRole('button', { name: 'Tambah kuantitas' }).click()
       expect(cartStore.getState().items[0].quantity).toBe(3)
+      await expect.element(page.getByText('Rp 60.000').last()).toBeVisible()
 
-      const decBtn = findElementBySlot(rendered, 'cart-item-decrement')
-      expect(decBtn).toBeDefined()
-      decBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      // Decrement
+      await page.getByRole('button', { name: 'Kurangi kuantitas' }).click()
       expect(cartStore.getState().items[0].quantity).toBe(2)
+      await expect.element(page.getByText('Rp 40.000').last()).toBeVisible()
 
-      const removeBtn = findElementBySlot(rendered, 'cart-item-remove')
-      expect(removeBtn).toBeDefined()
-      removeBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      // Remove item
+      await page.getByRole('button', { name: 'Hapus item' }).click()
       expect(cartStore.getState().items).toHaveLength(0)
+      await expect.element(page.getByText('Keranjang Belanja Kosong')).toBeVisible()
     })
 
-    it('displays validation errors on incomplete fields according to fulfillment mode', () => {
+    it('displays validation errors on incomplete fields according to fulfillment mode', async () => {
       cartStore.getState().addItem({
         name: 'Kopi Susu Gula Aren',
         basePrice: 20000,
@@ -455,69 +392,28 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         subtotal: 20000,
       })
 
-      // Test DINE_IN with missing fields
-      const renderedDineIn = renderIslandElement(
-        <StorefrontCartDrawer
-          initialCustomerName=""
-          initialFulfillmentMode="DINE_IN"
-          initialTableNumber=""
-          open={true}
-          tenant={mockTenant}
-          onOpenChange={vi.fn()}
-        />,
-        cartStore,
-      )
-
-      const checkoutBtn = findElementBySlot(renderedDineIn, 'cart-checkout-button')
-      expect(checkoutBtn).toBeDefined()
-      checkoutBtn?.props?.onClick?.({ preventDefault: vi.fn() })
-
-      // Static markup rendered with initial validation error state
-      const markupDineInErrors = renderToStaticMarkup(
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <StorefrontCartDrawer
-            initialCustomerName=""
-            initialFulfillmentMode="DINE_IN"
-            initialTableNumber=""
-            open={true}
-            tenant={mockTenant}
-            onOpenChange={vi.fn()}
-            initialErrors={{
-              customerName: 'Nama pemesan wajib diisi',
-              tableNumber: 'Nomor meja wajib diisi',
-            }}
-          />
+          <StorefrontCartDrawer open={true} tenant={mockStorefrontTenant} onOpenChange={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markupDineInErrors).toContain('Nomor meja wajib diisi')
-      expect(markupDineInErrors).toContain('Nama pemesan wajib diisi')
+      // In default DINE_IN mode with empty name and table number, submit checkout
+      await page.getByRole('button', { name: 'Pesan via WhatsApp' }).click()
 
-      // Test DELIVERY with missing address
-      const markupDeliveryErrors = renderToStaticMarkup(
-        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
-          <StorefrontCartDrawer
-            initialAddress=""
-            initialCustomerName="Budi"
-            initialFulfillmentMode="DELIVERY"
-            open={true}
-            tenant={mockTenant}
-            onOpenChange={vi.fn()}
-            initialErrors={{
-              address: 'Alamat pengiriman lengkap wajib diisi',
-            }}
-          />
-        </StorefrontCartProvider>,
-      )
+      await expect.element(page.getByText('Nama pemesan wajib diisi')).toBeVisible()
+      await expect.element(page.getByText('Nomor meja wajib diisi')).toBeVisible()
 
-      expect(markupDeliveryErrors).toContain('Alamat pengiriman lengkap wajib diisi')
+      // Switch to DELIVERY mode
+      await page.getByRole('button', { name: 'Delivery' }).click()
+      await page.getByRole('button', { name: 'Pesan via WhatsApp' }).click()
+
+      await expect.element(page.getByText('Nama pemesan wajib diisi')).toBeVisible()
+      await expect.element(page.getByText('Alamat pengiriman lengkap wajib diisi')).toBeVisible()
     })
 
-    it('compiles order and dispatches WhatsApp URL on valid checkout submission', () => {
-      const windowOpenSpy = vi.fn()
-      globalThis.window = {
-        open: windowOpenSpy,
-      } as unknown as Window & typeof globalThis
+    it('compiles order and dispatches WhatsApp URL on valid checkout submission', async () => {
+      const windowOpenSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
 
       cartStore.getState().addItem({
         name: 'Kopi Susu Gula Aren',
@@ -531,21 +427,16 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         unitPrice: 29000,
       })
 
-      const rendered = renderIslandElement(
-        <StorefrontCartDrawer
-          initialCustomerName="Ahmad Reza"
-          initialFulfillmentMode="DINE_IN"
-          initialTableNumber="Meja 12"
-          open={true}
-          tenant={mockTenant}
-          onOpenChange={vi.fn()}
-        />,
-        cartStore,
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <StorefrontCartDrawer open={true} tenant={mockStorefrontTenant} onOpenChange={vi.fn()} />
+        </StorefrontCartProvider>,
       )
 
-      const checkoutBtn = findElementBySlot(rendered, 'cart-checkout-button')
-      expect(checkoutBtn).toBeDefined()
-      checkoutBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      await page.getByLabelText(/Nama Pemesan/i).fill('Ahmad Reza')
+      await page.getByLabelText(/Nomor Meja/i).fill('Meja 12')
+
+      await page.getByRole('button', { name: 'Pesan via WhatsApp' }).click()
 
       expect(windowOpenSpy).toHaveBeenCalledTimes(1)
       const calledUrl = windowOpenSpy.mock.calls[0][0] as string
@@ -565,11 +456,8 @@ describe('Storefront Client Islands (Ticket 05)', () => {
       expect(decodedText).toContain('No. Meja: Meja 12')
     })
 
-    it('includes pickup preferences in WhatsApp order summary when mode is TAKEAWAY or PICKUP', () => {
-      const windowOpenSpy = vi.fn()
-      globalThis.window = {
-        open: windowOpenSpy,
-      } as unknown as Window & typeof globalThis
+    it('includes pickup preferences in WhatsApp order summary when mode is TAKEAWAY', async () => {
+      const windowOpenSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
 
       cartStore.getState().addItem({
         name: 'Donat Cokelat',
@@ -580,25 +468,17 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         unitPrice: 12000,
       })
 
-      const renderedTakeaway = renderIslandElement(
-        <StorefrontCartDrawer
-          initialCustomerName="Siti Nurhaliza"
-          initialFulfillmentMode="TAKEAWAY"
-          initialPickupPreferences="Ambil jam 15.00 sore"
-          open={true}
-          tenant={mockTenant}
-          onOpenChange={vi.fn()}
-        />,
-        cartStore,
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <StorefrontCartDrawer open={true} tenant={mockStorefrontTenant} onOpenChange={vi.fn()} />
+        </StorefrontCartProvider>,
       )
 
-      const markup = renderToStaticMarkup(renderedTakeaway)
-      expect(markup).toContain('Preferensi Pengambilan')
-      expect(markup).toContain('Ambil jam 15.00 sore')
+      await page.getByRole('button', { name: 'Takeaway' }).click()
+      await page.getByLabelText(/Nama Pemesan/i).fill('Siti Nurhaliza')
+      await page.getByLabelText(/Preferensi Pengambilan/i).fill('Ambil jam 15.00 sore')
 
-      const checkoutBtn = findElementBySlot(renderedTakeaway, 'cart-checkout-button')
-      expect(checkoutBtn).toBeDefined()
-      checkoutBtn?.props?.onClick?.({ preventDefault: vi.fn() })
+      await page.getByRole('button', { name: 'Pesan via WhatsApp' }).click()
 
       expect(windowOpenSpy).toHaveBeenCalledTimes(1)
       const calledUrl = windowOpenSpy.mock.calls[0][0] as string
@@ -613,17 +493,19 @@ describe('Storefront Client Islands (Ticket 05)', () => {
   // =========================================================================
 
   describe('mobileCartBar', () => {
-    it('returns null when cart item count is zero', () => {
-      const markup = renderToStaticMarkup(
+    it('does not render when cart item count is zero', async () => {
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
           <MobileCartBar onOpenCart={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markup).toBe('')
+      await expect
+        .element(page.getByRole('button', { name: /Buka keranjang belanja/i }))
+        .not.toBeInTheDocument()
     })
 
-    it('renders sticky dock with item count and formatted subtotal when cart has items', () => {
+    it('renders sticky bar with item count and formatted subtotal when cart has items', async () => {
       cartStore.getState().addItem({
         name: 'Donat Cokelat',
         basePrice: 15000,
@@ -632,19 +514,18 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         subtotal: 45000,
       })
 
-      const markup = renderToStaticMarkup(
+      render(
         <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
           <MobileCartBar onOpenCart={vi.fn()} />
         </StorefrontCartProvider>,
       )
 
-      expect(markup).toContain('3') // count
-      expect(markup).toContain('Rp 45.000') // total
-      expect(markup).toContain('fixed')
-      expect(markup).toContain('bottom-0')
+      await expect.element(page.getByText('3 produk')).toBeVisible()
+      await expect.element(page.getByText('Rp 45.000')).toBeVisible()
+      await expect.element(page.getByText('Lihat Keranjang')).toBeVisible()
     })
 
-    it('triggers onOpenCart callback when user clicks the bar or button', () => {
+    it('triggers onOpenCart callback when user clicks the bar button', async () => {
       const onOpenCart = vi.fn()
 
       cartStore.getState().addItem({
@@ -655,12 +536,13 @@ describe('Storefront Client Islands (Ticket 05)', () => {
         subtotal: 20000,
       })
 
-      const rendered = renderIslandElement(<MobileCartBar onOpenCart={onOpenCart} />, cartStore)
+      render(
+        <StorefrontCartProvider initialStore={cartStore} tenantId="tenant-test">
+          <MobileCartBar onOpenCart={onOpenCart} />
+        </StorefrontCartProvider>,
+      )
 
-      const openButton = findElementBySlot(rendered, 'mobile-cart-open')
-      expect(openButton).toBeDefined()
-      openButton?.props?.onClick?.({ preventDefault: vi.fn() })
-
+      await page.getByRole('button', { name: /Buka keranjang belanja/i }).click()
       expect(onOpenCart).toHaveBeenCalledTimes(1)
     })
   })

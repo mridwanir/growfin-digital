@@ -4,9 +4,9 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] Test configuration resolves Next.js environment variables without runtime CommonJS import exceptions in Node ESM.
-- [ ] A dedicated test environment file containing non-secret mock variables is present in the repository root and tracked by git.
-- [ ] The test configuration defines three isolated projects corresponding to unit tests, component tests, and integration tests.
-- [ ] Running the root test command initializes the test runner successfully without crashing during setup.
+- [x] Test configuration resolves Next.js environment variables without runtime CommonJS import exceptions in Node ESM.
+- [x] A dedicated test environment file containing non-secret mock variables is present in the repository root and tracked by git.
+- [x] The test configuration defines three isolated projects corresponding to unit tests, component tests, and integration tests.
+- [x] Running the root test command initializes the test runner successfully without crashing during setup.

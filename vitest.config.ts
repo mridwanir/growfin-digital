@@ -1,6 +1,8 @@
-import { loadEnvConfig } from '@next/env'
+import nextEnv from '@next/env'
 import react from '@vitejs/plugin-react'
 import { defaultExclude, defineConfig } from 'vitest/config'
+
+const { loadEnvConfig } = nextEnv
 
 export default defineConfig({
   plugins: [react()],

@@ -4,10 +4,10 @@
 
 **Blocked by:** 01: Test environment configuration and runner boot repair
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] A global setup script programmatically launches an in-memory PGlite PostgreSQL server on an isolated port before integration tests execute.
-- [ ] Schema migrations are applied programmatically to the in-memory database using the Drizzle migration runner within the setup script.
-- [ ] The global setup script sets the test database connection string in the environment so database clients connect to the in-memory instance.
-- [ ] The global setup script shuts down the database server cleanly after the integration test suite settles.
-- [ ] Integration test commands run against the ephemeral database without requiring an external database process running on port 5432.
+- [x] A global setup script programmatically launches an in-memory PGlite PostgreSQL server on an isolated port before integration tests execute.
+- [x] Schema migrations are applied programmatically to the in-memory database using the Drizzle migration runner within the setup script.
+- [x] The global setup script sets the test database connection string in the environment so database clients connect to the in-memory instance.
+- [x] The global setup script shuts down the database server cleanly after the integration test suite settles.
+- [x] Integration test commands run against the ephemeral database without requiring an external database process running on port 5432.

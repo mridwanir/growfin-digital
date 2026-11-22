@@ -7,7 +7,7 @@
     "build": "run-s db:migrate build:next",
     "build:local": "run-p db-server:memory build:next --race",
     "build:next": "next build",
-    "ci": "run-s -c lint knip typecheck test",
+    "ci": "run-s lint knip typecheck test",
     "db-server:file": "pglite-server --max-connections=10 --db=.temp/db --run 'pnpm run db:migrate'",
     "db-server:memory": "pglite-server --max-connections=10 --run 'pnpm run db:migrate'",
     "db:generate": "drizzle-kit generate",

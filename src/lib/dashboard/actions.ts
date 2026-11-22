@@ -43,6 +43,22 @@ async function requireMerchantSession(): Promise<AuthCheckResult> {
   }
   return { success: true, user: session.user, userId: session.user.id }
 }
+function validateInput<T>(
+  schema: z.ZodType<T>,
+  input: unknown,
+):
+  | { data: T; success: true }
+  | { error: string; fieldErrors: Record<string, string[]>; success: false } {
+  const parsed = schema.safeParse(input)
+  if (!parsed.success) {
+    return {
+      error: parsed.error.issues[0]?.message ?? 'Validation failed',
+      fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+      success: false,
+    }
+  }
+  return { data: parsed.data, success: true }
+}
 
 const updateSettingsSchema = z.object({
   address: z.string().nullable().optional(),
@@ -81,12 +97,14 @@ const createCategorySchema = z.object({
   slug: z.string().optional(),
   sortOrder: z.number().int().optional(),
 })
+const createProductCategorySchema = createCategorySchema
 
 const updateCategorySchema = z.object({
   name: z.string().min(1).optional(),
   slug: z.string().optional(),
   sortOrder: z.number().int().optional(),
 })
+const updateProductCategorySchema = updateCategorySchema
 
 const variantOptionSchema = z.object({
   label: z.string().min(1, 'Option label is required'),
@@ -141,18 +159,12 @@ export async function updateTenantSettingsAction(
     return { error: authResult.error, success: false }
   }
 
-  const parsed = updateSettingsSchema.safeParse(input)
-  if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
-    const fieldErrors = parsed.error.flatten().fieldErrors
-    return {
-      error: firstError,
-      fieldErrors,
-      success: false,
-    }
+  const validation = validateInput(updateSettingsSchema, input)
+  if (!validation.success) {
+    return validation
   }
 
-  const updated = await updateTenantSettings(tenantId, authResult.userId, parsed.data)
+  const updated = await updateTenantSettings(tenantId, authResult.userId, validation.data)
   if (!updated) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
@@ -162,7 +174,7 @@ export async function updateTenantSettingsAction(
   return { data: updated, success: true }
 }
 
-export async function createCategoryAction(
+export async function createProductCategoryAction(
   tenantId: string,
   input: unknown,
 ): Promise<ActionResult<Category>> {
@@ -171,28 +183,23 @@ export async function createCategoryAction(
     return { error: authResult.error, success: false }
   }
 
-  const parsed = createCategorySchema.safeParse(input)
-  if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
-    const fieldErrors = parsed.error.flatten().fieldErrors
-    return {
-      error: firstError,
-      fieldErrors,
-      success: false,
-    }
+  const validation = validateInput(createProductCategorySchema, input)
+  if (!validation.success) {
+    return validation
   }
 
-  const created = await createCategory(tenantId, authResult.userId, parsed.data)
+  const created = await createCategory(tenantId, authResult.userId, validation.data)
   if (!created) {
-    return { error: 'Category or tenant not found', success: false }
+    return { error: 'Tenant not found or forbidden', success: false }
   }
 
   revalidatePath('/dashboard/products')
 
   return { data: created, success: true }
 }
+export const createCategoryAction = createProductCategoryAction
 
-export async function updateCategoryAction(
+export async function updateProductCategoryAction(
   tenantId: string,
   categoryId: string,
   input: unknown,
@@ -202,18 +209,12 @@ export async function updateCategoryAction(
     return { error: authResult.error, success: false }
   }
 
-  const parsed = updateCategorySchema.safeParse(input)
-  if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
-    const fieldErrors = parsed.error.flatten().fieldErrors
-    return {
-      error: firstError,
-      fieldErrors,
-      success: false,
-    }
+  const validation = validateInput(updateProductCategorySchema, input)
+  if (!validation.success) {
+    return validation
   }
 
-  const updated = await updateCategory(tenantId, authResult.userId, categoryId, parsed.data)
+  const updated = await updateCategory(tenantId, authResult.userId, categoryId, validation.data)
   if (!updated) {
     return { error: 'Category or tenant not found', success: false }
   }
@@ -222,8 +223,9 @@ export async function updateCategoryAction(
 
   return { data: updated, success: true }
 }
+export const updateCategoryAction = updateProductCategoryAction
 
-export async function deleteCategoryAction(
+export async function deleteProductCategoryAction(
   tenantId: string,
   categoryId: string,
 ): Promise<ActionResult<{ success: true }>> {
@@ -241,6 +243,7 @@ export async function deleteCategoryAction(
 
   return { data: { success: true }, success: true }
 }
+export const deleteCategoryAction = deleteProductCategoryAction
 
 export async function createProductAction(
   tenantId: string,
@@ -251,20 +254,14 @@ export async function createProductAction(
     return { error: authResult.error, success: false }
   }
 
-  const parsed = createProductSchema.safeParse(input)
-  if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
-    const fieldErrors = parsed.error.flatten().fieldErrors
-    return {
-      error: firstError,
-      fieldErrors,
-      success: false,
-    }
+  const validation = validateInput(createProductSchema, input)
+  if (!validation.success) {
+    return validation
   }
 
-  const created = await createProduct(tenantId, authResult.userId, parsed.data)
+  const created = await createProduct(tenantId, authResult.userId, validation.data)
   if (!created) {
-    return { error: 'Product or tenant not found', success: false }
+    return { error: 'Tenant not found or forbidden', success: false }
   }
 
   revalidatePath('/dashboard/products')
@@ -301,18 +298,12 @@ export async function updateProductAction(
     return { error: authResult.error, success: false }
   }
 
-  const parsed = updateProductSchema.safeParse(input)
-  if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
-    const fieldErrors = parsed.error.flatten().fieldErrors
-    return {
-      error: firstError,
-      fieldErrors,
-      success: false,
-    }
+  const validation = validateInput(updateProductSchema, input)
+  if (!validation.success) {
+    return validation
   }
 
-  const updated = await updateProduct(tenantId, authResult.userId, productId, parsed.data)
+  const updated = await updateProduct(tenantId, authResult.userId, productId, validation.data)
   if (!updated) {
     return { error: 'Product or tenant not found', success: false }
   }

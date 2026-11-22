@@ -102,6 +102,12 @@ export function ProductsClient({
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
     null,
   )
+  const [categoryFieldErrors, setCategoryFieldErrors] = useState<
+    Record<string, string[] | undefined>
+  >({})
+  const [productFieldErrors, setProductFieldErrors] = useState<
+    Record<string, string[] | undefined>
+  >({})
   // Category inline state
   const [newCategoryName, setNewCategoryName] = useState('')
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
@@ -118,6 +124,7 @@ export function ProductsClient({
     if (!editingCategoryName.trim()) return
 
     setFeedback(null)
+    setCategoryFieldErrors({})
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
@@ -125,6 +132,9 @@ export function ProductsClient({
           name: editingCategoryName.trim(),
         })
         if (!res.success) {
+          if (res.fieldErrors) {
+            setCategoryFieldErrors(res.fieldErrors)
+          }
           setFeedback({
             type: 'error',
             message: res.error || 'Gagal memperbarui kategori',
@@ -132,6 +142,7 @@ export function ProductsClient({
           return
         }
 
+        setCategoryFieldErrors({})
         setCategories(prev => prev.map(c => (c.id === catId ? res.data : c)))
         setEditingCategoryId(null)
         setEditingCategoryName('')
@@ -183,6 +194,7 @@ export function ProductsClient({
     if (!newCategoryName.trim()) return
 
     setFeedback(null)
+    setCategoryFieldErrors({})
     setActiveCategoryId(null)
     startCategoryTransition(async () => {
       try {
@@ -192,6 +204,9 @@ export function ProductsClient({
         })
 
         if (!res.success) {
+          if (res.fieldErrors) {
+            setCategoryFieldErrors(res.fieldErrors)
+          }
           setFeedback({
             type: 'error',
             message: res.error || 'Gagal menambahkan kategori',
@@ -199,6 +214,7 @@ export function ProductsClient({
           return
         }
 
+        setCategoryFieldErrors({})
         setCategories(prev => [...prev, res.data])
         setNewCategoryName('')
         setFeedback({ type: 'success', message: `Kategori "${res.data.name}" berhasil dibuat` })
@@ -227,6 +243,9 @@ export function ProductsClient({
         }
 
         setCategories(prev => prev.filter(c => c.id !== catId))
+        setProducts(prev =>
+          prev.map(p => (p.categoryId === catId ? { ...p, categoryId: null } : p)),
+        )
         setFeedback({ type: 'success', message: `Kategori "${catName}" berhasil dihapus` })
       } catch (err: unknown) {
         setFeedback({
@@ -252,6 +271,7 @@ export function ProductsClient({
     setImageUrl('')
     setImageStorageKey('')
     setFormVariants([])
+    setProductFieldErrors({})
     setIsFormOpen(true)
   }
 
@@ -279,6 +299,7 @@ export function ProductsClient({
         })),
       })),
     )
+    setProductFieldErrors({})
     setIsFormOpen(true)
   }
 
@@ -395,16 +416,22 @@ export function ProductsClient({
 
     if (editingProductId) {
       setFeedback(null)
+      setProductFieldErrors({})
       startProductTransition(async () => {
         try {
           const res = await updateProductAction(selectedTenantId, editingProductId, payload)
           if (!res.success) {
+            if (res.fieldErrors) {
+              setProductFieldErrors(res.fieldErrors)
+            }
             setFeedback({
               type: 'error',
               message: res.error || 'Gagal menyimpan produk',
             })
             return
           }
+
+          setProductFieldErrors({})
 
           setProducts(prev => prev.map(p => (p.id === res.data.id ? res.data : p)))
           setFeedback({
@@ -423,16 +450,22 @@ export function ProductsClient({
     }
 
     setFeedback(null)
+    setProductFieldErrors({})
     startProductTransition(async () => {
       try {
         const res = await createProductAction(selectedTenantId, payload)
         if (!res.success) {
+          if (res.fieldErrors) {
+            setProductFieldErrors(res.fieldErrors)
+          }
           setFeedback({
             type: 'error',
             message: res.error || 'Gagal membuat produk',
           })
           return
         }
+
+        setProductFieldErrors({})
 
         setProducts(prev => [res.data, ...prev])
         setFeedback({
@@ -560,6 +593,9 @@ export function ProductsClient({
               Tambah Kategori
             </Button>
           </form>
+          {categoryFieldErrors.name && (
+            <p className="text-destructive text-xs">{categoryFieldErrors.name.join(', ')}</p>
+          )}
 
           <div className="flex flex-wrap gap-2 pt-2">
             {categories.length === 0 ? (
@@ -865,6 +901,9 @@ export function ProductsClient({
                   value={name}
                   onChange={e => setName(e.target.value)}
                 />
+                {productFieldErrors.name && (
+                  <p className="text-destructive text-xs">{productFieldErrors.name.join(', ')}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -883,6 +922,11 @@ export function ProductsClient({
                       </option>
                     ))}
                   </select>
+                  {productFieldErrors.categoryId && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.categoryId.join(', ')}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -895,6 +939,11 @@ export function ProductsClient({
                     value={stock}
                     onChange={e => setStock(e.target.value)}
                   />
+                  {productFieldErrors.stock && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.stock.join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -910,6 +959,11 @@ export function ProductsClient({
                     value={basePrice}
                     onChange={e => setBasePrice(e.target.value)}
                   />
+                  {productFieldErrors.basePrice && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.basePrice.join(', ')}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -922,6 +976,11 @@ export function ProductsClient({
                     value={originalPrice}
                     onChange={e => setOriginalPrice(e.target.value)}
                   />
+                  {productFieldErrors.originalPrice && (
+                    <p className="text-destructive text-xs">
+                      {productFieldErrors.originalPrice.join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -935,6 +994,11 @@ export function ProductsClient({
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                 />
+                {productFieldErrors.description && (
+                  <p className="text-destructive text-xs">
+                    {productFieldErrors.description.join(', ')}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-2">

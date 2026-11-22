@@ -2,10 +2,17 @@ import { NextRequest } from 'next/server'
 import { describe, expect, it, vi } from 'vitest'
 
 import { POST as authWebhook } from '@/app/api/auth/webhook/route'
+import { auth } from '@/lib/auth/server'
+import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
+import * as dashboardMutations from '@/lib/dashboard/mutations'
 import { resend } from '@/lib/email/resend'
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}))
+
 describe('End-to-End Passwordless Auth Integration Flow', () => {
-  it('executes passwordless auth webhook delivery', async () => {
+  it('executes passwordless auth webhook delivery and allows merchant settings mutation', async () => {
     // 1. Webhook delivers OTP email via Resend
     const resendSpy = vi.spyOn(resend.emails, 'send').mockResolvedValueOnce({
       data: { id: 'email_msg_999' },
@@ -48,5 +55,74 @@ describe('End-to-End Passwordless Auth Integration Flow', () => {
         to: 'merchant.flow@growfin.my.id',
       }),
     )
+
+    // 2. Verified merchant session allows mutating settings via updateTenantSettingsAction
+    const merchantSession = {
+      session: {
+        id: 'sess_flow_merchant',
+        createdAt: new Date(),
+        expiresAt: new Date(Date.now() + 86400000),
+        token: 'token_merchant_abc',
+        updatedAt: new Date(),
+        userId: 'user_flow_merchant',
+      },
+      user: {
+        id: 'user_flow_merchant',
+        name: 'Merchant Flow User',
+        createdAt: new Date(),
+        email: 'merchant.flow@growfin.my.id',
+        emailVerified: true,
+        updatedAt: new Date(),
+      },
+    }
+
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
+      data: merchantSession,
+      error: null,
+    })
+
+    const mockUpdatedTenant = {
+      id: 'tenant_flow_123',
+      name: 'Flow Merchant Store',
+      address: 'Jl. Merdeka No. 45',
+      brandingContent: null,
+      category: 'F&B',
+      city: 'Jakarta Pusat',
+      createdAt: new Date(),
+      customDomain: null,
+      domainActiveUntil: null,
+      fomoExpiresAt: null,
+      googleMapsUrl: null,
+      operatingHours: null,
+      organizationId: null,
+      packageTier: 'free' as const,
+      phone: '081234567890',
+      siteActiveUntil: null,
+      slug: 'flow-merchant-store',
+      status: 'published' as const,
+      themeConfig: {},
+      updatedAt: new Date(),
+      userId: 'user_flow_merchant',
+    }
+
+    const mutationSpy = vi
+      .spyOn(dashboardMutations, 'updateTenantSettings')
+      .mockResolvedValueOnce(mockUpdatedTenant)
+
+    const actionResult = await updateTenantSettingsAction('tenant_flow_123', {
+      address: 'Jl. Merdeka No. 45',
+      city: 'Jakarta Pusat',
+      phone: '081234567890',
+    })
+
+    expect(actionResult).toEqual({
+      data: mockUpdatedTenant,
+      success: true,
+    })
+    expect(mutationSpy).toHaveBeenCalledWith('tenant_flow_123', 'user_flow_merchant', {
+      address: 'Jl. Merdeka No. 45',
+      city: 'Jakarta Pusat',
+      phone: '081234567890',
+    })
   })
 })

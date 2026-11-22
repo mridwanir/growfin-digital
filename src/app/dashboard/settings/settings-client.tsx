@@ -67,7 +67,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
   const [isPending, startTransition] = useTransition()
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[] | undefined>>({})
   const handleTenantChange = (tenantId: string) => {
     setSelectedTenantId(tenantId)
     router.push(`/dashboard/settings?tenant=${tenantId}`)
@@ -77,7 +77,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
     e.preventDefault()
     setSuccessMessage('')
     setErrorMessage('')
-
+    setFieldErrors({})
     const payload = {
       address: address.trim() || null,
       city: city.trim() || null,
@@ -99,10 +99,14 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
     startTransition(async () => {
       const res = await updateTenantSettingsAction(selectedTenantId, payload)
       if (!res.success) {
+        if (res.fieldErrors) {
+          setFieldErrors(res.fieldErrors)
+        }
         setErrorMessage(res.error || 'Gagal menyimpan pengaturan')
         return
       }
 
+      setFieldErrors({})
       setSuccessMessage('Pengaturan toko berhasil disimpan!')
     })
   }
@@ -168,6 +172,9 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
               />
+              {fieldErrors.phone && (
+                <p className="text-destructive text-xs">{fieldErrors.phone.join(', ')}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -178,6 +185,9 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
                 value={city}
                 onChange={e => setCity(e.target.value)}
               />
+              {fieldErrors.city && (
+                <p className="text-destructive text-xs">{fieldErrors.city.join(', ')}</p>
+              )}
             </div>
 
             <div className="space-y-2 sm:col-span-2">
@@ -188,6 +198,9 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
                 value={address}
                 onChange={e => setAddress(e.target.value)}
               />
+              {fieldErrors.address && (
+                <p className="text-destructive text-xs">{fieldErrors.address.join(', ')}</p>
+              )}
             </div>
           </CardContent>
         </Card>

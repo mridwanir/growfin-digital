@@ -5,10 +5,13 @@ import { auth } from '@/lib/auth/server'
 import {
   createCategoryAction,
   createProductAction,
+  createProductCategoryAction,
   deleteCategoryAction,
   deleteProductAction,
+  deleteProductCategoryAction,
   updateCategoryAction,
   updateProductAction,
+  updateProductCategoryAction,
   updateTenantSettingsAction,
 } from '@/lib/dashboard/actions'
 import * as dashboardMutations from '@/lib/dashboard/mutations'
@@ -17,9 +20,34 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
+const mockUserId = 'user-123'
+
+function createMockSession(userId: string = mockUserId, email: string = 'merchant@example.com') {
+  return {
+    error: null,
+    data: {
+      session: {
+        id: 'sess-1',
+        createdAt: new Date(),
+        expiresAt: new Date(),
+        token: 'tok-1',
+        updatedAt: new Date(),
+        userId,
+      },
+      user: {
+        id: userId,
+        name: 'Merchant Test',
+        createdAt: new Date(),
+        email,
+        emailVerified: true,
+        updatedAt: new Date(),
+      },
+    },
+  }
+}
+
 describe('updateTenantSettingsAction seam', () => {
   const mockTenantId = 'tenant-456'
-  const mockUserId = 'user-123'
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -81,27 +109,7 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     const mutationSpy = vi.spyOn(dashboardMutations, 'updateTenantSettings')
 
     const invalidInput = {
@@ -125,27 +133,7 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('rejects modification of tenant owned by another user or non-existent tenant', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'updateTenantSettings').mockResolvedValueOnce(null)
 
     const result = await updateTenantSettingsAction(mockTenantId, {
@@ -162,27 +150,7 @@ describe('updateTenantSettingsAction seam', () => {
   })
 
   it('updates tenant settings, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mockUpdatedTenant = {
       id: mockTenantId,
@@ -247,12 +215,15 @@ describe('updateTenantSettingsAction seam', () => {
   })
 })
 
-describe('createCategoryAction seam', () => {
+describe('createProductCategoryAction seam', () => {
   const mockTenantId = 'tenant-456'
-  const mockUserId = 'user-123'
 
   beforeEach(() => {
     vi.clearAllMocks()
+  })
+
+  it('aliases createCategoryAction for backward compatibility', () => {
+    expect(createCategoryAction).toBe(createProductCategoryAction)
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
@@ -262,7 +233,7 @@ describe('createCategoryAction seam', () => {
     })
     const mutationSpy = vi.spyOn(dashboardMutations, 'createCategory')
 
-    const result = await createCategoryAction(mockTenantId, { name: 'Makanan' })
+    const result = await createProductCategoryAction(mockTenantId, { name: 'Makanan' })
 
     expect(result).toEqual({
       error: 'Unauthorized',
@@ -273,30 +244,10 @@ describe('createCategoryAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     const mutationSpy = vi.spyOn(dashboardMutations, 'createCategory')
 
-    const result = await createCategoryAction(mockTenantId, {
+    const result = await createProductCategoryAction(mockTenantId, {
       name: '',
       sortOrder: 1.5,
     })
@@ -314,60 +265,20 @@ describe('createCategoryAction seam', () => {
   })
 
   it('rejects creation when tenant is not found or forbidden', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'createCategory').mockResolvedValueOnce(null)
 
-    const result = await createCategoryAction(mockTenantId, { name: 'Minuman' })
+    const result = await createProductCategoryAction(mockTenantId, { name: 'Minuman' })
 
     expect(result).toEqual({
-      error: 'Category or tenant not found',
+      error: 'Tenant not found or forbidden',
       success: false,
     })
     expect(revalidatePath).not.toHaveBeenCalled()
   })
 
   it('creates category, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mockCreatedCategory = {
       id: 'cat-123',
@@ -387,7 +298,7 @@ describe('createCategoryAction seam', () => {
       sortOrder: 0,
     }
 
-    const result = await createCategoryAction(mockTenantId, payload)
+    const result = await createProductCategoryAction(mockTenantId, payload)
 
     expect(mutationSpy).toHaveBeenCalledWith(mockTenantId, mockUserId, payload)
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
@@ -398,13 +309,16 @@ describe('createCategoryAction seam', () => {
   })
 })
 
-describe('updateCategoryAction seam', () => {
+describe('updateProductCategoryAction seam', () => {
   const mockTenantId = 'tenant-456'
   const mockCategoryId = 'cat-123'
-  const mockUserId = 'user-123'
 
   beforeEach(() => {
     vi.clearAllMocks()
+  })
+
+  it('aliases updateCategoryAction for backward compatibility', () => {
+    expect(updateCategoryAction).toBe(updateProductCategoryAction)
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
@@ -414,7 +328,7 @@ describe('updateCategoryAction seam', () => {
     })
     const mutationSpy = vi.spyOn(dashboardMutations, 'updateCategory')
 
-    const result = await updateCategoryAction(mockTenantId, mockCategoryId, {
+    const result = await updateProductCategoryAction(mockTenantId, mockCategoryId, {
       name: 'Makanan Baru',
     })
 
@@ -427,30 +341,10 @@ describe('updateCategoryAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     const mutationSpy = vi.spyOn(dashboardMutations, 'updateCategory')
 
-    const result = await updateCategoryAction(mockTenantId, mockCategoryId, {
+    const result = await updateProductCategoryAction(mockTenantId, mockCategoryId, {
       name: '',
       sortOrder: 'invalid' as unknown as number,
     })
@@ -468,30 +362,10 @@ describe('updateCategoryAction seam', () => {
   })
 
   it('rejects update when category or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'updateCategory').mockResolvedValueOnce(null)
 
-    const result = await updateCategoryAction(mockTenantId, mockCategoryId, {
+    const result = await updateProductCategoryAction(mockTenantId, mockCategoryId, {
       name: 'Makanan Edit',
     })
 
@@ -503,27 +377,7 @@ describe('updateCategoryAction seam', () => {
   })
 
   it('updates category, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mockUpdatedCategory = {
       id: mockCategoryId,
@@ -543,7 +397,7 @@ describe('updateCategoryAction seam', () => {
       sortOrder: 1,
     }
 
-    const result = await updateCategoryAction(mockTenantId, mockCategoryId, payload)
+    const result = await updateProductCategoryAction(mockTenantId, mockCategoryId, payload)
 
     expect(mutationSpy).toHaveBeenCalledWith(mockTenantId, mockUserId, mockCategoryId, payload)
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
@@ -554,13 +408,16 @@ describe('updateCategoryAction seam', () => {
   })
 })
 
-describe('deleteCategoryAction seam', () => {
+describe('deleteProductCategoryAction seam', () => {
   const mockTenantId = 'tenant-456'
   const mockCategoryId = 'cat-123'
-  const mockUserId = 'user-123'
 
   beforeEach(() => {
     vi.clearAllMocks()
+  })
+
+  it('aliases deleteCategoryAction for backward compatibility', () => {
+    expect(deleteCategoryAction).toBe(deleteProductCategoryAction)
   })
 
   it('rejects unauthenticated requests with Unauthorized error', async () => {
@@ -570,7 +427,7 @@ describe('deleteCategoryAction seam', () => {
     })
     const mutationSpy = vi.spyOn(dashboardMutations, 'deleteCategory')
 
-    const result = await deleteCategoryAction(mockTenantId, mockCategoryId)
+    const result = await deleteProductCategoryAction(mockTenantId, mockCategoryId)
 
     expect(result).toEqual({
       error: 'Unauthorized',
@@ -581,30 +438,10 @@ describe('deleteCategoryAction seam', () => {
   })
 
   it('rejects deletion when category or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'deleteCategory').mockResolvedValueOnce(false)
 
-    const result = await deleteCategoryAction(mockTenantId, mockCategoryId)
+    const result = await deleteProductCategoryAction(mockTenantId, mockCategoryId)
 
     expect(result).toEqual({
       error: 'Category or tenant not found',
@@ -614,31 +451,11 @@ describe('deleteCategoryAction seam', () => {
   })
 
   it('deletes category, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mutationSpy = vi.spyOn(dashboardMutations, 'deleteCategory').mockResolvedValueOnce(true)
 
-    const result = await deleteCategoryAction(mockTenantId, mockCategoryId)
+    const result = await deleteProductCategoryAction(mockTenantId, mockCategoryId)
 
     expect(mutationSpy).toHaveBeenCalledWith(mockTenantId, mockUserId, mockCategoryId)
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
@@ -651,7 +468,6 @@ describe('deleteCategoryAction seam', () => {
 
 describe('createProductAction seam', () => {
   const mockTenantId = 'tenant-456'
-  const mockUserId = 'user-123'
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -708,27 +524,7 @@ describe('createProductAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     const mutationSpy = vi.spyOn(dashboardMutations, 'createProduct')
 
     const result = await createProductAction(mockTenantId, {
@@ -755,27 +551,7 @@ describe('createProductAction seam', () => {
   })
 
   it('rejects creation when tenant is not found or forbidden', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'createProduct').mockResolvedValueOnce(null)
 
     const result = await createProductAction(mockTenantId, {
@@ -784,34 +560,14 @@ describe('createProductAction seam', () => {
     })
 
     expect(result).toEqual({
-      error: 'Product or tenant not found',
+      error: 'Tenant not found or forbidden',
       success: false,
     })
     expect(revalidatePath).not.toHaveBeenCalled()
   })
 
   it('creates product, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mockCreatedProduct = {
       id: 'prod-123',
@@ -899,7 +655,6 @@ describe('createProductAction seam', () => {
 describe('deleteProductAction seam', () => {
   const mockTenantId = 'tenant-456'
   const mockProductId = 'prod-123'
-  const mockUserId = 'user-123'
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -950,27 +705,7 @@ describe('deleteProductAction seam', () => {
   })
 
   it('rejects deletion when product or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'deleteProduct').mockResolvedValueOnce(false)
 
     const result = await deleteProductAction(mockTenantId, mockProductId)
@@ -983,27 +718,7 @@ describe('deleteProductAction seam', () => {
   })
 
   it('deletes product, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mutationSpy = vi.spyOn(dashboardMutations, 'deleteProduct').mockResolvedValueOnce(true)
 
@@ -1020,7 +735,6 @@ describe('deleteProductAction seam', () => {
 
 describe('updateProductAction seam', () => {
   const mockTenantId = 'tenant-456'
-  const mockUserId = 'user-123'
   const mockProductId = 'prod-123'
 
   beforeEach(() => {
@@ -1078,27 +792,7 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects invalid schema inputs with field error details', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     const mutationSpy = vi.spyOn(dashboardMutations, 'updateProduct')
 
     const result = await updateProductAction(mockTenantId, mockProductId, {
@@ -1125,27 +819,7 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects invalid variant option labels and non-integer price modifiers', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     const mutationSpy = vi.spyOn(dashboardMutations, 'updateProduct')
 
     const result = await updateProductAction(mockTenantId, mockProductId, {
@@ -1172,27 +846,7 @@ describe('updateProductAction seam', () => {
   })
 
   it('rejects modification when product or tenant is not found', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
     vi.spyOn(dashboardMutations, 'updateProduct').mockResolvedValueOnce(null)
 
     const result = await updateProductAction(mockTenantId, mockProductId, {
@@ -1208,27 +862,7 @@ describe('updateProductAction seam', () => {
   })
 
   it('updates product and variants atomically, calls revalidatePath, and returns success result object', async () => {
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      error: null,
-      data: {
-        session: {
-          id: 'sess-1',
-          createdAt: new Date(),
-          expiresAt: new Date(),
-          token: 'tok-1',
-          updatedAt: new Date(),
-          userId: mockUserId,
-        },
-        user: {
-          id: mockUserId,
-          name: 'Merchant Test',
-          createdAt: new Date(),
-          email: 'merchant@example.com',
-          emailVerified: true,
-          updatedAt: new Date(),
-        },
-      },
-    })
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMockSession(mockUserId))
 
     const mockUpdatedProduct = {
       id: mockProductId,

@@ -1,4 +1,4 @@
-Status: ready-for-agent
+Status: resolved
 
 # Test Suites Overhaul and Testing Infrastructure Rebuild
 

@@ -4,7 +4,7 @@
 
 **Blocked by:** 02: Product category lifecycle Server Actions and client transition
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] The dashboard actions module exports typed Server Actions for creating and deleting products
 - [ ] Product creation and deletion actions verify active merchant sessions and tenant ownership

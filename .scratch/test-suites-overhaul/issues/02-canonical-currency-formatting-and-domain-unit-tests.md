@@ -4,10 +4,10 @@
 
 **Blocked by:** 01: Test environment configuration and runner boot repair
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] A canonical storefront currency formatting module exists and formats Indonesian Rupiah amounts across valid and edge-case numeric inputs.
-- [ ] Duplicate currency formatting implementations across catalog and email modules are deleted and cut over to the canonical utility.
-- [ ] Unit tests for currency formatting, cart math, WhatsApp order summaries, and SEO metadata pass cleanly in Node under the unit project.
-- [ ] Unit tests execute with zero database connections and zero network requests.
-- [ ] Running the unit test command verifies all domain unit test suites.
+- [x] A canonical storefront currency formatting module exists and formats Indonesian Rupiah amounts across valid and edge-case numeric inputs.
+- [x] Duplicate currency formatting implementations across catalog and email modules are deleted and cut over to the canonical utility.
+- [x] Unit tests for currency formatting, cart math, WhatsApp order summaries, and SEO metadata pass cleanly in Node under the unit project.
+- [x] Unit tests execute with zero database connections and zero network requests.
+- [x] Running the unit test command verifies all domain unit test suites.

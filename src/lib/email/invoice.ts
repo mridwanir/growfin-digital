@@ -4,6 +4,7 @@ import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
 import { resend } from '@/lib/email/resend'
 import { env } from '@/lib/env'
+import { formatCurrency } from '@/lib/storefront/currency'
 
 export interface InvoiceEmailParams {
   toEmail?: string
@@ -15,15 +16,6 @@ export interface InvoiceEmailParams {
   packageTier?: string | null
   paymentMethod?: string | null
   slug: string
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('id-ID', {
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-    style: 'currency',
-  }).format(amount)
 }
 
 function formatTierTitle(tier?: string | null): string {

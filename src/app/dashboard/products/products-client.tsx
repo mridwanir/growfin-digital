@@ -29,7 +29,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
   createCategoryAction,
+  createProductAction,
   deleteCategoryAction,
+  deleteProductAction,
   updateCategoryAction,
 } from '@/lib/dashboard/actions'
 
@@ -168,6 +170,9 @@ export function ProductsClient({
   const [formVariants, setFormVariants] = useState<ProductVariantItem[]>([])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isProductPending, startProductTransition] = useTransition()
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
+  const isFormPending = isSubmitting || isProductPending
 
   const handleTenantChange = (tenantId: string) => {
     router.push(`/dashboard/products?tenant=${tenantId}`)
@@ -389,69 +394,95 @@ export function ProductsClient({
       variants: cleanedVariants,
     }
 
-    setIsSubmitting(true)
-    setFeedback(null)
+    if (editingProductId) {
+      setIsSubmitting(true)
+      setFeedback(null)
 
-    try {
-      const url = editingProductId
-        ? `/api/dashboard/tenants/${selectedTenantId}/products/${editingProductId}`
-        : `/api/dashboard/tenants/${selectedTenantId}/products`
-      const method = editingProductId ? 'PATCH' : 'POST'
+      try {
+        const url = `/api/dashboard/tenants/${selectedTenantId}/products/${editingProductId}`
+        const res = await fetch(url, {
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'PATCH',
+        })
 
-      const res = await fetch(url, {
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json' },
-        method,
-      })
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => null)
+          throw new Error(errorData?.error || 'Gagal menyimpan produk')
+        }
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => null)
-        throw new Error(errorData?.error || 'Gagal menyimpan produk')
-      }
-
-      const resData = await res.json()
-      if (editingProductId) {
-        setProducts(products.map(p => (p.id === editingProductId ? resData.product : p)))
+        const resData = await res.json()
+        setProducts(prev => prev.map(p => (p.id === editingProductId ? resData.product : p)))
         setFeedback({
           type: 'success',
           message: `Produk "${resData.product.name}" berhasil diperbarui`,
         })
-      } else {
-        setProducts([resData.product, ...products])
+
+        setIsFormOpen(false)
+        router.refresh()
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal menyimpan produk',
+        })
+      } finally {
+        setIsSubmitting(false)
+      }
+      return
+    }
+
+    setFeedback(null)
+    startProductTransition(async () => {
+      try {
+        const res = await createProductAction(selectedTenantId, payload)
+        if (!res.success) {
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal membuat produk',
+          })
+          return
+        }
+
+        setProducts(prev => [res.data, ...prev])
         setFeedback({
           type: 'success',
-          message: `Produk "${resData.product.name}" berhasil ditambahkan`,
+          message: `Produk "${res.data.name}" berhasil ditambahkan`,
+        })
+        setIsFormOpen(false)
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal membuat produk',
         })
       }
-
-      setIsFormOpen(false)
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal menyimpan produk',
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
+    })
   }
 
-  const handleDeleteProduct = async (prodId: string, prodName: string) => {
-    try {
-      const res = await fetch(`/api/dashboard/tenants/${selectedTenantId}/products/${prodId}`, {
-        method: 'DELETE',
-      })
-      if (!res.ok) throw new Error('Gagal menghapus produk')
+  const handleDeleteProduct = (prodId: string, prodName: string) => {
+    setFeedback(null)
+    setDeletingProductId(prodId)
+    startProductTransition(async () => {
+      try {
+        const res = await deleteProductAction(selectedTenantId, prodId)
+        if (!res.success) {
+          setFeedback({
+            type: 'error',
+            message: res.error || 'Gagal menghapus produk',
+          })
+          return
+        }
 
-      setProducts(products.filter(p => p.id !== prodId))
-      setFeedback({ type: 'success', message: `Produk "${prodName}" berhasil dihapus` })
-      router.refresh()
-    } catch (err: unknown) {
-      setFeedback({
-        type: 'error',
-        message: err instanceof Error ? err.message : 'Gagal menghapus produk',
-      })
-    }
+        setProducts(prev => prev.filter(p => p.id !== prodId))
+        setFeedback({ type: 'success', message: `Produk "${prodName}" berhasil dihapus` })
+      } catch (err: unknown) {
+        setFeedback({
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Gagal menghapus produk',
+        })
+      } finally {
+        setDeletingProductId(null)
+      }
+    })
   }
 
   // Filtered Products
@@ -789,12 +820,17 @@ export function ProductsClient({
                       </Button>
                       <Button
                         className="text-destructive hover:bg-destructive/10"
+                        disabled={isProductPending}
                         size="sm"
                         title="Hapus Produk"
                         variant="ghost"
                         onClick={() => handleDeleteProduct(prod.id, prod.name)}
                       >
-                        <Trash2 className="size-3.5" />
+                        {isProductPending && deletingProductId === prod.id ? (
+                          <Loader2 className="size-3.5 animate-spin" />
+                        ) : (
+                          <Trash2 className="size-3.5" />
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -1084,15 +1120,15 @@ export function ProductsClient({
 
               <div className="flex items-center justify-end gap-3 border-t pt-4">
                 <Button
-                  disabled={isSubmitting}
+                  disabled={isFormPending}
                   type="button"
                   variant="outline"
                   onClick={() => setIsFormOpen(false)}
                 >
                   Batal
                 </Button>
-                <Button disabled={isSubmitting} type="submit">
-                  {isSubmitting ? (
+                <Button disabled={isFormPending} type="submit">
+                  {isFormPending ? (
                     <>
                       <Loader2 className="mr-2 size-4 animate-spin" />
                       Menyimpan...

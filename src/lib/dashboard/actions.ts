@@ -2,6 +2,7 @@
 
 import type { Category } from '@/db/schema/catalog'
 import type { Tenant } from '@/db/schema/tenants'
+import type { ProductWithVariants } from '@/lib/dashboard/mutations'
 
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -9,7 +10,9 @@ import { z } from 'zod'
 import { auth } from '@/lib/auth/server'
 import {
   createCategory,
+  createProduct,
   deleteCategory,
+  deleteProduct,
   updateCategory,
   updateTenantSettings,
 } from '@/lib/dashboard/mutations'
@@ -19,7 +22,7 @@ export type ActionResult<T> =
   | { error: string; fieldErrors?: Record<string, string[]>; success: false }
 
 export type TenantSettings = Tenant
-export type { Category }
+export type { Category, ProductWithVariants }
 
 interface AuthenticatedUser {
   id: string
@@ -82,6 +85,34 @@ const updateCategorySchema = z.object({
   name: z.string().min(1).optional(),
   slug: z.string().optional(),
   sortOrder: z.number().int().optional(),
+})
+
+const variantOptionSchema = z.object({
+  label: z.string().min(1, 'Option label is required'),
+  priceModifier: z.number().int().default(0),
+  sortOrder: z.number().int().optional(),
+})
+
+const variantSchema = z.object({
+  name: z.string().min(1, 'Variant name is required'),
+  options: z.array(variantOptionSchema).min(1, 'Variant must have at least one option'),
+  required: z.boolean().default(false),
+})
+
+const createProductSchema = z.object({
+  name: z.string().min(1, 'Product name is required'),
+  basePrice: z.number().int().min(0, 'Base price must be a non-negative integer'),
+  categoryId: z.string().uuid().nullable().optional(),
+  description: z.string().nullable().optional(),
+  duration: z.number().int().nullable().optional(),
+  imageGallery: z.array(z.string()).optional(),
+  imageStorageKey: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  isActive: z.boolean().optional(),
+  originalPrice: z.number().int().nullable().optional(),
+  sortOrder: z.number().int().optional(),
+  stock: z.number().int().nullable().optional(),
+  variants: z.array(variantSchema).optional(),
 })
 
 export async function updateTenantSettingsAction(
@@ -187,6 +218,55 @@ export async function deleteCategoryAction(
   const deleted = await deleteCategory(tenantId, authResult.userId, categoryId)
   if (!deleted) {
     return { error: 'Category or tenant not found', success: false }
+  }
+
+  revalidatePath('/dashboard/products')
+
+  return { data: { success: true }, success: true }
+}
+
+export async function createProductAction(
+  tenantId: string,
+  input: unknown,
+): Promise<ActionResult<ProductWithVariants>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const parsed = createProductSchema.safeParse(input)
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
+    const fieldErrors = parsed.error.flatten().fieldErrors
+    return {
+      error: firstError,
+      fieldErrors,
+      success: false,
+    }
+  }
+
+  const created = await createProduct(tenantId, authResult.userId, parsed.data)
+  if (!created) {
+    return { error: 'Product or tenant not found', success: false }
+  }
+
+  revalidatePath('/dashboard/products')
+
+  return { data: created, success: true }
+}
+
+export async function deleteProductAction(
+  tenantId: string,
+  productId: string,
+): Promise<ActionResult<{ success: true }>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const deleted = await deleteProduct(tenantId, authResult.userId, productId)
+  if (!deleted) {
+    return { error: 'Product or tenant not found', success: false }
   }
 
   revalidatePath('/dashboard/products')

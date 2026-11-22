@@ -4,15 +4,15 @@
 
 **Blocked by:** 02: Product category lifecycle Server Actions and client transition
 
-Status: claimed
+Status: resolved
 
-- [ ] The dashboard actions module exports typed Server Actions for creating and deleting products
-- [ ] Product creation and deletion actions verify active merchant sessions and tenant ownership
-- [ ] The creation action validates required product name, base price, optional category linkage, stock, and image metadata
-- [ ] The creation action persists product records in the database and revalidates the products path
-- [ ] The deletion action removes product records scoped by tenant and revalidates the products path
-- [ ] The product catalog client component replaces product creation fetch calls with the creation Server Action inside a React transition
-- [ ] The product catalog client component replaces product deletion fetch calls with the deletion Server Action inside a React transition
-- [ ] Local product lists update using functional state setters with the returned product on creation and filtering on deletion
-- [ ] Form submission controls disable and show progress indicators while transitions are active
-- [ ] Integration tests exercise product creation and deletion actions directly, asserting authorization guards, tenant isolation, schema parsing, database persistence, and deletion
+- [x] The dashboard actions module exports typed Server Actions for creating and deleting products
+- [x] Product creation and deletion actions verify active merchant sessions and tenant ownership
+- [x] The creation action validates required product name, base price, optional category linkage, stock, and image metadata
+- [x] The creation action persists product records in the database and revalidates the products path
+- [x] The deletion action removes product records scoped by tenant and revalidates the products path
+- [x] The product catalog client component replaces product creation fetch calls with the creation Server Action inside a React transition
+- [x] The product catalog client component replaces product deletion fetch calls with the deletion Server Action inside a React transition
+- [x] Local product lists update using functional state setters with the returned product on creation and filtering on deletion
+- [x] Form submission controls disable and show progress indicators while transitions are active
+- [x] Integration tests exercise product creation and deletion actions directly, asserting authorization guards, tenant isolation, schema parsing, database persistence, and deletion

@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Test environment configuration and runner boot repair
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] The component test project is configured exclusively in Vitest Browser Mode with the Playwright Chromium provider.
 - [ ] Interactive client islands (customization dialog, cart drawer, mobile cart bar, and product catalog) are tested through user interactions and accessible DOM element queries without traversing private React props.

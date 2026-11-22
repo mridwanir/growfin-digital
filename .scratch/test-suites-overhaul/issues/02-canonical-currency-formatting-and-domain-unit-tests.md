@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Test environment configuration and runner boot repair
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] A canonical storefront currency formatting module exists and formats Indonesian Rupiah amounts across valid and edge-case numeric inputs.
 - [ ] Duplicate currency formatting implementations across catalog and email modules are deleted and cut over to the canonical utility.

@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Test environment configuration and runner boot repair
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] A global setup script programmatically launches an in-memory PGlite PostgreSQL server on an isolated port before integration tests execute.
 - [ ] Schema migrations are applied programmatically to the in-memory database using the Drizzle migration runner within the setup script.

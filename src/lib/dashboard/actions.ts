@@ -1,18 +1,25 @@
 'use server'
 
+import type { Category } from '@/db/schema/catalog'
 import type { Tenant } from '@/db/schema/tenants'
 
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { auth } from '@/lib/auth/server'
-import { updateTenantSettings } from '@/lib/dashboard/mutations'
+import {
+  createCategory,
+  deleteCategory,
+  updateCategory,
+  updateTenantSettings,
+} from '@/lib/dashboard/mutations'
 
 export type ActionResult<T> =
   | { data: T; success: true }
   | { error: string; fieldErrors?: Record<string, string[]>; success: false }
 
 export type TenantSettings = Tenant
+export type { Category }
 
 interface AuthenticatedUser {
   id: string
@@ -65,6 +72,18 @@ const updateSettingsSchema = z.object({
     .optional(),
 })
 
+const createCategorySchema = z.object({
+  name: z.string().min(1, 'Category name is required'),
+  slug: z.string().optional(),
+  sortOrder: z.number().int().optional(),
+})
+
+const updateCategorySchema = z.object({
+  name: z.string().min(1).optional(),
+  slug: z.string().optional(),
+  sortOrder: z.number().int().optional(),
+})
+
 export async function updateTenantSettingsAction(
   tenantId: string,
   input: unknown,
@@ -93,4 +112,84 @@ export async function updateTenantSettingsAction(
   revalidatePath('/dashboard/settings')
 
   return { data: updated, success: true }
+}
+
+export async function createCategoryAction(
+  tenantId: string,
+  input: unknown,
+): Promise<ActionResult<Category>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const parsed = createCategorySchema.safeParse(input)
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
+    const fieldErrors = parsed.error.flatten().fieldErrors
+    return {
+      error: firstError,
+      fieldErrors,
+      success: false,
+    }
+  }
+
+  const created = await createCategory(tenantId, authResult.userId, parsed.data)
+  if (!created) {
+    return { error: 'Category or tenant not found', success: false }
+  }
+
+  revalidatePath('/dashboard/products')
+
+  return { data: created, success: true }
+}
+
+export async function updateCategoryAction(
+  tenantId: string,
+  categoryId: string,
+  input: unknown,
+): Promise<ActionResult<Category>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const parsed = updateCategorySchema.safeParse(input)
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message ?? 'Validation failed'
+    const fieldErrors = parsed.error.flatten().fieldErrors
+    return {
+      error: firstError,
+      fieldErrors,
+      success: false,
+    }
+  }
+
+  const updated = await updateCategory(tenantId, authResult.userId, categoryId, parsed.data)
+  if (!updated) {
+    return { error: 'Category or tenant not found', success: false }
+  }
+
+  revalidatePath('/dashboard/products')
+
+  return { data: updated, success: true }
+}
+
+export async function deleteCategoryAction(
+  tenantId: string,
+  categoryId: string,
+): Promise<ActionResult<{ success: true }>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const deleted = await deleteCategory(tenantId, authResult.userId, categoryId)
+  if (!deleted) {
+    return { error: 'Category or tenant not found', success: false }
+  }
+
+  revalidatePath('/dashboard/products')
+
+  return { data: { success: true }, success: true }
 }

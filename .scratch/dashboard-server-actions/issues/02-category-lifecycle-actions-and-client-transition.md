@@ -4,16 +4,16 @@
 
 **Blocked by:** 01: Tenant settings Server Action and client transition
 
-Status: claimed
+Status: resolved
 
-- [ ] The dashboard actions module exports typed Server Actions for creating, updating, and deleting product categories
-- [ ] Each category action extracts and verifies the active merchant session using the shared authorization helper
-- [ ] Category actions reject unauthenticated callers and merchants attempting to mutate categories under tenants owned by other users
-- [ ] The category creation action validates category names and generates URL-friendly slugs
-- [ ] The category update action validates optional name, slug, and sort order parameters
-- [ ] The category deletion action removes category records scoped by tenant identifier
-- [ ] Successful category actions invoke path revalidation for the products route
-- [ ] The product catalog client component replaces direct category fetch calls with Server Action invocations inside React transitions
-- [ ] Category state updates in the client component use functional state setters with the action return data
-- [ ] The category interface displays success notifications and inline error alerts based on the action result object
-- [ ] Integration tests exercise the category Server Actions directly, asserting authorization guards, tenant isolation, schema validation, persistence, and deletion
+- [x] The dashboard actions module exports typed Server Actions for creating, updating, and deleting product categories
+- [x] Each category action extracts and verifies the active merchant session using the shared authorization helper
+- [x] Category actions reject unauthenticated callers and merchants attempting to mutate categories under tenants owned by other users
+- [x] The category creation action validates category names and generates URL-friendly slugs
+- [x] The category update action validates optional name, slug, and sort order parameters
+- [x] The category deletion action removes category records scoped by tenant identifier
+- [x] Successful category actions invoke path revalidation for the products route
+- [x] The product catalog client component replaces direct category fetch calls with Server Action invocations inside React transitions
+- [x] Category state updates in the client component use functional state setters with the action return data
+- [x] The category interface displays success notifications and inline error alerts based on the action result object
+- [x] Integration tests exercise the category Server Actions directly, asserting authorization guards, tenant isolation, schema validation, persistence, and deletion

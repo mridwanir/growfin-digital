@@ -58,6 +58,7 @@ Temporary Items
 # testing
 /coverage
 
+.vitest/
 # next.js
 /.next/
 /out/

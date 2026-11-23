@@ -5,7 +5,7 @@ import { createElement } from 'react'
 
 import {
   ExpiredSiteScreen,
-  GrowfinWatermark,
+  MeracikWatermark,
   StorefrontClientIslands,
 } from '@/components/storefront'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
@@ -15,6 +15,8 @@ import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 import { buildLocalBusinessJsonLd, resolveArchetype } from '@/lib/storefront/seo'
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
+
+// oxlint-disable react/no-danger -- Structured JSON-LD script for SEO
 
 interface DemoPageProps {
   params: Promise<{ slug: string }>
@@ -45,11 +47,11 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
 
   return {
     description,
-    title: `Preview: ${tenantName} | Growfin Digital`,
+    title: `Preview: ${tenantName} | MeracikWeb`,
     openGraph: {
       description,
       images: [{ alt: tenantName, url: imageUrl }],
-      title: `Preview: ${tenantName} | Growfin Digital`,
+      title: `Preview: ${tenantName} | MeracikWeb`,
     },
   }
 }
@@ -87,7 +89,7 @@ export default async function DemoPage({ params }: DemoPageProps) {
         getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
         { categories, products, tenant },
         <StorefrontClientIslands tenant={tenant} />,
-        <GrowfinWatermark />,
+        <MeracikWatermark />,
       )}
     </StorefrontCartProvider>
   )

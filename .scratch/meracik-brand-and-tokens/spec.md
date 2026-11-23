@@ -1,4 +1,4 @@
-Status: ready-for-agent
+Status: resolved
 
 # MeracikWeb brand tokens and design system foundations
 

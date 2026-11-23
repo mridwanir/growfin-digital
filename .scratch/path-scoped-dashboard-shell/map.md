@@ -15,3 +15,4 @@ Implementation map for path-scoped dashboard shell under `/dashboard/[tenantSlug
 ## Decisions so far
 
 - [[issues/01-path-scoped-route-layout-and-guard.md]]: Implemented `getTenantBySlug` query and `src/app/dashboard/[tenantSlug]/layout.tsx` dynamic segment route guard enforcing session authentication (`/login` redirect) and tenant ownership verification (`/dashboard` redirect).
+- [[issues/03-root-dashboard-overview-and-redirect.md]]: Converted `src/app/dashboard/page.tsx` into an Async Server Component enforcing auth guard (`/login`), automatic single-tenant redirect to `/dashboard/[tenantSlug]`, empty state store creation prompt, and multi-tenant overview matrix with path-scoped links.

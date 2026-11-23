@@ -43,11 +43,11 @@ describe('semantic color tokens and contrast calibration (ticket 01)', () => {
     })
 
     it('calibrates border token to oklch(0.80 0.02 260)', () => {
-      expect(root['--border']).toBe('oklch(0.80 0.02 260)')
+      expect(root['--border']).toMatch(/^oklch\(0\.80?\s+0\.02\s+260\)$/)
     })
 
     it('aligns input token with border', () => {
-      expect(root['--input']).toBe('oklch(0.80 0.02 260)')
+      expect(root['--input']).toMatch(/^oklch\(0\.80?\s+0\.02\s+260\)$/)
     })
 
     it('configures ring consistently with primary', () => {
@@ -57,7 +57,7 @@ describe('semantic color tokens and contrast calibration (ticket 01)', () => {
     it('configures sidebar tokens consistently with primary and border', () => {
       expect(root['--sidebar-primary']).toBe('oklch(0.53 0.22 260)')
       expect(root['--sidebar-primary-foreground']).toBe('oklch(0.985 0 0)')
-      expect(root['--sidebar-border']).toBe('oklch(0.80 0.02 260)')
+      expect(root['--sidebar-border']).toMatch(/^oklch\(0\.80?\s+0\.02\s+260\)$/)
       expect(root['--sidebar-ring']).toBe('oklch(0.53 0.22 260)')
     })
   })

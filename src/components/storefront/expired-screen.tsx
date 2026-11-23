@@ -42,7 +42,7 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
         <p className="text-muted-foreground mb-8 text-sm leading-relaxed">
           Website <strong className="text-foreground font-extrabold">{displayTitle}</strong> sedang
           dalam masa pembaruan layanan. Jika Anda adalah pemilik bisnis ini, silakan masuk ke
-          Dashboard Growfin untuk memperpanjang masa aktif.
+          Dashboard MeracikWeb untuk memperpanjang masa aktif.
         </p>
 
         {/* Action Button */}
@@ -51,13 +51,13 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
             className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/20 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-black shadow-lg transition-all active:scale-95"
             href="/dashboard"
           >
-            <span>Masuk ke Dashboard Growfin</span>
+            <span>Masuk ke Dashboard MeracikWeb</span>
             <ArrowRight className="size-4" />
           </Link>
 
           <a
             className="border-border text-muted-foreground hover:bg-accent hover:text-foreground flex w-full items-center justify-center gap-2 rounded-xl border bg-transparent px-4 py-2.5 text-xs font-bold transition-all"
-            href={`https://wa.me/${supportWa}?text=${encodeURIComponent(`Halo Growfin, saya ingin bertanya tentang perpanjangan website ${displayTitle}`)}`}
+            href={`https://wa.me/${supportWa}?text=${encodeURIComponent(`Halo MeracikWeb, saya ingin bertanya tentang perpanjangan website ${displayTitle}`)}`}
             rel="noreferrer"
             target="_blank"
           >
@@ -68,7 +68,7 @@ export function ExpiredSiteScreen({ businessName }: ExpiredSiteScreenProps) {
         {/* Footer info */}
         <div className="border-border text-muted-foreground mt-8 flex items-center justify-center gap-1.5 border-t pt-6 text-[11px]">
           <ShieldCheck className="text-primary size-3.5" />
-          <span>Growfin Digital Platform UMKM</span>
+          <span>MeracikWeb Platform UMKM</span>
         </div>
       </div>
     </div>

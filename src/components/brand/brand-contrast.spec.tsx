@@ -4,6 +4,7 @@ import { page } from 'vitest/browser'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 
 import { MeracikWordmark } from './meracik-wordmark'
@@ -105,13 +106,34 @@ describe('Brand WCAG 2.2 AA Contrast Compliance (Light Mode)', () => {
 
     const containerStyle = window.getComputedStyle(container.element())
     const inputStyle = window.getComputedStyle(input.element())
-
-    // The Meracik token system defines interactive control perimeter boundaries with the ring token.
-    const ringToken = inputStyle.getPropertyValue('--ring').trim()
-    const perimeterColor = ringToken || inputStyle.borderColor
-    const perimeterContrast = getContrastRatio(perimeterColor, containerStyle.backgroundColor)
-
+    const perimeterContrast = getContrastRatio(
+      inputStyle.borderColor,
+      containerStyle.backgroundColor,
+    )
     expect(perimeterContrast).toBeGreaterThanOrEqual(3.0)
+  })
+
+  it('asserts Card perimeter border contrast >= 3:1 against page background and text contrast >= 4.5:1', async () => {
+    render(
+      <div className="bg-background text-foreground p-8" data-testid="light-container">
+        <Card className="border" data-testid="light-card">
+          <p>Card Content</p>
+        </Card>
+      </div>,
+    )
+
+    const container = page.getByTestId('light-container')
+    const card = page.getByTestId('light-card')
+    await expect.element(card).toBeVisible()
+
+    const containerStyle = window.getComputedStyle(container.element())
+    const cardStyle = window.getComputedStyle(card.element())
+
+    const borderContrast = getContrastRatio(cardStyle.borderColor, containerStyle.backgroundColor)
+    const textContrast = getContrastRatio(cardStyle.color, cardStyle.backgroundColor)
+
+    expect(borderContrast).toBeGreaterThanOrEqual(3.0)
+    expect(textContrast).toBeGreaterThanOrEqual(4.5)
   })
 
   it('asserts MeracikWordmark text contrast >= 4.5:1 against background', async () => {
@@ -191,12 +213,34 @@ describe('Brand WCAG 2.2 AA Contrast Compliance (Dark Mode)', () => {
     const containerStyle = window.getComputedStyle(container.element())
     const inputStyle = window.getComputedStyle(input.element())
 
-    // The Meracik token system defines interactive control perimeter boundaries with the ring token.
-    const ringToken = inputStyle.getPropertyValue('--ring').trim()
-    const perimeterColor = ringToken || inputStyle.borderColor
-    const perimeterContrast = getContrastRatio(perimeterColor, containerStyle.backgroundColor)
-
+    const perimeterContrast = getContrastRatio(
+      inputStyle.borderColor,
+      containerStyle.backgroundColor,
+    )
     expect(perimeterContrast).toBeGreaterThanOrEqual(3.0)
+  })
+
+  it('asserts Card perimeter border contrast >= 3:1 against page background and text contrast >= 4.5:1', async () => {
+    render(
+      <div className="dark bg-background text-foreground p-8" data-testid="dark-container">
+        <Card className="border" data-testid="dark-card">
+          <p>Card Content</p>
+        </Card>
+      </div>,
+    )
+
+    const container = page.getByTestId('dark-container')
+    const card = page.getByTestId('dark-card')
+    await expect.element(card).toBeVisible()
+
+    const containerStyle = window.getComputedStyle(container.element())
+    const cardStyle = window.getComputedStyle(card.element())
+
+    const borderContrast = getContrastRatio(cardStyle.borderColor, containerStyle.backgroundColor)
+    const textContrast = getContrastRatio(cardStyle.color, cardStyle.backgroundColor)
+
+    expect(borderContrast).toBeGreaterThanOrEqual(3.0)
+    expect(textContrast).toBeGreaterThanOrEqual(4.5)
   })
 
   it('asserts MeracikWordmark text contrast >= 4.5:1 against background', async () => {

@@ -234,6 +234,62 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       })
       expect(revalidatePath).not.toHaveBeenCalled()
     })
+
+    it('retains published sections and theme when creating draft if none exists and input sections are omitted', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValue(createMerchantSession({ userId: userAId }))
+
+      // 1. Temporarily delete draft config so none exists
+      const [draft] = await db
+        .select()
+        .from(storefrontConfigs)
+        .where(
+          and(
+            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.status, 'draft'),
+          ),
+        )
+      await db.delete(storefrontConfigs).where(eq(storefrontConfigs.id, draft.id))
+
+      // 2. Fetch published config to verify retention
+      const [published] = await db
+        .select()
+        .from(storefrontConfigs)
+        .where(
+          and(
+            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.status, 'published'),
+          ),
+        )
+
+      // 3. Save draft with ONLY theme update (omitting sections)
+      const themeOnly: StorefrontTheme = {
+        fontFamily: 'font-mono',
+        layoutId: 'warm-editorial',
+        themeColor: '#abcdef',
+      }
+      const saveRes = await saveStorefrontDraftAction(tenantA.tenantId, { theme: themeOnly })
+      expect(saveRes).toMatchObject({
+        success: true,
+        data: {
+          sections: published.sections,
+          status: 'draft',
+          theme: themeOnly,
+        },
+      })
+
+      // 4. Verify in DB that sections were retained from published rather than empty []
+      const [newDraftInDb] = await db
+        .select()
+        .from(storefrontConfigs)
+        .where(
+          and(
+            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.status, 'draft'),
+          ),
+        )
+      expect(newDraftInDb.sections).toEqual(published.sections)
+      expect(newDraftInDb.sections.length).toBeGreaterThan(0)
+    })
   })
 
   describe('seam 2: transactional publishing', () => {
@@ -442,6 +498,37 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       expect(restoredDraft).toBeDefined()
       expect(restoredDraft.theme).toEqual(published.theme)
     })
+
+    it('returns error when attempting to discard if no published configuration exists', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValue(createMerchantSession({ userId: userAId }))
+
+      // Temporarily delete published config
+      const [published] = await db
+        .select()
+        .from(storefrontConfigs)
+        .where(
+          and(
+            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.status, 'published'),
+          ),
+        )
+      await db.delete(storefrontConfigs).where(eq(storefrontConfigs.id, published.id))
+
+      const discardRes = await discardStorefrontDraftAction(tenantA.tenantId)
+      expect(discardRes).toEqual({
+        error: 'No published configuration found to discard to',
+        success: false,
+      })
+
+      // Restore published config
+      await db.insert(storefrontConfigs).values({
+        id: published.id,
+        sections: published.sections,
+        status: 'published',
+        tenantId: tenantA.tenantId,
+        theme: published.theme,
+      })
+    })
   })
 
   describe('seam 4: cross-tenant isolation & authorization guard', () => {
@@ -468,6 +555,20 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         success: false,
       })
 
+      expect(revalidatePath).not.toHaveBeenCalled()
+    })
+
+    it('rejects unauthenticated requests when session user id is missing', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
+
+      const result = await saveStorefrontDraftAction(tenantA.tenantId, {
+        theme: { themeColor: '#ff0000' },
+      })
+
+      expect(result).toEqual({
+        error: 'Unauthorized',
+        success: false,
+      })
       expect(revalidatePath).not.toHaveBeenCalled()
     })
 

@@ -131,13 +131,17 @@ export function extractLegacyThemeConfig(config: StorefrontConfig): ThemeConfig 
   const sortedSections = [...sections].sort((a, b) => a.sortOrder - b.sortOrder)
   const visibleOrder = sortedSections.filter(s => s.isVisible).map(s => s.type)
   const hidden = sortedSections.filter(s => !s.isVisible).map(s => s.type)
+  const themeRecord = (config.theme || {}) as Record<string, unknown>
+  const explicitHidden = Array.isArray(themeRecord.hiddenSections)
+    ? (themeRecord.hiddenSections as string[])
+    : []
 
   return {
     ...config.theme,
     fontFamily: config.theme?.fontFamily,
-    hiddenSections: hidden,
+    hiddenSections: [...new Set([...explicitHidden, ...hidden])],
     layoutId: config.theme?.layoutId,
-    sectionOrder: visibleOrder,
+    sectionOrder: visibleOrder.length > 0 ? visibleOrder : (themeRecord.sectionOrder as string[]),
     themeColor: config.theme?.themeColor,
   }
 }

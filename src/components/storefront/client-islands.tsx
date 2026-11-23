@@ -76,7 +76,11 @@ function StorefrontClientIslandsContent({ tenant }: StorefrontClientIslandsProps
   }, [addItem])
 
   const waNumber = resolveTenantWhatsAppNumber(tenant)
-  const fulfillmentModes = resolveFulfillmentModes(tenant.category, tenant.themeConfig)
+  const themeConfig =
+    tenant && typeof tenant === 'object' && 'themeConfig' in tenant
+      ? (tenant.themeConfig as ThemeConfig | Record<string, unknown> | null | undefined)
+      : undefined
+  const fulfillmentModes = resolveFulfillmentModes(tenant.category, themeConfig)
   return (
     <>
       <MobileCartBar onOpenCart={() => setIsCartOpen(true)} />

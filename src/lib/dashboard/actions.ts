@@ -1,12 +1,7 @@
 'use server'
 
 import type { Category } from '@/db/schema/catalog'
-import type {
-  StorefrontConfig,
-  StorefrontSection,
-  StorefrontTheme,
-  Tenant,
-} from '@/db/schema/tenants'
+import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
 import type { ProductWithVariants } from '@/lib/dashboard/mutations'
 
 import { and, eq } from 'drizzle-orm'
@@ -25,6 +20,10 @@ import {
   updateProduct,
   updateTenantSettings,
 } from '@/lib/dashboard/mutations'
+import {
+  DEFAULT_STOREFRONT_SECTIONS,
+  DEFAULT_STOREFRONT_THEME,
+} from '@/lib/storefront/compatibility'
 
 export type ActionResult<T> =
   | { data: T; success: true }
@@ -318,17 +317,38 @@ export async function updateProductAction(
   return { data: updated, success: true }
 }
 
-const sectionSchema = z.object({
+const sectionTypeSchema = z.enum([
+  'hero',
+  'catalog',
+  'reviews',
+  'gallery',
+  'operating_hours',
+  'footer',
+])
+
+const storefrontSectionSchema = z.object({
   id: z.string().min(1),
-  type: z.enum(['hero', 'catalog', 'reviews', 'gallery', 'operating_hours', 'footer']),
-  content: z.record(z.string(), z.unknown()),
+  type: sectionTypeSchema,
+  content: z.record(z.string(), z.unknown()).default({}),
   isVisible: z.boolean(),
   sortOrder: z.number().int(),
 })
 
+const storefrontThemeSchema = z
+  .object({
+    colorPalette: z.union([z.string(), z.record(z.string(), z.unknown())]).optional(),
+    fbType: z.enum(['DINE_IN', 'QUICK_SERVICE', 'PRE_ORDER']).optional(),
+    fontFamily: z.string().optional(),
+    fulfillmentModes: z.array(z.string()).optional(),
+    heroSecondaryAction: z.enum(['whatsapp', 'cart', 'gallery']).optional(),
+    layoutId: z.string().optional(),
+    themeColor: z.string().optional(),
+  })
+  .passthrough()
+
 const saveDraftSchema = z.object({
-  sections: z.array(sectionSchema).optional(),
-  theme: z.record(z.string(), z.unknown()).optional(),
+  sections: z.array(storefrontSectionSchema).optional(),
+  theme: storefrontThemeSchema.optional(),
 })
 
 export async function saveStorefrontDraftAction(
@@ -369,10 +389,10 @@ export async function saveStorefrontDraftAction(
       updatedAt: now,
     }
     if (validation.data.theme !== undefined) {
-      updateValues.theme = validation.data.theme as StorefrontTheme
+      updateValues.theme = validation.data.theme
     }
     if (validation.data.sections !== undefined) {
-      updateValues.sections = validation.data.sections as StorefrontSection[]
+      updateValues.sections = validation.data.sections
     }
 
     const [updated] = await db
@@ -382,13 +402,25 @@ export async function saveStorefrontDraftAction(
       .returning()
     draftRecord = updated
   } else {
+    const [published] = await db
+      .select()
+      .from(storefrontConfigs)
+      .where(
+        and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')),
+      )
+      .limit(1)
+
+    const initialSections =
+      validation.data.sections ?? published?.sections ?? DEFAULT_STOREFRONT_SECTIONS
+    const initialTheme = validation.data.theme ?? published?.theme ?? DEFAULT_STOREFRONT_THEME
+
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
-        sections: (validation.data.sections ?? []) as StorefrontSection[],
+        sections: initialSections,
         status: 'draft',
         tenantId,
-        theme: (validation.data.theme ?? {}) as StorefrontTheme,
+        theme: initialTheme,
         updatedAt: now,
       })
       .returning()
@@ -508,24 +540,25 @@ export async function discardStorefrontDraftAction(
     .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')))
     .limit(1)
 
+  if (!published) {
+    return { error: 'No published configuration found to discard to', success: false }
+  }
+
   const [existingDraft] = await db
     .select()
     .from(storefrontConfigs)
     .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
     .limit(1)
 
-  const targetTheme = (published?.theme ?? {}) as StorefrontTheme
-  const targetSections = (published?.sections ?? []) as StorefrontSection[]
   const now = new Date()
-
   let draftRecord: StorefrontConfig
 
   if (existingDraft) {
     const [updated] = await db
       .update(storefrontConfigs)
       .set({
-        sections: targetSections,
-        theme: targetTheme,
+        sections: published.sections,
+        theme: published.theme,
         updatedAt: now,
       })
       .where(eq(storefrontConfigs.id, existingDraft.id))
@@ -535,10 +568,10 @@ export async function discardStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
-        sections: targetSections,
+        sections: published.sections,
         status: 'draft',
         tenantId,
-        theme: targetTheme,
+        theme: published.theme,
         updatedAt: now,
       })
       .returning()

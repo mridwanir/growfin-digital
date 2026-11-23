@@ -30,8 +30,12 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
   }
 
   const tenantName = data.tenant.name
+  const legacyBranding =
+    'brandingContent' in data.tenant
+      ? (data.tenant.brandingContent as Record<string, unknown> | null)
+      : null
   const branding = {
-    ...((data.tenant.brandingContent as Record<string, unknown> | null) || {}),
+    ...(legacyBranding || {}),
     ...(data.config ? extractLegacyBrandingFromSections(data.config.sections) : {}),
   }
   const description =
@@ -85,7 +89,13 @@ export default async function DemoPage({ params }: DemoPageProps) {
         type="application/ld+json"
       />
       {createElement(
-        getStorefrontLayout(config?.theme?.layoutId || tenant.themeConfig?.layoutId, archetype),
+        getStorefrontLayout(
+          config?.theme?.layoutId ||
+            ('themeConfig' in tenant
+              ? (tenant.themeConfig as { layoutId?: string } | undefined)?.layoutId
+              : undefined),
+          archetype,
+        ),
         { categories, config, products, tenant },
         <StorefrontClientIslands tenant={tenant} />,
         <GrowfinWatermark />,

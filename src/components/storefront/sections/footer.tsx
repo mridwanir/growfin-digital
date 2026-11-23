@@ -35,7 +35,8 @@ export interface FooterSectionProps {
 const CURRENT_YEAR = new Date().getFullYear()
 
 export function Footer({ tenant, content, className }: FooterSectionProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
+  const branding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
 
   const name = tenant.name || 'Storefront'
   const tagline = content?.tagline || branding.tagline || branding.heroSubtitle || ''

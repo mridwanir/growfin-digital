@@ -86,7 +86,13 @@ export default async function SitePage({ params }: SitePageProps) {
         type="application/ld+json"
       />
       {createElement(
-        getStorefrontLayout(config?.theme?.layoutId || tenant.themeConfig?.layoutId, archetype),
+        getStorefrontLayout(
+          config?.theme?.layoutId ||
+            ('themeConfig' in tenant
+              ? (tenant.themeConfig as { layoutId?: string } | undefined)?.layoutId
+              : undefined),
+          archetype,
+        ),
         { categories, config, products, tenant },
         <StorefrontClientIslands tenant={tenant} />,
         !tierLimits.removeBranding && <GrowfinWatermark />,

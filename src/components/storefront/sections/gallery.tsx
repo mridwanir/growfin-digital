@@ -83,7 +83,8 @@ export function Gallery({
   variant = 'grid',
   className,
 }: GallerySectionProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
+  const branding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
 
   const sectionTitle = title || content?.title || branding.galleryTitle || 'Galeri Foto'
   const sectionDescription =

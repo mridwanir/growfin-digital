@@ -28,7 +28,7 @@ export async function generateMetadata({ searchParams }: PreviewPageProps): Prom
 
 export default async function PreviewPage({ searchParams }: PreviewPageProps) {
   const { theme } = await searchParams
-  const { categories, products, selectedTheme, tenant } = getMockStorefrontData(theme)
+  const { categories, config, products, selectedTheme, tenant } = getMockStorefrontData(theme)
 
   return (
     <StorefrontCartProvider tenantId={tenant.id}>
@@ -36,7 +36,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
         <ThemePreviewBar currentThemeId={selectedTheme.id} />
         {createElement(
           getStorefrontLayout(selectedTheme.id, selectedTheme.archetype),
-          { categories, products, tenant },
+          { categories, config, products, tenant },
           <StorefrontClientIslands tenant={tenant} />,
           <GrowfinWatermark />,
         )}

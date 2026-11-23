@@ -165,7 +165,7 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       const meta = await generateDemoMetadata({
         params: Promise.resolve({ slug: persisted.tenant.slug }),
       })
-      expect(meta.title).toBe('Preview: Kopi Senja Nusantara | Growfin Digital')
+      expect(meta.title).toBe('Preview: Kopi Senja Nusantara | MeracikWeb')
       expect(meta.description).toContain('Kopi Terbaik Sejak 2020')
     })
   })

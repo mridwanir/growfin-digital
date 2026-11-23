@@ -83,7 +83,6 @@ export default async function SitePage({ params }: SitePageProps) {
   return (
     <StorefrontCartProvider tenantId={tenant.id}>
       <script
-        // oxlint-disable-next-line react/no-danger -- Structured JSON-LD payload insertion
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
       />

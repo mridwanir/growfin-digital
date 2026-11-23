@@ -1,4 +1,4 @@
-import type { BrandingContent, Tenant } from '@/db/schema/tenants'
+import type { BrandingContent, FooterSectionContent, Tenant } from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 import { ExternalLink, MapPin, MessageCircle, Phone, Share2 } from 'lucide-react'
@@ -28,35 +28,45 @@ function InstagramIcon({ className }: { className?: string }) {
 
 export interface FooterSectionProps {
   tenant: Tenant
+  content?: FooterSectionContent
   className?: string
 }
 
 const CURRENT_YEAR = new Date().getFullYear()
 
-export function Footer({ tenant, className }: FooterSectionProps) {
+export function Footer({ tenant, content, className }: FooterSectionProps) {
   const branding = (tenant.brandingContent as BrandingContent) || {}
 
   const name = tenant.name || 'Storefront'
-  const tagline = branding.tagline || branding.heroSubtitle || ''
+  const tagline = content?.tagline || branding.tagline || branding.heroSubtitle || ''
   const address = tenant.address || null
   const city = tenant.city || null
   const phone = tenant.phone || null
-  const googleMapsUrl = tenant.googleMapsUrl || null
+  const googleMapsUrl = content?.socialLinks?.googleMaps || tenant.googleMapsUrl || null
 
   const instagramUrl =
+    content?.socialLinks?.instagram ||
     branding.socialLinks?.instagram?.url ||
     (branding['socialMedia'] as Record<string, { url?: string }> | undefined)?.instagram?.url ||
     null
 
   const waNumber = resolveTenantWhatsAppNumber(tenant)
-  const waUrl = waNumber ? `https://wa.me/${waNumber}` : null
+  const waUrl = content?.socialLinks?.whatsapp
+    ? content.socialLinks.whatsapp.startsWith('http')
+      ? content.socialLinks.whatsapp
+      : `https://wa.me/${content.socialLinks.whatsapp.replace(/\D/g, '')}`
+    : waNumber
+      ? `https://wa.me/${waNumber}`
+      : null
 
   const facebookUrl =
+    content?.socialLinks?.facebook ||
     branding.socialLinks?.facebook?.url ||
     (branding['socialMedia'] as Record<string, { url?: string }> | undefined)?.facebook?.url ||
     null
 
   const tiktokUrl =
+    content?.socialLinks?.tiktok ||
     branding.socialLinks?.tiktok?.url ||
     (branding['socialMedia'] as Record<string, { url?: string }> | undefined)?.tiktok?.url ||
     null
@@ -152,31 +162,43 @@ export function Footer({ tenant, className }: FooterSectionProps) {
               Navigasi Halaman
             </h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a className="hover:text-foreground transition-colors" href="#hero">
-                  Beranda
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-foreground transition-colors" href="#catalog">
-                  Katalog & Menu
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-foreground transition-colors" href="#gallery">
-                  Galeri Foto
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-foreground transition-colors" href="#reviews">
-                  Ulasan Pelanggan
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-foreground transition-colors" href="#operating-hours">
-                  Jam Operasional
-                </a>
-              </li>
+              {content?.navigation && content.navigation.length > 0 ? (
+                content.navigation.map(nav => (
+                  <li key={nav.href}>
+                    <a className="hover:text-foreground transition-colors" href={nav.href}>
+                      {nav.label}
+                    </a>
+                  </li>
+                ))
+              ) : (
+                <>
+                  <li>
+                    <a className="hover:text-foreground transition-colors" href="#hero">
+                      Beranda
+                    </a>
+                  </li>
+                  <li>
+                    <a className="hover:text-foreground transition-colors" href="#catalog">
+                      Katalog & Menu
+                    </a>
+                  </li>
+                  <li>
+                    <a className="hover:text-foreground transition-colors" href="#gallery">
+                      Galeri Foto
+                    </a>
+                  </li>
+                  <li>
+                    <a className="hover:text-foreground transition-colors" href="#reviews">
+                      Ulasan Pelanggan
+                    </a>
+                  </li>
+                  <li>
+                    <a className="hover:text-foreground transition-colors" href="#operating-hours">
+                      Jam Operasional
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 

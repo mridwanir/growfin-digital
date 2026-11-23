@@ -1,13 +1,17 @@
 /**
- * Pure integer currency formatting and discount calculation in Indonesian Rupiah (IDR).
+ * Canonical Indonesian Rupiah (IDR) currency formatting and discount calculations.
  */
 
-export { formatCurrency } from '@/lib/storefront/cart/domain'
+export function formatCurrency(amount: number): string {
+  if (!Number.isFinite(amount)) {
+    return 'Rp 0'
+  }
+  const isNegative = amount < 0
+  const absoluteValue = Math.abs(Math.round(amount))
+  const formatted = absoluteValue.toLocaleString('id-ID')
+  return isNegative ? `-Rp ${formatted}` : `Rp ${formatted}`
+}
 
-/**
- * Determines whether a valid strikethrough discount exists. Returns true ONLY when originalPrice >
- * price and both are valid positive numbers.
- */
 export function hasValidDiscount(
   price: number | null | undefined,
   originalPrice?: number | null | undefined,
@@ -17,9 +21,6 @@ export function hasValidDiscount(
   return originalPrice > price
 }
 
-/**
- * Calculates discount percentage rounded to whole integer. Returns 0 if hasValidDiscount is false.
- */
 export function getDiscountPercentage(
   price: number | null | undefined,
   originalPrice?: number | null | undefined,

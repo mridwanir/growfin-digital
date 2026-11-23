@@ -2,13 +2,27 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { trackEvent } from '@/lib/analytics'
 
+interface WindowMock {
+  location: {
+    pathname: string
+    search: string
+  }
+}
+
+interface CustomGlobal {
+  fetch: typeof globalThis.fetch
+  window?: WindowMock
+}
+
+const customGlobal = globalThis as unknown as CustomGlobal
+
 describe('Analytics client utilities (trackEvent)', () => {
   const originalFetch = globalThis.fetch
-  const originalWindow = (globalThis as unknown as { window?: unknown }).window
+  const originalWindow = customGlobal.window
 
   beforeEach(() => {
     vi.restoreAllMocks()
-    ;(globalThis as unknown as { window: unknown }).window = {
+    customGlobal.window = {
       location: {
         pathname: '/site/test-slug',
         search: '',
@@ -18,26 +32,27 @@ describe('Analytics client utilities (trackEvent)', () => {
 
   afterEach(() => {
     globalThis.fetch = originalFetch
-    ;(globalThis as unknown as { window: unknown }).window = originalWindow
+    customGlobal.window = originalWindow
   })
 
   it('extracts slug from /site/<slug> path and ignores other paths', () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
     globalThis.fetch = fetchMock
-    ;(
-      globalThis as unknown as { window: { location: { pathname: string; search: string } } }
-    ).window.location = {
-      pathname: '/other/path',
-      search: '',
+    customGlobal.window = {
+      location: {
+        pathname: '/other/path',
+        search: '',
+      },
     }
 
     trackEvent('page_view')
     expect(fetchMock).not.toHaveBeenCalled()
-    ;(
-      globalThis as unknown as { window: { location: { pathname: string; search: string } } }
-    ).window.location = {
-      pathname: '/site/my-cool-store',
-      search: '',
+
+    customGlobal.window = {
+      location: {
+        pathname: '/site/my-cool-store',
+        search: '',
+      },
     }
 
     trackEvent('page_view')
@@ -66,11 +81,11 @@ describe('Analytics client utilities (trackEvent)', () => {
   it('forwards UTM params as query parameters on page_view event', () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
     globalThis.fetch = fetchMock
-    ;(
-      globalThis as unknown as { window: { location: { pathname: string; search: string } } }
-    ).window.location = {
-      pathname: '/site/test-slug',
-      search: '?utm_source=twitter&utm_medium=social&utm_campaign=launch&other=ignore',
+    customGlobal.window = {
+      location: {
+        pathname: '/site/test-slug',
+        search: '?utm_source=twitter&utm_medium=social&utm_campaign=launch&other=ignore',
+      },
     }
 
     trackEvent('page_view')
@@ -86,11 +101,11 @@ describe('Analytics client utilities (trackEvent)', () => {
   it('does not append UTM query parameters for non-page_view events', () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }))
     globalThis.fetch = fetchMock
-    ;(
-      globalThis as unknown as { window: { location: { pathname: string; search: string } } }
-    ).window.location = {
-      pathname: '/site/test-slug',
-      search: '?utm_source=twitter',
+    customGlobal.window = {
+      location: {
+        pathname: '/site/test-slug',
+        search: '?utm_source=twitter',
+      },
     }
 
     trackEvent('checkout_start')

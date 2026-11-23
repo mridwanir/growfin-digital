@@ -1,17 +1,55 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
+import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
-import { describe, expect, it, vi } from 'vitest'
+import crypto from 'node:crypto'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { POST as authWebhook } from '@/app/api/auth/webhook/route'
+import { db } from '@/db'
+import { userInNeonAuth } from '@/db/schema/auth'
+import { tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
-import * as dashboardMutations from '@/lib/dashboard/mutations'
 import { resend } from '@/lib/email/resend'
+
+import { createMerchantSession } from '../fixtures/session-fixture'
+import { createTestTenant } from '../fixtures/tenant-fixture'
 
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
 describe('End-to-End Passwordless Auth Integration Flow', () => {
+  const userId = crypto.randomUUID()
+  let tenantFixture: TestTenantFixture
+  let tenantId: string
+
+  beforeAll(async () => {
+    await db.insert(userInNeonAuth).values({
+      id: userId,
+      name: 'Merchant Flow User',
+      email: 'merchant.flow@growfin.my.id',
+      emailVerified: true,
+    })
+
+    tenantFixture = await createTestTenant({
+      name: 'Flow Merchant Store',
+      address: 'Jl. Merdeka No. 10',
+      category: 'F&B',
+      city: 'Jakarta Pusat',
+      phone: '081234567890',
+      status: 'published',
+      userId,
+    })
+    tenantId = tenantFixture.tenantId
+  })
+
+  afterAll(async () => {
+    await tenantFixture?.cleanup()
+    await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, userId))
+  })
+
   it('executes passwordless auth webhook delivery and allows merchant settings mutation', async () => {
     // 1. Webhook delivers OTP email via Resend
     const resendSpy = vi.spyOn(resend.emails, 'send').mockResolvedValueOnce({
@@ -57,72 +95,33 @@ describe('End-to-End Passwordless Auth Integration Flow', () => {
     )
 
     // 2. Verified merchant session allows mutating settings via updateTenantSettingsAction
-    const merchantSession = {
-      session: {
-        id: 'sess_flow_merchant',
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 86400000),
-        token: 'token_merchant_abc',
-        updatedAt: new Date(),
-        userId: 'user_flow_merchant',
-      },
-      user: {
-        id: 'user_flow_merchant',
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({
         name: 'Merchant Flow User',
-        createdAt: new Date(),
         email: 'merchant.flow@growfin.my.id',
-        emailVerified: true,
-        updatedAt: new Date(),
-      },
-    }
+        userId,
+      }),
+    )
 
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce({
-      data: merchantSession,
-      error: null,
-    })
-
-    const mockUpdatedTenant = {
-      id: 'tenant_flow_123',
-      name: 'Flow Merchant Store',
-      address: 'Jl. Merdeka No. 45',
-      brandingContent: null,
-      category: 'F&B',
-      city: 'Jakarta Pusat',
-      createdAt: new Date(),
-      customDomain: null,
-      domainActiveUntil: null,
-      fomoExpiresAt: null,
-      googleMapsUrl: null,
-      operatingHours: null,
-      organizationId: null,
-      packageTier: 'free' as const,
-      phone: '081234567890',
-      siteActiveUntil: null,
-      slug: 'flow-merchant-store',
-      status: 'published' as const,
-      themeConfig: {},
-      updatedAt: new Date(),
-      userId: 'user_flow_merchant',
-    }
-
-    const mutationSpy = vi
-      .spyOn(dashboardMutations, 'updateTenantSettings')
-      .mockResolvedValueOnce(mockUpdatedTenant)
-
-    const actionResult = await updateTenantSettingsAction('tenant_flow_123', {
+    const actionResult = await updateTenantSettingsAction(tenantId, {
       address: 'Jl. Merdeka No. 45',
       city: 'Jakarta Pusat',
       phone: '081234567890',
     })
 
-    expect(actionResult).toEqual({
-      data: mockUpdatedTenant,
+    expect(actionResult).toMatchObject({
       success: true,
+      data: {
+        id: tenantId,
+        address: 'Jl. Merdeka No. 45',
+        city: 'Jakarta Pusat',
+        phone: '081234567890',
+      },
     })
-    expect(mutationSpy).toHaveBeenCalledWith('tenant_flow_123', 'user_flow_merchant', {
-      address: 'Jl. Merdeka No. 45',
-      city: 'Jakarta Pusat',
-      phone: '081234567890',
-    })
+
+    const [updatedTenant] = await db.select().from(tenants).where(eq(tenants.id, tenantId))
+    expect(updatedTenant.address).toBe('Jl. Merdeka No. 45')
+    expect(updatedTenant.city).toBe('Jakarta Pusat')
+    expect(updatedTenant.phone).toBe('081234567890')
   })
 })

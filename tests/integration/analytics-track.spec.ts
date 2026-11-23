@@ -1,46 +1,35 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
-import { afterAll, beforeEach, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 import { POST as trackHandler } from '@/app/api/analytics/track/route'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { tenants } from '@/db/schema/tenants'
+
+import { createTestTenant } from '../fixtures/tenant-fixture'
 
 describe('Analytics tracking API seam: POST /api/analytics/track', () => {
-  const testSlug = 'analytics-test-store'
+  let fixture: TestTenantFixture
+  let testSlug: string
   let tenantId: string
 
-  beforeEach(async () => {
-    // Clean up any existing analytics events and test tenant
-    const existing = await db
-      .select({ id: tenants.id })
-      .from(tenants)
-      .where(eq(tenants.slug, testSlug))
-      .limit(1)
+  beforeAll(async () => {
+    fixture = await createTestTenant({
+      name: 'Analytics Test Store',
+      category: 'Retail & Fashion',
+    })
+    testSlug = fixture.slug
+    tenantId = fixture.tenantId
+  })
 
-    if (existing.length > 0) {
-      tenantId = existing[0].id
-      await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
-    } else {
-      const [inserted] = await db
-        .insert(tenants)
-        .values({
-          name: 'Analytics Test Store',
-          category: 'Retail & Fashion',
-          slug: testSlug,
-          status: 'published',
-        })
-        .returning()
-      tenantId = inserted.id
-    }
+  beforeEach(async () => {
+    await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
   })
 
   afterAll(async () => {
-    if (tenantId) {
-      await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
-      await db.delete(tenants).where(eq(tenants.id, tenantId))
-    }
+    await fixture?.cleanup()
   })
 
   it('returns 400 when the request body is missing required fields (slug, event)', async () => {

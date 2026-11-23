@@ -24,6 +24,9 @@
     "prepare": "simple-git-hooks && skills sync -y",
     "start": "next start",
     "test": "vitest run",
+    "test:components": "vitest run -p components",
+    "test:integration": "vitest run -p integration",
+    "test:unit": "vitest run -p unit",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -49,7 +52,9 @@
   "devDependencies": {
     "@ashtrath/oxc-config": "^0.1.1",
     "@ashtrath/skills": "^0.1.0",
+    "@electric-sql/pglite": "^0.5.15",
     "@electric-sql/pglite-socket": "^0.2.18",
+    "@next/env": "^16.4.6",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^26",
     "@types/pg": "^8.23.1",
@@ -60,6 +65,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "^1.0.0-rc.5",
     "knip": "^6.44.1",
+    "msw": "^3.0.7",
     "nano-staged": "^1.0.2",
     "npm-run-all2": "^9.0.4",
     "oxfmt": "^0.76.0",
@@ -69,7 +75,8 @@
     "skills": "^1.9.0",
     "tailwindcss": "^4",
     "typescript": "^7",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "vitest-browser-react": "^2.3.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpx nano-staged",

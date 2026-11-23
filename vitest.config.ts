@@ -1,6 +1,10 @@
+import nextEnv from '@next/env'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
+import { fileURLToPath } from 'node:url'
 import { defaultExclude, defineConfig } from 'vitest/config'
+
+const { loadEnvConfig } = nextEnv
 
 export default defineConfig({
   plugins: [react()],
@@ -12,12 +16,10 @@ export default defineConfig({
   },
   resolve: {
     tsconfigPaths: true,
-    alias: {
-      'next/headers': 'next/headers.js',
-      'next/navigation': 'next/navigation.js',
-    },
   },
   test: {
+    env: loadEnvConfig(process.cwd()).parsedEnv,
+    fsModuleCache: true,
     reporters: ['default', process.env.CI ? 'github-actions' : {}],
     coverage: {
       exclude: ['src/**/*.stories.{js,jsx,ts,tsx}'],
@@ -28,20 +30,40 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'node',
-          exclude: [...defaultExclude, 'src/hooks/**/*.spec.ts'],
-          include: ['src/**/*.spec.{js,ts,jsx,tsx}', 'tests/**/*.spec.{js,ts,jsx,tsx}'],
+          exclude: [...defaultExclude, 'src/**/*.spec.tsx'],
+          include: ['src/**/*.spec.ts'],
         },
       },
       {
+        define: {
+          'process.env': {},
+        },
+        resolve: {
+          alias: {
+            'next/image': fileURLToPath(
+              new URL('./src/components/storefront/__fixtures__/mock-image.tsx', import.meta.url),
+            ),
+          },
+        },
         test: {
           name: 'components',
-          include: ['src/**/*.spec.{jsx,tsx}'],
+          include: ['src/components/**/*.spec.tsx'],
           browser: {
             enabled: true,
             headless: true,
             instances: [{ browser: 'chromium' }],
             provider: playwright(),
           },
+        },
+      },
+      {
+        test: {
+          name: 'integration',
+          environment: 'node',
+          globalSetup: ['./tests/integration/global-setup.ts'],
+          hookTimeout: 15000,
+          include: ['tests/integration/**/*.spec.ts'],
+          setupFiles: ['./tests/integration/setup.ts'],
         },
       },
     ],

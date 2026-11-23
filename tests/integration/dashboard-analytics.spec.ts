@@ -1,26 +1,25 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { userInNeonAuth } from '@/db/schema/auth'
-import { tenants } from '@/db/schema/tenants'
 import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
+
+import { createTestTenant } from '../fixtures/tenant-fixture'
 
 describe('Dashboard analytics metrics seam (getTenantAnalyticsMetrics)', () => {
   const merchant1Id = '99999999-9999-4999-8999-999999999991'
   const merchant2Id = '99999999-9999-4999-8999-999999999992'
 
+  let tenant1Fixture: TestTenantFixture
+  let tenant2Fixture: TestTenantFixture
   let tenant1Id: string
   let tenant2Id: string
 
   beforeAll(async () => {
-    // Clean up test data
-    await db.delete(tenants).where(eq(tenants.slug, 'merchant1-analytics-store'))
-    await db.delete(tenants).where(eq(tenants.slug, 'merchant2-analytics-store'))
-    await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, merchant1Id))
-    await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, merchant2Id))
-
     // Seed test users
     await db.insert(userInNeonAuth).values([
       {
@@ -37,42 +36,25 @@ describe('Dashboard analytics metrics seam (getTenantAnalyticsMetrics)', () => {
       },
     ])
 
-    // Seed test tenants
-    const [t1] = await db
-      .insert(tenants)
-      .values({
-        name: 'Merchant 1 Analytics Store',
-        category: 'Retail & Fashion',
-        slug: 'merchant1-analytics-store',
-        status: 'published',
-        userId: merchant1Id,
-      })
-      .returning()
+    // Seed test tenants via centralized fixture
+    tenant1Fixture = await createTestTenant({
+      name: 'Merchant 1 Analytics Store',
+      category: 'Retail & Fashion',
+      userId: merchant1Id,
+    })
+    tenant2Fixture = await createTestTenant({
+      name: 'Merchant 2 Analytics Store',
+      category: 'Food & Beverage',
+      userId: merchant2Id,
+    })
 
-    const [t2] = await db
-      .insert(tenants)
-      .values({
-        name: 'Merchant 2 Analytics Store',
-        category: 'Food & Beverage',
-        slug: 'merchant2-analytics-store',
-        status: 'published',
-        userId: merchant2Id,
-      })
-      .returning()
-
-    tenant1Id = t1.id
-    tenant2Id = t2.id
+    tenant1Id = tenant1Fixture.tenantId
+    tenant2Id = tenant2Fixture.tenantId
   })
 
   afterAll(async () => {
-    if (tenant1Id) {
-      await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenant1Id))
-      await db.delete(tenants).where(eq(tenants.id, tenant1Id))
-    }
-    if (tenant2Id) {
-      await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenant2Id))
-      await db.delete(tenants).where(eq(tenants.id, tenant2Id))
-    }
+    await tenant1Fixture?.cleanup()
+    await tenant2Fixture?.cleanup()
     await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, merchant1Id))
     await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, merchant2Id))
   })

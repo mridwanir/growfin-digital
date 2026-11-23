@@ -1,3 +1,5 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -5,32 +7,25 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { POST as trackHandler } from '@/app/api/analytics/track/route'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { tenants } from '@/db/schema/tenants'
+
+import { createTestTenant } from '../fixtures/tenant-fixture'
 
 describe('Storefront Page View tracking integration', () => {
-  const storeSlug = 'page-view-test-store'
+  let fixture: TestTenantFixture
+  let storeSlug: string
   let tenantId: string
 
   beforeAll(async () => {
-    await db.delete(tenants).where(eq(tenants.slug, storeSlug))
-
-    const [tenant] = await db
-      .insert(tenants)
-      .values({
-        name: 'Page View Test Store',
-        category: 'Food & Beverage',
-        slug: storeSlug,
-        status: 'published',
-      })
-      .returning()
-    tenantId = tenant.id
+    fixture = await createTestTenant({
+      name: 'Page View Test Store',
+      category: 'Food & Beverage',
+    })
+    storeSlug = fixture.slug
+    tenantId = fixture.tenantId
   })
 
   afterAll(async () => {
-    if (tenantId) {
-      await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
-      await db.delete(tenants).where(eq(tenants.id, tenantId))
-    }
+    await fixture?.cleanup()
   })
 
   it('visiting a storefront page produces a page_view row in analytics_events with the correct tenant_id', async () => {

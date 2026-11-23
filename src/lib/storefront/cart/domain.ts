@@ -77,14 +77,4 @@ export function buildCartItemHash(
   return `${String(productId)}::variants=[${variantSegments.join(',')}]::addons=[${sortedAddons.join(',')}]`
 }
 
-/**
- * Formats an integer Indonesian Rupiah price into a standard display string (e.g. "Rp 25.000").
- * Preserves integer pricing invariants throughout domain math and formats only at the leaf.
- */
-export function formatCurrency(amount: number): string {
-  if (!Number.isFinite(amount)) return 'Rp 0'
-  const isNegative = amount < 0
-  const absoluteValue = Math.abs(Math.round(amount))
-  const formatted = absoluteValue.toLocaleString('id-ID')
-  return isNegative ? `-Rp ${formatted}` : `Rp ${formatted}`
-}
+export { formatCurrency } from '../currency'

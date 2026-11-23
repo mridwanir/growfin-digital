@@ -1,12 +1,17 @@
 import type { StorefrontConfig, StorefrontSection, Tenant } from '@/db/schema/tenants'
 
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
 import { StorefrontEditor } from '@/components/dashboard/editor'
 
 import '@/styles/globals.css'
+
+vi.mock('@/lib/dashboard/actions', () => ({
+  publishStorefrontDraftAction: vi.fn(),
+  saveStorefrontDraftAction: vi.fn(),
+}))
 
 const mockTenant: Tenant = {
   id: 'tenant-canvas-test',

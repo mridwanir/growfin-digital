@@ -6,8 +6,20 @@ import { page } from 'vitest/browser'
 
 import { StorefrontEditor, useStorefrontEditor } from '@/components/dashboard/editor'
 import { MERACIK_PREVIEW_UPDATE } from '@/components/storefront/preview-protocol'
+import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
 
 import '@/styles/globals.css'
+
+vi.mock('@/lib/dashboard/actions', () => ({
+  publishStorefrontDraftAction: vi.fn(),
+  saveStorefrontDraftAction: vi.fn(),
+}))
+
+function delay(ms: number): Promise<void> {
+  const { promise, resolve } = Promise.withResolvers<void>()
+  setTimeout(resolve, ms)
+  return promise
+}
 
 const mockTenant: Tenant = {
   id: 'tenant-test-123',
@@ -280,5 +292,159 @@ describe('StorefrontEditor compound components and context', () => {
     const desktopBtn = page.getByRole('button', { name: /desktop/i })
     await desktopBtn.click()
     await expect.element(canvasContainer).toHaveClass(/max-w-full/)
+  })
+
+  it('triggers debounced autosave (800ms) calling saveStorefrontDraftAction on form changes', async () => {
+    const mockSave = vi.mocked(saveStorefrontDraftAction)
+    mockSave.mockReset()
+    mockSave.mockResolvedValue({
+      data: mockInitialConfig,
+      success: true,
+    })
+
+    render(
+      <StorefrontEditor.Root initialConfig={mockInitialConfig} tenant={mockTenant}>
+        <StorefrontEditor.Toolbar />
+        <StorefrontEditor.Inspector />
+      </StorefrontEditor.Root>,
+    )
+
+    expect(mockSave).not.toHaveBeenCalled()
+
+    const titleInput = page.getByLabelText(/title/i).first()
+    await titleInput.fill('Kopi Susu Mantap')
+
+    await delay(200)
+    expect(mockSave).not.toHaveBeenCalled()
+
+    await delay(700)
+
+    expect(mockSave).toHaveBeenCalledTimes(1)
+    expect(mockSave).toHaveBeenCalledWith(
+      mockTenant.id,
+      expect.objectContaining({
+        theme: mockInitialConfig.theme,
+        sections: expect.arrayContaining([
+          expect.objectContaining({
+            id: 'sec-hero',
+            content: expect.objectContaining({ title: 'Kopi Susu Mantap' }),
+          }),
+        ]),
+      }),
+    )
+  })
+
+  it('reflects saving during save and saved once persisted in the status badge', async () => {
+    const mockSave = vi.mocked(saveStorefrontDraftAction)
+    mockSave.mockReset()
+
+    const { promise: savePromise, resolve: resolveSave } = Promise.withResolvers<{
+      data: StorefrontConfig
+      success: true
+    }>()
+    mockSave.mockReturnValue(savePromise)
+
+    render(
+      <StorefrontEditor.Root initialConfig={mockInitialConfig} tenant={mockTenant}>
+        <StorefrontEditor.Toolbar />
+        <StorefrontEditor.Inspector />
+      </StorefrontEditor.Root>,
+    )
+
+    await expect.element(page.getByText('Saved')).toBeInTheDocument()
+
+    const titleInput = page.getByLabelText(/title/i).first()
+    await titleInput.fill('Kopi Tubruk')
+
+    await delay(850)
+
+    await expect.element(page.getByText('Saving...')).toBeInTheDocument()
+
+    resolveSave({ data: mockInitialConfig, success: true })
+
+    await expect.element(page.getByText('Saved')).toBeInTheDocument()
+  })
+
+  it('reflects error state with destructive badge and icon on save failure', async () => {
+    const mockSave = vi.mocked(saveStorefrontDraftAction)
+    mockSave.mockReset()
+    mockSave.mockResolvedValue({
+      error: 'Database connection failed',
+      success: false,
+    })
+
+    render(
+      <StorefrontEditor.Root initialConfig={mockInitialConfig} tenant={mockTenant}>
+        <StorefrontEditor.Toolbar />
+        <StorefrontEditor.Inspector />
+      </StorefrontEditor.Root>,
+    )
+
+    const titleInput = page.getByLabelText(/title/i).first()
+    await titleInput.fill('Failed Save Test')
+
+    await delay(850)
+
+    const errorBadge = page.getByText('Save error')
+    await expect.element(errorBadge).toBeInTheDocument()
+    const errorBadgeEl = page.getByTestId('save-status-error')
+    await expect.element(errorBadgeEl).toBeInTheDocument()
+    await expect.element(errorBadgeEl).toHaveClass(/destructive/)
+  })
+
+  it('invokes publishStorefrontDraftAction in a transition and displays success notification upon completion', async () => {
+    const mockPublish = vi.mocked(publishStorefrontDraftAction)
+    mockPublish.mockReset()
+
+    const { promise: publishPromise, resolve: resolvePublish } = Promise.withResolvers<{
+      data: StorefrontConfig
+      success: true
+    }>()
+    mockPublish.mockReturnValue(publishPromise)
+
+    render(
+      <StorefrontEditor.Root initialConfig={mockInitialConfig} tenant={mockTenant}>
+        <StorefrontEditor.Toolbar />
+      </StorefrontEditor.Root>,
+    )
+
+    const publishBtn = page.getByRole('button', { name: /publish/i })
+    await expect.element(publishBtn).toBeInTheDocument()
+    await expect.element(publishBtn).toBeEnabled()
+
+    await publishBtn.click()
+
+    expect(mockPublish).toHaveBeenCalledTimes(1)
+    expect(mockPublish).toHaveBeenCalledWith(mockTenant.id)
+
+    await expect.element(publishBtn).toBeDisabled()
+
+    resolvePublish({ data: mockInitialConfig, success: true })
+
+    const notification = page.getByRole('status')
+    await expect.element(notification).toBeInTheDocument()
+    await expect.element(notification).toHaveTextContent('Storefront published successfully')
+  })
+
+  it('displays error notification when publishStorefrontDraftAction fails', async () => {
+    const mockPublish = vi.mocked(publishStorefrontDraftAction)
+    mockPublish.mockReset()
+    mockPublish.mockResolvedValue({
+      error: 'Network connection lost during publish',
+      success: false,
+    })
+
+    render(
+      <StorefrontEditor.Root initialConfig={mockInitialConfig} tenant={mockTenant}>
+        <StorefrontEditor.Toolbar />
+      </StorefrontEditor.Root>,
+    )
+
+    const publishBtn = page.getByRole('button', { name: /publish/i })
+    await publishBtn.click()
+
+    const alert = page.getByRole('alert')
+    await expect.element(alert).toBeInTheDocument()
+    await expect.element(alert).toHaveTextContent('Network connection lost during publish')
   })
 })

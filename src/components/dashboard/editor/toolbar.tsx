@@ -1,5 +1,9 @@
 'use client'
 
+import type { KeyboardEvent } from 'react'
+
+import type { ViewportMode } from './context'
+
 import { cn } from 'cn'
 import { Check, Loader2, Monitor, Smartphone, Tablet } from 'lucide-react'
 
@@ -12,8 +16,57 @@ export interface StorefrontEditorToolbarProps {
   className?: string
 }
 
+const VIEWPORT_OPTIONS: Array<{
+  ariaLabel: string
+  icon: typeof Smartphone
+  label: string
+  mode: ViewportMode
+}> = [
+  {
+    ariaLabel: 'Mobile (375px)',
+    icon: Smartphone,
+    label: 'Mobile',
+    mode: 'mobile',
+  },
+  {
+    ariaLabel: 'Tablet (768px)',
+    icon: Tablet,
+    label: 'Tablet',
+    mode: 'tablet',
+  },
+  {
+    ariaLabel: 'Desktop (100%)',
+    icon: Monitor,
+    label: 'Desktop',
+    mode: 'desktop',
+  },
+]
+
 export function StorefrontEditorToolbar({ className }: StorefrontEditorToolbarProps) {
   const { activeViewport, isPending, saveStatus, setActiveViewport } = useStorefrontEditor()
+
+  const handleViewportKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const modes: ViewportMode[] = ['mobile', 'tablet', 'desktop']
+    const currentIndex = modes.indexOf(activeViewport)
+    let targetIndex = -1
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      targetIndex = (currentIndex + 1) % modes.length
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      targetIndex = (currentIndex - 1 + modes.length) % modes.length
+    }
+
+    if (targetIndex >= 0) {
+      const nextMode = modes[targetIndex]
+      if (nextMode) {
+        setActiveViewport(nextMode)
+        const buttons = event.currentTarget.querySelectorAll('button')
+        buttons[targetIndex]?.focus()
+      }
+    }
+  }
 
   return (
     <header
@@ -24,42 +77,35 @@ export function StorefrontEditorToolbar({ className }: StorefrontEditorToolbarPr
         className,
       )}
     >
-      <div className="bg-muted/30 flex items-center gap-1.5 rounded-lg border p-0.5">
-        <Button
-          aria-label="Mobile (375px)"
-          className="h-7 gap-1.5 px-2.5 text-xs"
-          size="sm"
-          type="button"
-          variant={activeViewport === 'mobile' ? 'secondary' : 'ghost'}
-          onClick={() => setActiveViewport('mobile')}
-        >
-          <Smartphone className="size-3.5" />
-          <span>Mobile</span>
-        </Button>
-
-        <Button
-          aria-label="Tablet (768px)"
-          className="h-7 gap-1.5 px-2.5 text-xs"
-          size="sm"
-          type="button"
-          variant={activeViewport === 'tablet' ? 'secondary' : 'ghost'}
-          onClick={() => setActiveViewport('tablet')}
-        >
-          <Tablet className="size-3.5" />
-          <span>Tablet</span>
-        </Button>
-
-        <Button
-          aria-label="Desktop (100%)"
-          className="h-7 gap-1.5 px-2.5 text-xs"
-          size="sm"
-          type="button"
-          variant={activeViewport === 'desktop' ? 'secondary' : 'ghost'}
-          onClick={() => setActiveViewport('desktop')}
-        >
-          <Monitor className="size-3.5" />
-          <span>Desktop</span>
-        </Button>
+      <div
+        aria-label="Device viewport"
+        className="bg-muted/40 flex items-center gap-1 rounded-lg border p-1"
+        role="group"
+        onKeyDown={handleViewportKeyDown}
+      >
+        {VIEWPORT_OPTIONS.map(({ ariaLabel, icon: Icon, label, mode }) => {
+          const isActive = activeViewport === mode
+          return (
+            <Button
+              key={mode}
+              aria-label={ariaLabel}
+              aria-pressed={isActive}
+              size="sm"
+              type="button"
+              variant={isActive ? 'secondary' : 'ghost'}
+              onClick={() => setActiveViewport(mode)}
+              className={cn(
+                'h-7 gap-1.5 px-2.5 text-xs font-medium transition-all',
+                isActive
+                  ? 'bg-background text-foreground hover:bg-background shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              <Icon className="size-3.5" />
+              <span>{label}</span>
+            </Button>
+          )
+        })}
       </div>
 
       <div className="flex items-center gap-3">

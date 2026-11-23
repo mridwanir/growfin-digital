@@ -1,12 +1,20 @@
 'use server'
 
 import type { Category } from '@/db/schema/catalog'
-import type { Tenant } from '@/db/schema/tenants'
+import type {
+  StorefrontConfig,
+  StorefrontSection,
+  StorefrontTheme,
+  Tenant,
+} from '@/db/schema/tenants'
 import type { ProductWithVariants } from '@/lib/dashboard/mutations'
 
+import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
+import { db } from '@/db'
+import { storefrontConfigs, tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import {
   createCategory,
@@ -308,4 +316,237 @@ export async function updateProductAction(
   revalidatePath('/dashboard/products')
 
   return { data: updated, success: true }
+}
+
+const sectionSchema = z.object({
+  id: z.string().min(1),
+  type: z.enum(['hero', 'catalog', 'reviews', 'gallery', 'operating_hours', 'footer']),
+  content: z.record(z.string(), z.unknown()),
+  isVisible: z.boolean(),
+  sortOrder: z.number().int(),
+})
+
+const saveDraftSchema = z.object({
+  sections: z.array(sectionSchema).optional(),
+  theme: z.record(z.string(), z.unknown()).optional(),
+})
+
+export async function saveStorefrontDraftAction(
+  tenantId: string,
+  input: unknown,
+): Promise<ActionResult<StorefrontConfig>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const validation = validateInput(saveDraftSchema, input)
+  if (!validation.success) {
+    return validation
+  }
+
+  const [tenant] = await db
+    .select({ id: tenants.id, slug: tenants.slug })
+    .from(tenants)
+    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .limit(1)
+
+  if (!tenant) {
+    return { error: 'Tenant not found or forbidden', success: false }
+  }
+
+  const [existingDraft] = await db
+    .select()
+    .from(storefrontConfigs)
+    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+    .limit(1)
+
+  const now = new Date()
+  let draftRecord: StorefrontConfig
+
+  if (existingDraft) {
+    const updateValues: Partial<typeof storefrontConfigs.$inferInsert> = {
+      updatedAt: now,
+    }
+    if (validation.data.theme !== undefined) {
+      updateValues.theme = validation.data.theme as StorefrontTheme
+    }
+    if (validation.data.sections !== undefined) {
+      updateValues.sections = validation.data.sections as StorefrontSection[]
+    }
+
+    const [updated] = await db
+      .update(storefrontConfigs)
+      .set(updateValues)
+      .where(eq(storefrontConfigs.id, existingDraft.id))
+      .returning()
+    draftRecord = updated
+  } else {
+    const [inserted] = await db
+      .insert(storefrontConfigs)
+      .values({
+        sections: (validation.data.sections ?? []) as StorefrontSection[],
+        status: 'draft',
+        tenantId,
+        theme: (validation.data.theme ?? {}) as StorefrontTheme,
+        updatedAt: now,
+      })
+      .returning()
+    draftRecord = inserted
+  }
+
+  revalidatePath('/dashboard/[tenantSlug]/editor')
+  revalidatePath(`/dashboard/${tenant.slug}/editor`)
+
+  return { data: draftRecord, success: true }
+}
+
+export async function publishStorefrontDraftAction(
+  tenantId: string,
+): Promise<ActionResult<StorefrontConfig>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const [tenant] = await db
+    .select({ id: tenants.id, slug: tenants.slug })
+    .from(tenants)
+    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .limit(1)
+
+  if (!tenant) {
+    return { error: 'Tenant not found or forbidden', success: false }
+  }
+
+  const publishedRecord = await db.transaction(async tx => {
+    const [draft] = await tx
+      .select()
+      .from(storefrontConfigs)
+      .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+      .limit(1)
+
+    if (!draft) {
+      return null
+    }
+
+    const now = new Date()
+
+    const [existingPublished] = await tx
+      .select()
+      .from(storefrontConfigs)
+      .where(
+        and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')),
+      )
+      .limit(1)
+
+    let published: StorefrontConfig
+
+    if (existingPublished) {
+      const [updated] = await tx
+        .update(storefrontConfigs)
+        .set({
+          sections: draft.sections,
+          theme: draft.theme,
+          updatedAt: now,
+        })
+        .where(eq(storefrontConfigs.id, existingPublished.id))
+        .returning()
+      published = updated
+    } else {
+      const [inserted] = await tx
+        .insert(storefrontConfigs)
+        .values({
+          sections: draft.sections,
+          status: 'published',
+          tenantId,
+          theme: draft.theme,
+          updatedAt: now,
+        })
+        .returning()
+      published = inserted
+    }
+
+    await tx.update(tenants).set({ updatedAt: now }).where(eq(tenants.id, tenantId))
+
+    return published
+  })
+
+  if (!publishedRecord) {
+    return { error: 'Draft configuration not found', success: false }
+  }
+
+  revalidatePath('/site/[slug]')
+  revalidatePath('/dashboard/[tenantSlug]')
+  revalidatePath(`/site/${tenant.slug}`)
+  revalidatePath(`/dashboard/${tenant.slug}`)
+
+  return { data: publishedRecord, success: true }
+}
+
+export async function discardStorefrontDraftAction(
+  tenantId: string,
+): Promise<ActionResult<StorefrontConfig>> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return { error: authResult.error, success: false }
+  }
+
+  const [tenant] = await db
+    .select({ id: tenants.id, slug: tenants.slug })
+    .from(tenants)
+    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .limit(1)
+
+  if (!tenant) {
+    return { error: 'Tenant not found or forbidden', success: false }
+  }
+
+  const [published] = await db
+    .select()
+    .from(storefrontConfigs)
+    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')))
+    .limit(1)
+
+  const [existingDraft] = await db
+    .select()
+    .from(storefrontConfigs)
+    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+    .limit(1)
+
+  const targetTheme = (published?.theme ?? {}) as StorefrontTheme
+  const targetSections = (published?.sections ?? []) as StorefrontSection[]
+  const now = new Date()
+
+  let draftRecord: StorefrontConfig
+
+  if (existingDraft) {
+    const [updated] = await db
+      .update(storefrontConfigs)
+      .set({
+        sections: targetSections,
+        theme: targetTheme,
+        updatedAt: now,
+      })
+      .where(eq(storefrontConfigs.id, existingDraft.id))
+      .returning()
+    draftRecord = updated
+  } else {
+    const [inserted] = await db
+      .insert(storefrontConfigs)
+      .values({
+        sections: targetSections,
+        status: 'draft',
+        tenantId,
+        theme: targetTheme,
+        updatedAt: now,
+      })
+      .returning()
+    draftRecord = inserted
+  }
+
+  revalidatePath('/dashboard/[tenantSlug]/editor')
+  revalidatePath(`/dashboard/${tenant.slug}/editor`)
+
+  return { data: draftRecord, success: true }
 }

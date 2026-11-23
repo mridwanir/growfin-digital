@@ -4,8 +4,8 @@
 
 **Blocked by:** 02: Storefront Editor compound components and context.
 
-Status: claimed
+Status: resolved
 
-- [ ] Viewport toggle switch allows selecting Mobile (375px), Tablet (768px), and Desktop (100%).
-- [ ] Preview iframe container scales and centers properly without layout overflow.
-- [ ] Initial viewport defaults to 375px mobile view.
+- [x] Viewport toggle switch allows selecting Mobile (375px), Tablet (768px), and Desktop (100%).
+- [x] Preview iframe container scales and centers properly without layout overflow.
+- [x] Initial viewport defaults to 375px mobile view.

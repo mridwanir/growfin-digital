@@ -1,4 +1,5 @@
 import nextEnv from '@next/env'
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
 import { fileURLToPath } from 'node:url'
@@ -7,7 +8,7 @@ import { defaultExclude, defineConfig } from 'vitest/config'
 const { loadEnvConfig } = nextEnv
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [tailwindcss(), react()],
   oxc: {
     jsx: {
       importSource: 'react',
@@ -15,6 +16,7 @@ export default defineConfig({
     },
   },
   resolve: {
+    dedupe: ['react', 'react-dom'],
     tsconfigPaths: true,
   },
   test: {

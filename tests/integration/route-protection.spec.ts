@@ -11,8 +11,14 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { POST as storageDeleteRoute } from '@/app/api/storage/delete/route'
 import { POST as storageUploadRoute } from '@/app/api/storage/upload/route'
 import TenantDashboardLayout from '@/app/dashboard/[tenantSlug]/layout'
+import TenantOverviewPage from '@/app/dashboard/[tenantSlug]/page'
+import TenantProductsPage from '@/app/dashboard/[tenantSlug]/products/page'
+import TenantSettingsPage from '@/app/dashboard/[tenantSlug]/settings/page'
 import DashboardPage from '@/app/dashboard/page'
+import LegacyProductsPage from '@/app/dashboard/products/page'
+import LegacySettingsPage from '@/app/dashboard/settings/page'
 import { db } from '@/db'
+import { analyticsEvents } from '@/db/schema/analytics'
 import { userInNeonAuth } from '@/db/schema/auth'
 import { auth } from '@/lib/auth/server'
 import {
@@ -24,7 +30,7 @@ import {
   updateProductCategoryAction,
   updateTenantSettingsAction,
 } from '@/lib/dashboard/actions'
-import { getTenantBySlug } from '@/lib/dashboard/mutations'
+import { createCategory, createProduct, getTenantBySlug } from '@/lib/dashboard/mutations'
 
 import {
   createCustomerSession,
@@ -530,6 +536,366 @@ describe('Route Protection & Authorization Seam', () => {
       expect(html).toContain('Belum Ada Website')
       expect(html).toContain('Mulai Buat Website')
       expect(html).toContain('href="/"')
+    })
+  })
+
+  describe('path-scoped tenant overview, settings, and products routes seam', () => {
+    const singleUserId = crypto.randomUUID()
+    const multiUserId = crypto.randomUUID()
+    const unownedUserId = crypto.randomUUID()
+    let singleTenantFixture: TestTenantFixture
+    let multiTenantFixture1: TestTenantFixture
+    let multiTenantFixture2: TestTenantFixture
+
+    beforeAll(async () => {
+      await db.insert(userInNeonAuth).values([
+        {
+          id: singleUserId,
+          name: 'Single Owner',
+          email: `single-owner-${Date.now()}@example.com`,
+          emailVerified: true,
+        },
+        {
+          id: multiUserId,
+          name: 'Multi Owner',
+          email: `multi-owner-${Date.now()}@example.com`,
+          emailVerified: true,
+        },
+        {
+          id: unownedUserId,
+          name: 'Unowned Merchant',
+          email: `unowned-merchant-${Date.now()}@example.com`,
+          emailVerified: true,
+        },
+      ])
+
+      singleTenantFixture = await createTestTenant({
+        city: 'Bandung',
+        phone: '081234567890',
+        slug: `store-single-${Date.now()}`,
+        userId: singleUserId,
+      })
+
+      multiTenantFixture1 = await createTestTenant({
+        slug: `store-multi-1-${Date.now()}`,
+        userId: multiUserId,
+      })
+
+      multiTenantFixture2 = await createTestTenant({
+        slug: `store-multi-2-${Date.now()}`,
+        userId: multiUserId,
+      })
+
+      await db.insert(analyticsEvents).values([
+        {
+          acquisition: { source: 'instagram' },
+          createdAt: new Date(),
+          event: 'page_view',
+          tenantId: singleTenantFixture.tenantId,
+          visitorHash: 'hash-visitor-test-1',
+        },
+        {
+          acquisition: { source: 'instagram' },
+          createdAt: new Date(),
+          event: 'checkout_start',
+          tenantId: singleTenantFixture.tenantId,
+          visitorHash: 'hash-visitor-test-1',
+        },
+        {
+          acquisition: { source: 'instagram' },
+          createdAt: new Date(),
+          event: 'checkout_complete',
+          tenantId: singleTenantFixture.tenantId,
+          visitorHash: 'hash-visitor-test-1',
+        },
+      ])
+
+      const cat = await createCategory(singleTenantFixture.tenantId, singleUserId, {
+        name: 'Kopi Susu Spesial',
+      })
+      if (cat) {
+        await createProduct(singleTenantFixture.tenantId, singleUserId, {
+          name: 'Kopi Susu Gula Aren Enak',
+          basePrice: 22000,
+          categoryId: cat.id,
+          sortOrder: 0,
+        })
+      }
+    })
+
+    afterAll(async () => {
+      await singleTenantFixture?.cleanup()
+      await multiTenantFixture1?.cleanup()
+      await multiTenantFixture2?.cleanup()
+      await db
+        .delete(userInNeonAuth)
+        .where(inArray(userInNeonAuth.id, [singleUserId, multiUserId, unownedUserId]))
+    })
+
+    describe('tenant overview page (/dashboard/[tenantSlug])', () => {
+      it('redirects unauthenticated caller to /login', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
+
+        await expect(
+          TenantOverviewPage({
+            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+          }),
+        ).rejects.toThrow('NEXT_REDIRECT:/login')
+        expect(redirect).toHaveBeenCalledWith('/login')
+      })
+
+      it('redirects caller to /dashboard when accessing unowned tenant slug', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: unownedUserId,
+          }),
+        )
+
+        await expect(
+          TenantOverviewPage({
+            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+          }),
+        ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
+
+      it('renders tenant overview with analytics metrics and quick store links', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: singleUserId,
+          }),
+        )
+
+        const element = await TenantOverviewPage({
+          params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+        })
+        expect(element).toBeDefined()
+        expect(redirect).not.toHaveBeenCalled()
+
+        const html = renderToStaticMarkup(element)
+        expect(html).toContain(singleTenantFixture.tenant.name)
+        expect(html).toContain(singleTenantFixture.slug)
+        expect(html).toContain('Bandung')
+        expect(html).toContain('081234567890')
+        expect(html).toContain('instagram')
+        expect(html).toContain(`/dashboard/${singleTenantFixture.slug}/products`)
+        expect(html).toContain(`/dashboard/${singleTenantFixture.slug}/settings`)
+        expect(html).toContain(`/dashboard/${singleTenantFixture.slug}/editor`)
+      })
+    })
+
+    describe('tenant settings page (/dashboard/[tenantSlug]/settings)', () => {
+      it('redirects unauthenticated caller to /login', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
+
+        await expect(
+          TenantSettingsPage({
+            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+          }),
+        ).rejects.toThrow('NEXT_REDIRECT:/login')
+        expect(redirect).toHaveBeenCalledWith('/login')
+      })
+
+      it('redirects caller to /dashboard when accessing unowned tenant slug', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: unownedUserId,
+          }),
+        )
+
+        await expect(
+          TenantSettingsPage({
+            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+          }),
+        ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
+
+      it('loads settings for active tenant based on route params', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: singleUserId,
+          }),
+        )
+
+        const element = await TenantSettingsPage({
+          params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+        })
+        expect(element).toBeDefined()
+        expect(redirect).not.toHaveBeenCalled()
+
+        const html = renderToStaticMarkup(element)
+        expect(html).toContain(`Pengaturan Toko: ${singleTenantFixture.tenant.name}`)
+        expect(html).toContain('Bandung')
+        expect(html).toContain('081234567890')
+        expect(html).not.toContain('?tenant=')
+      })
+    })
+
+    describe('tenant products page (/dashboard/[tenantSlug]/products)', () => {
+      it('redirects unauthenticated caller to /login', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
+
+        await expect(
+          TenantProductsPage({
+            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+          }),
+        ).rejects.toThrow('NEXT_REDIRECT:/login')
+        expect(redirect).toHaveBeenCalledWith('/login')
+      })
+
+      it('redirects caller to /dashboard when accessing unowned tenant slug', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: unownedUserId,
+          }),
+        )
+
+        await expect(
+          TenantProductsPage({
+            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+          }),
+        ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
+
+      it('loads categories and products for active tenant based on route params', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: singleUserId,
+          }),
+        )
+
+        const element = await TenantProductsPage({
+          params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
+        })
+        expect(element).toBeDefined()
+        expect(redirect).not.toHaveBeenCalled()
+
+        const html = renderToStaticMarkup(element)
+        expect(html).toContain(`Katalog Produk: ${singleTenantFixture.tenant.name}`)
+        expect(html).toContain('Kopi Susu Spesial')
+        expect(html).toContain('Kopi Susu Gula Aren Enak')
+        expect(html).not.toContain('?tenant=')
+      })
+    })
+
+    describe('legacy settings route redirect (/dashboard/settings)', () => {
+      it('redirects unauthenticated caller to /login', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
+
+        await expect(LegacySettingsPage({})).rejects.toThrow('NEXT_REDIRECT:/login')
+        expect(redirect).toHaveBeenCalledWith('/login')
+      })
+
+      it('redirects caller with 0 tenants to /dashboard', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: unownedUserId,
+          }),
+        )
+
+        await expect(LegacySettingsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
+
+      it('redirects single-tenant caller directly to path-scoped settings route', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: singleUserId,
+          }),
+        )
+
+        await expect(LegacySettingsPage({})).rejects.toThrow(
+          `NEXT_REDIRECT:/dashboard/${singleTenantFixture.slug}/settings`,
+        )
+        expect(redirect).toHaveBeenCalledWith(`/dashboard/${singleTenantFixture.slug}/settings`)
+      })
+
+      it('redirects caller with matching tenant query param to path-scoped settings route', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: multiUserId,
+          }),
+        )
+
+        await expect(
+          LegacySettingsPage({
+            searchParams: Promise.resolve({ tenant: multiTenantFixture2.tenantId }),
+          }),
+        ).rejects.toThrow(`NEXT_REDIRECT:/dashboard/${multiTenantFixture2.slug}/settings`)
+        expect(redirect).toHaveBeenCalledWith(`/dashboard/${multiTenantFixture2.slug}/settings`)
+      })
+
+      it('redirects multi-tenant caller without tenant param to /dashboard', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: multiUserId,
+          }),
+        )
+
+        await expect(LegacySettingsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
+    })
+
+    describe('legacy products route redirect (/dashboard/products)', () => {
+      it('redirects unauthenticated caller to /login', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
+
+        await expect(LegacyProductsPage({})).rejects.toThrow('NEXT_REDIRECT:/login')
+        expect(redirect).toHaveBeenCalledWith('/login')
+      })
+
+      it('redirects caller with 0 tenants to /dashboard', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: unownedUserId,
+          }),
+        )
+
+        await expect(LegacyProductsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
+
+      it('redirects single-tenant caller directly to path-scoped products route', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: singleUserId,
+          }),
+        )
+
+        await expect(LegacyProductsPage({})).rejects.toThrow(
+          `NEXT_REDIRECT:/dashboard/${singleTenantFixture.slug}/products`,
+        )
+        expect(redirect).toHaveBeenCalledWith(`/dashboard/${singleTenantFixture.slug}/products`)
+      })
+
+      it('redirects caller with matching tenant query param to path-scoped products route', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: multiUserId,
+          }),
+        )
+
+        await expect(
+          LegacyProductsPage({
+            searchParams: Promise.resolve({ tenant: multiTenantFixture1.tenantId }),
+          }),
+        ).rejects.toThrow(`NEXT_REDIRECT:/dashboard/${multiTenantFixture1.slug}/products`)
+        expect(redirect).toHaveBeenCalledWith(`/dashboard/${multiTenantFixture1.slug}/products`)
+      })
+
+      it('redirects multi-tenant caller without tenant param to /dashboard', async () => {
+        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+          createMerchantSession({
+            userId: multiUserId,
+          }),
+        )
+
+        await expect(LegacyProductsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+        expect(redirect).toHaveBeenCalledWith('/dashboard')
+      })
     })
   })
 })

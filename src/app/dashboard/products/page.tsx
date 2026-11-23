@@ -1,86 +1,36 @@
-import { Store } from 'lucide-react'
-import Link from 'next/link'
-import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
 
-import { buttonVariants } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
-import {
-  getMerchantTenants,
-  getTenantCategories,
-  getTenantProducts,
-} from '@/lib/dashboard/mutations'
+import { getMerchantTenants } from '@/lib/dashboard/mutations'
 
-import { ProductsClient } from './products-client'
-
-interface ProductsPageProps {
-  searchParams: Promise<{ tenant?: string }>
+interface LegacyProductsPageProps {
+  searchParams?: Promise<{ tenant?: string }>
 }
 
-async function ProductsContent({ searchParams }: ProductsPageProps) {
+export default async function LegacyProductsPage({ searchParams }: LegacyProductsPageProps) {
   const { data: session } = await getSession()
-  if (!session?.user?.id) return null
-
-  const tenantList = await getMerchantTenants(session.user.id)
-  if (tenantList.length === 0) {
-    return (
-      <Card className="flex flex-col items-center justify-center p-12 text-center">
-        <Store className="text-muted-foreground size-12 stroke-1" />
-        <h3 className="font-heading mt-4 text-base font-semibold">Belum Ada Toko</h3>
-        <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-          Anda perlu memiliki setidaknya satu website toko untuk mengelola katalog produk.
-        </p>
-        <Link className={buttonVariants({ className: 'mt-6' })} href="/">
-          Buat Toko Baru
-        </Link>
-      </Card>
-    )
+  if (!session?.user?.id) {
+    redirect('/login')
   }
 
-  const { tenant: selectedTenantId } = await searchParams
-  const activeTenant = tenantList.find(t => t.id === selectedTenantId) || tenantList[0]
+  const tenants = await getMerchantTenants(session.user.id)
+  if (tenants.length === 0) {
+    redirect('/dashboard')
+  }
 
-  const [categories, products] = await Promise.all([
-    getTenantCategories(activeTenant.id, session.user.id),
-    getTenantProducts(activeTenant.id, session.user.id),
-  ])
+  const resolvedParams = searchParams ? await searchParams : undefined
+  const tenantParam = resolvedParams?.tenant
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold tracking-tight">
-          Katalog Produk: {activeTenant.name}
-        </h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Kelola kategori, daftar menu, variasi harga, dan stok barang untuk storefront Anda.
-        </p>
-      </div>
+  if (tenantParam) {
+    const matched = tenants.find(t => t.id === tenantParam || t.slug === tenantParam)
+    if (matched) {
+      redirect(`/dashboard/${matched.slug}/products`)
+    }
+  }
 
-      <ProductsClient
-        initialCategories={categories || []}
-        initialProducts={products || []}
-        selectedTenantId={activeTenant.id}
-        tenants={tenantList.map(t => ({ id: t.id, name: t.name, slug: t.slug }))}
-      />
-    </div>
-  )
-}
+  if (tenants.length === 1) {
+    redirect(`/dashboard/${tenants[0].slug}/products`)
+  }
 
-export default function ProductsPage({ searchParams }: ProductsPageProps) {
-  return (
-    <main className="container mx-auto px-4 py-8 sm:px-6">
-      <Suspense
-        fallback={
-          <div className="space-y-6">
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="h-48 rounded-xl" />
-            <Skeleton className="h-96 rounded-xl" />
-          </div>
-        }
-      >
-        <ProductsContent searchParams={searchParams} />
-      </Suspense>
-    </main>
-  )
+  redirect('/dashboard')
 }

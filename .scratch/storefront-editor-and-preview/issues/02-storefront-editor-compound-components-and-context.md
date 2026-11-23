@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Isolated storefront preview route.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] `StorefrontEditor.Root` provides typed context for draft state, selected section, active viewport, and pending transitions using React 19 `use()`.
 - [ ] `StorefrontEditor.Sidebar` renders the section list with reorder actions and visibility switches.

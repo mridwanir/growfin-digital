@@ -175,7 +175,7 @@ describe('Storefront Loader & Config Integration (Ticket 04)', () => {
     expect(data?.tenant.id).toBe(bareTenant.id)
     expect(data?.config).toBeDefined()
     expect(data?.config.status).toBe('published')
-    expect(data?.config.tenantId).toBe(bareTenant.id)
+    expect(data?.config.organizationId).toBe(bareTenant.id)
     expect(data?.config.theme).toBeDefined()
     expect(Array.isArray(data?.config.sections)).toBe(true)
     expect(data?.config.sections.length).toBeGreaterThan(0)
@@ -272,7 +272,7 @@ describe('Storefront Loader & Config Integration (Ticket 04)', () => {
         .delete(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, fixture.tenantId),
+            eq(storefrontConfigs.organizationId, fixture.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -306,7 +306,7 @@ describe('Storefront Loader & Config Integration (Ticket 04)', () => {
       expect(data).not.toBeNull()
       expect(data?.tenant.id).toBe(bareTenant.id)
       expect(data?.config).toBeDefined()
-      expect(data?.config.tenantId).toBe(bareTenant.id)
+      expect(data?.config.organizationId).toBe(bareTenant.id)
       expect(data?.config.theme).toBeDefined()
       expect(Array.isArray(data?.config.sections)).toBe(true)
       expect(data?.config.sections.length).toBeGreaterThan(0)

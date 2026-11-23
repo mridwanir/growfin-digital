@@ -136,7 +136,7 @@ export function buildLocalBusinessJsonLd(
   return {
     name: tenant.name,
     '@context': 'https://schema.org',
-    '@type': getLocalBusinessType(tenant.category, archetype),
+    '@type': getLocalBusinessType(tenant.category || undefined, archetype),
     description,
     image: ogImageUrl,
     logo: logoUrl,

@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { getSessionCookie } from 'better-auth/cookies'
+import { organization } from 'better-auth/plugins'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextResponse } from 'next/server'
@@ -42,6 +43,9 @@ const baseAuth = betterAuth({
     provider: 'pg',
     schema: {
       account: authSchema.account,
+      invitation: authSchema.invitation,
+      member: authSchema.member,
+      organization: authSchema.organization,
       session: authSchema.session,
       user: authSchema.user,
       verification: authSchema.verification,
@@ -89,6 +93,27 @@ const baseAuth = betterAuth({
       })
     },
   },
+  plugins: [
+    organization({
+      schema: {
+        organization: {
+          additionalFields: {
+            address: { type: 'string', required: false },
+            category: { type: 'string', required: false },
+            city: { type: 'string', required: false },
+            customDomain: { type: 'string', required: false },
+            domainActiveUntil: { type: 'date', required: false },
+            googleMapsUrl: { type: 'string', required: false },
+            operatingHours: { type: 'json', required: false },
+            packageTier: { type: 'string', defaultValue: 'free', required: false },
+            phone: { type: 'string', required: false },
+            siteActiveUntil: { type: 'date', required: false },
+            status: { type: 'string', defaultValue: 'draft', required: false },
+          },
+        },
+      },
+    }),
+  ],
   secret:
     env.BETTER_AUTH_SECRET ||
     process.env.BETTER_AUTH_SECRET ||
@@ -98,6 +123,7 @@ const baseAuth = betterAuth({
 export interface SessionPayload {
   session: {
     id: string
+    activeOrganizationId?: string | null
     createdAt: Date
     expiresAt: Date
     ipAddress?: string | null

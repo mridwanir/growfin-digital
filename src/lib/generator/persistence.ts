@@ -1,19 +1,21 @@
 import type { GeneratedWebsiteData } from './schema'
 import type { Database } from '@/db'
-import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
+import type { Organization } from '@/db/schema/auth'
+import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 
 import crypto from 'node:crypto'
 
 import { db } from '@/db'
+import { organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { storefrontConfigs } from '@/db/schema/storefront'
 
 import { generateCategorySlug, generateTenantSlug } from './slug'
 
 export interface PersistResult {
   categories: (typeof categories.$inferSelect)[]
   products: (typeof products.$inferSelect)[]
-  tenant: typeof tenants.$inferSelect
+  tenant: Organization
 }
 
 /**
@@ -30,7 +32,7 @@ export async function persistGeneratedWebsite(
   return database.transaction(async tx => {
     // 1. Insert tenant record
     const [insertedTenant] = await tx
-      .insert(tenants)
+      .insert(organization)
       .values({
         name: data.business.name,
         address: data.business.address || null,
@@ -135,15 +137,15 @@ export async function persistGeneratedWebsite(
 
     await tx.insert(storefrontConfigs).values([
       {
+        organizationId: insertedTenant.id,
         sections,
         status: 'draft',
-        tenantId: insertedTenant.id,
         theme,
       },
       {
+        organizationId: insertedTenant.id,
         sections,
         status: 'published',
-        tenantId: insertedTenant.id,
         theme,
       },
     ])
@@ -151,9 +153,9 @@ export async function persistGeneratedWebsite(
     // 2. Batch insert categories
     const categoryValues = data.categories.map((cat, idx) => ({
       name: cat.name,
+      organizationId: insertedTenant.id,
       slug: cat.slug || generateCategorySlug(cat.name, idx),
       sortOrder: cat.sortOrder ?? idx,
-      tenantId: insertedTenant.id,
     }))
 
     const insertedCategories = await tx.insert(categories).values(categoryValues).returning()
@@ -181,11 +183,11 @@ export async function persistGeneratedWebsite(
         imageGallery: prod.imageGallery ?? [],
         imageUrl: prod.imageUrl ?? null,
         isActive: true,
+        organizationId: insertedTenant.id,
         originalPrice: prod.originalPrice ?? null,
         sortOrder: prod.sortOrder ?? idx,
         specifications: prod.specifications ?? [],
         stock: prod.stock ?? null,
-        tenantId: insertedTenant.id,
       }
     })
 

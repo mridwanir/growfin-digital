@@ -47,11 +47,11 @@ describe('Checkout funnel analytics integration', () => {
     const events = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     const startEvent = events.find(e => e.event === 'checkout_start')
     expect(startEvent).toBeDefined()
-    expect(startEvent?.tenantId).toBe(tenantId)
+    expect(startEvent?.organizationId).toBe(tenantId)
   })
 
   it('tracks checkout_complete event with contextual metadata when checkout CTA is clicked', async () => {
@@ -80,17 +80,17 @@ describe('Checkout funnel analytics integration', () => {
     const events = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     const completeEvent = events.find(e => e.event === 'checkout_complete')
     expect(completeEvent).toBeDefined()
-    expect(completeEvent?.tenantId).toBe(tenantId)
+    expect(completeEvent?.organizationId).toBe(tenantId)
     expect(completeEvent?.eventData).toEqual(metadata)
   })
 
   it('complete user journey produces page_view, checkout_start, and checkout_complete rows', async () => {
     // Clear previous events for a fresh journey test
-    await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
+    await db.delete(analyticsEvents).where(eq(analyticsEvents.organizationId, tenantId))
 
     const visitorIp = '203.0.113.99'
     const userAgent = 'Mozilla/5.0 MobileJourney/1.0'
@@ -156,7 +156,7 @@ describe('Checkout funnel analytics integration', () => {
     const rows = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(rows).toHaveLength(3)
 

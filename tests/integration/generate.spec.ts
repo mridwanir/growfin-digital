@@ -134,7 +134,7 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
     const persistedConfigs = await db
       .select()
       .from(storefrontConfigs)
-      .where(eq(storefrontConfigs.tenantId, persistedTenant.id))
+      .where(eq(storefrontConfigs.organizationId, persistedTenant.id))
     expect(persistedConfigs).toHaveLength(2)
     const configStatuses = persistedConfigs.map(c => c.status)
     expect(configStatuses).toContain('draft')
@@ -146,7 +146,7 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
     const persistedCategories = await db
       .select()
       .from(categories)
-      .where(eq(categories.tenantId, persistedTenant.id))
+      .where(eq(categories.organizationId, persistedTenant.id))
     expect(persistedCategories).toHaveLength(2)
     const categoryNames = persistedCategories.map(c => c.name)
     expect(categoryNames).toContain('Signature Coffee')
@@ -159,7 +159,7 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
     const persistedProducts = await db
       .select()
       .from(products)
-      .where(eq(products.tenantId, persistedTenant.id))
+      .where(eq(products.organizationId, persistedTenant.id))
     expect(persistedProducts).toHaveLength(2)
 
     const coffeeProduct = persistedProducts.find(p => p.name === 'Es Kopi Susu Senja')!

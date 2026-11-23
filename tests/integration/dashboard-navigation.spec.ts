@@ -124,14 +124,14 @@ describe('Dashboard Navigation Integration Seam', () => {
       {
         createdAt: new Date(),
         event: 'checkout_start',
-        tenantId: singleTenantFixture.tenantId,
+        organizationId: singleTenantFixture.tenantId,
         visitorHash: 'hash-single-1',
       },
       {
         acquisition: { source: 'instagram' },
         createdAt: new Date(),
         event: 'checkout_complete',
-        tenantId: singleTenantFixture.tenantId,
+        organizationId: singleTenantFixture.tenantId,
         visitorHash: 'hash-single-1',
       },
     ])

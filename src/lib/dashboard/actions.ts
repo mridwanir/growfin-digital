@@ -1,7 +1,8 @@
 'use server'
 
 import type { Category } from '@/db/schema/catalog'
-import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
+import type { StorefrontConfig } from '@/db/schema/storefront'
+import type { Tenant } from '@/db/schema/tenants'
 import type { ProductWithVariants } from '@/lib/dashboard/mutations'
 
 import { and, eq } from 'drizzle-orm'
@@ -9,7 +10,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { db } from '@/db'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { member, organization } from '@/db/schema/auth'
+import { storefrontConfigs } from '@/db/schema/storefront'
 import { auth } from '@/lib/auth/server'
 import {
   createCategory,
@@ -376,9 +378,10 @@ export async function saveStorefrontDraftAction(
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id, slug: tenants.slug })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .select({ id: organization.id, slug: organization.slug })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, tenantId), eq(member.userId, authResult.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -388,7 +391,9 @@ export async function saveStorefrontDraftAction(
   const [existingDraft] = await db
     .select()
     .from(storefrontConfigs)
-    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+    .where(
+      and(eq(storefrontConfigs.organizationId, tenantId), eq(storefrontConfigs.status, 'draft')),
+    )
     .limit(1)
 
   const now = new Date()
@@ -416,7 +421,10 @@ export async function saveStorefrontDraftAction(
       .select()
       .from(storefrontConfigs)
       .where(
-        and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')),
+        and(
+          eq(storefrontConfigs.organizationId, tenantId),
+          eq(storefrontConfigs.status, 'published'),
+        ),
       )
       .limit(1)
 
@@ -427,9 +435,9 @@ export async function saveStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
+        organizationId: tenantId,
         sections: initialSections,
         status: 'draft',
-        tenantId,
         theme: initialTheme,
         updatedAt: now,
       })
@@ -452,9 +460,10 @@ export async function publishStorefrontDraftAction(
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id, slug: tenants.slug })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .select({ id: organization.id, slug: organization.slug })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, tenantId), eq(member.userId, authResult.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -465,7 +474,9 @@ export async function publishStorefrontDraftAction(
     const [draft] = await tx
       .select()
       .from(storefrontConfigs)
-      .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+      .where(
+        and(eq(storefrontConfigs.organizationId, tenantId), eq(storefrontConfigs.status, 'draft')),
+      )
       .limit(1)
 
     if (!draft) {
@@ -478,7 +489,10 @@ export async function publishStorefrontDraftAction(
       .select()
       .from(storefrontConfigs)
       .where(
-        and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')),
+        and(
+          eq(storefrontConfigs.organizationId, tenantId),
+          eq(storefrontConfigs.status, 'published'),
+        ),
       )
       .limit(1)
 
@@ -499,9 +513,9 @@ export async function publishStorefrontDraftAction(
       const [inserted] = await tx
         .insert(storefrontConfigs)
         .values({
+          organizationId: tenantId,
           sections: draft.sections,
           status: 'published',
-          tenantId,
           theme: draft.theme,
           updatedAt: now,
         })
@@ -509,7 +523,7 @@ export async function publishStorefrontDraftAction(
       published = inserted
     }
 
-    await tx.update(tenants).set({ updatedAt: now }).where(eq(tenants.id, tenantId))
+    await tx.update(organization).set({ updatedAt: now }).where(eq(organization.id, tenantId))
 
     return published
   })
@@ -535,9 +549,10 @@ export async function discardStorefrontDraftAction(
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id, slug: tenants.slug })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .select({ id: organization.id, slug: organization.slug })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, tenantId), eq(member.userId, authResult.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -547,7 +562,12 @@ export async function discardStorefrontDraftAction(
   const [published] = await db
     .select()
     .from(storefrontConfigs)
-    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')))
+    .where(
+      and(
+        eq(storefrontConfigs.organizationId, tenantId),
+        eq(storefrontConfigs.status, 'published'),
+      ),
+    )
     .limit(1)
 
   if (!published) {
@@ -557,7 +577,9 @@ export async function discardStorefrontDraftAction(
   const [existingDraft] = await db
     .select()
     .from(storefrontConfigs)
-    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+    .where(
+      and(eq(storefrontConfigs.organizationId, tenantId), eq(storefrontConfigs.status, 'draft')),
+    )
     .limit(1)
 
   const now = new Date()
@@ -578,9 +600,9 @@ export async function discardStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
+        organizationId: tenantId,
         sections: published.sections,
         status: 'draft',
-        tenantId,
         theme: published.theme,
         updatedAt: now,
       })

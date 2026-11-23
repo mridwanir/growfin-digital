@@ -1,6 +1,6 @@
-import { bigserial, index, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { bigserial, index, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
-import { tenants } from './tenants'
+import { organization } from './auth'
 
 // ---------------------------------------------------------------------------
 // Analytics Events Table
@@ -14,18 +14,28 @@ export const analyticsEvents = pgTable(
     event: text('event').notNull(),
     eventData: jsonb('event_data'),
     visitorHash: text('visitor_hash').notNull(),
-    tenantId: uuid('tenant_id')
+    organizationId: text('organization_id')
       .notNull()
-      .references(() => tenants.id, { onDelete: 'cascade' }),
+      .references(() => organization.id, { onDelete: 'cascade' }),
   },
   table => [
-    index('analytics_events_tenant_id_created_at_idx').on(table.tenantId, table.createdAt),
-    index('analytics_events_tenant_id_event_created_at_idx').on(
-      table.tenantId,
+    index('analytics_events_organization_id_created_at_idx').on(
+      table.organizationId,
+      table.createdAt,
+    ),
+    index('analytics_events_organization_id_event_created_at_idx').on(
+      table.organizationId,
       table.event,
       table.createdAt,
     ),
   ],
 )
+
+Object.defineProperty(analyticsEvents, 'tenantId', {
+  configurable: true,
+  get() {
+    return this.organizationId
+  },
+})
 
 export type AnalyticsEvent = typeof analyticsEvents.$inferSelect

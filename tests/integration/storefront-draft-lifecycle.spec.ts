@@ -149,7 +149,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -163,7 +163,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -190,7 +190,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -244,7 +244,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -256,7 +256,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -283,7 +283,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -301,7 +301,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -324,7 +324,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -359,7 +359,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -374,9 +374,9 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       // Restore draft config for subsequent tests
       await db.insert(storefrontConfigs).values({
         id: draft.id,
+        organizationId: tenantA.tenantId,
         sections: draft.sections,
         status: 'draft',
-        tenantId: tenantA.tenantId,
         theme: draft.theme,
       })
     })
@@ -414,7 +414,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -436,7 +436,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -461,7 +461,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .delete(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -471,7 +471,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -491,7 +491,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -508,7 +508,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -523,9 +523,9 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       // Restore published config
       await db.insert(storefrontConfigs).values({
         id: published.id,
+        organizationId: tenantA.tenantId,
         sections: published.sections,
         status: 'published',
-        tenantId: tenantA.tenantId,
         theme: published.theme,
       })
     })
@@ -582,7 +582,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -591,7 +591,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )
@@ -625,7 +625,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'draft'),
           ),
         )
@@ -634,7 +634,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenantA.tenantId),
+            eq(storefrontConfigs.organizationId, tenantA.tenantId),
             eq(storefrontConfigs.status, 'published'),
           ),
         )

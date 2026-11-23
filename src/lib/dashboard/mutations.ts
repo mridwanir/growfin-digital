@@ -1,10 +1,10 @@
-import type { BrandingContent, OperatingHours } from '@/db/schema/tenants'
+import type { BrandingContent, OperatingHours } from '@/db/schema/storefront'
 
 import { and, desc, eq, inArray } from 'drizzle-orm'
 
 import { db } from '@/db'
+import { member, organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
 
 /**
  * Returns all tenants owned by the given merchant user.
@@ -12,23 +12,24 @@ import { tenants } from '@/db/schema/tenants'
 export async function getMerchantTenants(userId: string) {
   return db
     .select({
-      id: tenants.id,
-      name: tenants.name,
-      address: tenants.address,
-      category: tenants.category,
-      city: tenants.city,
-      createdAt: tenants.createdAt,
-      customDomain: tenants.customDomain,
-      packageTier: tenants.packageTier,
-      phone: tenants.phone,
-      siteActiveUntil: tenants.siteActiveUntil,
-      slug: tenants.slug,
-      status: tenants.status,
-      updatedAt: tenants.updatedAt,
+      id: organization.id,
+      name: organization.name,
+      address: organization.address,
+      category: organization.category,
+      city: organization.city,
+      createdAt: organization.createdAt,
+      customDomain: organization.customDomain,
+      packageTier: organization.packageTier,
+      phone: organization.phone,
+      siteActiveUntil: organization.siteActiveUntil,
+      slug: organization.slug,
+      status: organization.status,
+      updatedAt: organization.updatedAt,
     })
-    .from(tenants)
-    .where(eq(tenants.userId, userId))
-    .orderBy(desc(tenants.createdAt))
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(eq(member.userId, userId))
+    .orderBy(desc(organization.createdAt))
 }
 
 /**
@@ -40,9 +41,30 @@ export async function getTenantBySlug(slug: string, userId: string) {
   }
 
   const [tenant] = await db
-    .select()
-    .from(tenants)
-    .where(and(eq(tenants.slug, slug), eq(tenants.userId, userId)))
+    .select({
+      id: organization.id,
+      name: organization.name,
+      address: organization.address,
+      category: organization.category,
+      city: organization.city,
+      createdAt: organization.createdAt,
+      customDomain: organization.customDomain,
+      domainActiveUntil: organization.domainActiveUntil,
+      googleMapsUrl: organization.googleMapsUrl,
+      logo: organization.logo,
+      metadata: organization.metadata,
+      operatingHours: organization.operatingHours,
+      packageTier: organization.packageTier,
+      phone: organization.phone,
+      siteActiveUntil: organization.siteActiveUntil,
+      slug: organization.slug,
+      status: organization.status,
+      updatedAt: organization.updatedAt,
+      userId: member.userId,
+    })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.slug, slug), eq(member.userId, userId)))
     .limit(1)
 
   return tenant ?? null
@@ -62,22 +84,26 @@ export interface UpdateTenantSettingsInput {
 export async function getTenantSettings(tenantId: string, userId: string) {
   const [tenant] = await db
     .select({
-      id: tenants.id,
-      name: tenants.name,
-      address: tenants.address,
-      category: tenants.category,
-      city: tenants.city,
-      customDomain: tenants.customDomain,
-      googleMapsUrl: tenants.googleMapsUrl,
-      operatingHours: tenants.operatingHours,
-      packageTier: tenants.packageTier,
-      phone: tenants.phone,
-      slug: tenants.slug,
-      status: tenants.status,
-      updatedAt: tenants.updatedAt,
+      id: organization.id,
+      name: organization.name,
+      address: organization.address,
+      category: organization.category,
+      city: organization.city,
+      customDomain: organization.customDomain,
+      domainActiveUntil: organization.domainActiveUntil,
+      googleMapsUrl: organization.googleMapsUrl,
+      operatingHours: organization.operatingHours,
+      packageTier: organization.packageTier,
+      phone: organization.phone,
+      siteActiveUntil: organization.siteActiveUntil,
+      slug: organization.slug,
+      status: organization.status,
+      updatedAt: organization.updatedAt,
+      userId: member.userId,
     })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, userId)))
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, tenantId), eq(member.userId, userId)))
     .limit(1)
 
   return tenant ?? null
@@ -101,7 +127,7 @@ export async function updateTenantSettings(
   }
 
   const [updated] = await db
-    .update(tenants)
+    .update(organization)
     .set({
       address: input.address !== undefined ? input.address : current.address,
       city: input.city !== undefined ? input.city : current.city,
@@ -109,9 +135,8 @@ export async function updateTenantSettings(
       phone: input.phone !== undefined ? input.phone : current.phone,
       updatedAt: new Date(),
     })
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, userId)))
+    .where(eq(organization.id, tenantId))
     .returning()
-
   return updated ?? null
 }
 
@@ -134,7 +159,7 @@ export async function getTenantCategories(tenantId: string, userId: string) {
   return db
     .select()
     .from(categories)
-    .where(eq(categories.tenantId, tenantId))
+    .where(eq(categories.organizationId, tenantId))
     .orderBy(categories.sortOrder, categories.name)
 }
 
@@ -155,13 +180,16 @@ export async function createCategory(
     .insert(categories)
     .values({
       name: input.name.trim(),
+      organizationId: tenantId,
       slug: finalSlug || 'category',
       sortOrder: input.sortOrder ?? 0,
-      tenantId,
     })
     .returning()
 
-  return created
+  return {
+    ...created,
+    tenantId: created.organizationId,
+  }
 }
 
 /**
@@ -184,10 +212,9 @@ export async function updateCategory(
   const [updated] = await db
     .update(categories)
     .set(updateValues)
-    .where(and(eq(categories.id, categoryId), eq(categories.tenantId, tenantId)))
+    .where(and(eq(categories.id, categoryId), eq(categories.organizationId, tenantId)))
     .returning()
-
-  return updated ?? null
+  return updated ? { ...updated, tenantId: updated.organizationId } : null
 }
 
 /**
@@ -199,9 +226,8 @@ export async function deleteCategory(tenantId: string, userId: string, categoryI
 
   const result = await db
     .delete(categories)
-    .where(and(eq(categories.id, categoryId), eq(categories.tenantId, tenantId)))
+    .where(and(eq(categories.id, categoryId), eq(categories.organizationId, tenantId)))
     .returning({ id: categories.id })
-
   return result.length > 0
 }
 
@@ -263,6 +289,7 @@ export interface ProductWithVariants {
   isActive: boolean
   sortOrder: number
   duration: number | null
+  organizationId: string
   tenantId: string
   createdAt: Date
   updatedAt: Date
@@ -294,9 +321,8 @@ export async function getTenantProducts(
   const productRows = await db
     .select()
     .from(products)
-    .where(eq(products.tenantId, tenantId))
+    .where(eq(products.organizationId, tenantId))
     .orderBy(products.sortOrder, desc(products.createdAt))
-
   if (productRows.length === 0) return []
 
   const productIds = productRows.map(p => p.id)
@@ -341,6 +367,7 @@ export async function getTenantProducts(
 
   return productRows.map(p => ({
     ...p,
+    tenantId: p.organizationId,
     variants: variantsByProductId.get(p.id) || [],
   }))
 }
@@ -359,7 +386,7 @@ async function getProductById(
   const [product] = await db
     .select()
     .from(products)
-    .where(and(eq(products.id, productId), eq(products.tenantId, tenantId)))
+    .where(and(eq(products.id, productId), eq(products.organizationId, tenantId)))
     .limit(1)
 
   if (!product) return null
@@ -393,6 +420,7 @@ async function getProductById(
 
   return {
     ...product,
+    tenantId: product.organizationId,
     variants,
   }
 }
@@ -465,13 +493,12 @@ export async function createProduct(
         imageStorageKey: input.imageStorageKey,
         imageUrl: input.imageUrl,
         isActive: input.isActive ?? true,
+        organizationId: tenantId,
         originalPrice: input.originalPrice,
         sortOrder: input.sortOrder ?? 0,
         stock: input.stock,
-        tenantId,
       })
       .returning({ id: products.id })
-
     if (input.variants && input.variants.length > 0) {
       await insertVariants(tx, createdProduct.id, input.variants)
     }
@@ -503,8 +530,7 @@ export async function updateProduct(
     await tx
       .update(products)
       .set(updateValues)
-      .where(and(eq(products.id, productId), eq(products.tenantId, tenantId)))
-
+      .where(and(eq(products.id, productId), eq(products.organizationId, tenantId)))
     if (input.variants !== undefined) {
       await tx.delete(productVariants).where(eq(productVariants.productId, productId))
       await insertVariants(tx, productId, input.variants)
@@ -523,8 +549,7 @@ export async function deleteProduct(tenantId: string, userId: string, productId:
 
   const result = await db
     .delete(products)
-    .where(and(eq(products.id, productId), eq(products.tenantId, tenantId)))
+    .where(and(eq(products.id, productId), eq(products.organizationId, tenantId)))
     .returning({ id: products.id })
-
   return result.length > 0
 }

@@ -188,7 +188,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'draft'),
         ),
       )
@@ -212,7 +212,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'published'),
         ),
       )
@@ -282,7 +282,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'draft'),
         ),
       )
@@ -307,7 +307,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'published'),
         ),
       )
@@ -390,7 +390,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'draft'),
         ),
       )

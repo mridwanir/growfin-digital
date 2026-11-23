@@ -1,7 +1,6 @@
 import { bigint, index, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 
-import { userInNeonAuth } from './auth'
-import { tenants } from './tenants'
+import { organization, user } from './auth'
 
 export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired'
 
@@ -20,15 +19,22 @@ export const orders = pgTable(
     snapshotTier: text('snapshot_tier'),
     status: text('status').$type<OrderStatus>().notNull().default('pending'),
     updatedAt: timestamp('updated_at', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
-    userId: uuid('user_id').references(() => userInNeonAuth.id, { onDelete: 'set null' }),
-    tenantId: uuid('tenant_id')
+    userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
+    organizationId: text('organization_id')
       .notNull()
-      .references(() => tenants.id, { onDelete: 'cascade' }),
+      .references(() => organization.id, { onDelete: 'cascade' }),
   },
   table => [
-    index('orders_tenant_id_idx').on(table.tenantId),
+    index('orders_organization_id_idx').on(table.organizationId),
     index('orders_user_id_idx').on(table.userId),
   ],
 )
+
+Object.defineProperty(orders, 'tenantId', {
+  configurable: true,
+  get() {
+    return this.organizationId
+  },
+})
 
 export type Order = typeof orders.$inferSelect

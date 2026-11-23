@@ -104,7 +104,7 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
 
       expect(savedOrder).toBeDefined()
       expect(savedOrder.status).toBe('pending')
-      expect(savedOrder.tenantId).toBe(testTenant.id)
+      expect(savedOrder.organizationId).toBe(testTenant.id)
       expect(savedOrder.amount).toBe(299000)
       expect(savedOrder.snapshotTier).toBe('instant')
     })
@@ -181,9 +181,9 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
         .insert(orders)
         .values({
           amount: 299000,
+          organizationId: testTenant.id,
           snapshotTier: 'instan',
           status: 'pending',
-          tenantId: testTenant.id,
         })
         .returning()
 
@@ -242,9 +242,9 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
         .insert(orders)
         .values({
           amount: 299000,
+          organizationId: testTenant.id,
           snapshotTier: 'instan',
           status: 'pending',
-          tenantId: testTenant.id,
         })
         .returning()
 
@@ -309,9 +309,9 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
         .insert(orders)
         .values({
           amount: 299000,
+          organizationId: testTenant.id,
           snapshotTier: 'instan',
           status: 'pending',
-          tenantId: testTenant.id,
         })
         .returning()
 
@@ -365,9 +365,9 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
         .insert(orders)
         .values({
           amount: 299000,
+          organizationId: testTenant.id,
           paidAt: new Date(),
           status: 'paid',
-          tenantId: testTenant.id,
         })
         .returning()
 
@@ -394,9 +394,9 @@ describe('Midtrans Payment Pipeline and Tenant Activation (Issue 09)', () => {
         .insert(orders)
         .values({
           amount: 299000,
+          organizationId: testTenant.id,
           snapshotTier: 'instan',
           status: 'pending',
-          tenantId: testTenant.id,
         })
         .returning()
 

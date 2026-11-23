@@ -66,9 +66,9 @@ beforeAll(async () => {
     .insert(categories)
     .values({
       name: 'Kategori Default',
+      organizationId: mockTenantId,
       slug: `cat-default-${Date.now()}`,
       sortOrder: 0,
-      tenantId: mockTenantId,
     })
     .returning()
   seededCategoryId = cat.id
@@ -335,9 +335,9 @@ describe('updateProductCategoryAction seam', () => {
       .insert(categories)
       .values({
         name: 'Makanan Lama',
+        organizationId: mockTenantId,
         slug: `makanan-lama-${Date.now()}`,
         sortOrder: 0,
-        tenantId: mockTenantId,
       })
       .returning()
 
@@ -401,9 +401,9 @@ describe('deleteProductCategoryAction seam', () => {
       .insert(categories)
       .values({
         name: 'Makanan Hapus',
+        organizationId: mockTenantId,
         slug: `makanan-hapus-${Date.now()}`,
         sortOrder: 0,
-        tenantId: mockTenantId,
       })
       .returning()
 
@@ -601,7 +601,7 @@ describe('deleteProductAction seam', () => {
       .values({
         name: 'Prod To Delete',
         basePrice: 20000,
-        tenantId: mockTenantId,
+        organizationId: mockTenantId,
       })
       .returning()
 
@@ -735,7 +735,7 @@ describe('updateProductAction seam', () => {
         name: 'Nasi Goreng Lama',
         basePrice: 25000,
         categoryId: seededCategoryId,
-        tenantId: mockTenantId,
+        organizationId: mockTenantId,
       })
       .returning()
 

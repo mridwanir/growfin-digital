@@ -1,14 +1,16 @@
 import type { ProductWithVariants } from '@/components/storefront/catalog'
+import type { Organization } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
-import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
+import type { StorefrontConfig } from '@/db/schema/storefront'
 
 import { and, eq, inArray, or } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { cache } from 'react'
 
 import { db } from '@/db'
+import { organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { storefrontConfigs } from '@/db/schema/storefront'
 import {
   DEFAULT_STOREFRONT_SECTIONS,
   DEFAULT_STOREFRONT_THEME,
@@ -18,7 +20,7 @@ export interface StorefrontData {
   categories: Category[]
   config: StorefrontConfig
   products: ProductWithVariants[]
-  tenant: Tenant
+  tenant: Organization
 }
 
 /**
@@ -32,8 +34,8 @@ export const getStorefrontDataBySlug = cache(
   async (slugOrDomain: string): Promise<StorefrontData | null> => {
     const [tenant] = await db
       .select()
-      .from(tenants)
-      .where(or(eq(tenants.slug, slugOrDomain), eq(tenants.customDomain, slugOrDomain)))
+      .from(organization)
+      .where(or(eq(organization.slug, slugOrDomain), eq(organization.customDomain, slugOrDomain)))
       .limit(1)
 
     if (!tenant) return null
@@ -42,27 +44,30 @@ export const getStorefrontDataBySlug = cache(
       db
         .select()
         .from(categories)
-        .where(eq(categories.tenantId, tenant.id))
+        .where(eq(categories.organizationId, tenant.id))
         .orderBy(categories.sortOrder),
       db
         .select()
         .from(products)
-        .where(eq(products.tenantId, tenant.id))
+        .where(eq(products.organizationId, tenant.id))
         .orderBy(products.sortOrder),
       db
         .select()
         .from(storefrontConfigs)
         .where(
-          and(eq(storefrontConfigs.tenantId, tenant.id), eq(storefrontConfigs.status, 'published')),
+          and(
+            eq(storefrontConfigs.organizationId, tenant.id),
+            eq(storefrontConfigs.status, 'published'),
+          ),
         )
         .limit(1),
     ])
 
     const config: StorefrontConfig = publishedConfig ?? {
       id: crypto.randomUUID(),
+      organizationId: tenant.id,
       sections: DEFAULT_STOREFRONT_SECTIONS,
       status: 'published',
-      tenantId: tenant.id,
       theme: DEFAULT_STOREFRONT_THEME,
       updatedAt: new Date(),
     }
@@ -139,8 +144,8 @@ export const getStorefrontDraftDataBySlug = cache(
   async (slugOrDomain: string): Promise<StorefrontData | null> => {
     const [tenant] = await db
       .select()
-      .from(tenants)
-      .where(or(eq(tenants.slug, slugOrDomain), eq(tenants.customDomain, slugOrDomain)))
+      .from(organization)
+      .where(or(eq(organization.slug, slugOrDomain), eq(organization.customDomain, slugOrDomain)))
       .limit(1)
 
     if (!tenant) return null
@@ -149,19 +154,19 @@ export const getStorefrontDraftDataBySlug = cache(
       db
         .select()
         .from(categories)
-        .where(eq(categories.tenantId, tenant.id))
+        .where(eq(categories.organizationId, tenant.id))
         .orderBy(categories.sortOrder),
       db
         .select()
         .from(products)
-        .where(eq(products.tenantId, tenant.id))
+        .where(eq(products.organizationId, tenant.id))
         .orderBy(products.sortOrder),
       db
         .select()
         .from(storefrontConfigs)
         .where(
           and(
-            eq(storefrontConfigs.tenantId, tenant.id),
+            eq(storefrontConfigs.organizationId, tenant.id),
             inArray(storefrontConfigs.status, ['draft', 'published']),
           ),
         ),
@@ -173,9 +178,9 @@ export const getStorefrontDraftDataBySlug = cache(
     const config: StorefrontConfig = draftConfig ??
       publishedConfig ?? {
         id: crypto.randomUUID(),
+        organizationId: tenant.id,
         sections: DEFAULT_STOREFRONT_SECTIONS,
         status: 'draft',
-        tenantId: tenant.id,
         theme: DEFAULT_STOREFRONT_THEME,
         updatedAt: new Date(),
       }

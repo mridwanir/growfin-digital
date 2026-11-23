@@ -52,12 +52,12 @@ describe('Storefront Page View tracking integration', () => {
     const events = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(events.length).toBeGreaterThanOrEqual(1)
     const pageViewEvent = events.find(e => e.event === 'page_view')
     expect(pageViewEvent).toBeDefined()
-    expect(pageViewEvent?.tenantId).toBe(tenantId)
+    expect(pageViewEvent?.organizationId).toBe(tenantId)
     expect(pageViewEvent?.acquisition).toEqual({
       medium: 'bio',
       referrer: 'https://l.instagram.com/',

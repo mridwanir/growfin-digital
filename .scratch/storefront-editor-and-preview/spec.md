@@ -1,4 +1,4 @@
-Status: ready-for-agent
+Status: resolved
 
 # Storefront Editor compound components and isolated preview synchronization
 

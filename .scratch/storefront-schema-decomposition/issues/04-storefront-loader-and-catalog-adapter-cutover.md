@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Storefront draft and publish Server Actions.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Storefront data loader fetches the published storefront configuration for the resolved tenant.
 - [ ] Section components (Hero, Catalog, Reviews, Gallery, Hours, Footer) receive their typed content from `StorefrontSection[]`.

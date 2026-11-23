@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
-import { GrowfinWatermark, MeracikWatermark } from './watermark'
+import { MeracikWatermark } from './watermark'
 
 describe('MeracikWatermark component', () => {
   it('renders watermark landmark with accessible name', async () => {
@@ -30,9 +30,5 @@ describe('MeracikWatermark component', () => {
 
     const cta = page.getByText('Buat Web Gratis')
     await expect.element(cta).toBeVisible()
-  })
-
-  it('exports GrowfinWatermark as backwards-compatible alias', () => {
-    expect(GrowfinWatermark).toBe(MeracikWatermark)
   })
 })

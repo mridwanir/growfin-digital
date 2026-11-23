@@ -46,5 +46,3 @@ export function MeracikWatermark({
     </aside>
   )
 }
-
-export const GrowfinWatermark = MeracikWatermark

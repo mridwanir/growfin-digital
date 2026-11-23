@@ -38,6 +38,7 @@ vi.mock('next/cache', () => ({
 }))
 
 vi.mock('next/navigation', () => ({
+  usePathname: vi.fn(() => ''),
   redirect: vi.fn((url: string) => {
     throw new Error(`NEXT_REDIRECT:${url}`)
   }),

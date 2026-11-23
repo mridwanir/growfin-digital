@@ -4,7 +4,7 @@
 
 **Blocked by:** 02: Storefront Editor compound components and context.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Form changes trigger an 800-millisecond debounced autosave to the server draft record.
 - [ ] Status badge indicates `saving`, `saved`, and `error` states clearly with semantic tokens and icons.

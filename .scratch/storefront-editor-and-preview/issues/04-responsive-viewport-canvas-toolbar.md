@@ -4,7 +4,7 @@
 
 **Blocked by:** 02: Storefront Editor compound components and context.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Viewport toggle switch allows selecting Mobile (375px), Tablet (768px), and Desktop (100%).
 - [ ] Preview iframe container scales and centers properly without layout overflow.

@@ -15,3 +15,4 @@ Implementation map for path-scoped dashboard shell under `/dashboard/[tenantSlug
 ## Decisions so far
 
 - [[issues/01-path-scoped-route-layout-and-guard.md]]: Implemented `getTenantBySlug` query and `src/app/dashboard/[tenantSlug]/layout.tsx` dynamic segment route guard enforcing session authentication (`/login` redirect) and tenant ownership verification (`/dashboard` redirect).
+- [[issues/02-dashboard-sidebar-and-tenant-switcher.md]]: Implemented persistent compound sidebar with `DashboardSidebar`, `TenantSwitcher`, `NavMain` (with `usePathname()` active highlighting), `NavUser`, and integrated into `src/app/dashboard/[tenantSlug]/layout.tsx`.

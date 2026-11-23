@@ -4,9 +4,9 @@
 
 **Blocked by:** 01: Path-scoped route layout and guard.
 
-Status: claimed
+Status: resolved
 
-- [ ] `DashboardSidebar` renders collapsible navigation using shadcn Sidebar primitives.
-- [ ] `TenantSwitcher` allows selecting between all tenants owned by the merchant, routing to `/dashboard/[newTenantSlug]`.
-- [ ] Active route indicator highlights current section (Overview, Editor, Catalog, Settings).
-- [ ] Sidebar collapses properly on mobile and narrow desktop viewports.
+- [x] `DashboardSidebar` renders collapsible navigation using shadcn Sidebar primitives.
+- [x] `TenantSwitcher` allows selecting between all tenants owned by the merchant, routing to `/dashboard/[newTenantSlug]`.
+- [x] Active route indicator highlights current section (Overview, Editor, Catalog, Settings).
+- [x] Sidebar collapses properly on mobile and narrow desktop viewports.

@@ -31,6 +31,23 @@ export async function getMerchantTenants(userId: string) {
     .orderBy(desc(tenants.createdAt))
 }
 
+/**
+ * Returns a tenant matching both slug and userId, or null if not found.
+ */
+export async function getTenantBySlug(slug: string, userId: string) {
+  if (!slug || !userId) {
+    return null
+  }
+
+  const [tenant] = await db
+    .select()
+    .from(tenants)
+    .where(and(eq(tenants.slug, slug), eq(tenants.userId, userId)))
+    .limit(1)
+
+  return tenant ?? null
+}
+
 export interface UpdateTenantSettingsInput {
   phone?: string | null
   address?: string | null

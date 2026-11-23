@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Tenants and storefront_configs schema definitions.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] `pnpm run db:generate` produces valid SQL migration files for the schema update.
 - [ ] `tests/fixtures/tenant-fixture.ts` seeds baseline published and draft storefront configurations.

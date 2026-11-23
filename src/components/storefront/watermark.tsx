@@ -7,20 +7,20 @@ export function GrowfinWatermark() {
       className="pointer-events-auto fixed bottom-4 left-1/2 z-45 -translate-x-1/2"
     >
       <Link
-        className="group flex items-center gap-1.5 rounded-full border border-white/10 bg-[#14141A]/90 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-[0_4px_20px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-[#00b894]/50 hover:bg-[#14141A] active:scale-95"
+        className="group border-border/80 bg-card/90 text-card-foreground hover:border-primary/50 hover:bg-card flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium whitespace-nowrap shadow-lg backdrop-blur-md transition-all duration-200 hover:scale-105 active:scale-95"
         href="https://growfin.my.id"
         rel="noopener noreferrer"
         target="_blank"
       >
         <span className="text-sm leading-none font-extrabold text-amber-400 drop-shadow">⚡</span>
-        <span className="text-slate-200">
+        <span className="text-muted-foreground">
           Website UMKM oleh{' '}
-          <strong className="font-bold text-white transition-colors group-hover:text-[#00e0b8]">
+          <strong className="text-card-foreground group-hover:text-primary font-bold transition-colors">
             Growfin Digital
           </strong>
         </span>
-        <span className="font-bold text-slate-500">—</span>
-        <span className="font-bold text-[#00e0b8] underline decoration-[#00e0b8]/40 underline-offset-2 group-hover:text-[#00b894]">
+        <span className="text-muted-foreground font-bold">—</span>
+        <span className="text-primary decoration-primary/40 group-hover:text-primary/90 font-bold underline underline-offset-2">
           Buat Web Gratis
         </span>
       </Link>

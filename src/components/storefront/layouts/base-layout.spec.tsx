@@ -85,7 +85,7 @@ describe('BaseStorefrontLayout footer visibility', () => {
 
     await render(<BaseStorefrontLayout config={config} tenant={mockTenant} />)
 
-    await expect.element(page.getByText('Powered by Growfin Digital')).toBeVisible()
+    await expect.element(page.getByText('Powered by MeracikWeb')).toBeVisible()
     await expect.element(page.getByText('Custom Footer Tagline')).toBeVisible()
   })
 
@@ -109,7 +109,7 @@ describe('BaseStorefrontLayout footer visibility', () => {
 
     await render(<BaseStorefrontLayout config={config} tenant={mockTenant} />)
 
-    await expect.element(page.getByText('Powered by Growfin Digital')).toBeVisible()
+    await expect.element(page.getByText('Powered by MeracikWeb')).toBeVisible()
   })
 
   it('does not render fallback footer when footer is in hiddenSections', async () => {

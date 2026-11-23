@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Debounced autosave and publish controls, 05: Delete legacy demo and preview routes.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Browser component tests verify postMessage event emission on inspector form inputs.
 - [ ] Integration tests verify that section reordering and content changes persist to draft records.

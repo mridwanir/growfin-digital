@@ -157,11 +157,11 @@ export function ProductCustomizationDialog(props: ProductCustomizationDialogProp
                 </p>
               )}
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-foreground text-lg font-bold">
+                <span className="text-foreground text-lg font-bold tabular-nums">
                   {formatCurrency(product.basePrice)}
                 </span>
                 {hasDiscount && product.originalPrice && (
-                  <span className="text-muted-foreground text-sm line-through">
+                  <span className="text-muted-foreground text-sm tabular-nums line-through">
                     {formatCurrency(product.originalPrice)}
                   </span>
                 )}
@@ -220,7 +220,7 @@ export function ProductCustomizationDialog(props: ProductCustomizationDialogProp
                           >
                             <span>{option.label}</span>
                             {option.priceModifier > 0 && (
-                              <span className="ml-1 opacity-80">
+                              <span className="ml-1 tabular-nums opacity-80">
                                 +{formatCurrency(option.priceModifier)}
                               </span>
                             )}
@@ -253,7 +253,7 @@ export function ProductCustomizationDialog(props: ProductCustomizationDialogProp
                         )}
                       >
                         <span className="font-medium">{addon.name}</span>
-                        <span className="text-muted-foreground font-medium">
+                        <span className="text-muted-foreground font-medium tabular-nums">
                           +{formatCurrency(addon.price)}
                         </span>
                       </button>
@@ -310,7 +310,10 @@ export function ProductCustomizationDialog(props: ProductCustomizationDialogProp
             </div>
             <div className="text-right">
               <div className="text-muted-foreground text-xs">Subtotal</div>
-              <div className="text-foreground text-lg font-bold" data-slot="customization-subtotal">
+              <div
+                className="text-foreground text-lg font-bold tabular-nums"
+                data-slot="customization-subtotal"
+              >
                 {formatCurrency(subtotal)}
               </div>
             </div>

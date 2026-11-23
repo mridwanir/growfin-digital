@@ -2,6 +2,7 @@ import type { Tenant } from '@/db/schema/tenants'
 
 import { describe, expect, it } from 'vitest'
 
+import { env } from '@/lib/env'
 import { buildLocalBusinessJsonLd, getLocalBusinessType } from '@/lib/storefront/seo'
 
 const baseMockTenant: Tenant = {
@@ -13,7 +14,6 @@ const baseMockTenant: Tenant = {
   createdAt: new Date('2025-01-01T00:00:00Z'),
   customDomain: null,
   domainActiveUntil: null,
-  fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?q=test',
   organizationId: null,
   packageTier: 'instant',
@@ -23,22 +23,11 @@ const baseMockTenant: Tenant = {
   status: 'published',
   updatedAt: new Date('2025-01-01T00:00:00Z'),
   userId: null,
-  brandingContent: {
-    heroSubtitle: 'Gaya modern setiap hari',
-    heroTitle: 'Toko Keren Fashion',
-    logoUrl: '/image/logo.png',
-    tagline: 'Koleksi fashion lokal terbaik',
-  },
   operatingHours: {
     closeTime: '21:00',
     isOpen: true,
     openTime: '09:00',
     raw: '09:00 - 21:00',
-  },
-  themeConfig: {
-    colorPalette: 'minimal',
-    fontFamily: 'font-sans',
-    layoutId: 'modern',
   },
 }
 
@@ -70,7 +59,9 @@ describe('SEO Domain Module (seo.ts)', () => {
       expect(jsonLd['@type']).toBe('Store')
       expect(jsonLd.name).toBe('Toko Keren')
       expect(jsonLd.telephone).toBe('081234567890')
-      expect(jsonLd.url).toBe('https://growfin.my.id/toko-keren')
+      expect(jsonLd.url).toBe(
+        `https://${env.NEXT_PUBLIC_BASE_DOMAIN || 'growfin.my.id'}/toko-keren`,
+      )
       expect(jsonLd.address['@type']).toBe('PostalAddress')
       expect(jsonLd.address.addressLocality).toBe('Jakarta')
       expect(jsonLd.hasMap).toBe('https://maps.google.com/?q=test')

@@ -1,4 +1,4 @@
-import type { BrandingContent, Tenant } from '@/db/schema/tenants'
+import type { BrandingContent, ReviewsSectionContent, Tenant } from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 import { ExternalLink, Heart, Star } from 'lucide-react'
@@ -13,6 +13,7 @@ interface ReviewItemData {
 
 export interface ReviewsSectionProps {
   tenant: Tenant
+  content?: ReviewsSectionContent
   title?: string
   description?: string
   reviews?: ReviewItemData[]
@@ -43,24 +44,34 @@ const DEFAULT_REVIEWS: ReviewItemData[] = [
 
 export function Reviews({
   tenant,
+  content,
   title,
   description,
   reviews: explicitReviews,
   variant = 'grid',
   className,
 }: ReviewsSectionProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
+  const branding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
 
-  const sectionTitle = title || branding.reviewsTitle || 'Ulasan Pelanggan'
+  const sectionTitle = title || content?.title || branding.reviewsTitle || 'Ulasan Pelanggan'
   const sectionDescription =
     description ||
+    content?.description ||
     branding.reviewsDescription ||
     'Lihat kepuasan dan testimoni nyata dari para pelanggan setia kami.'
-
+  const effectiveVariant = content?.variant || variant
   // Extract reviews
   let displayReviews: ReviewItemData[] = []
   if (explicitReviews && explicitReviews.length > 0) {
     displayReviews = explicitReviews
+  } else if (content?.reviews && content.reviews.length > 0) {
+    displayReviews = content.reviews.map(r => ({
+      authorName: r.authorName,
+      rating: r.rating,
+      text: r.text,
+      time: r.time,
+    }))
   } else {
     const rawReviews = branding['reviews']
     if (Array.isArray(rawReviews) && rawReviews.length > 0) {
@@ -83,7 +94,7 @@ export function Reviews({
     }
   }
 
-  const googleMapsUrl = tenant.googleMapsUrl || null
+  const googleMapsUrl = content?.googleMapsUrl || tenant.googleMapsUrl || null
 
   return (
     <section
@@ -121,7 +132,7 @@ export function Reviews({
 
         <div
           className={cn(
-            variant === 'scroll'
+            effectiveVariant === 'scroll'
               ? 'flex snap-x snap-mandatory gap-6 overflow-x-auto pb-6'
               : 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3',
           )}
@@ -137,7 +148,7 @@ export function Reviews({
                 data-slot="review-card"
                 className={cn(
                   'border-border/60 bg-card text-card-foreground flex flex-col justify-between rounded-2xl border p-6 shadow-xs transition-all hover:shadow-md',
-                  variant === 'scroll' && 'w-80 shrink-0 snap-start',
+                  effectiveVariant === 'scroll' && 'w-80 shrink-0 snap-start',
                 )}
               >
                 <div>

@@ -1,7 +1,15 @@
 'use client'
 
-import { AlertCircle, CheckCircle2, Clock, Loader2, MapPin, Save, Share2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Globe,
+  Loader2,
+  MapPin,
+  Save,
+  Share2,
+} from 'lucide-react'
 import { useState, useTransition } from 'react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -11,15 +19,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
 
-interface TenantOption {
-  id: string
-  name: string
-  slug: string
-}
-
-interface TenantSettingsData {
+export interface TenantSettingsData {
   address: string | null
-  brandingContent: {
+  brandingContent?: {
     socialLinks?: {
       facebook?: { active?: boolean; url: string }
       instagram?: { active?: boolean; url: string }
@@ -28,8 +30,10 @@ interface TenantSettingsData {
     }
   } | null
   city: string | null
+  customDomain?: string | null
   id: string
   name: string
+  packageTier?: string | null
   operatingHours: {
     closeTime?: string
     isOpen?: boolean
@@ -40,15 +44,13 @@ interface TenantSettingsData {
   slug: string
 }
 
-interface SettingsClientProps {
+export interface SettingsClientProps {
   initialTenant: TenantSettingsData
-  tenants: TenantOption[]
+  tenantId: string
+  tenantSlug: string
 }
 
-export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) {
-  const router = useRouter()
-  const [selectedTenantId, setSelectedTenantId] = useState(initialTenant.id)
-
+export function SettingsClient({ initialTenant, tenantId }: SettingsClientProps) {
   const [phone, setPhone] = useState(initialTenant.phone || '')
   const [city, setCity] = useState(initialTenant.city || '')
   const [address, setAddress] = useState(initialTenant.address || '')
@@ -68,16 +70,13 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[] | undefined>>({})
-  const handleTenantChange = (tenantId: string) => {
-    setSelectedTenantId(tenantId)
-    router.push(`/dashboard/settings?tenant=${tenantId}`)
-  }
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
     setSuccessMessage('')
     setErrorMessage('')
     setFieldErrors({})
+
     const payload = {
       address: address.trim() || null,
       city: city.trim() || null,
@@ -97,7 +96,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
     }
 
     startTransition(async () => {
-      const res = await updateTenantSettingsAction(selectedTenantId, payload)
+      const res = await updateTenantSettingsAction(tenantId, payload)
       if (!res.success) {
         if (res.fieldErrors) {
           setFieldErrors(res.fieldErrors)
@@ -107,34 +106,12 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
       }
 
       setFieldErrors({})
-      setSuccessMessage('Pengaturan toko berhasil disimpan!')
+      setSuccessMessage('Pengaturan toko berhasil disimpan.')
     })
   }
 
   return (
     <div className="space-y-6">
-      {tenants.length > 1 && (
-        <Card className="p-4">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Label className="text-sm font-medium" htmlFor="tenant-select">
-              Pilih Toko:
-            </Label>
-            <select
-              className="bg-background border-input ring-offset-background h-9 rounded-md border px-3 py-1 text-sm shadow-sm focus:ring-1 focus:outline-none"
-              id="tenant-select"
-              value={selectedTenantId}
-              onChange={e => handleTenantChange(e.target.value)}
-            >
-              {tenants.map(t => (
-                <option key={t.id} value={t.id}>
-                  {t.name} ({t.slug})
-                </option>
-              ))}
-            </select>
-          </div>
-        </Card>
-      )}
-
       {successMessage && (
         <Alert className="border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
           <CheckCircle2 className="size-4" />
@@ -160,7 +137,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
               <CardTitle>Kontak & Lokasi Usaha</CardTitle>
             </div>
             <CardDescription>
-              Detail kontak dan alamat yang ditampilkan di header, footer, dan peta storefront toko.
+              Detail kontak dan alamat yang ditampilkan di header, footer, dan storefront toko.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -272,7 +249,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
               <CardTitle>Media Sosial & WhatsApp</CardTitle>
             </div>
             <CardDescription>
-              Tautan akun media sosial toko Anda yang dapat diklik oleh pengunjung storefront.
+              Tautan akun media sosial toko Anda untuk pengunjung storefront.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -318,8 +295,57 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
           </CardContent>
         </Card>
 
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Button className="min-w-32" disabled={isPending} type="submit">
+        {/* Custom Domain */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Globe className="text-primary size-5" />
+              <CardTitle>Domain Kustom</CardTitle>
+            </div>
+            <CardDescription>
+              Status dan konfigurasi domain kustom untuk storefront toko Anda.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="customDomain">Domain Kustom</Label>
+              <Input
+                readOnly
+                className="bg-muted font-mono"
+                id="customDomain"
+                placeholder="Belum ada domain kustom terhubung"
+                value={initialTenant.customDomain || ''}
+              />
+            </div>
+
+            {initialTenant.customDomain ? (
+              <div className="bg-muted/30 space-y-2 rounded-lg border p-4 text-xs">
+                <div className="flex items-center gap-2 font-semibold text-emerald-600 dark:text-emerald-400">
+                  <CheckCircle2 className="size-4" />
+                  <span>Domain kustom terhubung: {initialTenant.customDomain}</span>
+                </div>
+                <p className="text-muted-foreground">
+                  Konfigurasi DNS: Arahkan CNAME www ke cname.meracik.web atau A record ke IP
+                  server. Verifikasi domain diproses secara otomatis.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-muted/30 text-muted-foreground space-y-2 rounded-lg border p-4 text-xs">
+                <p>
+                  Toko Anda saat ini menggunakan subdomain bawaan ({initialTenant.slug}
+                  .meracik.web).
+                </p>
+                <p>
+                  Untuk menghubungkan domain kustom seperti tokoanda.com, pastikan paket toko Anda
+                  aktif dan hubungi dukungan teknis.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end pt-4">
+          <Button className="min-w-[140px]" disabled={isPending} type="submit">
             {isPending ? (
               <>
                 <Loader2 className="mr-2 size-4 animate-spin" />
@@ -328,7 +354,7 @@ export function SettingsClient({ initialTenant, tenants }: SettingsClientProps) 
             ) : (
               <>
                 <Save className="mr-2 size-4" />
-                Simpan Pengaturan
+                Simpan Perubahan
               </>
             )}
           </Button>

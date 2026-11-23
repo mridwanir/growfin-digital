@@ -1,15 +1,16 @@
 import { NextRequest } from 'next/server'
 import { describe, expect, it } from 'vitest'
 
+import { env } from '@/lib/env'
 import proxy from '@/proxy'
 
 describe('stateless subdomain & custom domain routing (edge seam)', () => {
-  const baseDomain = 'growfin.my.id'
+  const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN || 'growfin.my.id'
 
   describe('subdomain rewrites', () => {
     it('rewrites tenant subdomain to /site/[slug]', async () => {
-      const request = new NextRequest('http://kopisenja.growfin.my.id/', {
-        headers: { host: 'kopisenja.growfin.my.id' },
+      const request = new NextRequest(`http://kopisenja.${baseDomain}/`, {
+        headers: { host: `kopisenja.${baseDomain}` },
       })
       const response = await proxy(request)
 
@@ -26,8 +27,8 @@ describe('stateless subdomain & custom domain routing (edge seam)', () => {
     })
 
     it('preserves nested paths when rewriting tenant subdomain', async () => {
-      const request = new NextRequest('http://kopisenja.growfin.my.id/menu', {
-        headers: { host: 'kopisenja.growfin.my.id' },
+      const request = new NextRequest(`http://kopisenja.${baseDomain}/menu`, {
+        headers: { host: `kopisenja.${baseDomain}` },
       })
       const response = await proxy(request)
 

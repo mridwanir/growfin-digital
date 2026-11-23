@@ -1,5 +1,14 @@
 import type { BaseStorefrontLayoutProps } from './types'
-import type { BrandingContent, ThemeConfig } from '@/db/schema/tenants'
+import type {
+  BrandingContent,
+  CatalogSectionContent,
+  FooterSectionContent,
+  GallerySectionContent,
+  HeroSectionContent,
+  OperatingHoursSectionContent,
+  ReviewsSectionContent,
+  ThemeConfig,
+} from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 
@@ -8,9 +17,14 @@ import { Footer, Gallery, Hero, OperatingHours, Reviews } from '@/components/sto
 import { DynamicThemeProvider } from '@/components/storefront/theme'
 import { isSectionVisible } from '@/lib/section-utils'
 import { resolveArchetype } from '@/lib/storefront/archetype'
+import {
+  extractLegacyBrandingFromSections,
+  extractLegacyThemeConfig,
+} from '@/lib/storefront/compatibility'
 
 export function BaseStorefrontLayout({
   tenant,
+  config,
   categories = [],
   products = [],
   children,
@@ -28,9 +42,15 @@ export function BaseStorefrontLayout({
   className,
   containerClassName,
 }: BaseStorefrontLayoutProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
-  const themeConfig = (tenant.themeConfig as ThemeConfig) || {}
-
+  const sections = config?.sections
+  const legacyBranding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
+  const branding = {
+    ...legacyBranding,
+    ...(sections ? extractLegacyBrandingFromSections(sections) : {}),
+  }
+  const legacyThemeConfig = 'themeConfig' in tenant ? (tenant.themeConfig as ThemeConfig) || {} : {}
+  const themeConfig = config ? extractLegacyThemeConfig(config) : legacyThemeConfig
   const order =
     themeConfig.sectionOrder && themeConfig.sectionOrder.length > 0
       ? themeConfig.sectionOrder
@@ -38,7 +58,55 @@ export function BaseStorefrontLayout({
 
   const hidden = themeConfig.hiddenSections
 
-  const resolvedFontFamily = themeConfig.fontFamily || fontFamily
+  const resolvedFontFamily = config?.theme?.fontFamily || themeConfig.fontFamily || fontFamily
+  const resolvedThemeColor = config?.theme?.themeColor || themeConfig.themeColor
+  const renderCatalog = (id: string, catalogContent?: CatalogSectionContent) => {
+    const title =
+      catalogContent?.title ||
+      branding.menuTitle ||
+      (resolveArchetype(tenant.category) === 'retail' ? 'Katalog Produk' : 'Menu Pilihan')
+    const description = catalogContent?.description || branding.menuDescription
+    const placeholder = catalogContent?.searchPlaceholder || 'Cari produk / menu...'
+    const activeCategoryVariant = catalogContent?.categoryVariant || categoryVariant
+    const activeCardDensity = catalogContent?.cardDensity || cardDensity
+    const activeCardRadius = catalogContent?.cardRadius || cardRadius
+    const activeCardVariant = catalogContent?.cardVariant || cardVariant
+    const activeGridCols = (Number(catalogContent?.gridCols) || gridCols) as 1 | 2 | 3 | 4
+    const activeGridGap = (catalogContent?.gridGap || gridGap) as 'sm' | 'default' | 'lg'
+
+    return (
+      <section key={id} className="w-full py-12 md:py-20" data-slot="catalog-section" id="catalog">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <ProductCatalog.Root categories={categories} products={products}>
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-foreground text-2xl font-extrabold tracking-tight sm:text-3xl">
+                  {title}
+                </h2>
+                {description && <p className="text-muted-foreground mt-1 text-sm">{description}</p>}
+              </div>
+              <ProductCatalog.SearchInput placeholder={placeholder} />
+            </div>
+            <ProductCatalog.CategoryBar
+              allLabel="Semua"
+              className="mb-8"
+              variant={activeCategoryVariant}
+            />
+
+            <ProductCatalog.Grid
+              cardDensity={activeCardDensity}
+              cardRadius={activeCardRadius}
+              cardVariant={activeCardVariant}
+              cols={activeGridCols}
+              gap={activeGridGap}
+            />
+
+            <ProductCatalog.Empty />
+          </ProductCatalog.Root>
+        </div>
+      </section>
+    )
+  }
 
   const renderSection = (id: string) => {
     if (!isSectionVisible(id, hidden)) return null
@@ -51,50 +119,7 @@ export function BaseStorefrontLayout({
       case 'katalog':
       case 'catalog':
       case 'products':
-        return (
-          <section
-            key={id}
-            className="w-full py-12 md:py-20"
-            data-slot="catalog-section"
-            id="catalog"
-          >
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <ProductCatalog.Root categories={categories} products={products}>
-                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h2 className="text-foreground text-2xl font-extrabold tracking-tight sm:text-3xl">
-                      {branding.menuTitle ||
-                        (resolveArchetype(tenant.category) === 'retail'
-                          ? 'Katalog Produk'
-                          : 'Menu Pilihan')}
-                    </h2>
-                    {branding.menuDescription && (
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        {branding.menuDescription}
-                      </p>
-                    )}
-                  </div>
-                  <ProductCatalog.SearchInput placeholder="Cari produk / menu..." />
-                </div>
-                <ProductCatalog.CategoryBar
-                  allLabel="Semua"
-                  className="mb-8"
-                  variant={categoryVariant}
-                />
-
-                <ProductCatalog.Grid
-                  cardDensity={cardDensity}
-                  cardRadius={cardRadius}
-                  cardVariant={cardVariant}
-                  cols={gridCols}
-                  gap={gridGap}
-                />
-
-                <ProductCatalog.Empty />
-              </ProductCatalog.Root>
-            </div>
-          </section>
-        )
+        return renderCatalog(id)
 
       case 'gallery':
       case 'lookbook':
@@ -117,13 +142,85 @@ export function BaseStorefrontLayout({
     }
   }
 
-  const hasFooterInOrder = order.includes('footer')
-  const shouldRenderFooter = !hasFooterInOrder && isSectionVisible('footer', hidden)
+  let mainContent: React.ReactNode
+  let shouldRenderFooter = false
+  const footerSectionContent = sections?.find(s => s.type === 'footer')?.content as
+    | FooterSectionContent
+    | undefined
 
+  if (sections && sections.length > 0) {
+    const sortedSections = [...sections].sort((a, b) => a.sortOrder - b.sortOrder)
+    const hasFooterSection = sortedSections.some(s => s.type === 'footer')
+    shouldRenderFooter = !hasFooterSection && isSectionVisible('footer', themeConfig.hiddenSections)
+
+    mainContent = sortedSections.map(section => {
+      if (!section.isVisible) return null
+
+      switch (section.type) {
+        case 'hero':
+          return (
+            <Hero
+              key={section.id}
+              content={section.content as HeroSectionContent}
+              tenant={tenant}
+              variant={heroVariant}
+            />
+          )
+
+        case 'catalog':
+          return renderCatalog(section.id, section.content as CatalogSectionContent)
+
+        case 'gallery':
+          return (
+            <Gallery
+              key={section.id}
+              content={section.content as GallerySectionContent}
+              tenant={tenant}
+              variant={(section.content as GallerySectionContent)?.variant || galleryVariant}
+            />
+          )
+
+        case 'reviews':
+          return (
+            <Reviews
+              key={section.id}
+              content={section.content as ReviewsSectionContent}
+              tenant={tenant}
+              variant={(section.content as ReviewsSectionContent)?.variant || reviewsVariant}
+            />
+          )
+
+        case 'operating_hours':
+          return (
+            <OperatingHours
+              key={section.id}
+              content={section.content as OperatingHoursSectionContent}
+              tenant={tenant}
+            />
+          )
+
+        case 'footer':
+          return (
+            <Footer
+              key={section.id}
+              content={section.content as FooterSectionContent}
+              tenant={tenant}
+            />
+          )
+
+        default:
+          return null
+      }
+    })
+  } else {
+    const hasFooterInOrder = order.includes('footer')
+    shouldRenderFooter = !hasFooterInOrder && isSectionVisible('footer', hidden)
+    mainContent = order.map(sectionId => renderSection(sectionId))
+  }
   return (
     <DynamicThemeProvider
       className={cn(resolvedFontFamily, className)}
-      themeColor={themeConfig.themeColor}
+      themeColor={resolvedThemeColor}
     >
       <div
         data-slot="storefront-layout-shell"
@@ -132,9 +229,9 @@ export function BaseStorefrontLayout({
           containerClassName,
         )}
       >
-        <main className="flex-1">{order.map(sectionId => renderSection(sectionId))}</main>
+        <main className="flex-1">{mainContent}</main>
 
-        {shouldRenderFooter && <Footer tenant={tenant} />}
+        {shouldRenderFooter && <Footer content={footerSectionContent} tenant={tenant} />}
 
         {children}
       </div>

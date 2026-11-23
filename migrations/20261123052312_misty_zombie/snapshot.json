@@ -1,0 +1,355 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "f5445d38-d924-4773-82ed-b554e150ae55",
+  "prevIds": [
+    "7e2dc33a-55ab-4d09-86e6-8a961d539469"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "storefront_configs"
+      ],
+      "writes": [
+        "s|tbl|public.storefront_configs",
+        "n|tbl|public.storefront_configs",
+        "e|tbl|public.storefront_configs",
+        "n|rel|public.storefront_configs",
+        "n|type|public.storefront_configs",
+        "n|rel|public.storefront_configs_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "drop_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tenants",
+        "branding_content"
+      ],
+      "writes": [
+        "s|col|public.tenants.branding_content",
+        "n|col|public.tenants.branding_content",
+        "e|col|public.tenants.branding_content"
+      ],
+      "reads": [
+        "n|tbl|public.tenants",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "drop_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tenants",
+        "fomo_expires_at"
+      ],
+      "writes": [
+        "s|col|public.tenants.fomo_expires_at",
+        "n|col|public.tenants.fomo_expires_at",
+        "e|col|public.tenants.fomo_expires_at"
+      ],
+      "reads": [
+        "n|tbl|public.tenants",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "drop_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tenants",
+        "theme_config"
+      ],
+      "writes": [
+        "s|col|public.tenants.theme_config",
+        "n|col|public.tenants.theme_config",
+        "e|col|public.tenants.theme_config"
+      ],
+      "reads": [
+        "n|tbl|public.tenants",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "storefront_configs",
+        "storefront_configs_tenant_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.storefront_configs_tenant_id_idx",
+        "n|idx|public.storefront_configs_tenant_id_idx",
+        "e|idx|public.storefront_configs_tenant_id_idx",
+        "n|rel|public.storefront_configs_tenant_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.storefront_configs",
+        "n|sch|public",
+        "n|col|public.storefront_configs.tenant_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "storefront_configs",
+        "storefront_configs_tenant_id_status_idx"
+      ],
+      "writes": [
+        "s|idx|public.storefront_configs_tenant_id_status_idx",
+        "n|idx|public.storefront_configs_tenant_id_status_idx",
+        "e|idx|public.storefront_configs_tenant_id_status_idx",
+        "n|rel|public.storefront_configs_tenant_id_status_idx"
+      ],
+      "reads": [
+        "n|tbl|public.storefront_configs",
+        "n|sch|public",
+        "n|col|public.storefront_configs.tenant_id",
+        "n|col|public.storefront_configs.status"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "storefront_configs"
+      ],
+      "writes": [
+        "s|fk|public.storefront_configs.storefront_configs_tenant_id_tenants_id_fkey",
+        "n|fk|public.storefront_configs.storefront_configs_tenant_id_tenants_id_fkey",
+        "e|fk|public.storefront_configs.storefront_configs_tenant_id_tenants_id_fkey",
+        "n|con|public.storefront_configs.storefront_configs_tenant_id_tenants_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.storefront_configs",
+        "n|sch|public",
+        "n|tbl|public.tenants",
+        "n|sch|public",
+        "n|col|public.storefront_configs.tenant_id",
+        "n|col|public.tenants.id",
+        "e|uniqueness|public.tenants.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "storefront_configs",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "sections",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'[]'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "status",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'draft'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "theme",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'{}'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "tenant_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "storefront_configs_tenant_id_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "tenant_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "storefront_configs_tenant_id_status_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "tenant_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "status",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "storefront_configs_tenant_id_tenants_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "tenant_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "tenants",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "storefront_configs",
+        "name": "storefront_configs_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"tenants\",\"branding_content\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"tenants\",\"fomo_expires_at\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"tenants\",\"theme_config\"]"
+    }
+  ]
+}

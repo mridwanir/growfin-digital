@@ -4,9 +4,9 @@
 
 **Blocked by:** 03: Debounced autosave and publish controls, 05: Delete legacy demo and preview routes.
 
-Status: claimed
+Status: resolved
 
-- [ ] Browser component tests verify postMessage event emission on inspector form inputs.
-- [ ] Integration tests verify that section reordering and content changes persist to draft records.
-- [ ] Integration tests verify transactional commit on publish action.
-- [ ] `pnpm run test` passes with zero failures.
+- [x] Browser component tests verify postMessage event emission on inspector form inputs.
+- [x] Integration tests verify that section reordering and content changes persist to draft records.
+- [x] Integration tests verify transactional commit on publish action.
+- [x] `pnpm run test` passes with zero failures.

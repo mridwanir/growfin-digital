@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Route `src/app/preview/[tenantSlug]/page.tsx` fetches the draft storefront configuration for the resolved tenant.
 - [ ] Listens for `MERACIK_PREVIEW_UPDATE` postMessage events and updates preview state dynamically.

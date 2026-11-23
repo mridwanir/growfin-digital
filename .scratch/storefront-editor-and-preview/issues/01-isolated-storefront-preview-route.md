@@ -4,8 +4,8 @@
 
 **Blocked by:** None (can start immediately).
 
-Status: claimed
+Status: completed
 
-- [ ] Route `src/app/preview/[tenantSlug]/page.tsx` fetches the draft storefront configuration for the resolved tenant.
-- [ ] Listens for `MERACIK_PREVIEW_UPDATE` postMessage events and updates preview state dynamically.
-- [ ] Isolated from dashboard styles, rendering only storefront theme and section layouts.
+- [x] Route `src/app/preview/[tenantSlug]/page.tsx` fetches the draft storefront configuration for the resolved tenant.
+- [x] Listens for `MERACIK_PREVIEW_UPDATE` postMessage events and updates preview state dynamically.
+- [x] Isolated from dashboard styles, rendering only storefront theme and section layouts.

@@ -65,6 +65,17 @@ Settings and catalog components are updated to consume `tenantSlug` directly fro
 - Building the Storefront Editor user interface (handled in `storefront-editor-and-preview`).
 - Schema migrations (handled in `storefront-schema-decomposition`).
 
+## Required Skills
+
+The implementing agent must consult and follow these skills:
+
+- `shadcn`: Use shadcn Sidebar, DropdownMenu, Avatar, and button primitives.
+- `vercel-composition-patterns`: Avoid boolean prop proliferation; use compound components for the sidebar and tenant switcher.
+- `better-layout`: Grouping, responsive structure, mobile collapsing behavior.
+- `better-accessibility`: ARIA navigation landmarks, keyboard focus management, skip link.
+- `better-ui`: Smooth transitions, high-frequency interaction response times.
+- `vitest`: Route integration tests, authentication guards.
+
 ## Further Notes
 
 Follows ADR 0006 and Next.js 16 App Router conventions.

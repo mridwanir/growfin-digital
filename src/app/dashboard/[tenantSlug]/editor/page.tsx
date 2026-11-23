@@ -4,6 +4,7 @@ import { StorefrontEditor } from '@/components/dashboard/editor'
 import { getSession } from '@/lib/auth/server'
 import { getTenantBySlug } from '@/lib/dashboard/mutations'
 import { getStorefrontDraftDataBySlug } from '@/lib/storefront/loader'
+import { serializeRecord } from '@/lib/storefront/serialization'
 
 interface EditorPageProps {
   params: Promise<{ tenantSlug: string }>
@@ -35,8 +36,8 @@ export default async function StorefrontEditorPage({ params }: EditorPageProps) 
     <div className="-m-4 flex h-[calc(100vh-4rem)] flex-col overflow-hidden md:-m-6">
       <StorefrontEditor.Root
         className="flex h-full flex-col"
-        initialConfig={config}
-        tenant={tenant}
+        initialConfig={serializeRecord(config)}
+        tenant={serializeRecord(tenant)}
       >
         <StorefrontEditor.Toolbar />
         <div className="flex flex-1 overflow-hidden">

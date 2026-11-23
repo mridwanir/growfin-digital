@@ -131,7 +131,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
 
     // 2. Edit Hero Subtitle
@@ -153,7 +153,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
 
     // 3. Edit Hero Primary Button Text
@@ -172,7 +172,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
 
     // 4. Switch to Catalog section in Sidebar and edit Catalog Title
@@ -194,7 +194,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
 
     // 5. Switch to Reviews section in Sidebar and edit Google Maps Link
@@ -218,7 +218,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
   })
 
@@ -288,7 +288,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ],
         }),
       }),
-      '*',
+      window.location.origin,
     )
 
     // Step 3: Toggle section visibility in Sidebar - Hide Reviews
@@ -307,7 +307,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
 
     // Step 4: Select Catalog in Sidebar, Inspector switches and updates description
@@ -347,7 +347,7 @@ describe('Storefront Editor and Preview end-to-end browser integration', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
   })
 

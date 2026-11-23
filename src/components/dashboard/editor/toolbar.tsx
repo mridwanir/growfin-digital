@@ -9,6 +9,7 @@ import { AlertCircle, Check, Loader2, Monitor, Smartphone, Tablet } from 'lucide
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 import { useStorefrontEditor } from './context'
 
@@ -86,42 +87,39 @@ export function StorefrontEditorToolbar({ className }: StorefrontEditorToolbarPr
         className,
       )}
     >
-      <div
+      <ToggleGroup
         aria-label="Device viewport"
-        className="bg-muted/40 flex items-center gap-1 rounded-lg border p-1"
-        role="group"
+        className="bg-muted/40 rounded-lg border p-1"
+        orientation="horizontal"
+        size="sm"
+        value={[activeViewport]}
         onKeyDown={handleViewportKeyDown}
+        onValueChange={val => {
+          const next = val[val.length - 1] as ViewportMode | undefined
+          if (next) {
+            setActiveViewport(next)
+          }
+        }}
       >
-        {VIEWPORT_OPTIONS.map(({ ariaLabel, icon: Icon, label, mode }) => {
-          const isActive = activeViewport === mode
-          return (
-            <Button
-              key={mode}
-              aria-label={ariaLabel}
-              aria-pressed={isActive}
-              size="sm"
-              type="button"
-              variant={isActive ? 'secondary' : 'ghost'}
-              onClick={() => setActiveViewport(mode)}
-              className={cn(
-                'h-7 gap-1.5 px-2.5 text-xs font-medium transition-all',
-                isActive
-                  ? 'bg-background text-foreground hover:bg-background shadow-xs'
-                  : 'text-muted-foreground hover:text-foreground',
-              )}
-            >
-              <Icon className="size-3.5" />
-              <span>{label}</span>
-            </Button>
-          )
-        })}
-      </div>
+        {VIEWPORT_OPTIONS.map(({ ariaLabel, icon: Icon, label, mode }) => (
+          <ToggleGroupItem
+            key={mode}
+            aria-label={ariaLabel}
+            className="data-pressed:bg-background data-pressed:text-foreground h-7 gap-1.5 px-2.5 text-xs font-medium data-pressed:shadow-xs"
+            value={mode}
+          >
+            <Icon className="size-3.5" />
+            <span>{label}</span>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
 
       <div className="flex items-center gap-3">
         {publishNotification && (
           <div
             aria-live="polite"
-            className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400"
+            className="bg-card animate-in fade-in flex items-center gap-1.5 rounded-md border border-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-600 shadow-xs dark:text-emerald-400"
+            data-slot="publish-toast"
             role="status"
           >
             <Check className="size-3.5 text-emerald-500" />

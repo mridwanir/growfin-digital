@@ -1,16 +1,21 @@
 import type { Metadata } from 'next'
 
-import { Geist } from 'next/font/google'
+import { Geist, Plus_Jakarta_Sans } from 'next/font/google'
 
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta',
+  weight: ['800'],
+})
 
 export const metadata: Metadata = {
   description: 'Digitalisasi UMKM Indonesia secara instan dalam satu klik.',
-  title: 'Growfin Digital | Platform SaaS UMKM Indonesia',
+  title: 'MeracikWeb | Platform SaaS UMKM Indonesia',
 }
 
 export default function RootLayout({
@@ -19,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html className={cn('font-sans', geist.variable)} lang="id">
+    <html className={cn('font-sans', geist.variable, plusJakartaSans.variable)} lang="id">
       <body>{children}</body>
     </html>
   )

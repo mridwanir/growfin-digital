@@ -1,4 +1,10 @@
-import type { BrandingContent, OperatingHours, Tenant } from '@/db/schema/tenants'
+/* oxlint-disable next/no-img-element -- Dynamic storefront images require raw img elements for CDN URLs */
+import type {
+  BrandingContent,
+  HeroSectionContent,
+  OperatingHours,
+  Tenant,
+} from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 import { ArrowRight, MessageCircle, ShoppingBag } from 'lucide-react'
@@ -7,6 +13,7 @@ import { resolveTenantWhatsAppNumber } from '@/lib/storefront/whatsapp'
 
 export interface HeroSectionProps {
   tenant: Tenant
+  content?: HeroSectionContent
   variant?: 'default' | 'centered' | 'split' | 'minimal' | 'bold'
   catalogAnchorId?: string
   className?: string
@@ -14,22 +21,33 @@ export interface HeroSectionProps {
 
 export function Hero({
   tenant,
+  content,
   variant = 'default',
   catalogAnchorId = 'catalog',
   className,
 }: HeroSectionProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
+  const branding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
   const operatingHours = (tenant.operatingHours as OperatingHours) || {}
 
-  const name = tenant.name || 'Storefront'
-  const tagline = branding.tagline || branding.heroSubtitle || ''
-  const description = branding.heroTitle || branding.heroSubtitle || branding.tagline || ''
+  const name = content?.title || tenant.name || 'Storefront'
+  const tagline = content?.subtitle || branding.tagline || branding.heroSubtitle || ''
+  const description =
+    content?.description ||
+    (content?.subtitle ? '' : branding.heroTitle) ||
+    branding.heroSubtitle ||
+    branding.tagline ||
+    ''
   const heroImageUrl =
+    content?.heroImageUrl ||
     branding.heroImageUrl ||
     'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80'
-  const logoUrl = branding.logoUrl || null
-  const iconEmoji = branding.iconEmoji || '🏪'
-
+  const logoUrl = content?.logoUrl || branding.logoUrl || null
+  const iconEmoji = content?.iconEmoji || branding.iconEmoji || '🏪'
+  const effectiveCatalogAnchorId = content?.catalogAnchorId || catalogAnchorId
+  const primaryButtonText = content?.primaryButtonText || 'Lihat Produk & Menu'
+  const whatsappButtonText = content?.whatsappButtonText || 'WhatsApp'
+  const showOperationalBadge = content?.showOperationalBadge ?? true
   const isOpen = operatingHours.isOpen !== false
   const openTime = operatingHours.openTime || '08:00'
   const closeTime = operatingHours.closeTime || '21:00'
@@ -91,7 +109,7 @@ export function Hero({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div className="flex flex-col items-start gap-6">
-              {lightOperationalBadge}
+              {showOperationalBadge && lightOperationalBadge}
               <div className="flex items-center gap-4">
                 {logoUrl ? (
                   <img
@@ -125,10 +143,10 @@ export function Hero({
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <a
                   className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold shadow-md transition-all hover:-translate-y-0.5 hover:opacity-90"
-                  href={`#${catalogAnchorId}`}
+                  href={`#${effectiveCatalogAnchorId}`}
                 >
                   <ShoppingBag className="size-4" />
-                  <span>Lihat Produk & Menu</span>
+                  <span>{primaryButtonText}</span>
                   <ArrowRight className="size-4" />
                 </a>
                 {waUrl && (
@@ -139,7 +157,7 @@ export function Hero({
                     target="_blank"
                   >
                     <MessageCircle className="size-4" />
-                    <span>WhatsApp</span>
+                    <span>{whatsappButtonText}</span>
                   </a>
                 )}
               </div>
@@ -175,7 +193,7 @@ export function Hero({
       </div>
 
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-4 text-center sm:px-6">
-        <div className="mb-6">{operationalBadge}</div>
+        {showOperationalBadge && <div className="mb-6">{operationalBadge}</div>}
 
         <div className="mb-6 flex flex-col items-center gap-4">
           {logoUrl ? (
@@ -204,10 +222,10 @@ export function Hero({
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
             className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:opacity-90"
-            href={`#${catalogAnchorId}`}
+            href={`#${effectiveCatalogAnchorId}`}
           >
             <ShoppingBag className="size-5" />
-            <span>Lihat Menu & Katalog</span>
+            <span>{content?.primaryButtonText || 'Lihat Menu & Katalog'}</span>
           </a>
           {waUrl && (
             <a
@@ -217,7 +235,7 @@ export function Hero({
               target="_blank"
             >
               <MessageCircle className="size-5" />
-              <span>WhatsApp</span>
+              <span>{whatsappButtonText}</span>
             </a>
           )}
         </div>

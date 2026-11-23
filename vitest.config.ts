@@ -1,4 +1,5 @@
 import nextEnv from '@next/env'
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
 import { fileURLToPath } from 'node:url'
@@ -7,7 +8,7 @@ import { defaultExclude, defineConfig } from 'vitest/config'
 const { loadEnvConfig } = nextEnv
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [tailwindcss(), react()],
   oxc: {
     jsx: {
       importSource: 'react',
@@ -15,6 +16,7 @@ export default defineConfig({
     },
   },
   resolve: {
+    dedupe: ['react', 'react-dom'],
     tsconfigPaths: true,
   },
   test: {
@@ -60,9 +62,10 @@ export default defineConfig({
         test: {
           name: 'integration',
           environment: 'node',
+          fileParallelism: false,
           globalSetup: ['./tests/integration/global-setup.ts'],
           hookTimeout: 15000,
-          include: ['tests/integration/**/*.spec.ts'],
+          include: ['tests/integration/**/*.spec.ts', 'tests/fixtures/**/*.spec.ts'],
           setupFiles: ['./tests/integration/setup.ts'],
         },
       },

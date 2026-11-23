@@ -277,7 +277,7 @@ export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
                           <PlusIcon className="size-3" />
                         </button>
                       </div>
-                      <div className="text-foreground text-sm font-bold">
+                      <div className="text-foreground text-sm font-bold tabular-nums">
                         {formatCurrency(item.subtotal)}
                       </div>
                     </div>
@@ -450,7 +450,10 @@ export function StorefrontCartDrawer(props: StorefrontCartDrawerProps) {
             <div className="border-border bg-background space-y-3 border-t p-4">
               <div className="flex items-center justify-between text-base">
                 <span className="text-foreground font-semibold">Total Pesanan</span>
-                <span className="text-foreground text-lg font-bold" data-slot="cart-subtotal">
+                <span
+                  className="text-foreground text-lg font-bold tabular-nums"
+                  data-slot="cart-subtotal"
+                >
                   {formatCurrency(total)}
                 </span>
               </div>

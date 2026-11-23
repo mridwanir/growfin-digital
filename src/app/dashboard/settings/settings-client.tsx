@@ -19,7 +19,7 @@ interface TenantOption {
 
 interface TenantSettingsData {
   address: string | null
-  brandingContent: {
+  brandingContent?: {
     socialLinks?: {
       facebook?: { active?: boolean; url: string }
       instagram?: { active?: boolean; url: string }

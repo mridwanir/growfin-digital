@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { createElement } from 'react'
 
-import { GrowfinWatermark } from '@/components/storefront'
+import { MeracikWatermark } from '@/components/storefront'
 import { StorefrontClientIslands } from '@/components/storefront/client-islands'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { ThemePreviewBar } from '@/components/storefront/theme-preview-bar'
@@ -28,7 +28,7 @@ export async function generateMetadata({ searchParams }: PreviewPageProps): Prom
 
 export default async function PreviewPage({ searchParams }: PreviewPageProps) {
   const { theme } = await searchParams
-  const { categories, products, selectedTheme, tenant } = getMockStorefrontData(theme)
+  const { categories, config, products, selectedTheme, tenant } = getMockStorefrontData(theme)
 
   return (
     <StorefrontCartProvider tenantId={tenant.id}>
@@ -36,9 +36,9 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
         <ThemePreviewBar currentThemeId={selectedTheme.id} />
         {createElement(
           getStorefrontLayout(selectedTheme.id, selectedTheme.archetype),
-          { categories, products, tenant },
+          { categories, config, products, tenant },
           <StorefrontClientIslands tenant={tenant} />,
-          <GrowfinWatermark />,
+          <MeracikWatermark />,
         )}
       </div>
     </StorefrontCartProvider>

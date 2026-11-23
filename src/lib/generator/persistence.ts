@@ -1,11 +1,12 @@
 import type { GeneratedWebsiteData } from './schema'
 import type { Database } from '@/db'
+import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
 
 import crypto from 'node:crypto'
 
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
+import { storefrontConfigs, tenants } from '@/db/schema/tenants'
 
 import { generateCategorySlug, generateTenantSlug } from './slug'
 
@@ -33,23 +34,119 @@ export async function persistGeneratedWebsite(
       .values({
         name: data.business.name,
         address: data.business.address || null,
-        brandingContent: data.business.brandingContent,
         category: data.business.category,
         city: data.business.city || null,
-        fomoExpiresAt,
         googleMapsUrl: data.business.googleMapsUrl || null,
         operatingHours: data.business.operatingHours,
         packageTier: 'free',
         phone: data.business.phone || null,
+        siteActiveUntil: fomoExpiresAt,
         slug,
         status: 'draft',
-        themeConfig: data.business.themeConfig,
       })
       .returning()
 
     if (!insertedTenant) {
       throw new Error('Failed to insert tenant record')
     }
+    // 1b. Batch insert draft and published storefront configs
+    const branding = data.business.brandingContent || {}
+    const themeConfig = data.business.themeConfig || {}
+
+    const sections: StorefrontSection[] = [
+      {
+        id: 'sec-hero',
+        type: 'hero',
+        isVisible: true,
+        sortOrder: 1,
+        content: {
+          heroImageUrl: branding.heroImageUrl,
+          iconEmoji: branding.iconEmoji,
+          logoUrl: branding.logoUrl,
+          subtitle: branding.tagline || branding.heroSubtitle || '',
+          title: branding.heroTitle || data.business.name,
+        },
+      },
+      {
+        id: 'sec-catalog',
+        type: 'catalog',
+        isVisible: true,
+        sortOrder: 2,
+        content: {
+          description: branding.menuDescription,
+          title: branding.menuTitle || 'Katalog Produk',
+        },
+      },
+      {
+        id: 'sec-reviews',
+        type: 'reviews',
+        isVisible: true,
+        sortOrder: 3,
+        content: {
+          description: branding.reviewsDescription,
+          reviews: branding.reviews,
+          title: branding.reviewsTitle || 'Ulasan Pelanggan',
+        },
+      },
+      {
+        id: 'sec-gallery',
+        type: 'gallery',
+        isVisible: true,
+        sortOrder: 4,
+        content: {
+          description: branding.galleryDescription,
+          images: branding.lookbook || branding.imageGallery || branding.images,
+          title: branding.galleryTitle || 'Galeri Foto',
+        },
+      },
+      {
+        id: 'sec-hours',
+        type: 'operating_hours',
+        isVisible: true,
+        sortOrder: 5,
+        content: {
+          title: 'Jam Operasional',
+        },
+      },
+      {
+        id: 'sec-footer',
+        type: 'footer',
+        isVisible: true,
+        sortOrder: 6,
+        content: {
+          tagline: branding.tagline,
+          socialLinks: branding.socialLinks
+            ? {
+                facebook: branding.socialLinks.facebook?.url,
+                instagram: branding.socialLinks.instagram?.url,
+                tiktok: branding.socialLinks.tiktok?.url,
+                whatsapp: branding.socialLinks.whatsapp?.url,
+              }
+            : undefined,
+        },
+      },
+    ]
+
+    const theme: StorefrontTheme = {
+      fontFamily: themeConfig.fontFamily || 'font-sans',
+      layoutId: themeConfig.layoutId || 'modern',
+      themeColor: themeConfig.themeColor || '#000000',
+    }
+
+    await tx.insert(storefrontConfigs).values([
+      {
+        sections,
+        status: 'draft',
+        tenantId: insertedTenant.id,
+        theme,
+      },
+      {
+        sections,
+        status: 'published',
+        tenantId: insertedTenant.id,
+        theme,
+      },
+    ])
 
     // 2. Batch insert categories
     const categoryValues = data.categories.map((cat, idx) => ({

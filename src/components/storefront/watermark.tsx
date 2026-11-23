@@ -1,26 +1,42 @@
 import Link from 'next/link'
 
-export function GrowfinWatermark() {
+import { MeracikWordmark } from '@/components/brand/meracik-wordmark'
+import { cn } from '@/lib/utils'
+
+export interface MeracikWatermarkProps {
+  className?: string
+  href?: string
+}
+
+export function MeracikWatermark({
+  className,
+  href = 'https://meracik.web.id',
+}: MeracikWatermarkProps = {}) {
   return (
     <aside
-      aria-label="Watermark Growfin Digital"
-      className="pointer-events-auto fixed bottom-4 left-1/2 z-45 -translate-x-1/2"
+      aria-label="Watermark MeracikWeb"
+      className={cn('pointer-events-auto fixed bottom-4 left-1/2 z-45 -translate-x-1/2', className)}
     >
       <Link
-        className="group flex items-center gap-1.5 rounded-full border border-white/10 bg-[#14141A]/90 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-[0_4px_20px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-[#00b894]/50 hover:bg-[#14141A] active:scale-95"
-        href="https://growfin.my.id"
+        aria-label="Website UMKM oleh MeracikWeb — Buat Web Gratis"
+        className="group border-border/80 bg-card/90 text-card-foreground hover:border-primary/50 hover:bg-card focus-visible:ring-ring flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium whitespace-nowrap shadow-lg backdrop-blur-md transition-all duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:outline-hidden active:scale-95"
+        href={href}
         rel="noopener noreferrer"
         target="_blank"
       >
-        <span className="text-sm leading-none font-extrabold text-amber-400 drop-shadow">⚡</span>
-        <span className="text-slate-200">
-          Website UMKM oleh{' '}
-          <strong className="font-bold text-white transition-colors group-hover:text-[#00e0b8]">
-            Growfin Digital
-          </strong>
+        <span
+          aria-hidden="true"
+          className="text-sm leading-none font-extrabold text-amber-500 drop-shadow select-none"
+        >
+          ⚡
         </span>
-        <span className="font-bold text-slate-500">—</span>
-        <span className="font-bold text-[#00e0b8] underline decoration-[#00e0b8]/40 underline-offset-2 group-hover:text-[#00b894]">
+        <span className="text-muted-foreground">
+          Website UMKM oleh <MeracikWordmark size="sm" />
+        </span>
+        <span aria-hidden="true" className="text-muted-foreground font-bold select-none">
+          —
+        </span>
+        <span className="text-primary decoration-primary/40 group-hover:text-primary/90 font-bold underline underline-offset-2">
           Buat Web Gratis
         </span>
       </Link>

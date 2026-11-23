@@ -7,7 +7,7 @@ import { createElement } from 'react'
 
 import {
   ExpiredSiteScreen,
-  GrowfinWatermark,
+  MeracikWatermark,
   StorefrontClientIslands,
 } from '@/components/storefront'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
@@ -17,6 +17,8 @@ import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 import { buildLocalBusinessJsonLd, buildSiteMetadata, resolveArchetype } from '@/lib/storefront/seo'
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
+
+// oxlint-disable react/no-danger -- Structured JSON-LD script for SEO
 
 interface SitePageProps {
   params: Promise<{ slug: string }>
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: SitePageProps): Promise<Metad
     return { title: 'Site Not Found' }
   }
 
-  const { tenant } = data
+  const { config, tenant } = data
   const now = new Date()
   const isLockedOrExpired =
     tenant.status === 'locked' ||
@@ -48,7 +50,7 @@ export async function generateMetadata({ params }: SitePageProps): Promise<Metad
     return { title: 'Site Not Found' }
   }
 
-  return buildSiteMetadata(tenant)
+  return buildSiteMetadata(tenant, config)
 }
 
 export default async function SitePage({ params }: SitePageProps) {
@@ -59,7 +61,7 @@ export default async function SitePage({ params }: SitePageProps) {
     notFound()
   }
 
-  const { categories, products, tenant } = data
+  const { categories, config, products, tenant } = data
   const now = new Date()
   const isLocked = tenant.status === 'locked'
   const isExpired = Boolean(tenant.siteActiveUntil && new Date(tenant.siteActiveUntil) < now)
@@ -77,18 +79,25 @@ export default async function SitePage({ params }: SitePageProps) {
   const activeTier: PackageTier = (tenant.packageTier as PackageTier) || 'instan'
   const tierLimits = PACKAGE_LIMITS[activeTier] || PACKAGE_LIMITS.instan
 
-  const jsonLd = buildLocalBusinessJsonLd(tenant, archetype)
+  const jsonLd = buildLocalBusinessJsonLd(tenant, archetype, config)
   return (
     <StorefrontCartProvider tenantId={tenant.id}>
       <script
+        // oxlint-disable-next-line react/no-danger -- Structured JSON-LD payload insertion
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
       />
       {createElement(
-        getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
-        { categories, products, tenant },
+        getStorefrontLayout(
+          config?.theme?.layoutId ||
+            ('themeConfig' in tenant
+              ? (tenant.themeConfig as { layoutId?: string } | undefined)?.layoutId
+              : undefined),
+          archetype,
+        ),
+        { categories, config, products, tenant },
         <StorefrontClientIslands tenant={tenant} />,
-        !tierLimits.removeBranding && <GrowfinWatermark />,
+        !tierLimits.removeBranding && <MeracikWatermark />,
       )}
     </StorefrontCartProvider>
   )

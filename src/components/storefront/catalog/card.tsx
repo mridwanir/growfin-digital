@@ -163,14 +163,14 @@ export function ProductCatalogCard({
           <div className="flex flex-col">
             {isDiscounted && product.originalPrice != null && (
               <span
-                className="text-muted-foreground text-[11px] line-through"
+                className="text-muted-foreground text-[11px] tabular-nums line-through"
                 data-slot="catalog-card-original-price"
               >
                 {formatCurrency(product.originalPrice)}
               </span>
             )}
             <span
-              className="text-foreground font-bold tracking-tight"
+              className="text-foreground font-bold tracking-tight tabular-nums"
               data-slot="catalog-card-price"
             >
               {formatCurrency(product.basePrice)}

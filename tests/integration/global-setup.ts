@@ -2,6 +2,8 @@ import { PGlite } from '@electric-sql/pglite'
 import { PGLiteSocketServer } from '@electric-sql/pglite-socket'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
+import fs from 'node:fs'
+import path from 'node:path'
 import { Pool } from 'pg'
 
 let server: PGLiteSocketServer | null = null
@@ -16,6 +18,9 @@ export async function teardown() {
     await pglite.close()
     pglite = null
   }
+  try {
+    fs.rmSync(path.join(process.cwd(), '.temp/test-db-url'), { force: true })
+  } catch {}
 }
 
 export async function setup() {
@@ -31,6 +36,8 @@ export async function setup() {
   const databaseUrl = `postgresql://postgres:postgres@${server.getServerConn()}/postgres`
   process.env.DATABASE_URL = databaseUrl
   process.env.DATABASE_URL_UNPOOLED = databaseUrl
+  fs.mkdirSync(path.join(process.cwd(), '.temp'), { recursive: true })
+  fs.writeFileSync(path.join(process.cwd(), '.temp/test-db-url'), databaseUrl)
 
   const setupPool = new Pool({ connectionString: databaseUrl, max: 2 })
   const client = await setupPool.connect()

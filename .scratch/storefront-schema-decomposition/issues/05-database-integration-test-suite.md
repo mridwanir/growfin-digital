@@ -4,9 +4,9 @@
 
 **Blocked by:** 04: Storefront loader and catalog adapter cutover.
 
-Status: claimed
+Status: resolved
 
-- [ ] Tests verify that draft changes do not alter public storefront query results before publication.
-- [ ] Tests verify that publishing synchronizes the draft payload to the published record.
-- [ ] Tests verify that discard restores the draft to the published baseline.
-- [ ] `pnpm run test:integration` passes cleanly.
+- [x] Tests verify that draft changes do not alter public storefront query results before publication.
+- [x] Tests verify that publishing synchronizes the draft payload to the published record.
+- [x] Tests verify that discard restores the draft to the published baseline.
+- [x] `pnpm run test:integration` passes cleanly.

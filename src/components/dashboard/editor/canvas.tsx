@@ -1,22 +1,38 @@
 /* oxlint-disable react/iframe-missing-sandbox -- preview iframe requires scripts and same-origin messaging */
 'use client'
 
+import type { ViewportMode } from './context'
+
 import { cn } from 'cn'
 
 import { useStorefrontEditor } from './context'
 
+interface ViewportConfiguration {
+  containerClass: string
+  label: string
+}
+
+const VIEWPORT_CONFIG: Record<ViewportMode, ViewportConfiguration> = {
+  desktop: {
+    containerClass: 'w-full max-w-full h-full',
+    label: 'Desktop (100%)',
+  },
+  mobile: {
+    containerClass: 'w-full max-w-[375px] h-[780px] max-h-full',
+    label: 'Mobile (375px)',
+  },
+  tablet: {
+    containerClass: 'w-full max-w-[768px] h-[780px] max-h-full',
+    label: 'Tablet (768px)',
+  },
+}
 export interface StorefrontEditorCanvasProps {
   className?: string
 }
 
 export function StorefrontEditorCanvas({ className }: StorefrontEditorCanvasProps) {
   const { activeViewport, dispatchPreviewUpdate, iframeRef, tenant } = useStorefrontEditor()
-
-  const viewportWidthClass = {
-    desktop: 'w-full max-w-full',
-    mobile: 'w-[375px] max-w-[375px]',
-    tablet: 'w-[768px] max-w-[768px]',
-  }[activeViewport]
+  const currentViewport = VIEWPORT_CONFIG[activeViewport]
 
   return (
     <main
@@ -29,14 +45,17 @@ export function StorefrontEditorCanvas({ className }: StorefrontEditorCanvasProp
     >
       <div
         data-testid="canvas-device-frame"
+        data-viewport={activeViewport}
         className={cn(
-          'bg-background relative flex h-[780px] flex-col overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-in-out',
-          viewportWidthClass,
+          'bg-background relative m-auto flex flex-col overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-in-out',
+          currentViewport.containerClass,
         )}
       >
-        <div className="bg-muted/50 text-muted-foreground flex h-7 items-center justify-between border-b px-3 text-[11px] select-none">
-          <span className="truncate">/preview/{tenant.slug}</span>
-          <span className="capitalize">{activeViewport} view</span>
+        <div className="bg-muted/50 text-muted-foreground flex h-7 shrink-0 items-center justify-between border-b px-3 text-[11px] select-none">
+          <span className="truncate font-mono">/preview/{tenant.slug}</span>
+          <span className="font-medium" data-testid="canvas-viewport-label">
+            {currentViewport.label}
+          </span>
         </div>
         <iframe
           ref={iframeRef}

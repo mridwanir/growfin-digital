@@ -5,12 +5,18 @@ import { Suspense } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
+import { getMerchantTenants } from '@/lib/dashboard/mutations'
 
-async function DashboardGuard({ children }: { children: ReactNode }) {
+export async function DashboardGuard({ children }: { children: ReactNode }) {
   const { data: session } = await getSession()
 
   if (!session?.user) {
     redirect('/login')
+  }
+
+  const tenants = await getMerchantTenants(session.user.id)
+  if (tenants.length === 0) {
+    redirect('/onboarding')
   }
 
   return children

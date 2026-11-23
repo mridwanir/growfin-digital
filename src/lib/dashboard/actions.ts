@@ -615,3 +615,9 @@ export async function discardStorefrontDraftAction(
 
   return { data: draftRecord, success: true }
 }
+
+export {
+  createStoreOnboardingAction,
+  type CreateStoreOnboardingData,
+  type CreateStoreOnboardingInput,
+} from '@/lib/onboarding/actions'

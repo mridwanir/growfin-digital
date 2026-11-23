@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowLeft, CheckCircle2, Mail } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -187,6 +188,12 @@ export default function LoginPage() {
                   {loading && <Spinner data-icon="inline-start" />}
                   {loading ? 'Signing in...' : 'Sign In'}
                 </Button>
+                <div className="text-muted-foreground text-center text-xs">
+                  Belum memiliki akun?{' '}
+                  <Link className="text-primary font-medium hover:underline" href="/onboarding">
+                    Daftar di sini
+                  </Link>
+                </div>
               </div>
             </form>
           )}

@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Legacy columns `fomoExpiresAt`, `theme_config`, and `branding_content` are removed from the `tenants` table.
 - [ ] `storefront_configs` table is declared with `tenantId`, `status`, `theme`, `sections`, and `updatedAt`.

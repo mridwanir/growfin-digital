@@ -221,7 +221,7 @@ export function Footer({ tenant, className }: FooterSectionProps) {
           <p>
             © {CURRENT_YEAR} {name}. All rights reserved.
           </p>
-          <p className="text-muted-foreground/80">Powered by Growfin Digital</p>
+          <p className="text-muted-foreground/80">Powered by MeracikWeb</p>
         </div>
       </div>
     </footer>

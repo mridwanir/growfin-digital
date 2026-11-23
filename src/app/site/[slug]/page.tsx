@@ -7,7 +7,7 @@ import { createElement } from 'react'
 
 import {
   ExpiredSiteScreen,
-  GrowfinWatermark,
+  MeracikWatermark,
   StorefrontClientIslands,
 } from '@/components/storefront'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
@@ -17,6 +17,8 @@ import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 import { buildLocalBusinessJsonLd, buildSiteMetadata, resolveArchetype } from '@/lib/storefront/seo'
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
+
+// oxlint-disable react/no-danger -- Structured JSON-LD script for SEO
 
 interface SitePageProps {
   params: Promise<{ slug: string }>
@@ -88,7 +90,7 @@ export default async function SitePage({ params }: SitePageProps) {
         getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
         { categories, products, tenant },
         <StorefrontClientIslands tenant={tenant} />,
-        !tierLimits.removeBranding && <GrowfinWatermark />,
+        !tierLimits.removeBranding && <MeracikWatermark />,
       )}
     </StorefrontCartProvider>
   )

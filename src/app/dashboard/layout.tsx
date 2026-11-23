@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
+import { MeracikWordmark } from '@/components/brand'
 import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
@@ -21,13 +22,20 @@ async function DashboardGuard({ children }: { children: ReactNode }) {
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-6">
             <Link
-              className="flex items-center gap-2 text-lg font-bold tracking-tight"
+              aria-label="MeracikWeb Merchant Dashboard"
+              className="flex items-center gap-2.5 text-lg font-bold tracking-tight"
               href="/dashboard"
             >
-              <span className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg text-xs font-black">
-                G
+              <span
+                aria-hidden="true"
+                className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg text-xs font-black select-none"
+              >
+                M
               </span>
-              <span>Growfin Merchant</span>
+              <span className="flex items-center gap-1.5">
+                <MeracikWordmark size="sm" />
+                <span className="text-muted-foreground text-sm font-semibold">Merchant</span>
+              </span>
             </Link>
 
             <nav className="hidden items-center gap-1 text-sm font-medium md:flex">

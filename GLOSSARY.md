@@ -1,6 +1,6 @@
-# Growfin Digital Domain Glossary
+# MeracikWeb Domain Glossary
 
-This glossary defines the ubiquitous language for Growfin Digital's multi-tenant storefront and digital commerce platform.
+This glossary defines the ubiquitous language for MeracikWeb's multi-tenant storefront and digital commerce platform.
 
 ## Language
 
@@ -25,6 +25,10 @@ _Avoid_: Template type, vertical, business type
 **Theme**:
 A distinct visual styling configuration (typography, card aesthetics, spacing, palette) applied to an archetype layout.
 _Avoid_: Skin, template, design
+
+**Storefront Editor**:
+The merchant interface within the dashboard for customizing a tenant's storefront sections, theme configuration, and branding content in real time with an interactive preview.
+_Avoid_: Page editor, site builder, visual composer, website designer
 
 ### Catalog & Pricing
 

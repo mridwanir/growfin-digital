@@ -1,4 +1,4 @@
-Status: ready-for-agent
+Status: resolved
 
 # Storefront schema decomposition and server-side draft architecture
 

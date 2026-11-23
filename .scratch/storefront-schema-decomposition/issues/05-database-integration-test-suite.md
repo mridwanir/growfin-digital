@@ -10,3 +10,7 @@ Status: resolved
 - [x] Tests verify that publishing synchronizes the draft payload to the published record.
 - [x] Tests verify that discard restores the draft to the published baseline.
 - [x] `pnpm run test:integration` passes cleanly.
+
+## Answer
+
+Implemented comprehensive database integration test suite in `tests/integration/storefront-draft-lifecycle.spec.ts` using in-memory PGlite. Validated all four lifecycle seams: autosave draft isolation, transactional publishing synchronization, discard reversion to published baseline, and authorization/cross-tenant access rejection. Fixed legacy column references in mutations and generator tests. All integration tests pass cleanly with 100% success rate.

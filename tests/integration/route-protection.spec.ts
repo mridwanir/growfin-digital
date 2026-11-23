@@ -407,6 +407,9 @@ describe('Route Protection & Authorization Seam', () => {
       const html = renderToStaticMarkup(element)
       expect(html).toContain('Welcome Merchant Store')
       expect(html).toContain('id="dashboard-child"')
+      expect(html).toContain('href="#main-content"')
+      expect(html).toContain('Skip to main content')
+      expect(html).toContain('id="main-content"')
     })
   })
 

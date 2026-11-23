@@ -1,6 +1,6 @@
 'use client'
 
-import { Bell, ChevronsUpDown, LogOut, User } from 'lucide-react'
+import { ChevronsUpDown, LogOut } from 'lucide-react'
 import * as React from 'react'
 
 import {
@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { authClient } from '@/lib/auth/client'
 
 export interface SidebarUser {
   name?: string | null
@@ -88,19 +89,9 @@ export function NavUser({ user }: NavUserProps) {
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <User className="size-4" />
-                <span>Account</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell className="size-4" />
-                <span>Notifications</span>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => {
+              onClick={async () => {
+                await authClient.signOut()
                 window.location.href = '/login'
               }}
             >

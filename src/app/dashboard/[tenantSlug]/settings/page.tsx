@@ -36,7 +36,7 @@ export default async function TenantSettingsPage({ params }: TenantSettingsPageP
           Pengaturan Toko: {fullSettings.name}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Perbarui kontak usaha, jam operasional, dan tautan sosial media toko Anda.
+          Perbarui kontak usaha, jam operasional, tautan sosial media, dan domain kustom toko Anda.
         </p>
       </div>
 

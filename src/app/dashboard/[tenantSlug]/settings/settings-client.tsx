@@ -1,6 +1,15 @@
 'use client'
 
-import { AlertCircle, CheckCircle2, Clock, Loader2, MapPin, Save, Share2 } from 'lucide-react'
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Globe,
+  Loader2,
+  MapPin,
+  Save,
+  Share2,
+} from 'lucide-react'
 import { useState, useTransition } from 'react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -21,8 +30,10 @@ export interface TenantSettingsData {
     }
   } | null
   city: string | null
+  customDomain?: string | null
   id: string
   name: string
+  packageTier?: string | null
   operatingHours: {
     closeTime?: string
     isOpen?: boolean
@@ -281,6 +292,55 @@ export function SettingsClient({ initialTenant, tenantId }: SettingsClientProps)
                 onChange={e => setFacebook(e.target.value)}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Custom Domain */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Globe className="text-primary size-5" />
+              <CardTitle>Domain Kustom</CardTitle>
+            </div>
+            <CardDescription>
+              Status dan konfigurasi domain kustom untuk storefront toko Anda.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="customDomain">Domain Kustom</Label>
+              <Input
+                readOnly
+                className="bg-muted font-mono"
+                id="customDomain"
+                placeholder="Belum ada domain kustom terhubung"
+                value={initialTenant.customDomain || ''}
+              />
+            </div>
+
+            {initialTenant.customDomain ? (
+              <div className="bg-muted/30 space-y-2 rounded-lg border p-4 text-xs">
+                <div className="flex items-center gap-2 font-semibold text-emerald-600 dark:text-emerald-400">
+                  <CheckCircle2 className="size-4" />
+                  <span>Domain kustom terhubung: {initialTenant.customDomain}</span>
+                </div>
+                <p className="text-muted-foreground">
+                  Konfigurasi DNS: Arahkan CNAME www ke cname.meracik.web atau A record ke IP
+                  server. Verifikasi domain diproses secara otomatis.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-muted/30 text-muted-foreground space-y-2 rounded-lg border p-4 text-xs">
+                <p>
+                  Toko Anda saat ini menggunakan subdomain bawaan ({initialTenant.slug}
+                  .meracik.web).
+                </p>
+                <p>
+                  Untuk menghubungkan domain kustom seperti tokoanda.com, pastikan paket toko Anda
+                  aktif dan hubungi dukungan teknis.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 

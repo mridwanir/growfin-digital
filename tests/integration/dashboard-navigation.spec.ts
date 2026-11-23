@@ -15,7 +15,7 @@ import TenantSettingsPage from '@/app/dashboard/[tenantSlug]/settings/page'
 import DashboardPage from '@/app/dashboard/page'
 import LegacyProductsPage from '@/app/dashboard/products/page'
 import LegacySettingsPage from '@/app/dashboard/settings/page'
-import { NavMain, TenantSwitcher } from '@/components/dashboard/sidebar'
+import { DashboardSidebar, NavMain, NavUser, TenantSwitcher } from '@/components/dashboard/sidebar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
@@ -786,6 +786,9 @@ describe('Dashboard Navigation Integration Seam', () => {
       expect(html).toContain('Storefront Editor')
       expect(html).toContain('Catalog')
       expect(html).toContain('Settings')
+      expect(html).toContain('href="#main-content"')
+      expect(html).toContain('Skip to main content')
+      expect(html).toContain('id="main-content"')
       expect(html).toContain('id="custom-view-content"')
       expect(html).toContain('Custom Tenant Dashboard View')
     })
@@ -850,6 +853,82 @@ describe('Dashboard Navigation Integration Seam', () => {
         ),
       )
       expect(editorMarkup).toContain('aria-current="page"')
+    })
+
+    it('renders dashboard sidebar component with active tenant, links, and user profile', () => {
+      const html = renderToStaticMarkup(
+        React.createElement(
+          SidebarProvider,
+          { defaultOpen: false },
+          React.createElement(DashboardSidebar, {
+            currentTenant: {
+              id: multiTenantFixture1.tenant.id,
+              name: multiTenantFixture1.tenant.name,
+              category: multiTenantFixture1.tenant.category,
+              packageTier: multiTenantFixture1.tenant.packageTier,
+              slug: multiTenantFixture1.tenant.slug,
+            },
+            tenants: [
+              {
+                id: multiTenantFixture1.tenant.id,
+                name: multiTenantFixture1.tenant.name,
+                category: multiTenantFixture1.tenant.category,
+                packageTier: multiTenantFixture1.tenant.packageTier,
+                slug: multiTenantFixture1.tenant.slug,
+              },
+              {
+                id: multiTenantFixture2.tenant.id,
+                name: multiTenantFixture2.tenant.name,
+                category: multiTenantFixture2.tenant.category,
+                packageTier: multiTenantFixture2.tenant.packageTier,
+                slug: multiTenantFixture2.tenant.slug,
+              },
+            ],
+            user: {
+              name: 'Barista Utama',
+              email: 'merchant@example.com',
+              role: 'merchant',
+            },
+          }),
+        ),
+      )
+
+      expect(html).toContain('data-slot="sidebar"')
+      expect(html).toContain('data-collapsible="icon"')
+      expect(html).toContain(multiTenantFixture1.tenant.name)
+      expect(html).toContain('Overview')
+      expect(html).toContain('Storefront Editor')
+      expect(html).toContain('Catalog')
+      expect(html).toContain('Settings')
+      expect(html).toContain(`href="/dashboard/${multiTenantFixture1.slug}"`)
+      expect(html).toContain(`href="/dashboard/${multiTenantFixture1.slug}/editor"`)
+      expect(html).toContain(`href="/dashboard/${multiTenantFixture1.slug}/products"`)
+      expect(html).toContain(`href="/dashboard/${multiTenantFixture1.slug}/settings"`)
+      expect(html).toContain('Barista Utama')
+      expect(html).toContain('merchant@example.com')
+    })
+
+    it('renders navUser component displaying initials, name, email, and sign out without extra items', () => {
+      const html = renderToStaticMarkup(
+        React.createElement(
+          SidebarProvider,
+          null,
+          React.createElement(NavUser, {
+            user: {
+              name: 'Barista Utama',
+              email: 'barista@kopi.test',
+              role: 'merchant',
+            },
+          }),
+        ),
+      )
+
+      expect(html).toContain('Barista Utama')
+      expect(html).toContain('barista@kopi.test')
+      expect(html).toContain('BU')
+      expect(html).toContain('Log out')
+      expect(html).not.toContain('Account')
+      expect(html).not.toContain('Notifications')
     })
   })
 })

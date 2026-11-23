@@ -2,58 +2,13 @@ import { ExternalLink, Package, Palette, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+import { TenantStatusBadge, TenantTierBadge } from '@/components/dashboard/tenant-badges'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { getSession } from '@/lib/auth/server'
 import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
 import { getTenantBySlug } from '@/lib/dashboard/mutations'
 import { env } from '@/lib/env'
-
-function getStatusBadge(status: string) {
-  switch (status) {
-    case 'published':
-      return (
-        <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-          Aktif (Live)
-        </span>
-      )
-    case 'locked':
-      return (
-        <span className="inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-600 dark:text-rose-400">
-          Terkunci (Expired)
-        </span>
-      )
-    default:
-      return (
-        <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
-          Draft
-        </span>
-      )
-  }
-}
-
-function getTierBadge(tier: string) {
-  switch (tier) {
-    case 'pro':
-      return (
-        <span className="inline-flex items-center rounded-md bg-purple-500/10 px-2.5 py-0.5 text-xs font-medium text-purple-600 dark:text-purple-400">
-          PRO
-        </span>
-      )
-    case 'instant':
-      return (
-        <span className="inline-flex items-center rounded-md bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400">
-          INSTANT
-        </span>
-      )
-    default:
-      return (
-        <span className="bg-muted text-muted-foreground inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium">
-          FREE DEMO
-        </span>
-      )
-  }
-}
 
 interface TenantOverviewPageProps {
   params: Promise<{ tenantSlug: string }>
@@ -93,8 +48,8 @@ export default async function TenantOverviewPage({ params }: TenantOverviewPageP
         <div>
           <div className="flex items-center gap-2">
             <h1 className="font-heading text-2xl font-bold tracking-tight">{tenant.name}</h1>
-            {getStatusBadge(tenant.status)}
-            {getTierBadge(tenant.packageTier)}
+            <TenantStatusBadge status={tenant.status} />
+            <TenantTierBadge tier={tenant.packageTier} />
           </div>
           <p className="text-muted-foreground mt-1 text-sm">
             Ringkasan performa harian dan akses cepat pengelolaan toko.

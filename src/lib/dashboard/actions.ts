@@ -177,6 +177,10 @@ export async function updateTenantSettingsAction(
   }
 
   revalidatePath('/dashboard/settings')
+  revalidatePath('/dashboard/[tenantSlug]/settings')
+  if (updated.slug) {
+    revalidatePath(`/dashboard/${updated.slug}/settings`)
+  }
 
   return { data: updated, success: true }
 }
@@ -201,6 +205,7 @@ export async function createProductCategoryAction(
   }
 
   revalidatePath('/dashboard/products')
+  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: created, success: true }
 }
@@ -226,6 +231,7 @@ export async function updateProductCategoryAction(
   }
 
   revalidatePath('/dashboard/products')
+  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: updated, success: true }
 }
@@ -245,6 +251,7 @@ export async function deleteProductCategoryAction(
   }
 
   revalidatePath('/dashboard/products')
+  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: { success: true }, success: true }
 }
@@ -269,6 +276,7 @@ export async function createProductAction(
   }
 
   revalidatePath('/dashboard/products')
+  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: created, success: true }
 }
@@ -288,6 +296,7 @@ export async function deleteProductAction(
   }
 
   revalidatePath('/dashboard/products')
+  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: { success: true }, success: true }
 }
@@ -313,6 +322,7 @@ export async function updateProductAction(
   }
 
   revalidatePath('/dashboard/products')
+  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: updated, success: true }
 }

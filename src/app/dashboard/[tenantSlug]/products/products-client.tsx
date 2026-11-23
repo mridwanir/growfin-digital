@@ -18,7 +18,6 @@ import {
   X,
 } from 'lucide-react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
 import { MediaUploader } from '@/components/dashboard/media-uploader'
@@ -76,27 +75,19 @@ interface ProductItem {
   variants: ProductVariantItem[]
 }
 
-interface TenantOption {
-  id: string
-  name: string
-  slug: string
-}
-
-interface ProductsClientProps {
+export interface ProductsClientProps {
   initialCategories: CategoryItem[]
   initialProducts: ProductItem[]
-  selectedTenantId: string
-  tenants: TenantOption[]
+  tenantId: string
+  tenantSlug: string
 }
 
 export function ProductsClient({
   initialCategories,
   initialProducts,
-  selectedTenantId,
-  tenants,
+  tenantId,
+  tenantSlug: _tenantSlug,
 }: ProductsClientProps) {
-  const router = useRouter()
-
   const [categories, setCategories] = useState<CategoryItem[]>(initialCategories)
   const [products, setProducts] = useState<ProductItem[]>(initialProducts)
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
@@ -128,7 +119,7 @@ export function ProductsClient({
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
-        const res = await updateProductCategoryAction(selectedTenantId, catId, {
+        const res = await updateProductCategoryAction(tenantId, catId, {
           name: editingCategoryName.trim(),
         })
         if (!res.success) {
@@ -184,10 +175,6 @@ export function ProductsClient({
   const [isProductPending, startProductTransition] = useTransition()
   const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
 
-  const handleTenantChange = (tenantId: string) => {
-    router.push(`/dashboard/products?tenant=${tenantId}`)
-  }
-
   // --- Category Actions ---
   const handleAddCategory = (e: React.FormEvent) => {
     e.preventDefault()
@@ -198,7 +185,7 @@ export function ProductsClient({
     setActiveCategoryId(null)
     startCategoryTransition(async () => {
       try {
-        const res = await createProductCategoryAction(selectedTenantId, {
+        const res = await createProductCategoryAction(tenantId, {
           name: newCategoryName.trim(),
           sortOrder: categories.length,
         })
@@ -232,7 +219,7 @@ export function ProductsClient({
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
-        const res = await deleteProductCategoryAction(selectedTenantId, catId)
+        const res = await deleteProductCategoryAction(tenantId, catId)
 
         if (!res.success) {
           setFeedback({
@@ -419,7 +406,7 @@ export function ProductsClient({
       setProductFieldErrors({})
       startProductTransition(async () => {
         try {
-          const res = await updateProductAction(selectedTenantId, editingProductId, payload)
+          const res = await updateProductAction(tenantId, editingProductId, payload)
           if (!res.success) {
             if (res.fieldErrors) {
               setProductFieldErrors(res.fieldErrors)
@@ -453,7 +440,7 @@ export function ProductsClient({
     setProductFieldErrors({})
     startProductTransition(async () => {
       try {
-        const res = await createProductAction(selectedTenantId, payload)
+        const res = await createProductAction(tenantId, payload)
         if (!res.success) {
           if (res.fieldErrors) {
             setProductFieldErrors(res.fieldErrors)
@@ -487,7 +474,7 @@ export function ProductsClient({
     setDeletingProductId(prodId)
     startProductTransition(async () => {
       try {
-        const res = await deleteProductAction(selectedTenantId, prodId)
+        const res = await deleteProductAction(tenantId, prodId)
         if (!res.success) {
           setFeedback({
             type: 'error',
@@ -519,29 +506,6 @@ export function ProductsClient({
 
   return (
     <div className="space-y-8">
-      {/* Multi-Tenant Switcher */}
-      {tenants.length > 1 && (
-        <Card className="p-4">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Label className="text-sm font-medium" htmlFor="tenant-select">
-              Pilih Toko:
-            </Label>
-            <select
-              className="bg-background border-input h-9 rounded-md border px-3 py-1 text-sm shadow-sm focus:outline-none"
-              id="tenant-select"
-              value={selectedTenantId}
-              onChange={e => handleTenantChange(e.target.value)}
-            >
-              {tenants.map(t => (
-                <option key={t.id} value={t.id}>
-                  {t.name} ({t.slug})
-                </option>
-              ))}
-            </select>
-          </div>
-        </Card>
-      )}
-
       {/* Global Feedback Alert */}
       {feedback && (
         <Alert

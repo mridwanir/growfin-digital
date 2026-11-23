@@ -45,18 +45,6 @@ async function DashboardGuard({ children }: { children: ReactNode }) {
               >
                 Overview
               </Link>
-              <Link
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-3 py-1.5 transition-colors"
-                href="/dashboard/settings"
-              >
-                Settings
-              </Link>
-              <Link
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-3 py-1.5 transition-colors"
-                href="/dashboard/products"
-              >
-                Products & Variants
-              </Link>
             </nav>
           </div>
 

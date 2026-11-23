@@ -1,13 +1,11 @@
+import type { TestTenantFixture } from '../fixtures/tenant-fixture'
 import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
 
-import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterAll, describe, expect, it, vi } from 'vitest'
 
 import PreviewPage, { generateMetadata } from '@/app/preview/[tenantSlug]/page'
-import { db } from '@/db'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
 import proxy from '@/proxy'
 
 import { createTestTenant } from '../fixtures/tenant-fixture'
@@ -19,11 +17,10 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('Isolated Storefront Preview Route (/preview/[tenantSlug])', () => {
-  const createdTenantIds: string[] = []
+  const fixtures: TestTenantFixture[] = []
   afterAll(async () => {
-    for (const id of createdTenantIds) {
-      await db.delete(storefrontConfigs).where(eq(storefrontConfigs.tenantId, id))
-      await db.delete(tenants).where(eq(tenants.id, id))
+    for (const fixture of fixtures) {
+      await fixture.cleanup()
     }
   })
 
@@ -31,13 +28,14 @@ describe('Isolated Storefront Preview Route (/preview/[tenantSlug])', () => {
     const request = new NextRequest('http://localhost:3000/preview/kopi-artisan')
     const response = await proxy(request)
     expect(response.status).toBe(200)
+    expect(response.headers.get('Content-Security-Policy')).toBe("frame-ancestors 'self'")
   })
 
   it('generates noindex metadata for draft preview', async () => {
     const fixture = await createTestTenant({
       name: 'Metadata Test Store',
     })
-    createdTenantIds.push(fixture.tenantId)
+    fixtures.push(fixture)
 
     const metadata = await generateMetadata({
       params: Promise.resolve({ tenantSlug: fixture.slug }),
@@ -82,7 +80,7 @@ describe('Isolated Storefront Preview Route (/preview/[tenantSlug])', () => {
       draftSections,
       draftTheme,
     })
-    createdTenantIds.push(fixture.tenantId)
+    fixtures.push(fixture)
 
     const element = await PreviewPage({
       params: Promise.resolve({ tenantSlug: fixture.slug }),

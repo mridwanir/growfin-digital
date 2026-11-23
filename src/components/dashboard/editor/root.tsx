@@ -13,6 +13,7 @@ import type {
   StorefrontTheme,
   Tenant,
 } from '@/db/schema/tenants'
+import type { Serializable } from '@/lib/storefront/serialization'
 
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 
@@ -24,9 +25,9 @@ import { StorefrontEditorContext } from './context'
 export interface StorefrontEditorRootProps {
   children: ReactNode
   className?: string
-  initialConfig: StorefrontConfig
+  initialConfig: StorefrontConfig | Serializable<StorefrontConfig>
   onDraftChange?: (draft: StorefrontConfig) => void
-  tenant: Tenant
+  tenant: Tenant | Serializable<Tenant>
 }
 
 export function StorefrontEditorRoot({
@@ -43,8 +44,36 @@ export function StorefrontEditorRoot({
     return {
       ...initialConfig,
       sections: sortedSections,
+      updatedAt:
+        initialConfig.updatedAt instanceof Date
+          ? initialConfig.updatedAt
+          : new Date(initialConfig.updatedAt ?? 0),
     }
   })
+
+  const normalizedTenant = useMemo(
+    () =>
+      ({
+        ...tenant,
+        createdAt:
+          tenant.createdAt instanceof Date ? tenant.createdAt : new Date(tenant.createdAt ?? 0),
+        domainActiveUntil:
+          tenant.domainActiveUntil instanceof Date
+            ? tenant.domainActiveUntil
+            : tenant.domainActiveUntil
+              ? new Date(tenant.domainActiveUntil)
+              : null,
+        siteActiveUntil:
+          tenant.siteActiveUntil instanceof Date
+            ? tenant.siteActiveUntil
+            : tenant.siteActiveUntil
+              ? new Date(tenant.siteActiveUntil)
+              : null,
+        updatedAt:
+          tenant.updatedAt instanceof Date ? tenant.updatedAt : new Date(tenant.updatedAt ?? 0),
+      }) as Tenant,
+    [tenant],
+  )
 
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(() => {
     const initialSections = initialConfig.sections ?? []
@@ -78,8 +107,15 @@ export function StorefrontEditorRoot({
         payload: updatePayload,
       }
 
+      const targetOrigin =
+        typeof window !== 'undefined' &&
+        window.location?.origin &&
+        window.location.origin !== 'null'
+          ? window.location.origin
+          : '*'
+
       try {
-        targetWindow.postMessage(message, '*')
+        targetWindow.postMessage(message, targetOrigin)
       } catch {
         // Fallback for unexpected iframe messaging errors
       }
@@ -231,18 +267,18 @@ export function StorefrontEditorRoot({
         if (saveTimeoutRef.current !== null) {
           clearTimeout(saveTimeoutRef.current)
           saveTimeoutRef.current = null
-          const saveRes = await saveStorefrontDraftAction(tenant.id, {
-            sections: draftRef.current.sections,
-            theme: draftRef.current.theme,
-          })
-          if (!saveRes.success) {
-            setSaveStatus('error')
-            setPublishError(saveRes.error || 'Failed to save draft before publishing')
-            return
-          }
-          setSaveStatus('saved')
         }
 
+        const saveRes = await saveStorefrontDraftAction(tenant.id, {
+          sections: draftRef.current.sections,
+          theme: draftRef.current.theme,
+        })
+        if (!saveRes.success) {
+          setSaveStatus('error')
+          setPublishError(saveRes.error || 'Failed to save draft before publishing')
+          return
+        }
+        setSaveStatus('saved')
         const res = await publishStorefrontDraftAction(tenant.id)
         if (res.success) {
           setPublishNotification('Storefront published successfully')
@@ -276,7 +312,7 @@ export function StorefrontEditorRoot({
       setPublishNotification,
       setSaveStatus,
       setSelectedSectionId,
-      tenant,
+      tenant: normalizedTenant,
       theme: draft.theme,
       toggleSectionVisibility,
       updateSectionContent,
@@ -295,7 +331,7 @@ export function StorefrontEditorRoot({
       reorderSections,
       saveStatus,
       selectedSectionId,
-      tenant,
+      normalizedTenant,
       toggleSectionVisibility,
       updateSectionContent,
       updateTheme,

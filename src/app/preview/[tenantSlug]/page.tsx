@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 
 import { StorefrontPreviewClient } from '@/components/storefront/preview-client'
 import { getStorefrontDraftDataBySlug } from '@/lib/storefront/loader'
-
+import { serializeRecord } from '@/lib/storefront/serialization'
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
 export const instant = false
 
@@ -41,10 +41,10 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
 
   return (
     <StorefrontPreviewClient
-      categories={categories}
-      config={config}
-      products={products}
-      tenant={tenant}
+      categories={serializeRecord(categories)}
+      config={serializeRecord(config)}
+      products={serializeRecord(products)}
+      tenant={serializeRecord(tenant)}
     />
   )
 }

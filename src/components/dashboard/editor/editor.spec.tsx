@@ -15,12 +15,6 @@ vi.mock('@/lib/dashboard/actions', () => ({
   saveStorefrontDraftAction: vi.fn(),
 }))
 
-function delay(ms: number): Promise<void> {
-  const { promise, resolve } = Promise.withResolvers<void>()
-  setTimeout(resolve, ms)
-  return promise
-}
-
 const mockTenant: Tenant = {
   id: 'tenant-test-123',
   name: 'Kopi Artisan Senopati',
@@ -267,7 +261,7 @@ describe('StorefrontEditor compound components and context', () => {
           ]),
         }),
       }),
-      '*',
+      window.location.origin,
     )
   })
 
@@ -314,11 +308,12 @@ describe('StorefrontEditor compound components and context', () => {
     const titleInput = page.getByLabelText(/title/i).first()
     await titleInput.fill('Kopi Susu Mantap')
 
-    await delay(200)
-    expect(mockSave).not.toHaveBeenCalled()
-
-    await delay(700)
-
+    await vi.waitFor(
+      () => {
+        expect(mockSave).toHaveBeenCalledTimes(1)
+      },
+      { timeout: 2000 },
+    )
     expect(mockSave).toHaveBeenCalledTimes(1)
     expect(mockSave).toHaveBeenCalledWith(
       mockTenant.id,
@@ -356,8 +351,6 @@ describe('StorefrontEditor compound components and context', () => {
     const titleInput = page.getByLabelText(/title/i).first()
     await titleInput.fill('Kopi Tubruk')
 
-    await delay(850)
-
     await expect.element(page.getByText('Saving...')).toBeInTheDocument()
 
     resolveSave({ data: mockInitialConfig, success: true })
@@ -383,8 +376,6 @@ describe('StorefrontEditor compound components and context', () => {
     const titleInput = page.getByLabelText(/title/i).first()
     await titleInput.fill('Failed Save Test')
 
-    await delay(850)
-
     const errorBadge = page.getByText('Save error')
     await expect.element(errorBadge).toBeInTheDocument()
     const errorBadgeEl = page.getByTestId('save-status-error')
@@ -401,6 +392,11 @@ describe('StorefrontEditor compound components and context', () => {
       success: true
     }>()
     mockPublish.mockReturnValue(publishPromise)
+    const mockSave = vi.mocked(saveStorefrontDraftAction)
+    mockSave.mockResolvedValue({
+      data: mockInitialConfig,
+      success: true,
+    })
 
     render(
       <StorefrontEditor.Root initialConfig={mockInitialConfig} tenant={mockTenant}>

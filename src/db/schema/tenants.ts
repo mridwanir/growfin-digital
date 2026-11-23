@@ -231,11 +231,7 @@ export const tenants = pgTable(
   ],
 )
 
-export type Tenant = typeof tenants.$inferSelect & {
-  brandingContent?: BrandingContent | null
-  fomoExpiresAt?: Date | null
-  themeConfig?: ThemeConfig | null
-}
+export type Tenant = typeof tenants.$inferSelect
 export type NewTenant = typeof tenants.$inferInsert
 
 // ---------------------------------------------------------------------------

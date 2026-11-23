@@ -29,7 +29,6 @@ const mockFnbTenant: Tenant = {
   createdAt: new Date(),
   customDomain: null,
   domainActiveUntil: null,
-  fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?cid=123',
   organizationId: null,
   packageTier: 'instant',
@@ -39,22 +38,11 @@ const mockFnbTenant: Tenant = {
   status: 'published',
   updatedAt: new Date(),
   userId: null,
-  brandingContent: {
-    heroImage: 'https://images.unsplash.com/photo-coffee',
-    iconEmoji: '☕',
-    tagline: 'Secangkir Cerita Tiap Hari',
-    themeColor: '#d97706',
-  },
   operatingHours: {
     closeTime: '22:00',
     isOpen: true,
     openTime: '08:00',
     raw: '08:00 - 22:00',
-  },
-  themeConfig: {
-    fbType: 'DINE_IN',
-    layoutId: 'fnb-theme-classic',
-    themeColor: '#d97706',
   },
 }
 
@@ -104,16 +92,6 @@ const mockRetailTenant: Tenant = {
   name: 'Urban Streetwear Bandung',
   category: 'Clothing & Fashion',
   slug: 'urban-streetwear-bandung',
-  brandingContent: {
-    heroImage: 'https://images.unsplash.com/photo-fashion',
-    iconEmoji: '🛍️',
-    tagline: 'Modern Streetwear Collective',
-    themeColor: '#09090b',
-  },
-  themeConfig: {
-    layoutId: 'retail-theme-urban',
-    themeColor: '#09090b',
-  },
 }
 
 const mockRetailCategories: Category[] = [
@@ -241,13 +219,7 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
             React.createElement(LayoutComponent, {
               categories: mockFnbCategories,
               products: mockFnbProducts,
-              tenant: {
-                ...mockFnbTenant,
-                themeConfig: {
-                  ...mockFnbTenant.themeConfig,
-                  layoutId: theme,
-                },
-              },
+              tenant: mockFnbTenant,
             }),
           ),
         )
@@ -279,13 +251,7 @@ describe('storefront theme rendering, compound catalog & cart domain (seam 3)', 
             React.createElement(LayoutComponent, {
               categories: mockRetailCategories,
               products: mockRetailProducts,
-              tenant: {
-                ...mockRetailTenant,
-                themeConfig: {
-                  ...mockRetailTenant.themeConfig,
-                  layoutId: theme,
-                },
-              },
+              tenant: mockRetailTenant,
             }),
           ),
         )

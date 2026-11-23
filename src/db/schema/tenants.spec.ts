@@ -10,6 +10,7 @@ import type {
   StorefrontConfigStatus,
   StorefrontSection,
   StorefrontTheme,
+  Tenant,
 } from './tenants'
 
 import { getTableColumns } from 'drizzle-orm'
@@ -117,6 +118,7 @@ describe('Storefront type contracts', () => {
     >()
 
     expectTypeOf<StorefrontConfigStatus>().toEqualTypeOf<'draft' | 'published'>()
+    expectTypeOf<Tenant>().toEqualTypeOf<typeof tenants.$inferSelect>()
 
     const mockSection: StorefrontSection<HeroSectionContent> = {
       id: 'hero-1',

@@ -14,7 +14,6 @@ const baseMockTenant: Tenant = {
   createdAt: new Date('2025-01-01T00:00:00Z'),
   customDomain: null,
   domainActiveUntil: null,
-  fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?q=test',
   organizationId: null,
   packageTier: 'instant',
@@ -24,22 +23,11 @@ const baseMockTenant: Tenant = {
   status: 'published',
   updatedAt: new Date('2025-01-01T00:00:00Z'),
   userId: null,
-  brandingContent: {
-    heroSubtitle: 'Gaya modern setiap hari',
-    heroTitle: 'Toko Keren Fashion',
-    logoUrl: '/image/logo.png',
-    tagline: 'Koleksi fashion lokal terbaik',
-  },
   operatingHours: {
     closeTime: '21:00',
     isOpen: true,
     openTime: '09:00',
     raw: '09:00 - 21:00',
-  },
-  themeConfig: {
-    colorPalette: 'minimal',
-    fontFamily: 'font-sans',
-    layoutId: 'modern',
   },
 }
 

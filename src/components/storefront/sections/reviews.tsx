@@ -51,7 +51,8 @@ export function Reviews({
   variant = 'grid',
   className,
 }: ReviewsSectionProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
+  const branding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
 
   const sectionTitle = title || content?.title || branding.reviewsTitle || 'Ulasan Pelanggan'
   const sectionDescription =

@@ -43,8 +43,10 @@ function resolveStorefrontUrls(
     ? `https://${tenant.customDomain}`
     : `https://${baseDomain}/${tenant.slug}`
 
+  const legacyBranding =
+    'brandingContent' in tenant ? (tenant.brandingContent as Record<string, unknown> | null) : null
   const branding = {
-    ...((tenant.brandingContent as Record<string, unknown> | null) || {}),
+    ...(legacyBranding || {}),
     ...(config?.sections ? extractLegacyBrandingFromSections(config.sections) : {}),
   }
   const rawImage =
@@ -67,8 +69,10 @@ function resolveStorefrontUrls(
 
 export function buildSiteMetadata(tenant: Tenant, config?: StorefrontConfig): Metadata {
   const { ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant, config)
+  const legacyBranding =
+    'brandingContent' in tenant ? (tenant.brandingContent as Record<string, unknown> | null) : null
   const branding = {
-    ...((tenant.brandingContent as Record<string, unknown> | null) || {}),
+    ...(legacyBranding || {}),
     ...(config?.sections ? extractLegacyBrandingFromSections(config.sections) : {}),
   }
   const clientName = tenant.name
@@ -116,8 +120,10 @@ export function buildLocalBusinessJsonLd(
   config?: StorefrontConfig,
 ) {
   const { logoUrl, ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant, config)
+  const legacyBranding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent | null) : null
   const branding = {
-    ...((tenant.brandingContent as BrandingContent | null) || {}),
+    ...(legacyBranding || {}),
     ...(config?.sections ? extractLegacyBrandingFromSections(config.sections) : {}),
   }
   const operatingHours = (tenant.operatingHours as OperatingHours | null) || {}

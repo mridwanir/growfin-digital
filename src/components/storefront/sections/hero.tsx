@@ -26,7 +26,8 @@ export function Hero({
   catalogAnchorId = 'catalog',
   className,
 }: HeroSectionProps) {
-  const branding = (tenant.brandingContent as BrandingContent) || {}
+  const branding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
   const operatingHours = (tenant.operatingHours as OperatingHours) || {}
 
   const name = content?.title || tenant.name || 'Storefront'

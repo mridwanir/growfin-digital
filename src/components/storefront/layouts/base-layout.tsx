@@ -17,7 +17,10 @@ import { Footer, Gallery, Hero, OperatingHours, Reviews } from '@/components/sto
 import { DynamicThemeProvider } from '@/components/storefront/theme'
 import { isSectionVisible } from '@/lib/section-utils'
 import { resolveArchetype } from '@/lib/storefront/archetype'
-import { extractLegacyBrandingFromSections } from '@/lib/storefront/compatibility'
+import {
+  extractLegacyBrandingFromSections,
+  extractLegacyThemeConfig,
+} from '@/lib/storefront/compatibility'
 
 export function BaseStorefrontLayout({
   tenant,
@@ -40,12 +43,14 @@ export function BaseStorefrontLayout({
   containerClassName,
 }: BaseStorefrontLayoutProps) {
   const sections = config?.sections
+  const legacyBranding =
+    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
   const branding = {
-    ...((tenant.brandingContent as BrandingContent) || {}),
+    ...legacyBranding,
     ...(sections ? extractLegacyBrandingFromSections(sections) : {}),
   }
-  const themeConfig = (tenant.themeConfig as ThemeConfig) || {}
-
+  const legacyThemeConfig = 'themeConfig' in tenant ? (tenant.themeConfig as ThemeConfig) || {} : {}
+  const themeConfig = config ? extractLegacyThemeConfig(config) : legacyThemeConfig
   const order =
     themeConfig.sectionOrder && themeConfig.sectionOrder.length > 0
       ? themeConfig.sectionOrder
@@ -145,8 +150,8 @@ export function BaseStorefrontLayout({
 
   if (sections && sections.length > 0) {
     const sortedSections = [...sections].sort((a, b) => a.sortOrder - b.sortOrder)
-    const hasVisibleFooter = sortedSections.some(s => s.type === 'footer' && s.isVisible)
-    shouldRenderFooter = !hasVisibleFooter && isSectionVisible('footer', themeConfig.hiddenSections)
+    const hasFooterSection = sortedSections.some(s => s.type === 'footer')
+    shouldRenderFooter = !hasFooterSection && isSectionVisible('footer', themeConfig.hiddenSections)
 
     mainContent = sortedSections.map(section => {
       if (!section.isVisible) return null

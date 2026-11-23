@@ -17,68 +17,13 @@ import { analyticsEvents } from '@/db/schema/analytics'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { orders } from '@/db/schema/orders'
 import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import {
+  DEFAULT_STOREFRONT_SECTIONS,
+  DEFAULT_STOREFRONT_THEME,
+} from '@/lib/storefront/compatibility'
 
-export const DEFAULT_TEST_THEME: StorefrontTheme = {
-  fontFamily: 'font-sans',
-  layoutId: 'modern',
-  themeColor: '#000000',
-}
-
-export const DEFAULT_TEST_SECTIONS: StorefrontSection[] = [
-  {
-    id: 'sec-hero',
-    type: 'hero',
-    isVisible: true,
-    sortOrder: 1,
-    content: {
-      subtitle: 'Belanja mudah dan cepat',
-      title: 'Toko Test',
-    },
-  },
-  {
-    id: 'sec-catalog',
-    type: 'catalog',
-    isVisible: true,
-    sortOrder: 2,
-    content: {
-      title: 'Katalog Produk',
-    },
-  },
-  {
-    id: 'sec-reviews',
-    type: 'reviews',
-    isVisible: true,
-    sortOrder: 3,
-    content: {
-      title: 'Ulasan Pelanggan',
-    },
-  },
-  {
-    id: 'sec-gallery',
-    type: 'gallery',
-    isVisible: true,
-    sortOrder: 4,
-    content: {
-      title: 'Galeri Foto',
-    },
-  },
-  {
-    id: 'sec-hours',
-    type: 'operating_hours',
-    isVisible: true,
-    sortOrder: 5,
-    content: {
-      title: 'Jam Operasional',
-    },
-  },
-  {
-    id: 'sec-footer',
-    type: 'footer',
-    content: {},
-    isVisible: true,
-    sortOrder: 6,
-  },
-]
+export const DEFAULT_TEST_THEME: StorefrontTheme = DEFAULT_STOREFRONT_THEME
+export const DEFAULT_TEST_SECTIONS: StorefrontSection[] = DEFAULT_STOREFRONT_SECTIONS
 
 export interface CreateTestTenantOptions {
   id?: string

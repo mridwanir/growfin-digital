@@ -63,7 +63,7 @@ export async function getTenantSettings(tenantId: string, userId: string) {
     .where(and(eq(tenants.id, tenantId), eq(tenants.userId, userId)))
     .limit(1)
 
-  return tenant ? { ...tenant, brandingContent: null, themeConfig: null } : null
+  return tenant ?? null
 }
 
 /**
@@ -95,7 +95,7 @@ export async function updateTenantSettings(
     .where(and(eq(tenants.id, tenantId), eq(tenants.userId, userId)))
     .returning()
 
-  return updated ? { ...updated, brandingContent: null, themeConfig: null } : null
+  return updated ?? null
 }
 
 function slugify(text: string): string {

@@ -4,7 +4,7 @@
 
 **Blocked by:** 02: Drizzle migration and PGlite test fixtures.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] `saveStorefrontDraftAction` validates tenant ownership and updates `storefront_configs` where `status = 'draft'`.
 - [ ] `publishStorefrontDraftAction` copies draft records to published records inside a database transaction.

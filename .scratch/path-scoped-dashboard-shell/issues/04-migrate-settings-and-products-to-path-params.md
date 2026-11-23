@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Path-scoped route layout and guard, 02: Dashboard sidebar and tenant switcher.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Settings client consumes `tenantSlug` from route params; all form submissions pass `tenantId` resolved on the server.
 - [ ] Catalog client operates within the path-scoped route; internal links preserve `/dashboard/[tenantSlug]/products`.

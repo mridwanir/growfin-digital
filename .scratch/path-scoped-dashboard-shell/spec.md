@@ -1,4 +1,4 @@
-Status: ready-for-agent
+Status: resolved
 
 # Path-scoped dashboard shell and tenancy navigation
 

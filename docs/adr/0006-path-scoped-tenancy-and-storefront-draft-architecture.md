@@ -1,5 +1,7 @@
 # Path-scoped tenancy and server-side storefront draft architecture
 
+> Status: Superseded by ADR 0007
+
 The merchant dashboard migrates to path-scoped tenancy at `/dashboard/[tenantSlug]/...` with a persistent sidebar navigation and tenant switcher. Storefront presentation and layout data are extracted from the `tenants` table into a dedicated `storefront_configs` table supporting draft and published revisions. The Storefront Editor operates against server-side drafts with debounced autosave and renders previews in an isolated iframe communicating through postMessage events.
 
 ## Context

@@ -118,6 +118,19 @@ const baseAuth = betterAuth({
     env.BETTER_AUTH_SECRET ||
     process.env.BETTER_AUTH_SECRET ||
     'test_better_auth_secret_at_least_32_characters_long',
+  socialProviders: {
+    google: {
+      enabled: true,
+      clientId:
+        env.GOOGLE_CLIENT_ID ||
+        process.env.GOOGLE_CLIENT_ID ||
+        (process.env.NODE_ENV === 'test' ? 'test_google_client_id' : ''),
+      clientSecret:
+        env.GOOGLE_CLIENT_SECRET ||
+        process.env.GOOGLE_CLIENT_SECRET ||
+        (process.env.NODE_ENV === 'test' ? 'test_google_client_secret' : ''),
+    },
+  },
 })
 
 export interface SessionPayload {
@@ -171,6 +184,7 @@ const getSessionFromHeaders = async (customHeaders?: Headers): Promise<SessionRe
 export interface BetterAuthServer {
   api: typeof baseAuth.api
   handler: typeof baseAuth.handler
+  options: typeof baseAuth.options
   getSession: (customHeaders?: Headers) => Promise<SessionResult>
   middleware: (options?: {
     loginUrl?: string

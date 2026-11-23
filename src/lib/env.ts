@@ -19,6 +19,8 @@ export const env = createEnv({
     EMAIL_FROM: z.string().default('Growfin Digital <auth@growfin.my.id>'),
 
     GEMINI_API_KEY: z.string().min(1),
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
     GOOGLE_MAPS_API_KEY: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
 

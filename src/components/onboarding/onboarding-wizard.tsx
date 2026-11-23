@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { GoogleIcon } from '@/components/brand'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,6 +23,58 @@ interface OnboardingWizardProps {
   userName?: string | null
 }
 
+function validateStep1Credentials(name: string, email: string, password: string): string | null {
+  if (!name.trim()) {
+    return 'Nama lengkap wajib diisi'
+  }
+  if (!email.trim() || !email.includes('@')) {
+    return 'Format email tidak valid'
+  }
+  if (!password || password.length < 8) {
+    return 'Kata sandi minimal 8 karakter'
+  }
+  return null
+}
+
+function WizardHeader({ step }: { step: 1 | 2 }) {
+  const isStep1 = step === 1
+  return (
+    <CardHeader className="text-center">
+      <div className="bg-primary/10 text-primary mx-auto flex size-12 items-center justify-center rounded-xl">
+        {isStep1 ? <UserCheck className="size-6" /> : <Store className="size-6" />}
+      </div>
+
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <span
+          className={`flex size-6 items-center justify-center rounded-full text-xs font-semibold ${
+            isStep1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+          }`}
+        >
+          1
+        </span>
+        <span className="text-muted-foreground text-xs font-medium">Buat Akun</span>
+        <ChevronRight className="text-muted-foreground size-3.5" />
+        <span
+          className={`flex size-6 items-center justify-center rounded-full text-xs font-semibold ${
+            !isStep1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+          }`}
+        >
+          2
+        </span>
+        <span className="text-muted-foreground text-xs font-medium">Informasi Toko</span>
+      </div>
+
+      <CardTitle aria-level={1} className="mt-4 text-2xl font-bold tracking-tight" role="heading">
+        {isStep1 ? 'Mulai Bersama MeracikWeb' : 'Atur Toko Online Anda'}
+      </CardTitle>
+      <CardDescription>
+        {isStep1
+          ? 'Langkah 1 dari 2: Daftarkan akun pemilik toko Anda'
+          : 'Langkah 2 dari 2: Masukkan informasi toko untuk menyiapkan website Anda'}
+      </CardDescription>
+    </CardHeader>
+  )
+}
 export function OnboardingWizard({
   initialStep = 1,
   userEmail = null,
@@ -44,9 +97,9 @@ export function OnboardingWizard({
 
   // UI State
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
-
   // Handle store name change with auto-slug generation
   const handleStoreNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextName = e.target.value
@@ -67,22 +120,11 @@ export function OnboardingWizard({
     e.preventDefault()
     setError(null)
     setFieldErrors({})
-
-    if (!name.trim()) {
-      setError('Nama lengkap wajib diisi')
+    const validationError = validateStep1Credentials(name, email, password)
+    if (validationError) {
+      setError(validationError)
       return
     }
-
-    if (!email.trim() || !email.includes('@')) {
-      setError('Format email tidak valid')
-      return
-    }
-
-    if (!password || password.length < 8) {
-      setError('Kata sandi minimal 8 karakter')
-      return
-    }
-
     setLoading(true)
     try {
       const result = await authClient.signUp.email({
@@ -102,6 +144,21 @@ export function OnboardingWizard({
       setError('Terjadi kendala saat mendaftarkan akun. Silakan coba lagi.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Handle Google OAuth sign up: initiate Better Auth Google social sign-in
+  const handleGoogleSignUp = async () => {
+    setGoogleLoading(true)
+    setError(null)
+    try {
+      await authClient.signIn.social({
+        callbackURL: '/dashboard',
+        provider: 'google',
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal mendaftar dengan Google.')
+      setGoogleLoading(false)
     }
   }
 
@@ -141,44 +198,7 @@ export function OnboardingWizard({
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4 py-12">
       <Card className="w-full max-w-lg shadow-md">
-        <CardHeader className="text-center">
-          <div className="bg-primary/10 text-primary mx-auto flex size-12 items-center justify-center rounded-xl">
-            {step === 1 ? <UserCheck className="size-6" /> : <Store className="size-6" />}
-          </div>
-
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <span
-              className={`flex size-6 items-center justify-center rounded-full text-xs font-semibold ${
-                step === 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              1
-            </span>
-            <span className="text-muted-foreground text-xs font-medium">Buat Akun</span>
-            <ChevronRight className="text-muted-foreground size-3.5" />
-            <span
-              className={`flex size-6 items-center justify-center rounded-full text-xs font-semibold ${
-                step === 2 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              2
-            </span>
-            <span className="text-muted-foreground text-xs font-medium">Informasi Toko</span>
-          </div>
-
-          <CardTitle
-            aria-level={1}
-            className="mt-4 text-2xl font-bold tracking-tight"
-            role="heading"
-          >
-            {step === 1 ? 'Mulai Bersama MeracikWeb' : 'Atur Toko Online Anda'}
-          </CardTitle>
-          <CardDescription>
-            {step === 1
-              ? 'Langkah 1 dari 2: Daftarkan akun pemilik toko Anda'
-              : 'Langkah 2 dari 2: Masukkan informasi toko untuk menyiapkan website Anda'}
-          </CardDescription>
-        </CardHeader>
+        <WizardHeader step={step} />
 
         <CardContent className="flex flex-col gap-6">
           {error && (
@@ -245,7 +265,7 @@ export function OnboardingWizard({
                 </Field>
               </FieldGroup>
 
-              <Button className="w-full" disabled={loading} type="submit">
+              <Button className="w-full" disabled={loading || googleLoading} type="submit">
                 {loading ? (
                   <>
                     <Spinner className="mr-2" />
@@ -254,6 +274,30 @@ export function OnboardingWizard({
                 ) : (
                   'Lanjut ke Detail Toko'
                 )}
+              </Button>
+
+              <div className="relative my-1">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card text-muted-foreground px-2">Atau</span>
+                </div>
+              </div>
+
+              <Button
+                className="w-full"
+                disabled={loading || googleLoading}
+                type="button"
+                variant="outline"
+                onClick={handleGoogleSignUp}
+              >
+                {googleLoading ? (
+                  <Spinner className="mr-2" />
+                ) : (
+                  <GoogleIcon className="mr-2 size-4" />
+                )}
+                <span>Daftar dengan Google</span>
               </Button>
 
               <div className="text-muted-foreground text-center text-xs">

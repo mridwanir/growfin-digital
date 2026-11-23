@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { GoogleIcon } from '@/components/brand'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -29,9 +30,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [step, setStep] = useState<LoginStep>('credentials')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
-
   const validateEmail = (): boolean => {
     if (!email || !email.includes('@')) {
       setError('Please enter a valid email address.')
@@ -67,6 +68,20 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true)
+    setError(null)
+    try {
+      await authClient.signIn.social({
+        callbackURL: '/dashboard',
+        provider: 'google',
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal masuk dengan Google.')
+      setGoogleLoading(false)
     }
   }
 
@@ -184,10 +199,41 @@ export default function LoginPage() {
               </FieldGroup>
 
               <div className="flex flex-col gap-3">
-                <Button className="w-full" disabled={loading} size="lg" type="submit">
+                <Button
+                  className="w-full"
+                  disabled={loading || googleLoading}
+                  size="lg"
+                  type="submit"
+                >
                   {loading && <Spinner data-icon="inline-start" />}
                   {loading ? 'Signing in...' : 'Sign In'}
                 </Button>
+
+                <div className="relative my-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card text-muted-foreground px-2">Atau</span>
+                  </div>
+                </div>
+
+                <Button
+                  className="w-full"
+                  disabled={loading || googleLoading}
+                  size="lg"
+                  type="button"
+                  variant="outline"
+                  onClick={handleGoogleSignIn}
+                >
+                  {googleLoading ? (
+                    <Spinner data-icon="inline-start" />
+                  ) : (
+                    <GoogleIcon className="mr-2 size-4" />
+                  )}
+                  <span>Masuk dengan Google</span>
+                </Button>
+
                 <div className="text-muted-foreground text-center text-xs">
                   Belum memiliki akun?{' '}
                   <Link className="text-primary font-medium hover:underline" href="/onboarding">

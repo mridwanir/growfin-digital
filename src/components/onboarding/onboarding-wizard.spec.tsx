@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
+import { authClient } from '@/lib/auth/client'
+
 import { OnboardingWizard } from './onboarding-wizard'
 
 vi.mock('next/navigation', () => ({
@@ -13,6 +15,11 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/lib/auth/client', () => ({
   authClient: {
+    signIn: {
+      social: vi
+        .fn()
+        .mockResolvedValue({ data: { url: 'https://accounts.google.com' }, error: null }),
+    },
     signUp: {
       email: vi.fn().mockResolvedValue({ data: { user: { id: 'u-123' } }, error: null }),
     },
@@ -81,5 +88,18 @@ describe('OnboardingWizard browser mode component', () => {
 
     await storeNameInput.fill('Kopi Kenangan Mantap')
     await expect.element(slugInput).toHaveValue('kopi-kenangan-mantap')
+  })
+
+  it('triggers Google OAuth sign-in when clicking Google button in step 1', async () => {
+    render(<OnboardingWizard initialStep={1} />)
+
+    const googleBtn = page.getByRole('button', { name: /google/i })
+    await expect.element(googleBtn).toBeVisible()
+    await googleBtn.click()
+
+    expect(authClient.signIn.social).toHaveBeenCalledWith({
+      callbackURL: '/dashboard',
+      provider: 'google',
+    })
   })
 })

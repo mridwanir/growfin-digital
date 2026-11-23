@@ -13,3 +13,5 @@ Implementation map for path-scoped dashboard shell under `/dashboard/[tenantSlug
 - `05-dashboard-navigation-integration-tests.md`: Dashboard navigation integration tests.
 
 ## Decisions so far
+
+- [[issues/01-path-scoped-route-layout-and-guard.md]]: Implemented `getTenantBySlug` query and `src/app/dashboard/[tenantSlug]/layout.tsx` dynamic segment route guard enforcing session authentication (`/login` redirect) and tenant ownership verification (`/dashboard` redirect).

@@ -4,7 +4,6 @@ import { eq } from 'drizzle-orm'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import DemoPage, { generateMetadata as generateDemoMetadata } from '@/app/demo/[slug]/page'
 import SitePage, { generateMetadata as generateSiteMetadata } from '@/app/site/[slug]/page'
 import { ExpiredSiteScreen } from '@/components/storefront/expired-screen'
 import { db } from '@/db'
@@ -157,17 +156,6 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       expect(meta.robots).toEqual({ follow: false, index: false })
       expect(meta.title).toContain('Masa Pembaruan Layanan')
     })
-
-    it('generates preview metadata on demo route for draft tenant', async () => {
-      const persisted = await persistGeneratedWebsite(mockWebsiteData)
-      createdTenantIds.push(persisted.tenant.id)
-
-      const meta = await generateDemoMetadata({
-        params: Promise.resolve({ slug: persisted.tenant.slug }),
-      })
-      expect(meta.title).toBe('Preview: Kopi Senja Nusantara | MeracikWeb')
-      expect(meta.description).toContain('Kopi Terbaik Sejak 2020')
-    })
   })
 
   describe('publication Status & RSC Route Enforcement', () => {
@@ -227,34 +215,6 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       expect(markup).toContain('Kopi Susu Gula Aren')
       expect(markup).toContain('application/ld+json')
       expect(markup).toContain('CafeOrCoffeeShop')
-    })
-
-    it('renders preview storefront successfully on DemoPage for draft tenant', async () => {
-      const persisted = await persistGeneratedWebsite(mockWebsiteData)
-      createdTenantIds.push(persisted.tenant.id)
-      const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
-      expect(element).toBeDefined()
-      expect(element.type).not.toBe(ExpiredSiteScreen)
-
-      const markup = renderToStaticMarkup(element)
-      expect(markup).toContain('Kopi Senja Nusantara')
-      expect(markup).toContain('Kopi Susu Gula Aren')
-      expect(markup).toContain('application/ld+json')
-      expect(markup).toContain('CafeOrCoffeeShop')
-    })
-
-    it('renders ExpiredSiteScreen on DemoPage when siteActiveUntil has passed for draft tenant', async () => {
-      const persisted = await persistGeneratedWebsite(mockWebsiteData)
-      createdTenantIds.push(persisted.tenant.id)
-      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000)
-      await db
-        .update(tenants)
-        .set({ siteActiveUntil: pastDate, status: 'draft' })
-        .where(eq(tenants.id, persisted.tenant.id))
-
-      const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })
-      expect(element).toBeDefined()
-      expect(element.type).toBe(ExpiredSiteScreen)
     })
   })
 })

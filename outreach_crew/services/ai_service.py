@@ -1,15 +1,15 @@
 from typing import Optional
-from google import genai
+from openai import OpenAI
 import re
 import json
-from config.settings import GEMINI_API_KEY
+from config.settings import OPENAI_API_KEY
 from core.models import BusinessDemo
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, address: str, maps_url: str, slug: str, city: str = "Bandung", reviews_data: list = None) -> Optional[dict]:
     """
-    Menyusun struktur data JSON (Metadata JSONB) yang generik menggunakan Gemini
+    Menyusun struktur data JSON (Metadata JSONB) yang generik menggunakan OpenAI (gpt-6-luna)
     Bisa mengakomodasi F&B, Salon, Retail, Leisure, dll.
     """
     clean_phone = re.sub(r'[^0-9]', '', phone)
@@ -83,13 +83,22 @@ def generate_demo_data_ai(name: str, rating: float, reviews: int, phone: str, ad
     """
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-            config={"response_mime_type": "application/json"}
+        response = client.chat.completions.create(
+            model="gpt-6-luna",
+            response_format={"type": "json_object"},
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Kamu adalah sistem AI pembuat katalog cerdas untuk berbagai sektor bisnis lokal. Wajib selalu kembalikan raw JSON valid."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
         )
-        # Parse JSON and return it as dictionary
-        return json.loads(response.text.strip())
+        content = response.choices[0].message.content
+        return json.loads(content.strip())
     except Exception as e:
-        print(f"⚠️ Error Gemini API (Demo JSON): {e}")
+        print(f"⚠️ Error OpenAI API (Demo JSON): {e}")
         return None

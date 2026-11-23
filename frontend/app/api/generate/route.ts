@@ -1,13 +1,14 @@
 import { NextResponse, after } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { resolveTemplateType } from '@/lib/template-resolver';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import { Resend } from 'resend';
 import { checkRateLimit, extractDeviceId, getClientIp } from '@/lib/rate-limit';
 import { normalizeGeneratedMetadata } from '@/lib/catalog';
 
-// 1. Inisialisasi Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// 1. Inisialisasi OpenAI (Mendukung OPENAI_API_KEY atau fallback ke GEMINI_API_KEY jika di Vercel diganti langsung)
+const openAiKey = process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || '';
+const openai = new OpenAI({ apiKey: openAiKey });
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
 // Generate a URL-friendly slug from the business name
@@ -329,7 +330,7 @@ export async function POST(request: Request) {
     // Override kategori jika terjadi mis-match (hanya relevan jika dari maps, jika non-maps gunakan category pilihan user)
     const adjustedCategory = isMapsMode ? mapPrimaryTypeToCategory(primaryType, category) : category;
 
-    // 5. Generate JSON menggunakan Gemini AI
+    // 5. Generate JSON menggunakan OpenAI (gpt-6-luna)
     const prompt = `
       Kamu adalah sistem AI pembuat struktur data UI cerdas.
       Buatkan data JSON (Metadata) untuk dirender di website katalog bisnis.
@@ -382,13 +383,29 @@ export async function POST(request: Request) {
       WAJIB kembalikan RAW JSON yang valid, tanpa awalan \`\`\`json.
     `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json" }
-    });
+    // 5. Generate JSON menggunakan OpenAI GPT-6 Luna
+    let generatedText = '';
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-6-luna',
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content: 'Kamu adalah sistem AI pembuat struktur data UI katalog bisnis lokal. WAJIB selalu kembalikan RAW JSON valid sesuai format yang diminta.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      });
+      generatedText = completion.choices[0]?.message?.content || '{}';
+    } catch (apiError: any) {
+      console.error('OpenAI API Error:', apiError);
+      return NextResponse.json({ error: `AI Gagal memproses data: ${apiError?.message || 'Gagal menghubungi OpenAI'}` }, { status: 500 });
+    }
 
-    const generatedText = result.response.text();
     let metadata;
     try {
       metadata = JSON.parse(generatedText);
@@ -399,7 +416,7 @@ export async function POST(request: Request) {
 
       metadata = normalizeGeneratedMetadata(metadata);
     } catch (e) {
-      console.error('Failed to parse Gemini JSON:', e);
+      console.error('Failed to parse OpenAI JSON:', e);
       return NextResponse.json({ error: 'AI Gagal memproses data. Coba lagi.' }, { status: 500 });
     }
 

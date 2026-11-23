@@ -2,16 +2,21 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+CREW_DIR = Path(__file__).resolve().parent.parent
+
+# Load outreach_crew .env first
+load_dotenv(CREW_DIR / ".env")
 load_dotenv()
 
 # API Keys
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("GEMINI_API_KEY", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
 # Project Paths
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PROJECT_WEB_DIR = Path(os.getenv("PROJECT_WEB_DIR", BASE_DIR / "frontend"))
 DEMOS_TS_PATH = PROJECT_WEB_DIR / "lib" / "demos.ts"
 

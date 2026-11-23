@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Semantic color tokens and contrast calibration.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Primitives for `sidebar`, `tabs`, `sheet`, `popover`, `dropdown-menu`, `toggle-group`, `switch`, `textarea`, `tooltip`, and `select` are installed in `src/components/ui/`.
 - [ ] Installed components reference project path aliases and semantic CSS variables without hardcoded styling.

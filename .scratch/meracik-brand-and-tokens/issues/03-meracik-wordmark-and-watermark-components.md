@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Semantic color tokens and contrast calibration.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] `MeracikWordmark` renders code-based typography using `Plus Jakarta Sans` ExtraBold 800 with an italic `Web` suffix.
 - [ ] `MeracikWatermark` replaces `GrowfinWatermark` on free and demo storefront layouts.

@@ -109,7 +109,7 @@ describe('tenant dashboard operations', () => {
   })
 
   it('updates tenant profile settings', async () => {
-    const result = await updateTenantSettingsAction(fixture.tenantId, {
+    const result = await updateTenantSettingsAction({
       city: 'Bandung',
     })
     expect(result.success).toBe(true)
@@ -132,13 +132,13 @@ import { createMerchantSession, createUnauthenticatedSession } from '../fixtures
 
 it('rejects unauthenticated requests', async () => {
   vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
-  const result = await updateTenantSettingsAction(tenantId, payload)
+  const result = await updateTenantSettingsAction(payload)
   expect(result).toEqual({ error: 'Unauthorized', success: false })
 })
 
 it('accepts authorized merchant requests', async () => {
   vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: mockUserId }))
-  const result = await updateTenantSettingsAction(tenantId, payload)
+  const result = await updateTenantSettingsAction(payload)
   expect(result.success).toBe(true)
 })
 ```
@@ -193,7 +193,7 @@ it('calculates total with base price, variant modifiers, and addon selections', 
 
 // GOOD: Tests end-to-end outcome through a Server Action against the database
 it('updates tenant settings and returns updated record', async () => {
-  const result = await updateTenantSettingsAction(tenantId, {
+  const result = await updateTenantSettingsAction({
     name: 'Updated Store Name',
   })
 
@@ -217,7 +217,7 @@ it('calls calculateItemSubtotal when adding to cart', () => {
 // BAD: Spies on internal database mutation instead of running real query
 it('calls updateTenantSettings mutation helper', async () => {
   const spy = vi.spyOn(dashboardMutations, 'updateTenantSettings')
-  await updateTenantSettingsAction(tenantId, payload)
+  await updateTenantSettingsAction(payload)
   expect(spy).toHaveBeenCalled()
 })
 ```

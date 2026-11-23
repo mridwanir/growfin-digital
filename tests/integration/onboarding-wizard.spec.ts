@@ -201,7 +201,7 @@ describe('Two-Step Registration Wizard and Onboarding Guard (Issue 13)', () => {
       expect(org.category).toBe(category)
       expect(org.phone).toBe(phone)
       expect(org.packageTier).toBe('free')
-      expect(org.status).toBe('draft')
+      expect(org.status).toBe('published')
 
       // Assert merchant added to member table as 'owner'
       const [ownerMember] = await db
@@ -241,6 +241,31 @@ describe('Two-Step Registration Wizard and Onboarding Guard (Issue 13)', () => {
         createdOrgId,
         expect.any(Object),
       )
+    })
+
+    it('sanitizes unexpected server errors and logs them to console.error', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+        createMerchantSession({ userId: createdUserId || 'test-user-id' }),
+      )
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(db, 'transaction').mockRejectedValueOnce(new Error('Fatal DB crash'))
+
+      const result = await createStoreOnboardingAction({
+        name: 'Toko Error Test',
+        category: 'Retail',
+        phone: '081234567890',
+        slug: `error-slug-${Date.now()}`,
+      })
+
+      expect(result).toEqual({
+        error: 'Gagal membuat toko. Silakan coba beberapa saat lagi.',
+        success: false,
+      })
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Failed to create store onboarding:',
+        expect.any(Error),
+      )
+      consoleErrorSpy.mockRestore()
     })
   })
 

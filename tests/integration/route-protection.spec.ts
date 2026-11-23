@@ -48,7 +48,6 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('Route Protection & Authorization Seam', () => {
-  const mockTenantId = 'tenant-test-123'
   const mockCategoryId = 'cat-test-123'
   const mockProductId = 'prod-test-123'
 
@@ -63,29 +62,29 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('rejects updateTenantSettingsAction with Unauthorized error', async () => {
-        const result = await updateTenantSettingsAction(mockTenantId, { address: 'Jl. Test' })
+        const result = await updateTenantSettingsAction({ address: 'Jl. Test' })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects createProductCategoryAction with Unauthorized error', async () => {
-        const result = await createProductCategoryAction(mockTenantId, { name: 'Kategori Test' })
+        const result = await createProductCategoryAction({ name: 'Kategori Test' })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects updateProductCategoryAction with Unauthorized error', async () => {
-        const result = await updateProductCategoryAction(mockTenantId, mockCategoryId, {
+        const result = await updateProductCategoryAction(mockCategoryId, {
           name: 'Kategori Baru',
         })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects deleteProductCategoryAction with Unauthorized error', async () => {
-        const result = await deleteProductCategoryAction(mockTenantId, mockCategoryId)
+        const result = await deleteProductCategoryAction(mockCategoryId)
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects createProductAction with Unauthorized error', async () => {
-        const result = await createProductAction(mockTenantId, {
+        const result = await createProductAction({
           name: 'Produk Test',
           basePrice: 10000,
         })
@@ -93,14 +92,14 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('rejects updateProductAction with Unauthorized error', async () => {
-        const result = await updateProductAction(mockTenantId, mockProductId, {
+        const result = await updateProductAction(mockProductId, {
           name: 'Produk Edit',
         })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects deleteProductAction with Unauthorized error', async () => {
-        const result = await deleteProductAction(mockTenantId, mockProductId)
+        const result = await deleteProductAction(mockProductId)
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
     })
@@ -118,29 +117,29 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('rejects updateTenantSettingsAction when user id is empty', async () => {
-        const result = await updateTenantSettingsAction(mockTenantId, { address: 'Jl. Test' })
+        const result = await updateTenantSettingsAction({ address: 'Jl. Test' })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects createProductCategoryAction when user id is empty', async () => {
-        const result = await createProductCategoryAction(mockTenantId, { name: 'Kategori Test' })
+        const result = await createProductCategoryAction({ name: 'Kategori Test' })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects updateProductCategoryAction when user id is empty', async () => {
-        const result = await updateProductCategoryAction(mockTenantId, mockCategoryId, {
+        const result = await updateProductCategoryAction(mockCategoryId, {
           name: 'Kategori Baru',
         })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects deleteProductCategoryAction when user id is empty', async () => {
-        const result = await deleteProductCategoryAction(mockTenantId, mockCategoryId)
+        const result = await deleteProductCategoryAction(mockCategoryId)
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects createProductAction when user id is empty', async () => {
-        const result = await createProductAction(mockTenantId, {
+        const result = await createProductAction({
           name: 'Produk Test',
           basePrice: 10000,
         })
@@ -148,14 +147,14 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('rejects updateProductAction when user id is empty', async () => {
-        const result = await updateProductAction(mockTenantId, mockProductId, {
+        const result = await updateProductAction(mockProductId, {
           name: 'Produk Edit',
         })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
 
       it('rejects deleteProductAction when user id is empty', async () => {
-        const result = await deleteProductAction(mockTenantId, mockProductId)
+        const result = await deleteProductAction(mockProductId)
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
     })
@@ -172,7 +171,7 @@ describe('Route Protection & Authorization Seam', () => {
       })
 
       it('rejects updateTenantSettingsAction when user id is empty', async () => {
-        const result = await updateTenantSettingsAction(mockTenantId, {
+        const result = await updateTenantSettingsAction({
           name: 'Toko Baru',
         })
         expect(result).toEqual({ error: 'Unauthorized', success: false })

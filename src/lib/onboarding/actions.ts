@@ -107,7 +107,7 @@ export async function createStoreOnboardingAction(
           packageTier: 'free',
           phone,
           slug: normalizedSlug,
-          status: 'draft',
+          status: 'published',
         })
         .returning()
 
@@ -189,9 +189,9 @@ export async function createStoreOnboardingAction(
       },
     }
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Gagal membuat toko'
+    console.error('Failed to create store onboarding:', err)
     return {
-      error: message,
+      error: 'Gagal membuat toko. Silakan coba beberapa saat lagi.',
       success: false,
     }
   }

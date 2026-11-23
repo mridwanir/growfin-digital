@@ -85,7 +85,7 @@ export interface ProductsClientProps {
 export function ProductsClient({
   initialCategories,
   initialProducts,
-  tenantId,
+  tenantId: _tenantId,
   tenantSlug: _tenantSlug,
 }: ProductsClientProps) {
   const [categories, setCategories] = useState<CategoryItem[]>(initialCategories)
@@ -119,7 +119,7 @@ export function ProductsClient({
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
-        const res = await updateProductCategoryAction(tenantId, catId, {
+        const res = await updateProductCategoryAction(catId, {
           name: editingCategoryName.trim(),
         })
         if (!res.success) {
@@ -185,7 +185,7 @@ export function ProductsClient({
     setActiveCategoryId(null)
     startCategoryTransition(async () => {
       try {
-        const res = await createProductCategoryAction(tenantId, {
+        const res = await createProductCategoryAction({
           name: newCategoryName.trim(),
           sortOrder: categories.length,
         })
@@ -219,7 +219,7 @@ export function ProductsClient({
     setActiveCategoryId(catId)
     startCategoryTransition(async () => {
       try {
-        const res = await deleteProductCategoryAction(tenantId, catId)
+        const res = await deleteProductCategoryAction(catId)
 
         if (!res.success) {
           setFeedback({
@@ -406,7 +406,7 @@ export function ProductsClient({
       setProductFieldErrors({})
       startProductTransition(async () => {
         try {
-          const res = await updateProductAction(tenantId, editingProductId, payload)
+          const res = await updateProductAction(editingProductId, payload)
           if (!res.success) {
             if (res.fieldErrors) {
               setProductFieldErrors(res.fieldErrors)
@@ -440,7 +440,7 @@ export function ProductsClient({
     setProductFieldErrors({})
     startProductTransition(async () => {
       try {
-        const res = await createProductAction(tenantId, payload)
+        const res = await createProductAction(payload)
         if (!res.success) {
           if (res.fieldErrors) {
             setProductFieldErrors(res.fieldErrors)
@@ -474,7 +474,7 @@ export function ProductsClient({
     setDeletingProductId(prodId)
     startProductTransition(async () => {
       try {
-        const res = await deleteProductAction(tenantId, prodId)
+        const res = await deleteProductAction(prodId)
         if (!res.success) {
           setFeedback({
             type: 'error',

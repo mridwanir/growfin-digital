@@ -83,6 +83,35 @@ async function requireMerchantSession(): Promise<AuthCheckResult> {
     userId: session.user.id,
   }
 }
+
+interface AuthenticatedMerchant {
+  tenantId: string
+  user: AuthenticatedUser
+  userId: string
+}
+
+async function resolveActiveStore(): Promise<
+  { data: AuthenticatedMerchant; success: true } | { error: string; success: false }
+> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return authResult
+  }
+
+  const tenantId = authResult.activeOrganizationId
+  if (!tenantId) {
+    return { error: 'No active store found', success: false }
+  }
+
+  return {
+    success: true,
+    data: {
+      tenantId,
+      user: authResult.user,
+      userId: authResult.userId,
+    },
+  }
+}
 function validateInput<T>(
   schema: z.ZodType<T>,
   input: unknown,
@@ -191,76 +220,41 @@ const updateProductSchema = z.object({
 })
 
 export async function updateTenantSettingsAction(
-  tenantIdOrInput: string | unknown,
-  maybeInput?: unknown,
+  input: unknown,
 ): Promise<ActionResult<TenantSettings>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let rawInput: unknown
-
-  if (typeof tenantIdOrInput === 'string') {
-    tenantId = tenantIdOrInput
-    rawInput = maybeInput
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    rawInput = tenantIdOrInput
-  }
-
-  const validation = validateInput(updateSettingsSchema, rawInput)
+  const validation = validateInput(updateSettingsSchema, input)
   if (!validation.success) {
     return validation
   }
 
-  const updated = await updateTenantSettings(tenantId, authResult.userId, validation.data)
+  const updated = await updateTenantSettings(auth.data.tenantId, auth.data.userId, validation.data)
   if (!updated) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
   revalidatePath('/dashboard')
   revalidatePath('/dashboard/settings')
-  if (updated.slug) {
-    revalidatePath(`/dashboard/${updated.slug}/settings`)
-  }
 
   return { data: updated, success: true }
 }
 
-export async function createProductCategoryAction(
-  tenantIdOrInput: string | unknown,
-  maybeInput?: unknown,
-): Promise<ActionResult<Category>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+export async function createProductCategoryAction(input: unknown): Promise<ActionResult<Category>> {
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let rawInput: unknown
-
-  if (typeof tenantIdOrInput === 'string') {
-    tenantId = tenantIdOrInput
-    rawInput = maybeInput
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    rawInput = tenantIdOrInput
-  }
-
-  const validation = validateInput(createProductCategorySchema, rawInput)
+  const validation = validateInput(createProductCategorySchema, input)
   if (!validation.success) {
     return validation
   }
 
-  const created = await createCategory(tenantId, authResult.userId, validation.data)
+  const created = await createCategory(auth.data.tenantId, auth.data.userId, validation.data)
   if (!created) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
@@ -272,38 +266,25 @@ export async function createProductCategoryAction(
 }
 
 export async function updateProductCategoryAction(
-  tenantIdOrCategoryId: string,
-  categoryIdOrInput: string | unknown,
-  maybeInput?: unknown,
+  categoryId: string,
+  input: unknown,
 ): Promise<ActionResult<Category>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let categoryId: string
-  let rawInput: unknown
-
-  if (maybeInput !== undefined) {
-    tenantId = tenantIdOrCategoryId
-    categoryId = categoryIdOrInput as string
-    rawInput = maybeInput
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    categoryId = tenantIdOrCategoryId
-    rawInput = categoryIdOrInput
-  }
-
-  const validation = validateInput(updateProductCategorySchema, rawInput)
+  const validation = validateInput(updateProductCategorySchema, input)
   if (!validation.success) {
     return validation
   }
 
-  const updated = await updateCategory(tenantId, authResult.userId, categoryId, validation.data)
+  const updated = await updateCategory(
+    auth.data.tenantId,
+    auth.data.userId,
+    categoryId,
+    validation.data,
+  )
   if (!updated) {
     return { error: 'Category or tenant not found', success: false }
   }
@@ -315,29 +296,14 @@ export async function updateProductCategoryAction(
 }
 
 export async function deleteProductCategoryAction(
-  tenantIdOrCategoryId: string,
-  maybeCategoryId?: string,
+  categoryId: string,
 ): Promise<ActionResult<{ success: true }>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let categoryId: string
-
-  if (maybeCategoryId !== undefined) {
-    tenantId = tenantIdOrCategoryId
-    categoryId = maybeCategoryId
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    categoryId = tenantIdOrCategoryId
-  }
-
-  const deleted = await deleteCategory(tenantId, authResult.userId, categoryId)
+  const deleted = await deleteCategory(auth.data.tenantId, auth.data.userId, categoryId)
   if (!deleted) {
     return { error: 'Category or tenant not found', success: false }
   }
@@ -349,34 +315,19 @@ export async function deleteProductCategoryAction(
 }
 
 export async function createProductAction(
-  tenantIdOrInput: string | unknown,
-  maybeInput?: unknown,
+  input: unknown,
 ): Promise<ActionResult<ProductWithVariants>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let rawInput: unknown
-
-  if (typeof tenantIdOrInput === 'string') {
-    tenantId = tenantIdOrInput
-    rawInput = maybeInput
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    rawInput = tenantIdOrInput
-  }
-
-  const validation = validateInput(createProductSchema, rawInput)
+  const validation = validateInput(createProductSchema, input)
   if (!validation.success) {
     return validation
   }
 
-  const created = await createProduct(tenantId, authResult.userId, validation.data)
+  const created = await createProduct(auth.data.tenantId, auth.data.userId, validation.data)
   if (!created) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
@@ -388,29 +339,14 @@ export async function createProductAction(
 }
 
 export async function deleteProductAction(
-  tenantIdOrProductId: string,
-  maybeProductId?: string,
+  productId: string,
 ): Promise<ActionResult<{ success: true }>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let productId: string
-
-  if (maybeProductId !== undefined) {
-    tenantId = tenantIdOrProductId
-    productId = maybeProductId
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    productId = tenantIdOrProductId
-  }
-
-  const deleted = await deleteProduct(tenantId, authResult.userId, productId)
+  const deleted = await deleteProduct(auth.data.tenantId, auth.data.userId, productId)
   if (!deleted) {
     return { error: 'Product or tenant not found', success: false }
   }
@@ -422,38 +358,25 @@ export async function deleteProductAction(
 }
 
 export async function updateProductAction(
-  tenantIdOrProductId: string,
-  productIdOrInput: string | unknown,
-  maybeInput?: unknown,
+  productId: string,
+  input: unknown,
 ): Promise<ActionResult<ProductWithVariants>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let productId: string
-  let rawInput: unknown
-
-  if (maybeInput !== undefined) {
-    tenantId = tenantIdOrProductId
-    productId = productIdOrInput as string
-    rawInput = maybeInput
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    productId = tenantIdOrProductId
-    rawInput = productIdOrInput
-  }
-
-  const validation = validateInput(updateProductSchema, rawInput)
+  const validation = validateInput(updateProductSchema, input)
   if (!validation.success) {
     return validation
   }
 
-  const updated = await updateProduct(tenantId, authResult.userId, productId, validation.data)
+  const updated = await updateProduct(
+    auth.data.tenantId,
+    auth.data.userId,
+    productId,
+    validation.data,
+  )
   if (!updated) {
     return { error: 'Product or tenant not found', success: false }
   }
@@ -499,29 +422,14 @@ const saveDraftSchema = z.object({
 })
 
 export async function saveStorefrontDraftAction(
-  tenantIdOrInput?: string | unknown,
-  maybeInput?: unknown,
+  input?: unknown,
 ): Promise<ActionResult<StorefrontConfig>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  let tenantId: string
-  let rawInput: unknown
-
-  if (typeof tenantIdOrInput === 'string') {
-    tenantId = tenantIdOrInput
-    rawInput = maybeInput
-  } else {
-    if (!authResult.activeOrganizationId) {
-      return { error: 'No active store found', success: false }
-    }
-    tenantId = authResult.activeOrganizationId
-    rawInput = tenantIdOrInput
-  }
-
-  const validation = validateInput(saveDraftSchema, rawInput)
+  const validation = validateInput(saveDraftSchema, input ?? {})
   if (!validation.success) {
     return validation
   }
@@ -530,7 +438,7 @@ export async function saveStorefrontDraftAction(
     .select({ id: organization.id, slug: organization.slug })
     .from(organization)
     .innerJoin(member, eq(member.organizationId, organization.id))
-    .where(and(eq(organization.id, tenantId), eq(member.userId, authResult.userId)))
+    .where(and(eq(organization.id, auth.data.tenantId), eq(member.userId, auth.data.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -541,7 +449,10 @@ export async function saveStorefrontDraftAction(
     .select()
     .from(storefrontConfigs)
     .where(
-      and(eq(storefrontConfigs.organizationId, tenantId), eq(storefrontConfigs.status, 'draft')),
+      and(
+        eq(storefrontConfigs.organizationId, auth.data.tenantId),
+        eq(storefrontConfigs.status, 'draft'),
+      ),
     )
     .limit(1)
 
@@ -571,7 +482,7 @@ export async function saveStorefrontDraftAction(
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.organizationId, tenantId),
+          eq(storefrontConfigs.organizationId, auth.data.tenantId),
           eq(storefrontConfigs.status, 'published'),
         ),
       )
@@ -584,7 +495,7 @@ export async function saveStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
-        organizationId: tenantId,
+        organizationId: auth.data.tenantId,
         sections: initialSections,
         status: 'draft',
         theme: initialTheme,
@@ -596,31 +507,21 @@ export async function saveStorefrontDraftAction(
 
   revalidatePath('/dashboard')
   revalidatePath('/dashboard/editor')
-  if (tenant.slug) {
-    revalidatePath(`/dashboard/${tenant.slug}/editor`)
-  }
 
   return { data: draftRecord, success: true }
 }
 
-export async function publishStorefrontDraftAction(
-  maybeTenantId?: string,
-): Promise<ActionResult<StorefrontConfig>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
-  }
-
-  const tenantId = maybeTenantId || authResult.activeOrganizationId
-  if (!tenantId) {
-    return { error: 'No active store found', success: false }
+export async function publishStorefrontDraftAction(): Promise<ActionResult<StorefrontConfig>> {
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const [tenant] = await db
     .select({ id: organization.id, slug: organization.slug })
     .from(organization)
     .innerJoin(member, eq(member.organizationId, organization.id))
-    .where(and(eq(organization.id, tenantId), eq(member.userId, authResult.userId)))
+    .where(and(eq(organization.id, auth.data.tenantId), eq(member.userId, auth.data.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -632,7 +533,10 @@ export async function publishStorefrontDraftAction(
       .select()
       .from(storefrontConfigs)
       .where(
-        and(eq(storefrontConfigs.organizationId, tenantId), eq(storefrontConfigs.status, 'draft')),
+        and(
+          eq(storefrontConfigs.organizationId, auth.data.tenantId),
+          eq(storefrontConfigs.status, 'draft'),
+        ),
       )
       .limit(1)
 
@@ -647,7 +551,7 @@ export async function publishStorefrontDraftAction(
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.organizationId, tenantId),
+          eq(storefrontConfigs.organizationId, auth.data.tenantId),
           eq(storefrontConfigs.status, 'published'),
         ),
       )
@@ -670,7 +574,7 @@ export async function publishStorefrontDraftAction(
       const [inserted] = await tx
         .insert(storefrontConfigs)
         .values({
-          organizationId: tenantId,
+          organizationId: auth.data.tenantId,
           sections: draft.sections,
           status: 'published',
           theme: draft.theme,
@@ -680,7 +584,10 @@ export async function publishStorefrontDraftAction(
       published = inserted
     }
 
-    await tx.update(organization).set({ updatedAt: now }).where(eq(organization.id, tenantId))
+    await tx
+      .update(organization)
+      .set({ updatedAt: now })
+      .where(eq(organization.id, auth.data.tenantId))
 
     return published
   })
@@ -694,29 +601,21 @@ export async function publishStorefrontDraftAction(
   revalidatePath('/site/[slug]')
   if (tenant.slug) {
     revalidatePath(`/site/${tenant.slug}`)
-    revalidatePath(`/dashboard/${tenant.slug}`)
   }
   return { data: publishedRecord, success: true }
 }
 
-export async function discardStorefrontDraftAction(
-  maybeTenantId?: string,
-): Promise<ActionResult<StorefrontConfig>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
-  }
-
-  const tenantId = maybeTenantId || authResult.activeOrganizationId
-  if (!tenantId) {
-    return { error: 'No active store found', success: false }
+export async function discardStorefrontDraftAction(): Promise<ActionResult<StorefrontConfig>> {
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const [tenant] = await db
     .select({ id: organization.id, slug: organization.slug })
     .from(organization)
     .innerJoin(member, eq(member.organizationId, organization.id))
-    .where(and(eq(organization.id, tenantId), eq(member.userId, authResult.userId)))
+    .where(and(eq(organization.id, auth.data.tenantId), eq(member.userId, auth.data.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -728,7 +627,7 @@ export async function discardStorefrontDraftAction(
     .from(storefrontConfigs)
     .where(
       and(
-        eq(storefrontConfigs.organizationId, tenantId),
+        eq(storefrontConfigs.organizationId, auth.data.tenantId),
         eq(storefrontConfigs.status, 'published'),
       ),
     )
@@ -742,7 +641,10 @@ export async function discardStorefrontDraftAction(
     .select()
     .from(storefrontConfigs)
     .where(
-      and(eq(storefrontConfigs.organizationId, tenantId), eq(storefrontConfigs.status, 'draft')),
+      and(
+        eq(storefrontConfigs.organizationId, auth.data.tenantId),
+        eq(storefrontConfigs.status, 'draft'),
+      ),
     )
     .limit(1)
 
@@ -764,7 +666,7 @@ export async function discardStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
-        organizationId: tenantId,
+        organizationId: auth.data.tenantId,
         sections: published.sections,
         status: 'draft',
         theme: published.theme,
@@ -776,9 +678,6 @@ export async function discardStorefrontDraftAction(
 
   revalidatePath('/dashboard')
   revalidatePath('/dashboard/editor')
-  if (tenant.slug) {
-    revalidatePath(`/dashboard/${tenant.slug}/editor`)
-  }
   return { data: draftRecord, success: true }
 }
 

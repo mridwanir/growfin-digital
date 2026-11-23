@@ -129,7 +129,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         },
       ]
 
-      const saveResult = await saveStorefrontDraftAction(tenantA.tenantId, {
+      const saveResult = await saveStorefrontDraftAction({
         sections: modifiedSections,
         theme: modifiedTheme,
       })
@@ -179,7 +179,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       expect(publicData?.config.sections).toEqual(baselineSections)
 
       // Verify editor revalidation was called
-      expect(revalidatePath).toHaveBeenCalledWith(`/dashboard/${tenantA.slug}/editor`)
+      expect(revalidatePath).toHaveBeenCalledWith('/dashboard/editor')
     })
 
     it('preserves existing draft sections when only updating draft theme', async () => {
@@ -201,7 +201,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         themeColor: '#10b981',
       }
 
-      const result = await saveStorefrontDraftAction(tenantA.tenantId, { theme: newTheme })
+      const result = await saveStorefrontDraftAction({ theme: newTheme })
       expect(result).toMatchObject({
         success: true,
         data: {
@@ -226,7 +226,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         ],
       }
 
-      const result = await saveStorefrontDraftAction(tenantA.tenantId, invalidInput)
+      const result = await saveStorefrontDraftAction(invalidInput)
       expect(result).toMatchObject({
         error: expect.any(String),
         fieldErrors: expect.any(Object),
@@ -267,7 +267,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         layoutId: 'warm-editorial',
         themeColor: '#abcdef',
       }
-      const saveRes = await saveStorefrontDraftAction(tenantA.tenantId, { theme: themeOnly })
+      const saveRes = await saveStorefrontDraftAction({ theme: themeOnly })
       expect(saveRes).toMatchObject({
         success: true,
         data: {
@@ -307,7 +307,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         )
       expect(draftBefore).toBeDefined()
 
-      const publishResult = await publishStorefrontDraftAction(tenantA.tenantId)
+      const publishResult = await publishStorefrontDraftAction()
 
       expect(publishResult).toMatchObject({
         success: true,
@@ -365,7 +365,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         )
       await db.delete(storefrontConfigs).where(eq(storefrontConfigs.id, draft.id))
 
-      const result = await publishStorefrontDraftAction(tenantA.tenantId)
+      const result = await publishStorefrontDraftAction()
       expect(result).toEqual({
         error: 'Draft configuration not found',
         success: false,
@@ -402,7 +402,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         },
       ]
 
-      const saveResult = await saveStorefrontDraftAction(tenantA.tenantId, {
+      const saveResult = await saveStorefrontDraftAction({
         sections: experimentalSections,
         theme: experimentalTheme,
       })
@@ -420,7 +420,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         )
 
       // 3. Execute discard action
-      const discardResult = await discardStorefrontDraftAction(tenantA.tenantId)
+      const discardResult = await discardStorefrontDraftAction()
       expect(discardResult).toMatchObject({
         success: true,
         data: {
@@ -450,7 +450,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       expect(publicData?.config.sections).toEqual(publishedBaseline.sections)
 
       // Verify editor revalidation was called
-      expect(revalidatePath).toHaveBeenCalledWith(`/dashboard/${tenantA.slug}/editor`)
+      expect(revalidatePath).toHaveBeenCalledWith('/dashboard/editor')
     })
 
     it('creates draft configuration from published record if draft config was absent before discard', async () => {
@@ -476,7 +476,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
           ),
         )
 
-      const discardResult = await discardStorefrontDraftAction(tenantA.tenantId)
+      const discardResult = await discardStorefrontDraftAction()
       expect(discardResult).toMatchObject({
         success: true,
         data: {
@@ -514,7 +514,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         )
       await db.delete(storefrontConfigs).where(eq(storefrontConfigs.id, published.id))
 
-      const discardRes = await discardStorefrontDraftAction(tenantA.tenantId)
+      const discardRes = await discardStorefrontDraftAction()
       expect(discardRes).toEqual({
         error: 'No published configuration found to discard to',
         success: false,
@@ -535,7 +535,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
     it('rejects unauthenticated requests across all draft lifecycle actions', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValue(createUnauthenticatedSession())
 
-      const saveRes = await saveStorefrontDraftAction(tenantA.tenantId, {
+      const saveRes = await saveStorefrontDraftAction({
         theme: { themeColor: '#000000' },
       })
       expect(saveRes).toEqual({
@@ -543,13 +543,13 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         success: false,
       })
 
-      const publishRes = await publishStorefrontDraftAction(tenantA.tenantId)
+      const publishRes = await publishStorefrontDraftAction()
       expect(publishRes).toEqual({
         error: 'Unauthorized',
         success: false,
       })
 
-      const discardRes = await discardStorefrontDraftAction(tenantA.tenantId)
+      const discardRes = await discardStorefrontDraftAction()
       expect(discardRes).toEqual({
         error: 'Unauthorized',
         success: false,
@@ -561,7 +561,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
     it('rejects unauthenticated requests when session user id is missing', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
-      const result = await saveStorefrontDraftAction(tenantA.tenantId, {
+      const result = await saveStorefrontDraftAction({
         theme: { themeColor: '#ff0000' },
       })
 
@@ -574,7 +574,9 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
 
     it('rejects cross-tenant draft mutations when merchant B attempts modifying merchant A tenant', async () => {
       // Authenticated as Merchant B
-      vi.spyOn(auth, 'getSession').mockResolvedValue(createMerchantSession({ userId: userBId }))
+      vi.spyOn(auth, 'getSession').mockResolvedValue(
+        createMerchantSession({ activeOrganizationId: tenantA.tenantId, userId: userBId }),
+      )
 
       // Capture merchant A draft and published configs before tampering attempt
       const [aDraftBefore] = await db
@@ -597,7 +599,7 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         )
 
       // 1. Merchant B attempts to save draft on Tenant A
-      const saveRes = await saveStorefrontDraftAction(tenantA.tenantId, {
+      const saveRes = await saveStorefrontDraftAction({
         theme: { themeColor: '#666666' },
       })
       expect(saveRes).toEqual({
@@ -606,14 +608,14 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
       })
 
       // 2. Merchant B attempts to publish Tenant A draft
-      const publishRes = await publishStorefrontDraftAction(tenantA.tenantId)
+      const publishRes = await publishStorefrontDraftAction()
       expect(publishRes).toEqual({
         error: 'Tenant not found or forbidden',
         success: false,
       })
 
       // 3. Merchant B attempts to discard Tenant A draft
-      const discardRes = await discardStorefrontDraftAction(tenantA.tenantId)
+      const discardRes = await discardStorefrontDraftAction()
       expect(discardRes).toEqual({
         error: 'Tenant not found or forbidden',
         success: false,
@@ -649,10 +651,12 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
     })
 
     it('rejects draft operations on non-existent tenants', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValue(createMerchantSession({ userId: userAId }))
       const nonExistentTenantId = crypto.randomUUID()
+      vi.spyOn(auth, 'getSession').mockResolvedValue(
+        createMerchantSession({ activeOrganizationId: nonExistentTenantId, userId: userAId }),
+      )
 
-      const saveRes = await saveStorefrontDraftAction(nonExistentTenantId, {
+      const saveRes = await saveStorefrontDraftAction({
         theme: { themeColor: '#123456' },
       })
       expect(saveRes).toEqual({
@@ -660,13 +664,13 @@ describe('storefront draft lifecycle integration suite (Ticket 05)', () => {
         success: false,
       })
 
-      const publishRes = await publishStorefrontDraftAction(nonExistentTenantId)
+      const publishRes = await publishStorefrontDraftAction()
       expect(publishRes).toEqual({
         error: 'Tenant not found or forbidden',
         success: false,
       })
 
-      const discardRes = await discardStorefrontDraftAction(nonExistentTenantId)
+      const discardRes = await discardStorefrontDraftAction()
       expect(discardRes).toEqual({
         error: 'Tenant not found or forbidden',
         success: false,

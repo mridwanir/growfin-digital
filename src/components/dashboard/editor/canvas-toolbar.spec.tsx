@@ -23,15 +23,15 @@ const mockTenant: Tenant = {
   customDomain: null,
   domainActiveUntil: null,
   googleMapsUrl: null,
+  logo: null,
+  metadata: null,
   operatingHours: {},
-  organizationId: null,
   packageTier: 'free',
   phone: '081234567890',
   siteActiveUntil: null,
   slug: 'kopi-artisan-senopati',
   status: 'draft',
   updatedAt: new Date(),
-  userId: null,
 }
 
 const mockSections: StorefrontSection[] = [

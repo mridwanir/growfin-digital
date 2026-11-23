@@ -89,6 +89,17 @@ describe('stateless subdomain & custom domain routing (edge seam)', () => {
       expect(rewrite).toBeNull()
     })
 
+    it('does not rewrite reserved paths like /onboarding to /site/onboarding', async () => {
+      const request = new NextRequest(`https://${baseDomain}/onboarding`, {
+        headers: { host: baseDomain },
+      })
+      const response = await proxy(request)
+
+      expect(response.status).toBe(200)
+      const rewrite = response.headers.get('x-middleware-rewrite')
+      expect(rewrite).toBeNull()
+    })
+
     it('does not rewrite public root homepage', async () => {
       const request = new NextRequest(`https://${baseDomain}/`, {
         headers: { host: baseDomain },

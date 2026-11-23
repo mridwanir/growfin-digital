@@ -168,7 +168,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       },
     ]
 
-    const saveResult = await saveStorefrontDraftAction(fixture.tenantId, {
+    const saveResult = await saveStorefrontDraftAction({
       sections: updatedSections,
       theme: updatedTheme,
     })
@@ -289,7 +289,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     expect(draftBeforePublish).toBeDefined()
 
     // Execute publish action
-    const publishResult = await publishStorefrontDraftAction(fixture.tenantId)
+    const publishResult = await publishStorefrontDraftAction()
 
     expect(publishResult).toMatchObject({
       success: true,
@@ -355,19 +355,21 @@ describe('Storefront Editor draft save and transactional publish integration sui
     // 1. Unauthenticated saveStorefrontDraftAction
     vi.spyOn(auth, 'getSession').mockResolvedValue(createUnauthenticatedSession())
 
-    const unauthSave = await saveStorefrontDraftAction(fixture.tenantId, {
+    const unauthSave = await saveStorefrontDraftAction({
       theme: { layoutId: 'intruder-layout' },
     })
     expect(unauthSave).toEqual({ error: 'Unauthorized', success: false })
 
     // 2. Unauthenticated publishStorefrontDraftAction
-    const unauthPublish = await publishStorefrontDraftAction(fixture.tenantId)
+    const unauthPublish = await publishStorefrontDraftAction()
     expect(unauthPublish).toEqual({ error: 'Unauthorized', success: false })
 
     // 3. Cross-tenant merchant attempting to save draft
-    vi.spyOn(auth, 'getSession').mockResolvedValue(createMerchantSession({ userId: otherUserId }))
+    vi.spyOn(auth, 'getSession').mockResolvedValue(
+      createMerchantSession({ activeOrganizationId: fixture.tenantId, userId: otherUserId }),
+    )
 
-    const forbiddenSave = await saveStorefrontDraftAction(fixture.tenantId, {
+    const forbiddenSave = await saveStorefrontDraftAction({
       theme: { layoutId: 'intruder-layout' },
     })
     expect(forbiddenSave).toEqual({
@@ -376,7 +378,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     })
 
     // 4. Cross-tenant merchant attempting to publish draft
-    const forbiddenPublish = await publishStorefrontDraftAction(fixture.tenantId)
+    const forbiddenPublish = await publishStorefrontDraftAction()
     expect(forbiddenPublish).toEqual({
       error: 'Tenant not found or forbidden',
       success: false,

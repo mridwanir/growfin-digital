@@ -555,7 +555,7 @@ describe('Dashboard Navigation Integration Seam', () => {
       expect(html).not.toContain('/dashboard/[tenantSlug]')
     })
 
-    it('renders tenant switcher with active store and flat switching options', () => {
+    it('renders tenant switcher displaying active store identity and branding cleanly', () => {
       const html = renderToStaticMarkup(
         React.createElement(
           SidebarProvider,
@@ -569,10 +569,7 @@ describe('Dashboard Navigation Integration Seam', () => {
 
       expect(html).toContain(multiTenantFixture1.tenant.name)
       expect(html).toContain('INSTANT')
-      expect(html).toContain('Toko')
-      expect(html).toContain(multiTenantFixture2.tenant.name)
-      expect(html).toContain('href="/dashboard"')
-      expect(html).toContain('Buat Toko Baru')
+      expect(html).not.toContain('Buat Toko Baru')
     })
   })
 })

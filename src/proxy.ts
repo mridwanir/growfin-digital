@@ -7,13 +7,23 @@ import { env } from '@/lib/env'
 
 const authMiddleware = auth.middleware({
   loginUrl: '/login',
-  publicRoutes: ['/', '/login', '/api/generate', '/demo', '/site', '/preview'],
+  publicRoutes: [
+    '/',
+    '/login',
+    '/register',
+    '/onboarding',
+    '/api/generate',
+    '/demo',
+    '/site',
+    '/preview',
+  ],
 })
 
 const RESERVED_PATHS = [
   '/dashboard',
   '/login',
   '/register',
+  '/onboarding',
   '/demo',
   '/checkout',
   '/admin',

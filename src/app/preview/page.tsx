@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { createElement } from 'react'
 
-import { GrowfinWatermark } from '@/components/storefront'
+import { MeracikWatermark } from '@/components/storefront'
 import { StorefrontClientIslands } from '@/components/storefront/client-islands'
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { ThemePreviewBar } from '@/components/storefront/theme-preview-bar'
@@ -38,7 +38,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
           getStorefrontLayout(selectedTheme.id, selectedTheme.archetype),
           { categories, products, tenant },
           <StorefrontClientIslands tenant={tenant} />,
-          <GrowfinWatermark />,
+          <MeracikWatermark />,
         )}
       </div>
     </StorefrontCartProvider>

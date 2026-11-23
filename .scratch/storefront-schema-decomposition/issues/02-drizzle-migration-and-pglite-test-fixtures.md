@@ -4,8 +4,8 @@
 
 **Blocked by:** 01: Tenants and storefront_configs schema definitions.
 
-Status: claimed
+Status: completed
 
-- [ ] `pnpm run db:generate` produces valid SQL migration files for the schema update.
-- [ ] `tests/fixtures/tenant-fixture.ts` seeds baseline published and draft storefront configurations.
-- [ ] In-memory PGlite test environment boots and applies migrations cleanly without errors.
+- [x] `pnpm run db:generate` produces valid SQL migration files for the schema update.
+- [x] `tests/fixtures/tenant-fixture.ts` seeds baseline published and draft storefront configurations.
+- [x] In-memory PGlite test environment boots and applies migrations cleanly without errors.

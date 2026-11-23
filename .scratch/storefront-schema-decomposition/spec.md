@@ -82,6 +82,16 @@ The storefront loader in `src/lib/storefront/loader.ts` queries `storefront_conf
 - Implementing the preview iframe route.
 - Altering the catalog products or categories tables.
 
+## Required Skills
+
+The implementing agent must consult and follow these skills:
+
+- `drizzle`: Drizzle schema declarations, relations, drizzle-kit migrations, relational queries.
+- `codebase-design`: Clean module boundaries, Server Action interfaces (`ActionResult<T>`).
+- `domain-modeling`: Ubiquitous language, Tenant vs StorefrontConfig entities.
+- `tdd`: Test-driven implementation of draft actions and loaders.
+- `vitest`: In-memory PGlite database integration test suites.
+
 ## Further Notes
 
 All schema changes adhere to ADR 0006 and project coding standards.

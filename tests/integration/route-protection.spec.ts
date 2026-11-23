@@ -11,6 +11,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { POST as storageDeleteRoute } from '@/app/api/storage/delete/route'
 import { POST as storageUploadRoute } from '@/app/api/storage/upload/route'
 import TenantDashboardLayout from '@/app/dashboard/[tenantSlug]/layout'
+import DashboardPage from '@/app/dashboard/page'
 import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
 import { auth } from '@/lib/auth/server'
@@ -400,6 +401,135 @@ describe('Route Protection & Authorization Seam', () => {
       const html = renderToStaticMarkup(element)
       expect(html).toContain('Welcome Merchant Store')
       expect(html).toContain('id="dashboard-child"')
+    })
+  })
+
+  describe('root dashboard route overview and redirect seam', () => {
+    const singleTenantUserId = crypto.randomUUID()
+    const multiTenantUserId = crypto.randomUUID()
+    const zeroTenantUserId = crypto.randomUUID()
+    let singleTenantFixture: TestTenantFixture
+    let multiTenantFixtureA: TestTenantFixture
+    let multiTenantFixtureB: TestTenantFixture
+
+    beforeAll(async () => {
+      const now = Date.now()
+      await db.insert(userInNeonAuth).values([
+        {
+          id: singleTenantUserId,
+          name: 'Single Store Merchant',
+          email: `single-merchant-${now}@example.com`,
+          emailVerified: true,
+        },
+        {
+          id: multiTenantUserId,
+          name: 'Multi Store Merchant',
+          email: `multi-merchant-${now}@example.com`,
+          emailVerified: true,
+        },
+        {
+          id: zeroTenantUserId,
+          name: 'Zero Store Merchant',
+          email: `zero-merchant-${now}@example.com`,
+          emailVerified: true,
+        },
+      ])
+
+      singleTenantFixture = await createTestTenant({
+        slug: `single-store-${now}`,
+        userId: singleTenantUserId,
+      })
+
+      multiTenantFixtureA = await createTestTenant({
+        slug: `multi-store-a-${now}`,
+        userId: multiTenantUserId,
+      })
+
+      multiTenantFixtureB = await createTestTenant({
+        slug: `multi-store-b-${now}`,
+        userId: multiTenantUserId,
+      })
+    })
+
+    afterAll(async () => {
+      await singleTenantFixture?.cleanup()
+      await multiTenantFixtureA?.cleanup()
+      await multiTenantFixtureB?.cleanup()
+      await db
+        .delete(userInNeonAuth)
+        .where(
+          inArray(userInNeonAuth.id, [singleTenantUserId, multiTenantUserId, zeroTenantUserId]),
+        )
+    })
+
+    it('redirects unauthenticated caller to /login', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
+
+      await expect(DashboardPage()).rejects.toThrow('NEXT_REDIRECT:/login')
+      expect(redirect).toHaveBeenCalledWith('/login')
+    })
+
+    it('redirects caller with missing session user id to /login', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+        createMerchantSession({
+          userId: '',
+        }),
+      )
+
+      await expect(DashboardPage()).rejects.toThrow('NEXT_REDIRECT:/login')
+      expect(redirect).toHaveBeenCalledWith('/login')
+    })
+
+    it('redirects single-tenant merchant navigating to /dashboard to /dashboard/[tenantSlug]', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+        createMerchantSession({
+          userId: singleTenantUserId,
+        }),
+      )
+
+      await expect(DashboardPage()).rejects.toThrow(
+        `NEXT_REDIRECT:/dashboard/${singleTenantFixture.slug}`,
+      )
+      expect(redirect).toHaveBeenCalledWith(`/dashboard/${singleTenantFixture.slug}`)
+    })
+
+    it('renders store selection matrix without redirecting for multi-tenant merchant', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+        createMerchantSession({
+          userId: multiTenantUserId,
+        }),
+      )
+
+      const element = await DashboardPage()
+      expect(element).toBeDefined()
+      expect(redirect).not.toHaveBeenCalled()
+
+      const html = renderToStaticMarkup(element)
+      expect(html).toContain(multiTenantFixtureA.slug)
+      expect(html).toContain(multiTenantFixtureB.slug)
+      expect(html).toContain(`/dashboard/${multiTenantFixtureA.slug}`)
+      expect(html).toContain(`/dashboard/${multiTenantFixtureA.slug}/products`)
+      expect(html).toContain(`/dashboard/${multiTenantFixtureA.slug}/settings`)
+      expect(html).toContain(`/dashboard/${multiTenantFixtureB.slug}`)
+      expect(html).toContain(`/dashboard/${multiTenantFixtureB.slug}/products`)
+      expect(html).toContain(`/dashboard/${multiTenantFixtureB.slug}/settings`)
+    })
+
+    it('renders empty state card without redirecting for zero-tenant merchant', async () => {
+      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+        createMerchantSession({
+          userId: zeroTenantUserId,
+        }),
+      )
+
+      const element = await DashboardPage()
+      expect(element).toBeDefined()
+      expect(redirect).not.toHaveBeenCalled()
+
+      const html = renderToStaticMarkup(element)
+      expect(html).toContain('Belum Ada Website')
+      expect(html).toContain('Mulai Buat Website')
+      expect(html).toContain('href="/"')
     })
   })
 })

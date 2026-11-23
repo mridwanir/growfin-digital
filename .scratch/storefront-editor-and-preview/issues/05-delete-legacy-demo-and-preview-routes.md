@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Isolated storefront preview route, 04: Responsive viewport canvas toolbar.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Directory `src/app/demo/` is removed.
 - [ ] Old mock file `src/app/preview/page.tsx` is replaced by `src/app/preview/[tenantSlug]/page.tsx`.

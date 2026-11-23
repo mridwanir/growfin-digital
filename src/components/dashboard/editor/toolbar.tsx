@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from 'cn'
-import { Check, Loader2, Monitor, Smartphone, Tablet } from 'lucide-react'
+import { AlertCircle, Check, Loader2, Monitor, Smartphone, Tablet } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,16 @@ export interface StorefrontEditorToolbarProps {
 }
 
 export function StorefrontEditorToolbar({ className }: StorefrontEditorToolbarProps) {
-  const { activeViewport, isPending, saveStatus, setActiveViewport } = useStorefrontEditor()
+  const {
+    activeViewport,
+    isPending,
+    isPublishing,
+    publishDraft,
+    publishError,
+    publishNotification,
+    saveStatus,
+    setActiveViewport,
+  } = useStorefrontEditor()
 
   return (
     <header
@@ -63,36 +72,80 @@ export function StorefrontEditorToolbar({ className }: StorefrontEditorToolbarPr
       </div>
 
       <div className="flex items-center gap-3">
+        {publishNotification && (
+          <div
+            aria-live="polite"
+            className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400"
+            role="status"
+          >
+            <Check className="size-3.5 text-emerald-500" />
+            <span>{publishNotification}</span>
+          </div>
+        )}
+        {publishError && (
+          <div
+            className="text-destructive flex items-center gap-1.5 text-xs font-medium"
+            role="alert"
+          >
+            <AlertCircle className="size-3.5" />
+            <span>{publishError}</span>
+          </div>
+        )}
+
         {saveStatus === 'saving' && (
-          <Badge className="gap-1 text-xs font-normal" variant="secondary">
+          <Badge
+            className="gap-1 text-xs font-normal"
+            data-testid="save-status-saving"
+            variant="secondary"
+          >
             <Loader2 className="size-3 animate-spin" />
             <span>Saving...</span>
           </Badge>
         )}
         {saveStatus === 'saved' && (
-          <Badge className="text-muted-foreground gap-1 text-xs font-normal" variant="outline">
+          <Badge
+            className="text-muted-foreground gap-1 text-xs font-normal"
+            data-testid="save-status-saved"
+            variant="outline"
+          >
             <Check className="size-3 text-emerald-500" />
             <span>Saved</span>
           </Badge>
         )}
         {saveStatus === 'error' && (
-          <Badge className="gap-1 text-xs font-normal" variant="destructive">
+          <Badge
+            className="gap-1 text-xs font-normal"
+            data-testid="save-status-error"
+            variant="destructive"
+          >
+            <AlertCircle className="size-3" />
             <span>Save error</span>
           </Badge>
         )}
         {saveStatus === 'idle' && (
-          <Badge className="text-muted-foreground gap-1 text-xs font-normal" variant="outline">
+          <Badge
+            className="text-muted-foreground gap-1 text-xs font-normal"
+            data-testid="save-status-idle"
+            variant="outline"
+          >
             <span>Saved</span>
           </Badge>
         )}
-
         <Button
-          disabled={isPending || saveStatus === 'saving'}
+          disabled={isPending || isPublishing || saveStatus === 'saving'}
           size="sm"
           type="button"
           variant="default"
+          onClick={() => publishDraft()}
         >
-          Publish
+          {isPublishing ? (
+            <>
+              <Loader2 className="size-3.5 animate-spin" />
+              <span>Publishing...</span>
+            </>
+          ) : (
+            'Publish'
+          )}
         </Button>
       </div>
     </header>

@@ -17,6 +17,7 @@ import type {
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 
 import { MERACIK_PREVIEW_UPDATE } from '@/components/storefront/preview-protocol'
+import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
 
 import { StorefrontEditorContext } from './context'
 
@@ -52,9 +53,15 @@ export function StorefrontEditorRoot({
 
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('mobile')
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved')
-  const [isPending, _startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
+  const [isPublishing, startPublishTransition] = useTransition()
+  const [publishNotification, setPublishNotification] = useState<string | null>(null)
+  const [publishError, setPublishError] = useState<string | null>(null)
   const iframeRef = useRef<HTMLIFrameElement | null>(null)
   const isInitialMount = useRef(true)
+  const saveTimeoutRef = useRef<number | null>(null)
+  const draftRef = useRef(draft)
+  draftRef.current = draft
 
   const dispatchPreviewUpdate = useCallback(
     (payload?: MeracikPreviewUpdatePayload) => {
@@ -88,7 +95,34 @@ export function StorefrontEditorRoot({
 
     dispatchPreviewUpdate()
     onDraftChange?.(draft)
-  }, [draft, dispatchPreviewUpdate, onDraftChange])
+
+    clearTimeout(saveTimeoutRef.current ?? undefined)
+
+    saveTimeoutRef.current = window.setTimeout(() => {
+      saveTimeoutRef.current = null
+      setSaveStatus('saving')
+      startTransition(async () => {
+        try {
+          const res = await saveStorefrontDraftAction(tenant.id, {
+            sections: draft.sections,
+            theme: draft.theme,
+          })
+          if (res.success) {
+            setSaveStatus('saved')
+          } else {
+            setSaveStatus('error')
+          }
+        } catch {
+          setSaveStatus('error')
+        }
+      })
+    }, 800)
+
+    return () => {
+      clearTimeout(saveTimeoutRef.current ?? undefined)
+      saveTimeoutRef.current = null
+    }
+  }, [draft, dispatchPreviewUpdate, onDraftChange, tenant.id])
 
   const moveSection = useCallback((sectionId: string, direction: 'up' | 'down') => {
     setDraft(prev => {
@@ -188,6 +222,40 @@ export function StorefrontEditorRoot({
     }))
   }, [])
 
+  const publishDraft = useCallback(async () => {
+    setPublishNotification(null)
+    setPublishError(null)
+
+    startPublishTransition(async () => {
+      try {
+        if (saveTimeoutRef.current !== null) {
+          clearTimeout(saveTimeoutRef.current)
+          saveTimeoutRef.current = null
+          const saveRes = await saveStorefrontDraftAction(tenant.id, {
+            sections: draftRef.current.sections,
+            theme: draftRef.current.theme,
+          })
+          if (!saveRes.success) {
+            setSaveStatus('error')
+            setPublishError(saveRes.error || 'Failed to save draft before publishing')
+            return
+          }
+          setSaveStatus('saved')
+        }
+
+        const res = await publishStorefrontDraftAction(tenant.id)
+        if (res.success) {
+          setPublishNotification('Storefront published successfully')
+        } else {
+          setPublishError(res.error || 'Failed to publish storefront')
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Failed to publish storefront'
+        setPublishError(msg)
+      }
+    })
+  }, [tenant.id])
+
   const contextValue: StorefrontEditorContextValue = useMemo(
     () => ({
       activeViewport,
@@ -195,12 +263,17 @@ export function StorefrontEditorRoot({
       draft,
       iframeRef,
       isPending,
+      isPublishing,
       moveSection,
+      publishDraft,
+      publishError,
+      publishNotification,
       reorderSections,
       saveStatus,
       sections: draft.sections,
       selectedSectionId,
       setActiveViewport,
+      setPublishNotification,
       setSaveStatus,
       setSelectedSectionId,
       tenant,
@@ -214,7 +287,11 @@ export function StorefrontEditorRoot({
       dispatchPreviewUpdate,
       draft,
       isPending,
+      isPublishing,
       moveSection,
+      publishDraft,
+      publishError,
+      publishNotification,
       reorderSections,
       saveStatus,
       selectedSectionId,

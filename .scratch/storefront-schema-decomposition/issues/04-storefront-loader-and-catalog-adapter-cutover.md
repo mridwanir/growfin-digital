@@ -4,8 +4,8 @@
 
 **Blocked by:** 03: Storefront draft and publish Server Actions.
 
-Status: claimed
+Status: completed
 
-- [ ] Storefront data loader fetches the published storefront configuration for the resolved tenant.
-- [ ] Section components (Hero, Catalog, Reviews, Gallery, Hours, Footer) receive their typed content from `StorefrontSection[]`.
-- [ ] Public storefront routes render without references to legacy `theme_config` or `branding_content`.
+- [x] Storefront data loader fetches the published storefront configuration for the resolved tenant.
+- [x] Section components (Hero, Catalog, Reviews, Gallery, Hours, Footer) receive their typed content from `StorefrontSection[]`.
+- [x] Public storefront routes render without references to legacy `theme_config` or `branding_content`.

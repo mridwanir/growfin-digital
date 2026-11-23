@@ -1,10 +1,12 @@
-import type { BrandingContent, Tenant } from '@/db/schema/tenants'
+/* oxlint-disable next/no-img-element -- Dynamic storefront images require raw img elements for CDN URLs */
+import type { BrandingContent, GallerySectionContent, Tenant } from '@/db/schema/tenants'
 
 import { cn } from 'cn'
 import { Camera } from 'lucide-react'
 
 export interface GallerySectionProps {
   tenant: Tenant
+  content?: GallerySectionContent
   title?: string
   description?: string
   images?: string[]
@@ -25,9 +27,56 @@ interface LookbookItemData {
   imageUrl: string
   caption?: string
 }
+function resolveGalleryItems(
+  explicitImages?: string[],
+  contentImages?: Array<string | { caption?: string; imageUrl: string }>,
+  branding: BrandingContent = {},
+): LookbookItemData[] {
+  if (explicitImages && explicitImages.length > 0) {
+    return explicitImages.map(url => ({ imageUrl: url }))
+  }
+
+  if (contentImages && contentImages.length > 0) {
+    return contentImages.map(item => {
+      if (typeof item === 'string') return { imageUrl: item }
+      if (item && typeof item === 'object' && 'imageUrl' in item) {
+        return {
+          caption: typeof item.caption === 'string' ? item.caption : undefined,
+          imageUrl: String(item.imageUrl),
+        }
+      }
+      return { imageUrl: DEFAULT_GALLERY_IMAGES[0] }
+    })
+  }
+
+  const rawLookbook = branding['lookbook']
+  if (Array.isArray(rawLookbook) && rawLookbook.length > 0) {
+    return rawLookbook.map(item => {
+      if (typeof item === 'string') return { imageUrl: item }
+      if (item && typeof item === 'object' && 'imageUrl' in item) {
+        return {
+          caption: typeof item.caption === 'string' ? item.caption : undefined,
+          imageUrl: String(item.imageUrl),
+        }
+      }
+      return { imageUrl: DEFAULT_GALLERY_IMAGES[0] }
+    })
+  }
+
+  const rawGallery = branding['imageGallery'] || (branding['images'] as string[])
+  if (Array.isArray(rawGallery) && rawGallery.length > 0) {
+    return rawGallery.map(url => ({ imageUrl: String(url) }))
+  }
+
+  return DEFAULT_GALLERY_IMAGES.map((url, i) => ({
+    caption: `Dokumentasi suasana ${i + 1}`,
+    imageUrl: url,
+  }))
+}
 
 export function Gallery({
   tenant,
+  content,
   title,
   description,
   images: explicitImages,
@@ -36,42 +85,14 @@ export function Gallery({
 }: GallerySectionProps) {
   const branding = (tenant.brandingContent as BrandingContent) || {}
 
-  const sectionTitle = title || branding.galleryTitle || 'Galeri Foto'
+  const sectionTitle = title || content?.title || branding.galleryTitle || 'Galeri Foto'
   const sectionDescription =
     description ||
+    content?.description ||
     branding.galleryDescription ||
     'Suasana dan dokumentasi terbaik dari tempat kami.'
-
-  // Extract lookbook items from branding or defaults
-  let displayItems: LookbookItemData[] = []
-
-  if (explicitImages && explicitImages.length > 0) {
-    displayItems = explicitImages.map(url => ({ imageUrl: url }))
-  } else {
-    const rawLookbook = branding['lookbook']
-    if (Array.isArray(rawLookbook) && rawLookbook.length > 0) {
-      displayItems = rawLookbook.map(item => {
-        if (typeof item === 'string') return { imageUrl: item }
-        if (item && typeof item === 'object' && 'imageUrl' in item) {
-          return {
-            caption: typeof item.caption === 'string' ? item.caption : undefined,
-            imageUrl: String(item.imageUrl),
-          }
-        }
-        return { imageUrl: DEFAULT_GALLERY_IMAGES[0] }
-      })
-    } else {
-      const rawGallery = branding['imageGallery'] || (branding['images'] as string[])
-      if (Array.isArray(rawGallery) && rawGallery.length > 0) {
-        displayItems = rawGallery.map(url => ({ imageUrl: String(url) }))
-      } else {
-        displayItems = DEFAULT_GALLERY_IMAGES.map((url, i) => ({
-          caption: `Dokumentasi suasana ${i + 1}`,
-          imageUrl: url,
-        }))
-      }
-    }
-  }
+  const effectiveVariant = content?.variant || variant
+  const displayItems = resolveGalleryItems(explicitImages, content?.images, branding)
 
   return (
     <section
@@ -95,7 +116,7 @@ export function Gallery({
           )}
         </div>
 
-        {variant === 'masonry' ? (
+        {effectiveVariant === 'masonry' ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {displayItems.map((item, idx) => (
               <div
@@ -119,7 +140,7 @@ export function Gallery({
               </div>
             ))}
           </div>
-        ) : variant === 'compact' ? (
+        ) : effectiveVariant === 'compact' ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {displayItems.slice(0, 6).map((item, idx) => (
               <div

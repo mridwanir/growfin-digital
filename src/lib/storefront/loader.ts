@@ -1,16 +1,22 @@
 import type { ProductWithVariants } from '@/components/storefront/catalog'
 import type { Category } from '@/db/schema/catalog'
-import type { Tenant } from '@/db/schema/tenants'
+import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
 
-import { eq, inArray, or } from 'drizzle-orm'
+import { and, eq, inArray, or } from 'drizzle-orm'
+import crypto from 'node:crypto'
 import { cache } from 'react'
 
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
+import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import {
+  DEFAULT_STOREFRONT_SECTIONS,
+  DEFAULT_STOREFRONT_THEME,
+} from '@/lib/storefront/compatibility'
 
 export interface StorefrontData {
   categories: Category[]
+  config: StorefrontConfig
   products: ProductWithVariants[]
   tenant: Tenant
 }
@@ -32,7 +38,7 @@ export const getStorefrontDataBySlug = cache(
 
     if (!tenant) return null
 
-    const [tenantCategories, tenantProducts] = await Promise.all([
+    const [tenantCategories, tenantProducts, [publishedConfig]] = await Promise.all([
       db
         .select()
         .from(categories)
@@ -43,7 +49,23 @@ export const getStorefrontDataBySlug = cache(
         .from(products)
         .where(eq(products.tenantId, tenant.id))
         .orderBy(products.sortOrder),
+      db
+        .select()
+        .from(storefrontConfigs)
+        .where(
+          and(eq(storefrontConfigs.tenantId, tenant.id), eq(storefrontConfigs.status, 'published')),
+        )
+        .limit(1),
     ])
+
+    const config: StorefrontConfig = publishedConfig ?? {
+      id: crypto.randomUUID(),
+      sections: DEFAULT_STOREFRONT_SECTIONS,
+      status: 'published',
+      tenantId: tenant.id,
+      theme: DEFAULT_STOREFRONT_THEME,
+      updatedAt: new Date(),
+    }
 
     const productIds = tenantProducts.map(p => p.id)
     let variantsList: (typeof productVariants.$inferSelect)[] = []
@@ -94,6 +116,7 @@ export const getStorefrontDataBySlug = cache(
 
     return {
       categories: tenantCategories,
+      config,
       products: productsWithVariants,
       tenant,
     }

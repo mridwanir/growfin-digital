@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Primary electric blue is configured as `oklch(0.53 0.22 260)`, achieving at least 4.5:1 contrast against white and ice-white surfaces.
 - [ ] Light-mode border token is configured as `oklch(0.80 0.02 260)`, achieving at least 3:1 contrast against page background.

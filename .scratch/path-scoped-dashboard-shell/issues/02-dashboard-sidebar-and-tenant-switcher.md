@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Path-scoped route layout and guard.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] `DashboardSidebar` renders collapsible navigation using shadcn Sidebar primitives.
 - [ ] `TenantSwitcher` allows selecting between all tenants owned by the merchant, routing to `/dashboard/[newTenantSlug]`.

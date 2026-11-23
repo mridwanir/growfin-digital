@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Path-scoped route layout and guard.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Single-tenant merchants navigating to `/dashboard` are redirected directly to `/dashboard/[tenantSlug]`.
 - [ ] Multi-tenant merchants view a grid of store cards displaying daily statistics and links to manage each store.

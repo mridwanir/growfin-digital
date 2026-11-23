@@ -4,7 +4,7 @@ import { analyticsEvents } from './analytics'
 import { organizationInNeonAuth, userInNeonAuth } from './auth'
 import { categories, products, productVariants, variantOptions } from './catalog'
 import { orders } from './orders'
-import { tenants } from './tenants'
+import { storefrontConfigs, tenants } from './tenants'
 
 export const relations = defineRelations(
   {
@@ -14,6 +14,7 @@ export const relations = defineRelations(
     organizationInNeonAuth,
     products,
     productVariants,
+    storefrontConfigs,
     tenants,
     userInNeonAuth,
     variantOptions,
@@ -63,11 +64,18 @@ export const relations = defineRelations(
         to: r.products.id,
       }),
     },
+    storefrontConfigs: {
+      tenant: r.one.tenants({
+        from: r.storefrontConfigs.tenantId,
+        to: r.tenants.id,
+      }),
+    },
     tenants: {
       analyticsEvents: r.many.analyticsEvents(),
       categories: r.many.categories(),
       orders: r.many.orders(),
       products: r.many.products(),
+      storefrontConfigs: r.many.storefrontConfigs(),
       organization: r.one.organizationInNeonAuth({
         from: r.tenants.organizationId,
         to: r.organizationInNeonAuth.id,

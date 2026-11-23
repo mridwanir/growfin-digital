@@ -1,127 +1,138 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
-
 import { eq } from 'drizzle-orm'
-import { NextRequest } from 'next/server'
-import crypto from 'node:crypto'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { POST as authWebhook } from '@/app/api/auth/webhook/route'
+import { POST } from '@/app/api/auth/[...all]/route'
 import { db } from '@/db'
-import { userInNeonAuth } from '@/db/schema/auth'
-import { tenants } from '@/db/schema/tenants'
+import { user } from '@/db/schema/auth'
 import { auth } from '@/lib/auth/server'
-import { updateTenantSettingsAction } from '@/lib/dashboard/actions'
 import { resend } from '@/lib/email/resend'
 
-import { createMerchantSession } from '../fixtures/session-fixture'
-import { createTestTenant } from '../fixtures/tenant-fixture'
+describe('Self-Managed Better Auth Core Flow', () => {
+  const testEmail = `merchant-${Date.now()}@growfin.test`
+  const testPassword = 'SecurePassword123!'
+  const testName = 'Test Merchant'
 
-vi.mock('next/cache', () => ({
-  revalidatePath: vi.fn(),
-}))
-
-describe('End-to-End Passwordless Auth Integration Flow', () => {
-  const userId = crypto.randomUUID()
-  let tenantFixture: TestTenantFixture
-  let tenantId: string
-
-  beforeAll(async () => {
-    await db.insert(userInNeonAuth).values({
-      id: userId,
-      name: 'Merchant Flow User',
-      email: 'merchant.flow@growfin.my.id',
-      emailVerified: true,
-    })
-
-    tenantFixture = await createTestTenant({
-      name: 'Flow Merchant Store',
-      address: 'Jl. Merdeka No. 10',
-      category: 'F&B',
-      city: 'Jakarta Pusat',
-      phone: '081234567890',
-      status: 'published',
-      userId,
-    })
-    tenantId = tenantFixture.tenantId
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
   afterAll(async () => {
-    await tenantFixture?.cleanup()
-    await db.delete(userInNeonAuth).where(eq(userInNeonAuth.id, userId))
+    try {
+      await db.delete(user).where(eq(user.email, testEmail))
+    } catch {}
   })
 
-  it('executes passwordless auth webhook delivery and allows merchant settings mutation', async () => {
-    // 1. Webhook delivers OTP email via Resend
+  it('registers a new merchant with email and password and dispatches verification email via Resend', async () => {
     const resendSpy = vi.spyOn(resend.emails, 'send').mockResolvedValueOnce({
-      data: { id: 'email_msg_999' },
+      data: { id: 'email_test_123' },
       error: null,
       headers: null,
     })
 
-    const otpPayload = {
-      event_id: 'evt_flow_1',
-      event_type: 'send.otp',
-      timestamp: new Date().toISOString(),
-      context: {
-        project_name: 'Growfin Digital',
-      },
-      event_data: {
-        expires_at: new Date(Date.now() + 300000).toISOString(),
-        otp_code: '456789',
-        otp_type: 'sign-in',
-      },
-      user: {
-        name: 'Merchant Flow User',
-        email: 'merchant.flow@growfin.my.id',
-      },
-    }
-
-    const webhookReq = new NextRequest('http://localhost:3000/api/auth/webhook', {
-      body: JSON.stringify(otpPayload),
+    const request = new Request('http://localhost:3000/api/auth/sign-up/email', {
       method: 'POST',
+      body: JSON.stringify({
+        name: testName,
+        email: testEmail,
+        password: testPassword,
+      }),
       headers: {
         'Content-Type': 'application/json',
       },
     })
 
-    const webhookRes = await authWebhook(webhookReq)
-    expect(webhookRes.status).toBe(200)
+    const response = await POST(request)
+    expect(response.status).toBe(200)
+
+    const responseBody = await response.json()
+    expect(responseBody.user).toBeDefined()
+    expect(responseBody.user.email).toBe(testEmail)
+    expect(responseBody.user.name).toBe(testName)
+
     expect(resendSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        html: expect.stringContaining('456789'),
-        subject: expect.stringContaining('456789'),
-        to: 'merchant.flow@growfin.my.id',
+        to: testEmail,
       }),
     )
 
-    // 2. Verified merchant session allows mutating settings via updateTenantSettingsAction
-    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-      createMerchantSession({
-        name: 'Merchant Flow User',
-        email: 'merchant.flow@growfin.my.id',
-        userId,
+    const [dbUser] = await db.select().from(user).where(eq(user.email, testEmail))
+    expect(dbUser).toBeDefined()
+    expect(dbUser.email).toBe(testEmail)
+  })
+
+  it('signs in an existing merchant with email and password and returns session cookie', async () => {
+    const request = new Request('http://localhost:3000/api/auth/sign-in/email', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: testEmail,
+        password: testPassword,
       }),
-    )
-
-    const actionResult = await updateTenantSettingsAction(tenantId, {
-      address: 'Jl. Merdeka No. 45',
-      city: 'Jakarta Pusat',
-      phone: '081234567890',
-    })
-
-    expect(actionResult).toMatchObject({
-      success: true,
-      data: {
-        id: tenantId,
-        address: 'Jl. Merdeka No. 45',
-        city: 'Jakarta Pusat',
-        phone: '081234567890',
+      headers: {
+        'Content-Type': 'application/json',
       },
     })
 
-    const [updatedTenant] = await db.select().from(tenants).where(eq(tenants.id, tenantId))
-    expect(updatedTenant.address).toBe('Jl. Merdeka No. 45')
-    expect(updatedTenant.city).toBe('Jakarta Pusat')
-    expect(updatedTenant.phone).toBe('081234567890')
+    const response = await POST(request)
+    expect(response.status).toBe(200)
+
+    const setCookie = response.headers.get('set-cookie')
+    expect(setCookie).toBeDefined()
+    expect(setCookie).toContain('session_token')
+  })
+
+  it('dispatches password reset email directly via Resend', async () => {
+    const resendSpy = vi.spyOn(resend.emails, 'send').mockResolvedValueOnce({
+      data: { id: 'reset_email_123' },
+      error: null,
+      headers: null,
+    })
+
+    const request = new Request('http://localhost:3000/api/auth/request-password-reset', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: testEmail,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const response = await POST(request)
+    expect(response.status).toBe(200)
+
+    expect(resendSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: testEmail,
+      }),
+    )
+  })
+
+  it('retrieves valid session via auth.api.getSession and server getSession helper', async () => {
+    const signInReq = new Request('http://localhost:3000/api/auth/sign-in/email', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: testEmail,
+        password: testPassword,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const signInRes = await POST(signInReq)
+    const cookieHeader = signInRes.headers.get('set-cookie') || ''
+    const cookie = cookieHeader.split(';')[0]
+
+    const headers = new Headers({
+      cookie,
+    })
+
+    const apiSession = await auth.api.getSession({ headers })
+    expect(apiSession).toBeDefined()
+    expect(apiSession?.user.email).toBe(testEmail)
+
+    const sessionResult = await auth.getSession(headers)
+    expect(sessionResult.data).toBeDefined()
+    expect(sessionResult.data?.user.email).toBe(testEmail)
   })
 })

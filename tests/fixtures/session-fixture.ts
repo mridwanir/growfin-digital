@@ -13,8 +13,10 @@ interface SessionData {
     id: string
     createdAt: Date
     expiresAt: Date
+    ipAddress: string | null
     token: string
     updatedAt: Date
+    userAgent: string | null
     userId: string
   }
   user: {
@@ -23,6 +25,7 @@ interface SessionData {
     createdAt: Date
     email: string
     emailVerified: boolean
+    image: string | null
     role: string
     updatedAt: Date
   }
@@ -51,8 +54,10 @@ function createSessionPayload(
         id: `sess-${crypto.randomUUID()}`,
         createdAt: new Date(),
         expiresAt: options.expiresAt ?? new Date(Date.now() + 86400000),
+        ipAddress: null,
         token: `tok-${crypto.randomUUID()}`,
         updatedAt: new Date(),
+        userAgent: null,
         userId,
       },
       user:
@@ -64,6 +69,7 @@ function createSessionPayload(
               createdAt: new Date(),
               email: options.email ?? defaults.getDefaultEmail(userId),
               emailVerified: options.emailVerified ?? true,
+              image: null,
               role: options.role ?? defaults.role,
               updatedAt: new Date(),
             },

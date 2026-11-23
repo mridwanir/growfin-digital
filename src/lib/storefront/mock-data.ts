@@ -1,6 +1,6 @@
 import type { ProductWithVariants } from '@/components/storefront/catalog'
 import type { Category } from '@/db/schema/catalog'
-import type { Tenant } from '@/db/schema/tenants'
+import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
 
 export interface ThemeOption {
   id: string
@@ -657,6 +657,69 @@ const mockRetailProducts: ProductWithVariants[] = [
 // Mock Tenants
 // ---------------------------------------------------------------------------
 
+const mockFnbBranding = {
+  tagline: 'Secangkir Cerita Tiap Hari',
+  themeColor: '#d97706',
+  description:
+    'Spesialis racikan kopi biji pilihan nusantara, manual brew pour over, dan pastry hangat yang dipanggang segar setiap pagi.',
+  heroImage:
+    'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=80',
+  logoUrl:
+    'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&q=80',
+  lookbookImages: [
+    'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=800&q=80',
+  ],
+  marketingUsps: [
+    { desc: 'Biji kopi pilihan petani lokal Jawa Barat & Aceh', title: '100% Single Origin' },
+    { desc: 'Pastry butter Prancis dipanggang fresh tiap pagi', title: 'Fresh Baked Daily' },
+    { desc: 'Area ber-AC, colokan melimpah, dan Wi-Fi cepat', title: 'Ruang Nyaman' },
+  ],
+  operatingHours: {
+    closeTime: '22:00',
+    openTime: '08:00',
+    text: 'Setiap Hari: 08:00 - 22:00 WIB',
+    schedules: [
+      { day: 'Senin - Jumat', hours: '08:00 - 22:00' },
+      { day: 'Sabtu - Minggu', hours: '07:00 - 23:00' },
+    ],
+  },
+  reviews: [
+    {
+      author: 'Budi Santoso',
+      date: '2 hari lalu',
+      rating: 5,
+      text: 'Kopi Susu Arennya enak banget! Manisnya pas nggak bikin eneg. Tempatnya juga cocok buat WFC berjam-jam.',
+    },
+    {
+      author: 'Siti Rahmawati',
+      date: '1 minggu lalu',
+      rating: 5,
+      text: 'V60 Gayo anaerobiknya juara, aromanya wangi semerbak. Baristanya ramah dan detail ngejelasin proses seduh.',
+    },
+    {
+      author: 'Dimas Pratama',
+      date: '2 minggu lalu',
+      rating: 5,
+      text: 'Croissant butter-nya garing di luar tapi lembut di dalam. Wajib coba bareng cappuccino hangatnya!',
+    },
+    {
+      author: 'Jessica Amanda',
+      date: '1 bulan lalu',
+      rating: 4,
+      text: 'Ambience tenang, playlist musiknya asik. Parkir motor dan mobil gampang.',
+    },
+  ],
+  socialLinks: {
+    instagram: { active: true, url: 'https://instagram.com/growfin.id' },
+    whatsapp: { active: true, url: 'https://wa.me/6281234567890' },
+  },
+}
+
 const mockFnbTenant: Tenant = {
   id: 'mock-fnb-tenant',
   name: 'Kopi Artisan Nusantara',
@@ -666,7 +729,6 @@ const mockFnbTenant: Tenant = {
   createdAt: new Date('2026-01-01'),
   customDomain: null,
   domainActiveUntil: null,
-  fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?cid=mock-fnb',
   operatingHours: null,
   organizationId: null,
@@ -677,72 +739,68 @@ const mockFnbTenant: Tenant = {
   status: 'published',
   updatedAt: new Date('2026-01-01'),
   userId: 'mock-user-1',
-  brandingContent: {
-    tagline: 'Secangkir Cerita Tiap Hari',
-    themeColor: '#d97706',
-    description:
-      'Spesialis racikan kopi biji pilihan nusantara, manual brew pour over, dan pastry hangat yang dipanggang segar setiap pagi.',
-    heroImage:
-      'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=80',
-    logoUrl:
-      'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&q=80',
-    lookbookImages: [
-      'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=800&q=80',
-    ],
-    marketingUsps: [
-      { desc: 'Biji kopi pilihan petani lokal Jawa Barat & Aceh', title: '100% Single Origin' },
-      { desc: 'Pastry butter Prancis dipanggang fresh tiap pagi', title: 'Fresh Baked Daily' },
-      { desc: 'Area ber-AC, colokan melimpah, dan Wi-Fi cepat', title: 'Ruang Nyaman' },
-    ],
-    operatingHours: {
-      closeTime: '22:00',
-      openTime: '08:00',
-      text: 'Setiap Hari: 08:00 - 22:00 WIB',
-      schedules: [
-        { day: 'Senin - Jumat', hours: '08:00 - 22:00' },
-        { day: 'Sabtu - Minggu', hours: '07:00 - 23:00' },
-      ],
+}
+
+const mockRetailBranding = {
+  tagline: 'Urban Aesthetic & Everyday Heavyweight Apparel',
+  themeColor: '#09090b',
+  description:
+    'Brand streetwear independen berbasis di Bandung. Menghadirkan siluet boxy kontemporer dengan bahan katun premium berstandar internasional.',
+  heroImage:
+    'https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=1600&q=80',
+  logoUrl:
+    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80',
+  lookbookImages: [
+    'https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80',
+  ],
+  marketingUsps: [
+    {
+      desc: 'Material 24s & 16s combed bergramasi tinggi hingga 235 GSM',
+      title: 'Heavyweight Cotton',
     },
-    reviews: [
-      {
-        author: 'Budi Santoso',
-        date: '2 hari lalu',
-        rating: 5,
-        text: 'Kopi Susu Arennya enak banget! Manisnya pas nggak bikin eneg. Tempatnya juga cocok buat WFC berjam-jam.',
-      },
-      {
-        author: 'Siti Rahmawati',
-        date: '1 minggu lalu',
-        rating: 5,
-        text: 'V60 Gayo anaerobiknya juara, aromanya wangi semerbak. Baristanya ramah dan detail ngejelasin proses seduh.',
-      },
-      {
-        author: 'Dimas Pratama',
-        date: '2 minggu lalu',
-        rating: 5,
-        text: 'Croissant butter-nya garing di luar tapi lembut di dalam. Wajib coba bareng cappuccino hangatnya!',
-      },
-      {
-        author: 'Jessica Amanda',
-        date: '1 bulan lalu',
-        rating: 4,
-        text: 'Ambience tenang, playlist musiknya asik. Parkir motor dan mobil gampang.',
-      },
-    ],
-    socialLinks: {
-      instagram: { active: true, url: 'https://instagram.com/growfin.id' },
-      whatsapp: { active: true, url: 'https://wa.me/6281234567890' },
+    {
+      desc: 'Pola potongan kontemporer yang pas dan kokoh dipakai seharian',
+      title: 'Original Boxy Fit',
     },
+    {
+      desc: 'Layanan penukaran size mudah tanpa ribet dalam 7 hari kerja',
+      title: 'Garansi Tukar Ukuran',
+    },
+  ],
+  operatingHours: {
+    closeTime: '21:00',
+    openTime: '10:00',
+    schedules: [{ day: 'Setiap Hari', hours: '10:00 - 21:00' }],
+    text: 'Senin - Minggu: 10:00 - 21:00 WIB',
   },
-  themeConfig: {
-    fulfillmentModes: ['DINE_IN', 'TAKEAWAY', 'DELIVERY'],
-    layoutId: 'fnb-theme-classic',
-    themeColor: '#d97706',
+  reviews: [
+    {
+      author: 'Reza Fahlevi',
+      date: '3 hari lalu',
+      rating: 5,
+      text: 'Kaos boxy-nya parah sih kualitasnya, kerahnya tebel gak gampang melar abis dicuci. Packaging kardusnya juga niat banget.',
+    },
+    {
+      author: 'Nadia Putri',
+      date: '1 minggu lalu',
+      rating: 5,
+      text: 'Technical jacket-nya keren parah! Pas dipake naik motor malem-malem anget tapi gak gerah.',
+    },
+    {
+      author: 'Aditya Pratama',
+      date: '2 minggu lalu',
+      rating: 5,
+      text: 'Tote bag kanvasnya tebel kuat nampung laptop 15 inch plus buku. Jahitan bartack rapi!',
+    },
+  ],
+  socialLinks: {
+    instagram: { active: true, url: 'https://instagram.com/growfin.id' },
+    whatsapp: { active: true, url: 'https://wa.me/6281298765432' },
   },
 }
 
@@ -755,7 +813,6 @@ const mockRetailTenant: Tenant = {
   createdAt: new Date('2026-01-01'),
   customDomain: null,
   domainActiveUntil: null,
-  fomoExpiresAt: null,
   googleMapsUrl: 'https://maps.google.com/?cid=mock-retail',
   operatingHours: null,
   organizationId: null,
@@ -766,73 +823,6 @@ const mockRetailTenant: Tenant = {
   status: 'published',
   updatedAt: new Date('2026-01-01'),
   userId: 'mock-user-2',
-  brandingContent: {
-    tagline: 'Urban Aesthetic & Everyday Heavyweight Apparel',
-    themeColor: '#09090b',
-    description:
-      'Brand streetwear independen berbasis di Bandung. Menghadirkan siluet boxy kontemporer dengan bahan katun premium berstandar internasional.',
-    heroImage:
-      'https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=1600&q=80',
-    logoUrl:
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80',
-    lookbookImages: [
-      'https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80',
-    ],
-    marketingUsps: [
-      {
-        desc: 'Material 24s & 16s combed bergramasi tinggi hingga 235 GSM',
-        title: 'Heavyweight Cotton',
-      },
-      {
-        desc: 'Pola potongan kontemporer yang pas dan kokoh dipakai seharian',
-        title: 'Original Boxy Fit',
-      },
-      {
-        desc: 'Layanan penukaran size mudah tanpa ribet dalam 7 hari kerja',
-        title: 'Garansi Tukar Ukuran',
-      },
-    ],
-    operatingHours: {
-      closeTime: '21:00',
-      openTime: '10:00',
-      schedules: [{ day: 'Setiap Hari', hours: '10:00 - 21:00' }],
-      text: 'Senin - Minggu: 10:00 - 21:00 WIB',
-    },
-    reviews: [
-      {
-        author: 'Reza Fahlevi',
-        date: '3 hari lalu',
-        rating: 5,
-        text: 'Kaos boxy-nya parah sih kualitasnya, kerahnya tebel gak gampang melar abis dicuci. Packaging kardusnya juga niat banget.',
-      },
-      {
-        author: 'Nadia Putri',
-        date: '1 minggu lalu',
-        rating: 5,
-        text: 'Technical jacket-nya keren parah! Pas dipake naik motor malem-malem anget tapi gak gerah.',
-      },
-      {
-        author: 'Aditya Pratama',
-        date: '2 minggu lalu',
-        rating: 5,
-        text: 'Tote bag kanvasnya tebel kuat nampung laptop 15 inch plus buku. Jahitan bartack rapi!',
-      },
-    ],
-    socialLinks: {
-      instagram: { active: true, url: 'https://instagram.com/growfin.id' },
-      whatsapp: { active: true, url: 'https://wa.me/6281298765432' },
-    },
-  },
-  themeConfig: {
-    fulfillmentModes: ['PICKUP', 'DELIVERY'],
-    layoutId: 'retail-theme-urban',
-    themeColor: '#09090b',
-  },
 }
 
 // ---------------------------------------------------------------------------
@@ -840,10 +830,11 @@ const mockRetailTenant: Tenant = {
 // ---------------------------------------------------------------------------
 
 export interface MockStorefrontData {
-  tenant: Tenant
   categories: Category[]
+  config: StorefrontConfig
   products: ProductWithVariants[]
   selectedTheme: ThemeOption
+  tenant: Tenant
 }
 
 export function getMockStorefrontData(requestedThemeId?: string | null): MockStorefrontData {
@@ -851,18 +842,99 @@ export function getMockStorefrontData(requestedThemeId?: string | null): MockSto
 
   const isRetail = selectedTheme.archetype === 'retail'
 
-  const baseTenant = isRetail ? mockRetailTenant : mockFnbTenant
+  const tenant = isRetail ? mockRetailTenant : mockFnbTenant
   const categories = isRetail ? mockRetailCategories : mockFnbCategories
   const products = isRetail ? mockRetailProducts : mockFnbProducts
+  const branding = isRetail ? mockRetailBranding : mockFnbBranding
 
-  const tenant: Tenant = {
-    ...baseTenant,
-    brandingContent: {
-      ...(baseTenant.brandingContent as Record<string, unknown>),
-      themeColor: selectedTheme.color,
-    },
-    themeConfig: {
-      ...baseTenant.themeConfig,
+  const config: StorefrontConfig = {
+    id: `mock-config-${selectedTheme.id}`,
+    status: 'published',
+    tenantId: tenant.id,
+    updatedAt: new Date('2026-01-01'),
+    sections: [
+      {
+        id: 'mock-hero',
+        type: 'hero',
+        isVisible: true,
+        sortOrder: 1,
+        content: {
+          description: branding.description,
+          heroImageUrl: branding.heroImage,
+          logoUrl: branding.logoUrl,
+          subtitle: branding.tagline,
+          title: tenant.name,
+        },
+      },
+      {
+        id: 'mock-catalog',
+        type: 'catalog',
+        isVisible: true,
+        sortOrder: 2,
+        content: {
+          title: isRetail ? 'Koleksi Produk' : 'Menu Pilihan',
+        },
+      },
+      {
+        id: 'mock-gallery',
+        type: 'gallery',
+        isVisible: true,
+        sortOrder: 3,
+        content: {
+          images: branding.lookbookImages,
+          title: isRetail ? 'Lookbook Catalog' : 'Galeri Foto',
+        },
+      },
+      {
+        id: 'mock-reviews',
+        type: 'reviews',
+        isVisible: true,
+        sortOrder: 4,
+        content: {
+          title: isRetail ? 'Ulasan Komunitas' : 'Ulasan Pelanggan',
+          reviews: branding.reviews.map(r => ({
+            authorName: r.author,
+            rating: r.rating,
+            text: r.text,
+            time: r.date,
+          })),
+        },
+      },
+      {
+        id: 'mock-hours',
+        type: 'operating_hours',
+        isVisible: true,
+        sortOrder: 5,
+        content: {
+          raw: branding.operatingHours.text,
+          title: 'Jam Operasional',
+          schedules: branding.operatingHours.schedules?.map(s => {
+            const parts = s.hours.split(' - ')
+            return {
+              close: parts[1] || '22:00',
+              day: s.day,
+              open: parts[0] || '08:00',
+            }
+          }),
+        },
+      },
+      {
+        id: 'mock-footer',
+        type: 'footer',
+        isVisible: true,
+        sortOrder: 6,
+        content: {
+          tagline: branding.tagline,
+          socialLinks: {
+            instagram: branding.socialLinks.instagram?.url,
+            whatsapp: branding.socialLinks.whatsapp?.url,
+          },
+        },
+      },
+    ],
+    theme: {
+      fontFamily: 'font-sans',
+      fulfillmentModes: isRetail ? ['PICKUP', 'DELIVERY'] : ['DINE_IN', 'TAKEAWAY', 'DELIVERY'],
       layoutId: selectedTheme.id,
       themeColor: selectedTheme.color,
     },
@@ -870,6 +942,7 @@ export function getMockStorefrontData(requestedThemeId?: string | null): MockSto
 
   return {
     categories,
+    config,
     products,
     selectedTheme,
     tenant,

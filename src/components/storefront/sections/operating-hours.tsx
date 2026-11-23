@@ -1,5 +1,6 @@
 import type {
   DailySchedule,
+  OperatingHoursSectionContent,
   OperatingHours as OperatingHoursType,
   Tenant,
 } from '@/db/schema/tenants'
@@ -9,6 +10,7 @@ import { Calendar, Clock, MapPin, Phone } from 'lucide-react'
 
 export interface OperatingHoursSectionProps {
   tenant: Tenant
+  content?: OperatingHoursSectionContent
   title?: string
   description?: string
   className?: string
@@ -18,20 +20,26 @@ const DEFAULT_DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Min
 
 export function OperatingHours({
   tenant,
+  content,
   title = 'Jam Operasional & Lokasi',
   description = 'Kunjungi kami langsung atau hubungi kami pada jam operasional di bawah ini.',
   className,
 }: OperatingHoursSectionProps) {
   const operatingHours = (tenant.operatingHours as OperatingHoursType) || {}
 
-  const isOpen = operatingHours.isOpen !== false
-  const openTime = operatingHours.openTime || '08:00'
-  const closeTime = operatingHours.closeTime || '21:00'
-  const defaultHours = operatingHours.raw || `${openTime} - ${closeTime}`
+  const sectionTitle = content?.title || title
+  const sectionDescription = content?.description || description
+
+  const isOpen = content?.isOpen ?? operatingHours.isOpen !== false
+  const openTime = content?.openTime || operatingHours.openTime || '08:00'
+  const closeTime = content?.closeTime || operatingHours.closeTime || '21:00'
+  const defaultHours = content?.raw || operatingHours.raw || `${openTime} - ${closeTime}`
 
   // Build weekly schedule items
   let schedules: DailySchedule[] = []
-  if (Array.isArray(operatingHours.schedules) && operatingHours.schedules.length > 0) {
+  if (Array.isArray(content?.schedules) && content.schedules.length > 0) {
+    schedules = content.schedules
+  } else if (Array.isArray(operatingHours.schedules) && operatingHours.schedules.length > 0) {
     schedules = operatingHours.schedules
   } else {
     schedules = DEFAULT_DAYS.map(day => ({
@@ -60,10 +68,12 @@ export function OperatingHours({
             <span>Waktu Operasional</span>
           </div>
           <h2 className="text-foreground mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">
-            {title}
+            {sectionTitle}
           </h2>
-          {description && (
-            <p className="text-muted-foreground mx-auto mt-2 max-w-2xl text-base">{description}</p>
+          {sectionDescription && (
+            <p className="text-muted-foreground mx-auto mt-2 max-w-2xl text-base">
+              {sectionDescription}
+            </p>
           )}
         </div>
 

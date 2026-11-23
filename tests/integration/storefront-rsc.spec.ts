@@ -243,13 +243,13 @@ describe('storefront RSC Loader & Page Rendering (Seam 2)', () => {
       expect(markup).toContain('CafeOrCoffeeShop')
     })
 
-    it('renders ExpiredSiteScreen on DemoPage when fomoExpiresAt has passed for draft tenant', async () => {
+    it('renders ExpiredSiteScreen on DemoPage when siteActiveUntil has passed for draft tenant', async () => {
       const persisted = await persistGeneratedWebsite(mockWebsiteData)
       createdTenantIds.push(persisted.tenant.id)
       const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000)
       await db
         .update(tenants)
-        .set({ fomoExpiresAt: pastDate, status: 'draft' })
+        .set({ siteActiveUntil: pastDate, status: 'draft' })
         .where(eq(tenants.id, persisted.tenant.id))
 
       const element = await DemoPage({ params: Promise.resolve({ slug: persisted.tenant.slug }) })

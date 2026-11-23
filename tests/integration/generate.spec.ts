@@ -8,7 +8,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { POST as generateHandler } from '@/app/api/generate/route'
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
+import { storefrontConfigs, tenants } from '@/db/schema/tenants'
 import { persistGeneratedWebsite } from '@/lib/generator/persistence'
 import { generatedWebsiteSchema } from '@/lib/generator/schema'
 
@@ -131,7 +131,14 @@ describe('Transactional AI Website Generator Pipeline (/api/generate)', () => {
     expect(persistedTenant.status).toBe('draft')
     expect(persistedTenant.packageTier).toBe('free')
     expect(persistedTenant.googleMapsUrl).toBe('https://maps.google.com/?cid=123456789')
-    expect(persistedTenant.fomoExpiresAt).toBeDefined()
+    const persistedConfigs = await db
+      .select()
+      .from(storefrontConfigs)
+      .where(eq(storefrontConfigs.tenantId, persistedTenant.id))
+    expect(persistedConfigs).toHaveLength(2)
+    const configStatuses = persistedConfigs.map(c => c.status)
+    expect(configStatuses).toContain('draft')
+    expect(configStatuses).toContain('published')
 
     createdTenantIds.push(persistedTenant.id)
 

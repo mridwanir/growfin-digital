@@ -48,7 +48,6 @@ export async function getTenantSettings(tenantId: string, userId: string) {
       id: tenants.id,
       name: tenants.name,
       address: tenants.address,
-      brandingContent: tenants.brandingContent,
       category: tenants.category,
       city: tenants.city,
       customDomain: tenants.customDomain,
@@ -58,7 +57,6 @@ export async function getTenantSettings(tenantId: string, userId: string) {
       phone: tenants.phone,
       slug: tenants.slug,
       status: tenants.status,
-      themeConfig: tenants.themeConfig,
       updatedAt: tenants.updatedAt,
     })
     .from(tenants)
@@ -85,24 +83,10 @@ export async function updateTenantSettings(
     ...(input.operatingHours || {}),
   }
 
-  const currentBranding = current.brandingContent || {}
-  const updatedSocialLinks = input.socialLinks
-    ? {
-        ...(currentBranding.socialLinks || {}),
-        ...input.socialLinks,
-      }
-    : currentBranding.socialLinks
-
-  const updatedBranding: BrandingContent = {
-    ...currentBranding,
-    socialLinks: updatedSocialLinks,
-  }
-
   const [updated] = await db
     .update(tenants)
     .set({
       address: input.address !== undefined ? input.address : current.address,
-      brandingContent: updatedBranding,
       city: input.city !== undefined ? input.city : current.city,
       operatingHours: updatedOperatingHours,
       phone: input.phone !== undefined ? input.phone : current.phone,

@@ -11,6 +11,7 @@ import {
 import { getStorefrontLayout } from '@/components/storefront/layouts'
 import { env } from '@/lib/env'
 import { StorefrontCartProvider } from '@/lib/storefront/cart'
+import { extractLegacyBrandingFromSections } from '@/lib/storefront/compatibility'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 import { buildLocalBusinessJsonLd, resolveArchetype } from '@/lib/storefront/seo'
 // oxlint-disable-next-line react/only-export-components -- Next.js 16 Route Segment Config for Cache Components
@@ -31,13 +32,21 @@ export async function generateMetadata({ params }: DemoPageProps): Promise<Metad
   }
 
   const tenantName = data.tenant.name
-  const branding = (data.tenant.brandingContent as Record<string, unknown> | null) || {}
+  const legacyBranding =
+    'brandingContent' in data.tenant
+      ? (data.tenant.brandingContent as Record<string, unknown> | null)
+      : null
+  const branding = {
+    ...(legacyBranding || {}),
+    ...(data.config ? extractLegacyBrandingFromSections(data.config.sections) : {}),
+  }
   const description =
     (branding.tagline as string) ||
     `Preview website resmi ${tenantName}. Informasi, produk, dan katalog UMKM.`
   const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN || 'growfin.my.id'
   const rawImage =
     (branding.logoUrl as string) ||
+    (branding.heroImageUrl as string) ||
     (branding.heroImage as string) ||
     '/image/landing/growfin-logo-icon.png'
 
@@ -64,30 +73,32 @@ export default async function DemoPage({ params }: DemoPageProps) {
     notFound()
   }
 
-  const { categories, products, tenant } = data
+  const { categories, config, products, tenant } = data
   const now = new Date()
   const isLocked = tenant.status === 'locked'
-  const isExpired =
-    (tenant.status === 'published' &&
-      Boolean(tenant.siteActiveUntil && new Date(tenant.siteActiveUntil) < now)) ||
-    (tenant.status === 'draft' &&
-      Boolean(tenant.fomoExpiresAt && new Date(tenant.fomoExpiresAt) < now))
-
+  const isExpired = Boolean(tenant.siteActiveUntil && new Date(tenant.siteActiveUntil) < now)
   if (isLocked || isExpired) {
     return <ExpiredSiteScreen businessName={tenant.name} />
   }
 
   const archetype = resolveArchetype(tenant.category)
-  const jsonLd = buildLocalBusinessJsonLd(tenant, archetype)
+  const jsonLd = buildLocalBusinessJsonLd(tenant, archetype, config)
   return (
     <StorefrontCartProvider tenantId={tenant.id}>
       <script
+        // oxlint-disable-next-line react/no-danger -- Structured JSON-LD payload insertion
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type="application/ld+json"
       />
       {createElement(
-        getStorefrontLayout(tenant.themeConfig?.layoutId, archetype),
-        { categories, products, tenant },
+        getStorefrontLayout(
+          config?.theme?.layoutId ||
+            ('themeConfig' in tenant
+              ? (tenant.themeConfig as { layoutId?: string } | undefined)?.layoutId
+              : undefined),
+          archetype,
+        ),
+        { categories, config, products, tenant },
         <StorefrontClientIslands tenant={tenant} />,
         <MeracikWatermark />,
       )}

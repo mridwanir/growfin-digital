@@ -2,6 +2,7 @@ import type { Tenant } from '@/db/schema/tenants'
 
 import { describe, expect, it } from 'vitest'
 
+import { env } from '@/lib/env'
 import { buildLocalBusinessJsonLd, getLocalBusinessType } from '@/lib/storefront/seo'
 
 const baseMockTenant: Tenant = {
@@ -70,7 +71,9 @@ describe('SEO Domain Module (seo.ts)', () => {
       expect(jsonLd['@type']).toBe('Store')
       expect(jsonLd.name).toBe('Toko Keren')
       expect(jsonLd.telephone).toBe('081234567890')
-      expect(jsonLd.url).toBe('https://growfin.my.id/toko-keren')
+      expect(jsonLd.url).toBe(
+        `https://${env.NEXT_PUBLIC_BASE_DOMAIN || 'growfin.my.id'}/toko-keren`,
+      )
       expect(jsonLd.address['@type']).toBe('PostalAddress')
       expect(jsonLd.address.addressLocality).toBe('Jakarta')
       expect(jsonLd.hasMap).toBe('https://maps.google.com/?q=test')

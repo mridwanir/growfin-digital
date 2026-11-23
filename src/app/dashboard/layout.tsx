@@ -1,11 +1,8 @@
 import type { ReactNode } from 'react'
 
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
-import { MeracikWordmark } from '@/components/brand'
-import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
 
@@ -16,64 +13,7 @@ async function DashboardGuard({ children }: { children: ReactNode }) {
     redirect('/login')
   }
 
-  return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-border/60 bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-40 border-b backdrop-blur">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-6">
-            <Link
-              aria-label="MeracikWeb Merchant Dashboard"
-              className="flex items-center gap-2.5 text-lg font-bold tracking-tight"
-              href="/dashboard"
-            >
-              <span
-                aria-hidden="true"
-                className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg text-xs font-black select-none"
-              >
-                M
-              </span>
-              <span className="flex items-center gap-1.5">
-                <MeracikWordmark size="sm" />
-                <span className="text-muted-foreground text-sm font-semibold">Merchant</span>
-              </span>
-            </Link>
-
-            <nav className="hidden items-center gap-1 text-sm font-medium md:flex">
-              <Link
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-3 py-1.5 transition-colors"
-                href="/dashboard"
-              >
-                Overview
-              </Link>
-              <Link
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-3 py-1.5 transition-colors"
-                href="/dashboard/settings"
-              >
-                Settings
-              </Link>
-              <Link
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-3 py-1.5 transition-colors"
-                href="/dashboard/products"
-              >
-                Products & Variants
-              </Link>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-muted-foreground hidden text-xs sm:inline-block">
-              {session.user.email}
-            </span>
-            <Link className={buttonVariants({ size: 'sm', variant: 'outline' })} href="/">
-              Buat Toko Baru
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex-1">{children}</div>
-    </div>
-  )
+  return children
 }
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {

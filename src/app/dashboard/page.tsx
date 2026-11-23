@@ -1,6 +1,15 @@
-import { ExternalLink, MapPin, Package, Phone, PlusCircle, Settings, Store } from 'lucide-react'
+import {
+  ExternalLink,
+  LayoutDashboard,
+  MapPin,
+  Package,
+  Phone,
+  PlusCircle,
+  Settings,
+  Store,
+} from 'lucide-react'
 import Link from 'next/link'
-import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
 
 import { buttonVariants } from '@/components/ui/button'
 import {
@@ -11,71 +20,124 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import { getSession } from '@/lib/auth/server'
 import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
 import { getMerchantTenants } from '@/lib/dashboard/mutations'
 import { env } from '@/lib/env'
 
-async function MerchantOverview() {
-  const { data: session } = await getSession()
-  if (!session?.user?.id) return null
+function getStatusBadge(status: string) {
+  switch (status) {
+    case 'published':
+      return (
+        <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+          Aktif (Live)
+        </span>
+      )
+    case 'locked':
+      return (
+        <span className="inline-flex items-center rounded-full bg-rose-500/10 px-2 py-0.5 text-xs font-medium text-rose-600 dark:text-rose-400">
+          Terkunci (Expired)
+        </span>
+      )
+    default:
+      return (
+        <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
+          Draft
+        </span>
+      )
+  }
+}
 
-  const tenantList = await getMerchantTenants(session.user.id)
+function getTierBadge(tier: string) {
+  switch (tier) {
+    case 'pro':
+      return (
+        <span className="inline-flex items-center rounded-md bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-600 dark:text-purple-400">
+          PRO
+        </span>
+      )
+    case 'instant':
+      return (
+        <span className="inline-flex items-center rounded-md bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400">
+          INSTANT
+        </span>
+      )
+    default:
+      return (
+        <span className="bg-muted text-muted-foreground inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium">
+          FREE DEMO
+        </span>
+      )
+  }
+}
+
+export default async function DashboardPage() {
+  const { data: session } = await getSession()
+
+  if (!session?.user?.id) {
+    redirect('/login')
+  }
+
+  const tenants = await getMerchantTenants(session.user.id)
+
+  if (tenants.length === 1) {
+    redirect(`/dashboard/${tenants[0].slug}`)
+  }
+
+  if (tenants.length === 0) {
+    return (
+      <main className="container mx-auto px-4 py-8 sm:px-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="font-heading text-3xl font-bold tracking-tight">Merchant Dashboard</h1>
+            <p className="text-muted-foreground mt-1 text-sm">
+              Selamat datang, {session.user.name || session.user.email}. Kelola profil toko dan
+              katalog produk Anda.
+            </p>
+          </div>
+
+          <Link
+            href="/"
+            className={buttonVariants({
+              className: 'self-start sm:self-auto',
+            })}
+          >
+            <PlusCircle className="mr-2 size-4" />
+            Buat Website Baru
+          </Link>
+        </div>
+
+        <div className="mt-8">
+          <div className="flex items-center justify-between pb-4">
+            <h2 className="font-heading text-lg font-semibold tracking-tight">
+              Toko & Website Anda (0)
+            </h2>
+          </div>
+
+          <Card className="flex flex-col items-center justify-center p-12 text-center">
+            <Store className="text-muted-foreground size-12 stroke-1" />
+            <h3 className="font-heading mt-4 text-base font-semibold">Belum Ada Website</h3>
+            <p className="text-muted-foreground mt-1 max-w-sm text-sm">
+              Anda belum memiliki website toko aktif. Buat website instan dalam 30 detik untuk
+              bisnis Anda.
+            </p>
+            <Link className={buttonVariants({ className: 'mt-6' })} href="/">
+              Mulai Buat Website
+            </Link>
+          </Card>
+        </div>
+      </main>
+    )
+  }
+
   const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN
   const analyticsEntries = await Promise.all(
-    tenantList.map(async tenant => {
+    tenants.map(async tenant => {
       const tenantMetrics = await getTenantAnalyticsMetrics(tenant.id, session.user.id)
       return [tenant.id, tenantMetrics] as const
     }),
   )
   const analyticsByTenant = new Map(analyticsEntries)
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'published':
-        return (
-          <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-            Aktif (Live)
-          </span>
-        )
-      case 'locked':
-        return (
-          <span className="inline-flex items-center rounded-full bg-rose-500/10 px-2 py-0.5 text-xs font-medium text-rose-600 dark:text-rose-400">
-            Terkunci (Expired)
-          </span>
-        )
-      default:
-        return (
-          <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
-            Draft
-          </span>
-        )
-    }
-  }
-
-  const getTierBadge = (tier: string) => {
-    switch (tier) {
-      case 'pro':
-        return (
-          <span className="inline-flex items-center rounded-md bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-600 dark:text-purple-400">
-            PRO
-          </span>
-        )
-      case 'instant':
-        return (
-          <span className="inline-flex items-center rounded-md bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400">
-            INSTANT
-          </span>
-        )
-      default:
-        return (
-          <span className="bg-muted text-muted-foreground inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium">
-            FREE DEMO
-          </span>
-        )
-    }
-  }
 
   return (
     <main className="container mx-auto px-4 py-8 sm:px-6">
@@ -102,180 +164,151 @@ async function MerchantOverview() {
       <div className="mt-8">
         <div className="flex items-center justify-between pb-4">
           <h2 className="font-heading text-lg font-semibold tracking-tight">
-            Toko & Website Anda ({tenantList.length})
+            Toko & Website Anda ({tenants.length})
           </h2>
         </div>
 
-        {tenantList.length === 0 ? (
-          <Card className="flex flex-col items-center justify-center p-12 text-center">
-            <Store className="text-muted-foreground size-12 stroke-1" />
-            <h3 className="font-heading mt-4 text-base font-semibold">Belum Ada Website</h3>
-            <p className="text-muted-foreground mt-1 max-w-sm text-sm">
-              Anda belum memiliki website toko aktif. Buat website instan dalam 30 detik untuk
-              bisnis Anda.
-            </p>
-            <Link className={buttonVariants({ className: 'mt-6' })} href="/">
-              Mulai Buat Website
-            </Link>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {tenantList.map(tenant => {
-              const liveUrl =
-                tenant.status === 'published'
-                  ? `https://${tenant.slug}.${baseDomain}`
-                  : `/demo/${tenant.slug}`
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {tenants.map(tenant => {
+            const liveUrl =
+              tenant.status === 'published'
+                ? `https://${tenant.slug}.${baseDomain}`
+                : `/demo/${tenant.slug}`
 
-              return (
-                <Card key={tenant.id} className="flex flex-col justify-between shadow-sm">
-                  <CardHeader>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5">
-                        {getStatusBadge(tenant.status)}
-                        {getTierBadge(tenant.packageTier)}
-                      </div>
-                      <span className="text-muted-foreground truncate font-mono text-xs">
-                        {tenant.slug}
-                      </span>
+            const metrics = analyticsByTenant.get(tenant.id) ?? {
+              checkoutCompletes: 0,
+              checkoutStarts: 0,
+              conversionRate: 0,
+              pageViews: 0,
+              topSources: [],
+              uniqueVisitors: 0,
+            }
+
+            return (
+              <Card key={tenant.id} className="flex flex-col justify-between shadow-sm">
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      {getStatusBadge(tenant.status)}
+                      {getTierBadge(tenant.packageTier)}
+                    </div>
+                    <span className="text-muted-foreground truncate font-mono text-xs">
+                      {tenant.slug}
+                    </span>
+                  </div>
+
+                  <CardTitle className="mt-3 text-lg">
+                    <Link className="hover:underline" href={`/dashboard/${tenant.slug}`}>
+                      {tenant.name}
+                    </Link>
+                  </CardTitle>
+                  <CardDescription>{tenant.category}</CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-3 text-xs">
+                  {tenant.city && (
+                    <div className="text-muted-foreground flex items-center gap-2">
+                      <MapPin className="size-3.5 shrink-0" />
+                      <span className="truncate">{tenant.city}</span>
+                    </div>
+                  )}
+                  {tenant.phone && (
+                    <div className="text-muted-foreground flex items-center gap-2">
+                      <Phone className="size-3.5 shrink-0" />
+                      <span>{tenant.phone}</span>
+                    </div>
+                  )}
+                  {tenant.customDomain && (
+                    <div className="text-muted-foreground flex items-center gap-2 font-mono">
+                      <ExternalLink className="size-3.5 shrink-0" />
+                      <span className="text-primary truncate">{tenant.customDomain}</span>
+                    </div>
+                  )}
+
+                  <div className="space-y-2 border-t pt-3">
+                    <div className="text-muted-foreground flex items-center justify-between font-medium">
+                      <span>Statistik Hari Ini</span>
+                      <span>{metrics.conversionRate}% konversi</span>
                     </div>
 
-                    <CardTitle className="mt-3 text-lg">{tenant.name}</CardTitle>
-                    <CardDescription>{tenant.category}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="space-y-3 text-xs">
-                    {tenant.city && (
-                      <div className="text-muted-foreground flex items-center gap-2">
-                        <MapPin className="size-3.5 shrink-0" />
-                        <span className="truncate">{tenant.city}</span>
+                    <div className="grid grid-cols-2 gap-2 text-center">
+                      <div className="bg-muted/50 rounded-md p-2">
+                        <div className="text-muted-foreground text-[10px]">Tayangan</div>
+                        <div className="text-sm font-semibold">{metrics.pageViews}</div>
                       </div>
-                    )}
-                    {tenant.phone && (
-                      <div className="text-muted-foreground flex items-center gap-2">
-                        <Phone className="size-3.5 shrink-0" />
-                        <span>{tenant.phone}</span>
+                      <div className="bg-muted/50 rounded-md p-2">
+                        <div className="text-muted-foreground text-[10px]">Pengunjung Unik</div>
+                        <div className="text-sm font-semibold">{metrics.uniqueVisitors}</div>
                       </div>
-                    )}
-                    {tenant.customDomain && (
-                      <div className="text-muted-foreground flex items-center gap-2 font-mono">
-                        <ExternalLink className="size-3.5 shrink-0" />
-                        <span className="text-primary truncate">{tenant.customDomain}</span>
+                      <div className="bg-muted/50 rounded-md p-2">
+                        <div className="text-muted-foreground text-[10px]">Mulai Checkout</div>
+                        <div className="text-sm font-semibold">{metrics.checkoutStarts}</div>
                       </div>
-                    )}
+                      <div className="bg-muted/50 rounded-md p-2">
+                        <div className="text-muted-foreground text-[10px]">Selesai Order</div>
+                        <div className="text-sm font-semibold">{metrics.checkoutCompletes}</div>
+                      </div>
+                    </div>
 
-                    {(() => {
-                      const metrics = analyticsByTenant.get(tenant.id) ?? {
-                        checkoutCompletes: 0,
-                        checkoutStarts: 0,
-                        conversionRate: 0,
-                        pageViews: 0,
-                        topSources: [],
-                        uniqueVisitors: 0,
-                      }
+                    <div className="text-muted-foreground text-[11px]">
+                      {metrics.topSources.length > 0 ? (
+                        <span className="block truncate">
+                          Sumber:{' '}
+                          {metrics.topSources.map(s => `${s.source} (${s.count})`).join(', ')}
+                        </span>
+                      ) : (
+                        <span>Belum ada sumber rujukan hari ini</span>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
 
-                      return (
-                        <div className="space-y-2 border-t pt-3">
-                          <div className="text-muted-foreground flex items-center justify-between font-medium">
-                            <span>Statistik Hari Ini</span>
-                            <span>{metrics.conversionRate}% konversi</span>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-2 text-center">
-                            <div className="bg-muted/50 rounded-md p-2">
-                              <div className="text-muted-foreground text-[10px]">Tayangan</div>
-                              <div className="text-sm font-semibold">{metrics.pageViews}</div>
-                            </div>
-                            <div className="bg-muted/50 rounded-md p-2">
-                              <div className="text-muted-foreground text-[10px]">
-                                Pengunjung Unik
-                              </div>
-                              <div className="text-sm font-semibold">{metrics.uniqueVisitors}</div>
-                            </div>
-                            <div className="bg-muted/50 rounded-md p-2">
-                              <div className="text-muted-foreground text-[10px]">
-                                Mulai Checkout
-                              </div>
-                              <div className="text-sm font-semibold">{metrics.checkoutStarts}</div>
-                            </div>
-                            <div className="bg-muted/50 rounded-md p-2">
-                              <div className="text-muted-foreground text-[10px]">Selesai Order</div>
-                              <div className="text-sm font-semibold">
-                                {metrics.checkoutCompletes}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="text-muted-foreground text-[11px]">
-                            {metrics.topSources.length > 0 ? (
-                              <span className="block truncate">
-                                Sumber:{' '}
-                                {metrics.topSources.map(s => `${s.source} (${s.count})`).join(', ')}
-                              </span>
-                            ) : (
-                              <span>Belum ada sumber rujukan hari ini</span>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })()}
-                  </CardContent>
-
-                  <CardFooter className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
+                <CardFooter className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Link
                       className={buttonVariants({ size: 'sm', variant: 'outline' })}
-                      href={`/dashboard/settings?tenant=${tenant.id}`}
+                      href={`/dashboard/${tenant.slug}`}
                     >
-                      <Settings className="mr-1.5 size-3.5" />
-                      Pengaturan
+                      <LayoutDashboard className="mr-1.5 size-3.5" />
+                      Dashboard
                     </Link>
 
                     <Link
                       className={buttonVariants({ size: 'sm', variant: 'outline' })}
-                      href={`/dashboard/products?tenant=${tenant.id}`}
+                      href={`/dashboard/${tenant.slug}/products`}
                     >
                       <Package className="mr-1.5 size-3.5" />
                       Katalog Produk
                     </Link>
 
                     <Link
-                      href={liveUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                      className={buttonVariants({
-                        className: 'w-full sm:w-auto flex items-center gap-1.5',
-                        size: 'sm',
-                        variant: 'default',
-                      })}
+                      className={buttonVariants({ size: 'sm', variant: 'outline' })}
+                      href={`/dashboard/${tenant.slug}/settings`}
                     >
-                      <ExternalLink className="size-3.5" />
-                      Buka Toko
+                      <Settings className="mr-1.5 size-3.5" />
+                      Pengaturan
                     </Link>
-                  </CardFooter>
-                </Card>
-              )
-            })}
-          </div>
-        )}
+                  </div>
+
+                  <Link
+                    href={liveUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                    className={buttonVariants({
+                      className: 'w-full sm:w-auto flex items-center gap-1.5',
+                      size: 'sm',
+                      variant: 'default',
+                    })}
+                  >
+                    <ExternalLink className="size-3.5" />
+                    Buka Toko
+                  </Link>
+                </CardFooter>
+              </Card>
+            )
+          })}
+        </div>
       </div>
     </main>
-  )
-}
-
-export default function DashboardPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="container mx-auto flex flex-col gap-6 px-4 py-8">
-          <Skeleton className="h-10 w-72" />
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <Skeleton className="h-64 rounded-xl" />
-            <Skeleton className="h-64 rounded-xl" />
-            <Skeleton className="h-64 rounded-xl" />
-          </div>
-        </div>
-      }
-    >
-      <MerchantOverview />
-    </Suspense>
   )
 }

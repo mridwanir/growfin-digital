@@ -3,13 +3,13 @@ import { http, HttpResponse } from 'msw'
 export const GEMINI_API_URL =
   'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
 
-export const MIDTRANS_SNAP_URL_PATTERN =
+const MIDTRANS_SNAP_URL_PATTERN =
   /^https:\/\/app\.(?:sandbox\.)?midtrans\.com\/snap\/v1\/transactions$/
 
-export const MIDTRANS_STATUS_URL_PATTERN =
+const MIDTRANS_STATUS_URL_PATTERN =
   /^https:\/\/api\.(?:sandbox\.)?midtrans\.com\/v2\/([^/]+)\/status$/
 
-export const NEON_AUTH_JWKS_URL =
+const NEON_AUTH_JWKS_URL =
   'https://test.neonauth.us-east-1.aws.neon.tech/neondb/auth/.well-known/jwks.json'
 
 export const handlers = [

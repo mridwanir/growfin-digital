@@ -8,7 +8,7 @@ export interface MockSessionOptions {
   userId?: string
 }
 
-export interface SessionData {
+interface SessionData {
   session: {
     id: string
     createdAt: Date

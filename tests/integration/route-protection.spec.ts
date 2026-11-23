@@ -14,7 +14,11 @@ import {
   updateTenantSettingsAction,
 } from '@/lib/dashboard/actions'
 
-import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
+import {
+  createCustomerSession,
+  createMerchantSession,
+  createUnauthenticatedSession,
+} from '../fixtures/session-fixture'
 
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
@@ -129,6 +133,25 @@ describe('Route Protection & Authorization Seam', () => {
 
       it('rejects deleteProductAction when user id is empty', async () => {
         const result = await deleteProductAction(mockTenantId, mockProductId)
+        expect(result).toEqual({ error: 'Unauthorized', success: false })
+      })
+    })
+
+    describe('requests with customer session without user id', () => {
+      beforeEach(() => {
+        vi.spyOn(auth, 'getSession').mockResolvedValue(
+          createCustomerSession({
+            name: 'Customer User',
+            email: 'customer@example.com',
+            userId: '',
+          }),
+        )
+      })
+
+      it('rejects updateTenantSettingsAction when user id is empty', async () => {
+        const result = await updateTenantSettingsAction(mockTenantId, {
+          name: 'Toko Baru',
+        })
         expect(result).toEqual({ error: 'Unauthorized', success: false })
       })
     })

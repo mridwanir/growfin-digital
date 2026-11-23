@@ -7,6 +7,7 @@ import type { ProductWithVariants } from '@/lib/dashboard/mutations'
 
 import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { z } from 'zod'
 
 import { db } from '@/db'
@@ -42,7 +43,7 @@ interface AuthenticatedUser {
 }
 
 type AuthCheckResult =
-  | { success: true; user: AuthenticatedUser; userId: string }
+  | { activeOrganizationId: string | null; success: true; user: AuthenticatedUser; userId: string }
   | { error: string; success: false }
 
 async function requireMerchantSession(): Promise<AuthCheckResult> {
@@ -50,7 +51,37 @@ async function requireMerchantSession(): Promise<AuthCheckResult> {
   if (!session?.user?.id) {
     return { error: 'Unauthorized', success: false }
   }
-  return { success: true, user: session.user, userId: session.user.id }
+
+  let activeOrgId: string | null = session.session?.activeOrganizationId ?? null
+
+  if (!activeOrgId) {
+    try {
+      const cookieStore = await cookies()
+      activeOrgId =
+        cookieStore.get('better-auth.active_organization_id')?.value ??
+        cookieStore.get('__Secure-better-auth.active_organization_id')?.value ??
+        null
+    } catch {
+      // Ignored outside request context
+    }
+  }
+
+  if (!activeOrgId) {
+    const [firstOrg] = await db
+      .select({ organizationId: member.organizationId })
+      .from(member)
+      .where(eq(member.userId, session.user.id))
+      .limit(1)
+
+    activeOrgId = firstOrg?.organizationId ?? null
+  }
+
+  return {
+    activeOrganizationId: activeOrgId,
+    success: true,
+    user: session.user,
+    userId: session.user.id,
+  }
 }
 function validateInput<T>(
   schema: z.ZodType<T>,
@@ -160,15 +191,29 @@ const updateProductSchema = z.object({
 })
 
 export async function updateTenantSettingsAction(
-  tenantId: string,
-  input: unknown,
+  tenantIdOrInput: string | unknown,
+  maybeInput?: unknown,
 ): Promise<ActionResult<TenantSettings>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
   }
 
-  const validation = validateInput(updateSettingsSchema, input)
+  let tenantId: string
+  let rawInput: unknown
+
+  if (typeof tenantIdOrInput === 'string') {
+    tenantId = tenantIdOrInput
+    rawInput = maybeInput
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    rawInput = tenantIdOrInput
+  }
+
+  const validation = validateInput(updateSettingsSchema, rawInput)
   if (!validation.success) {
     return validation
   }
@@ -178,8 +223,8 @@ export async function updateTenantSettingsAction(
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/settings')
-  revalidatePath('/dashboard/[tenantSlug]/settings')
   if (updated.slug) {
     revalidatePath(`/dashboard/${updated.slug}/settings`)
   }
@@ -188,15 +233,29 @@ export async function updateTenantSettingsAction(
 }
 
 export async function createProductCategoryAction(
-  tenantId: string,
-  input: unknown,
+  tenantIdOrInput: string | unknown,
+  maybeInput?: unknown,
 ): Promise<ActionResult<Category>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
   }
 
-  const validation = validateInput(createProductCategorySchema, input)
+  let tenantId: string
+  let rawInput: unknown
+
+  if (typeof tenantIdOrInput === 'string') {
+    tenantId = tenantIdOrInput
+    rawInput = maybeInput
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    rawInput = tenantIdOrInput
+  }
+
+  const validation = validateInput(createProductCategorySchema, rawInput)
   if (!validation.success) {
     return validation
   }
@@ -206,23 +265,40 @@ export async function createProductCategoryAction(
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: created, success: true }
 }
 
 export async function updateProductCategoryAction(
-  tenantId: string,
-  categoryId: string,
-  input: unknown,
+  tenantIdOrCategoryId: string,
+  categoryIdOrInput: string | unknown,
+  maybeInput?: unknown,
 ): Promise<ActionResult<Category>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
   }
 
-  const validation = validateInput(updateProductCategorySchema, input)
+  let tenantId: string
+  let categoryId: string
+  let rawInput: unknown
+
+  if (maybeInput !== undefined) {
+    tenantId = tenantIdOrCategoryId
+    categoryId = categoryIdOrInput as string
+    rawInput = maybeInput
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    categoryId = tenantIdOrCategoryId
+    rawInput = categoryIdOrInput
+  }
+
+  const validation = validateInput(updateProductCategorySchema, rawInput)
   if (!validation.success) {
     return validation
   }
@@ -232,19 +308,33 @@ export async function updateProductCategoryAction(
     return { error: 'Category or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: updated, success: true }
 }
 
 export async function deleteProductCategoryAction(
-  tenantId: string,
-  categoryId: string,
+  tenantIdOrCategoryId: string,
+  maybeCategoryId?: string,
 ): Promise<ActionResult<{ success: true }>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
+  }
+
+  let tenantId: string
+  let categoryId: string
+
+  if (maybeCategoryId !== undefined) {
+    tenantId = tenantIdOrCategoryId
+    categoryId = maybeCategoryId
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    categoryId = tenantIdOrCategoryId
   }
 
   const deleted = await deleteCategory(tenantId, authResult.userId, categoryId)
@@ -252,22 +342,36 @@ export async function deleteProductCategoryAction(
     return { error: 'Category or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: { success: true }, success: true }
 }
 
 export async function createProductAction(
-  tenantId: string,
-  input: unknown,
+  tenantIdOrInput: string | unknown,
+  maybeInput?: unknown,
 ): Promise<ActionResult<ProductWithVariants>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
   }
 
-  const validation = validateInput(createProductSchema, input)
+  let tenantId: string
+  let rawInput: unknown
+
+  if (typeof tenantIdOrInput === 'string') {
+    tenantId = tenantIdOrInput
+    rawInput = maybeInput
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    rawInput = tenantIdOrInput
+  }
+
+  const validation = validateInput(createProductSchema, rawInput)
   if (!validation.success) {
     return validation
   }
@@ -277,19 +381,33 @@ export async function createProductAction(
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: created, success: true }
 }
 
 export async function deleteProductAction(
-  tenantId: string,
-  productId: string,
+  tenantIdOrProductId: string,
+  maybeProductId?: string,
 ): Promise<ActionResult<{ success: true }>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
+  }
+
+  let tenantId: string
+  let productId: string
+
+  if (maybeProductId !== undefined) {
+    tenantId = tenantIdOrProductId
+    productId = maybeProductId
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    productId = tenantIdOrProductId
   }
 
   const deleted = await deleteProduct(tenantId, authResult.userId, productId)
@@ -297,23 +415,40 @@ export async function deleteProductAction(
     return { error: 'Product or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: { success: true }, success: true }
 }
 
 export async function updateProductAction(
-  tenantId: string,
-  productId: string,
-  input: unknown,
+  tenantIdOrProductId: string,
+  productIdOrInput: string | unknown,
+  maybeInput?: unknown,
 ): Promise<ActionResult<ProductWithVariants>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
   }
 
-  const validation = validateInput(updateProductSchema, input)
+  let tenantId: string
+  let productId: string
+  let rawInput: unknown
+
+  if (maybeInput !== undefined) {
+    tenantId = tenantIdOrProductId
+    productId = productIdOrInput as string
+    rawInput = maybeInput
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    productId = tenantIdOrProductId
+    rawInput = productIdOrInput
+  }
+
+  const validation = validateInput(updateProductSchema, rawInput)
   if (!validation.success) {
     return validation
   }
@@ -323,8 +458,8 @@ export async function updateProductAction(
     return { error: 'Product or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: updated, success: true }
 }
@@ -364,15 +499,29 @@ const saveDraftSchema = z.object({
 })
 
 export async function saveStorefrontDraftAction(
-  tenantId: string,
-  input: unknown,
+  tenantIdOrInput?: string | unknown,
+  maybeInput?: unknown,
 ): Promise<ActionResult<StorefrontConfig>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
   }
 
-  const validation = validateInput(saveDraftSchema, input)
+  let tenantId: string
+  let rawInput: unknown
+
+  if (typeof tenantIdOrInput === 'string') {
+    tenantId = tenantIdOrInput
+    rawInput = maybeInput
+  } else {
+    if (!authResult.activeOrganizationId) {
+      return { error: 'No active store found', success: false }
+    }
+    tenantId = authResult.activeOrganizationId
+    rawInput = tenantIdOrInput
+  }
+
+  const validation = validateInput(saveDraftSchema, rawInput)
   if (!validation.success) {
     return validation
   }
@@ -445,18 +594,26 @@ export async function saveStorefrontDraftAction(
     draftRecord = inserted
   }
 
-  revalidatePath('/dashboard/[tenantSlug]/editor')
-  revalidatePath(`/dashboard/${tenant.slug}/editor`)
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/editor')
+  if (tenant.slug) {
+    revalidatePath(`/dashboard/${tenant.slug}/editor`)
+  }
 
   return { data: draftRecord, success: true }
 }
 
 export async function publishStorefrontDraftAction(
-  tenantId: string,
+  maybeTenantId?: string,
 ): Promise<ActionResult<StorefrontConfig>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
+  }
+
+  const tenantId = maybeTenantId || authResult.activeOrganizationId
+  if (!tenantId) {
+    return { error: 'No active store found', success: false }
   }
 
   const [tenant] = await db
@@ -532,20 +689,27 @@ export async function publishStorefrontDraftAction(
     return { error: 'Draft configuration not found', success: false }
   }
 
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/editor')
   revalidatePath('/site/[slug]')
-  revalidatePath('/dashboard/[tenantSlug]')
-  revalidatePath(`/site/${tenant.slug}`)
-  revalidatePath(`/dashboard/${tenant.slug}`)
-
+  if (tenant.slug) {
+    revalidatePath(`/site/${tenant.slug}`)
+    revalidatePath(`/dashboard/${tenant.slug}`)
+  }
   return { data: publishedRecord, success: true }
 }
 
 export async function discardStorefrontDraftAction(
-  tenantId: string,
+  maybeTenantId?: string,
 ): Promise<ActionResult<StorefrontConfig>> {
   const authResult = await requireMerchantSession()
   if (!authResult.success) {
     return { error: authResult.error, success: false }
+  }
+
+  const tenantId = maybeTenantId || authResult.activeOrganizationId
+  if (!tenantId) {
+    return { error: 'No active store found', success: false }
   }
 
   const [tenant] = await db
@@ -610,9 +774,11 @@ export async function discardStorefrontDraftAction(
     draftRecord = inserted
   }
 
-  revalidatePath('/dashboard/[tenantSlug]/editor')
-  revalidatePath(`/dashboard/${tenant.slug}/editor`)
-
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/editor')
+  if (tenant.slug) {
+    revalidatePath(`/dashboard/${tenant.slug}/editor`)
+  }
   return { data: draftRecord, success: true }
 }
 

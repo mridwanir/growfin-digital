@@ -6,10 +6,26 @@ import { db } from '@/db'
 import { member, organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 
+export interface MerchantTenantSummary {
+  id: string
+  name: string
+  address: string | null
+  category: string | null
+  city: string | null
+  createdAt: Date
+  customDomain: string | null
+  packageTier: string
+  phone: string | null
+  siteActiveUntil: Date | null
+  slug: string
+  status: string
+  updatedAt: Date
+}
+
 /**
  * Returns all tenants owned by the given merchant user.
  */
-export async function getMerchantTenants(userId: string) {
+export async function getMerchantTenants(userId: string): Promise<MerchantTenantSummary[]> {
   return db
     .select({
       id: organization.id,

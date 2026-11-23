@@ -226,8 +226,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     expect((publishedInDb.sections as StorefrontSection[])[2]?.isVisible).toBe(true)
 
     // 3. Verify editor cache path revalidation was requested
-    expect(revalidatePath).toHaveBeenCalledWith(`/dashboard/${fixture.slug}/editor`)
-    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/[tenantSlug]/editor')
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/editor')
   })
 
   it('confirms draft edits are not visible in public loader getStorefrontDataBySlug until published', async () => {
@@ -348,8 +347,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     expect(liveSections[2]?.isVisible).toBe(false)
 
     // 4. Verify cache revalidations triggered on publish
-    expect(revalidatePath).toHaveBeenCalledWith('/site/[slug]')
-    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/[tenantSlug]')
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard')
     expect(revalidatePath).toHaveBeenCalledWith(`/site/${fixture.slug}`)
   })
 
@@ -395,5 +393,22 @@ describe('Storefront Editor draft save and transactional publish integration sui
         ),
       )
     expect(draftInDb.theme).not.toEqual(expect.objectContaining({ layoutId: 'intruder-layout' }))
+  })
+
+  it('resolves active organization from session when tenantId is omitted in draft actions', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValue(
+      createMerchantSession({ activeOrganizationId: fixture.tenantId, userId: merchantUserId }),
+    )
+
+    const saveRes = await saveStorefrontDraftAction({
+      theme: { fontFamily: 'font-mono', layoutId: 'artisan', themeColor: '#10b981' },
+    })
+
+    expect(saveRes.success).toBe(true)
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/editor')
+
+    const pubRes = await publishStorefrontDraftAction()
+    expect(pubRes.success).toBe(true)
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard')
   })
 })

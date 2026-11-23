@@ -79,7 +79,7 @@ export interface ProductsClientProps {
   initialCategories: CategoryItem[]
   initialProducts: ProductItem[]
   tenantId: string
-  tenantSlug: string
+  tenantSlug?: string
 }
 
 export function ProductsClient({

@@ -1,36 +1,31 @@
 import { redirect } from 'next/navigation'
 
-import { getSession } from '@/lib/auth/server'
-import { getMerchantTenants } from '@/lib/dashboard/mutations'
+import { getTenantSettings } from '@/lib/dashboard/mutations'
+import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
 
-interface LegacySettingsPageProps {
-  searchParams?: Promise<{ tenant?: string }>
-}
+import { SettingsClient } from './settings-client'
 
-export default async function LegacySettingsPage({ searchParams }: LegacySettingsPageProps) {
-  const { data: session } = await getSession()
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
+export default async function TenantSettingsPage() {
+  const { currentTenant: tenant, session } = await requireActiveTenantContext()
 
-  const tenants = await getMerchantTenants(session.user.id)
-  if (tenants.length === 0) {
+  const fullSettings = await getTenantSettings(tenant.id, session.user.id)
+
+  if (!fullSettings) {
     redirect('/dashboard')
   }
 
-  const resolvedParams = searchParams ? await searchParams : undefined
-  const tenantParam = resolvedParams?.tenant
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-heading text-2xl font-bold tracking-tight">
+          Pengaturan Toko: {fullSettings.name}
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Perbarui kontak usaha, jam operasional, tautan sosial media, dan domain kustom toko Anda.
+        </p>
+      </div>
 
-  if (tenantParam) {
-    const matched = tenants.find(t => t.id === tenantParam || t.slug === tenantParam)
-    if (matched) {
-      redirect(`/dashboard/${matched.slug}/settings`)
-    }
-  }
-
-  if (tenants.length === 1) {
-    redirect(`/dashboard/${tenants[0].slug}/settings`)
-  }
-
-  redirect('/dashboard')
+      <SettingsClient initialTenant={fullSettings} tenantId={tenant.id} tenantSlug={tenant.slug} />
+    </div>
+  )
 }

@@ -46,8 +46,8 @@ export interface TenantSettingsData {
 
 export interface SettingsClientProps {
   initialTenant: TenantSettingsData
-  tenantId: string
-  tenantSlug: string
+  tenantId?: string
+  tenantSlug?: string
 }
 
 export function SettingsClient({ initialTenant, tenantId }: SettingsClientProps) {

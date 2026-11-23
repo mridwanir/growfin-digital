@@ -55,7 +55,9 @@ export function TenantSwitcher({ currentTenant, tenants }: TenantSwitcherProps) 
             <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
               <span className="truncate font-semibold">{currentTenant.name}</span>
               <span className="text-muted-foreground truncate text-xs">
-                {currentTenant.packageTier || currentTenant.category || 'Store'}
+                {(currentTenant.packageTier
+                  ? currentTenant.packageTier.toUpperCase()
+                  : currentTenant.category) || 'Store'}
               </span>
             </div>
             <ChevronsUpDown className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
@@ -70,16 +72,11 @@ export function TenantSwitcher({ currentTenant, tenants }: TenantSwitcherProps) 
               <DropdownMenuLabel className="text-muted-foreground text-xs">Toko</DropdownMenuLabel>
             </DropdownMenuGroup>
             {tenants.map(tenant => {
-              const isActive = tenant.slug === currentTenant.slug
+              const isActive = tenant.id === currentTenant.id || tenant.slug === currentTenant.slug
               return (
                 <DropdownMenuItem
                   key={tenant.id}
-                  render={
-                    <Link
-                      className="flex items-center gap-2 p-2"
-                      href={`/dashboard/${tenant.slug}`}
-                    />
-                  }
+                  render={<Link className="flex items-center gap-2 p-2" href="/dashboard" />}
                 >
                   <div className="flex size-6 items-center justify-center rounded-sm border">
                     <Store className="size-4 shrink-0" />

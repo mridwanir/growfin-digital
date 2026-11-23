@@ -10,13 +10,10 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 import { POST as storageDeleteRoute } from '@/app/api/storage/delete/route'
 import { POST as storageUploadRoute } from '@/app/api/storage/upload/route'
-import TenantDashboardLayout from '@/app/dashboard/[tenantSlug]/layout'
-import TenantOverviewPage from '@/app/dashboard/[tenantSlug]/page'
-import TenantProductsPage from '@/app/dashboard/[tenantSlug]/products/page'
-import TenantSettingsPage from '@/app/dashboard/[tenantSlug]/settings/page'
+import DashboardLayout from '@/app/dashboard/layout'
 import DashboardPage from '@/app/dashboard/page'
-import LegacyProductsPage from '@/app/dashboard/products/page'
-import LegacySettingsPage from '@/app/dashboard/settings/page'
+import TenantProductsPage from '@/app/dashboard/products/page'
+import TenantSettingsPage from '@/app/dashboard/settings/page'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { userInNeonAuth } from '@/db/schema/auth'
@@ -335,9 +332,8 @@ describe('Route Protection & Authorization Seam', () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
       await expect(
-        TenantDashboardLayout({
+        DashboardLayout({
           children: React.createElement('div', null, 'Child Content'),
-          params: Promise.resolve({ tenantSlug: ownerFixture.slug }),
         }),
       ).rejects.toThrow('NEXT_REDIRECT:/login')
       expect(redirect).toHaveBeenCalledWith('/login')
@@ -351,31 +347,14 @@ describe('Route Protection & Authorization Seam', () => {
       )
 
       await expect(
-        TenantDashboardLayout({
+        DashboardLayout({
           children: React.createElement('div', null, 'Child Content'),
-          params: Promise.resolve({ tenantSlug: ownerFixture.slug }),
         }),
       ).rejects.toThrow('NEXT_REDIRECT:/login')
       expect(redirect).toHaveBeenCalledWith('/login')
     })
 
-    it('redirects caller accessing non-existent tenant slug to /dashboard', async () => {
-      vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-        createMerchantSession({
-          userId: ownerUserId,
-        }),
-      )
-
-      await expect(
-        TenantDashboardLayout({
-          children: React.createElement('div', null, 'Child Content'),
-          params: Promise.resolve({ tenantSlug: 'non-existent-tenant-slug' }),
-        }),
-      ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-      expect(redirect).toHaveBeenCalledWith('/dashboard')
-    })
-
-    it('redirects caller accessing unowned tenant slug to /dashboard', async () => {
+    it('redirects caller accessing unowned or zero tenant to /onboarding', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
         createMerchantSession({
           userId: otherUserId,
@@ -383,24 +362,22 @@ describe('Route Protection & Authorization Seam', () => {
       )
 
       await expect(
-        TenantDashboardLayout({
+        DashboardLayout({
           children: React.createElement('div', null, 'Child Content'),
-          params: Promise.resolve({ tenantSlug: ownerFixture.slug }),
         }),
-      ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-      expect(redirect).toHaveBeenCalledWith('/dashboard')
+      ).rejects.toThrow('NEXT_REDIRECT:/onboarding')
+      expect(redirect).toHaveBeenCalledWith('/onboarding')
     })
 
-    it('renders layout shell wrapping children for authorized merchant accessing owned tenant slug', async () => {
+    it('renders layout shell wrapping children for authorized merchant', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
         createMerchantSession({
           userId: ownerUserId,
         }),
       )
 
-      const element = await TenantDashboardLayout({
+      const element = await DashboardLayout({
         children: React.createElement('div', { id: 'dashboard-child' }, 'Welcome Merchant Store'),
-        params: Promise.resolve({ tenantSlug: ownerFixture.slug }),
       })
 
       expect(element).toBeDefined()
@@ -489,22 +466,28 @@ describe('Route Protection & Authorization Seam', () => {
       expect(redirect).toHaveBeenCalledWith('/login')
     })
 
-    it('redirects single-tenant merchant navigating to /dashboard to /dashboard/[tenantSlug]', async () => {
+    it('renders store overview without redirecting to slug for single-tenant merchant', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
         createMerchantSession({
           userId: singleTenantUserId,
         }),
       )
 
-      await expect(DashboardPage()).rejects.toThrow(
-        `NEXT_REDIRECT:/dashboard/${singleTenantFixture.slug}`,
-      )
-      expect(redirect).toHaveBeenCalledWith(`/dashboard/${singleTenantFixture.slug}`)
+      const element = await DashboardPage()
+      expect(element).toBeDefined()
+      expect(redirect).not.toHaveBeenCalled()
+
+      const html = renderToStaticMarkup(element)
+      expect(html).toContain(singleTenantFixture.slug)
+      expect(html).toContain('href="/dashboard/products"')
+      expect(html).toContain('href="/dashboard/settings"')
+      expect(html).toContain('href="/dashboard/editor"')
     })
 
-    it('renders store selection matrix without redirecting for multi-tenant merchant', async () => {
+    it('renders active store overview for multi-tenant merchant', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
         createMerchantSession({
+          activeOrganizationId: multiTenantFixtureA.tenantId,
           userId: multiTenantUserId,
         }),
       )
@@ -515,30 +498,20 @@ describe('Route Protection & Authorization Seam', () => {
 
       const html = renderToStaticMarkup(element)
       expect(html).toContain(multiTenantFixtureA.slug)
-      expect(html).toContain(multiTenantFixtureB.slug)
-      expect(html).toContain(`/dashboard/${multiTenantFixtureA.slug}`)
-      expect(html).toContain(`/dashboard/${multiTenantFixtureA.slug}/products`)
-      expect(html).toContain(`/dashboard/${multiTenantFixtureA.slug}/settings`)
-      expect(html).toContain(`/dashboard/${multiTenantFixtureB.slug}`)
-      expect(html).toContain(`/dashboard/${multiTenantFixtureB.slug}/products`)
-      expect(html).toContain(`/dashboard/${multiTenantFixtureB.slug}/settings`)
+      expect(html).toContain('href="/dashboard/products"')
+      expect(html).toContain('href="/dashboard/settings"')
+      expect(html).toContain('href="/dashboard/editor"')
     })
 
-    it('renders empty state card without redirecting for zero-tenant merchant', async () => {
+    it('redirects zero-tenant merchant to /onboarding', async () => {
       vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
         createMerchantSession({
           userId: zeroTenantUserId,
         }),
       )
 
-      const element = await DashboardPage()
-      expect(element).toBeDefined()
-      expect(redirect).not.toHaveBeenCalled()
-
-      const html = renderToStaticMarkup(element)
-      expect(html).toContain('Belum Ada Website')
-      expect(html).toContain('Mulai Buat Website')
-      expect(html).toContain('href="/"')
+      await expect(DashboardPage()).rejects.toThrow('NEXT_REDIRECT:/onboarding')
+      expect(redirect).toHaveBeenCalledWith('/onboarding')
     })
   })
 
@@ -635,31 +608,23 @@ describe('Route Protection & Authorization Seam', () => {
         .where(inArray(userInNeonAuth.id, [singleUserId, multiUserId, unownedUserId]))
     })
 
-    describe('tenant overview page (/dashboard/[tenantSlug])', () => {
+    describe('tenant overview page (/dashboard)', () => {
       it('redirects unauthenticated caller to /login', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-        await expect(
-          TenantOverviewPage({
-            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-          }),
-        ).rejects.toThrow('NEXT_REDIRECT:/login')
+        await expect(DashboardPage()).rejects.toThrow('NEXT_REDIRECT:/login')
         expect(redirect).toHaveBeenCalledWith('/login')
       })
 
-      it('redirects caller to /dashboard when accessing unowned tenant slug', async () => {
+      it('redirects caller with no store to /onboarding', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
           createMerchantSession({
             userId: unownedUserId,
           }),
         )
 
-        await expect(
-          TenantOverviewPage({
-            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-          }),
-        ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
+        await expect(DashboardPage()).rejects.toThrow('NEXT_REDIRECT:/onboarding')
+        expect(redirect).toHaveBeenCalledWith('/onboarding')
       })
 
       it('renders tenant overview with analytics metrics and quick store links', async () => {
@@ -669,9 +634,7 @@ describe('Route Protection & Authorization Seam', () => {
           }),
         )
 
-        const element = await TenantOverviewPage({
-          params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-        })
+        const element = await DashboardPage()
         expect(element).toBeDefined()
         expect(redirect).not.toHaveBeenCalled()
 
@@ -681,49 +644,39 @@ describe('Route Protection & Authorization Seam', () => {
         expect(html).toContain('Bandung')
         expect(html).toContain('081234567890')
         expect(html).toContain('instagram')
-        expect(html).toContain(`/dashboard/${singleTenantFixture.slug}/products`)
-        expect(html).toContain(`/dashboard/${singleTenantFixture.slug}/settings`)
-        expect(html).toContain(`/dashboard/${singleTenantFixture.slug}/editor`)
+        expect(html).toContain('href="/dashboard/products"')
+        expect(html).toContain('href="/dashboard/settings"')
+        expect(html).toContain('href="/dashboard/editor"')
       })
     })
 
-    describe('tenant settings page (/dashboard/[tenantSlug]/settings)', () => {
+    describe('tenant settings page (/dashboard/settings)', () => {
       it('redirects unauthenticated caller to /login', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-        await expect(
-          TenantSettingsPage({
-            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-          }),
-        ).rejects.toThrow('NEXT_REDIRECT:/login')
+        await expect(TenantSettingsPage()).rejects.toThrow('NEXT_REDIRECT:/login')
         expect(redirect).toHaveBeenCalledWith('/login')
       })
 
-      it('redirects caller to /dashboard when accessing unowned tenant slug', async () => {
+      it('redirects caller with no store to /onboarding', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
           createMerchantSession({
             userId: unownedUserId,
           }),
         )
 
-        await expect(
-          TenantSettingsPage({
-            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-          }),
-        ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
+        await expect(TenantSettingsPage()).rejects.toThrow('NEXT_REDIRECT:/onboarding')
+        expect(redirect).toHaveBeenCalledWith('/onboarding')
       })
 
-      it('loads settings for active tenant based on route params', async () => {
+      it('loads settings for active tenant', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
           createMerchantSession({
             userId: singleUserId,
           }),
         )
 
-        const element = await TenantSettingsPage({
-          params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-        })
+        const element = await TenantSettingsPage()
         expect(element).toBeDefined()
         expect(redirect).not.toHaveBeenCalled()
 
@@ -735,43 +688,33 @@ describe('Route Protection & Authorization Seam', () => {
       })
     })
 
-    describe('tenant products page (/dashboard/[tenantSlug]/products)', () => {
+    describe('tenant products page (/dashboard/products)', () => {
       it('redirects unauthenticated caller to /login', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-        await expect(
-          TenantProductsPage({
-            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-          }),
-        ).rejects.toThrow('NEXT_REDIRECT:/login')
+        await expect(TenantProductsPage()).rejects.toThrow('NEXT_REDIRECT:/login')
         expect(redirect).toHaveBeenCalledWith('/login')
       })
 
-      it('redirects caller to /dashboard when accessing unowned tenant slug', async () => {
+      it('redirects caller with no store to /onboarding', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
           createMerchantSession({
             userId: unownedUserId,
           }),
         )
 
-        await expect(
-          TenantProductsPage({
-            params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-          }),
-        ).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
+        await expect(TenantProductsPage()).rejects.toThrow('NEXT_REDIRECT:/onboarding')
+        expect(redirect).toHaveBeenCalledWith('/onboarding')
       })
 
-      it('loads categories and products for active tenant based on route params', async () => {
+      it('loads categories and products for active tenant', async () => {
         vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
           createMerchantSession({
             userId: singleUserId,
           }),
         )
 
-        const element = await TenantProductsPage({
-          params: Promise.resolve({ tenantSlug: singleTenantFixture.slug }),
-        })
+        const element = await TenantProductsPage()
         expect(element).toBeDefined()
         expect(redirect).not.toHaveBeenCalled()
 
@@ -780,124 +723,6 @@ describe('Route Protection & Authorization Seam', () => {
         expect(html).toContain('Kopi Susu Spesial')
         expect(html).toContain('Kopi Susu Gula Aren Enak')
         expect(html).not.toContain('?tenant=')
-      })
-    })
-
-    describe('legacy settings route redirect (/dashboard/settings)', () => {
-      it('redirects unauthenticated caller to /login', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
-
-        await expect(LegacySettingsPage({})).rejects.toThrow('NEXT_REDIRECT:/login')
-        expect(redirect).toHaveBeenCalledWith('/login')
-      })
-
-      it('redirects caller with 0 tenants to /dashboard', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: unownedUserId,
-          }),
-        )
-
-        await expect(LegacySettingsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
-      })
-
-      it('redirects single-tenant caller directly to path-scoped settings route', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: singleUserId,
-          }),
-        )
-
-        await expect(LegacySettingsPage({})).rejects.toThrow(
-          `NEXT_REDIRECT:/dashboard/${singleTenantFixture.slug}/settings`,
-        )
-        expect(redirect).toHaveBeenCalledWith(`/dashboard/${singleTenantFixture.slug}/settings`)
-      })
-
-      it('redirects caller with matching tenant query param to path-scoped settings route', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: multiUserId,
-          }),
-        )
-
-        await expect(
-          LegacySettingsPage({
-            searchParams: Promise.resolve({ tenant: multiTenantFixture2.tenantId }),
-          }),
-        ).rejects.toThrow(`NEXT_REDIRECT:/dashboard/${multiTenantFixture2.slug}/settings`)
-        expect(redirect).toHaveBeenCalledWith(`/dashboard/${multiTenantFixture2.slug}/settings`)
-      })
-
-      it('redirects multi-tenant caller without tenant param to /dashboard', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: multiUserId,
-          }),
-        )
-
-        await expect(LegacySettingsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
-      })
-    })
-
-    describe('legacy products route redirect (/dashboard/products)', () => {
-      it('redirects unauthenticated caller to /login', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
-
-        await expect(LegacyProductsPage({})).rejects.toThrow('NEXT_REDIRECT:/login')
-        expect(redirect).toHaveBeenCalledWith('/login')
-      })
-
-      it('redirects caller with 0 tenants to /dashboard', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: unownedUserId,
-          }),
-        )
-
-        await expect(LegacyProductsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
-      })
-
-      it('redirects single-tenant caller directly to path-scoped products route', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: singleUserId,
-          }),
-        )
-
-        await expect(LegacyProductsPage({})).rejects.toThrow(
-          `NEXT_REDIRECT:/dashboard/${singleTenantFixture.slug}/products`,
-        )
-        expect(redirect).toHaveBeenCalledWith(`/dashboard/${singleTenantFixture.slug}/products`)
-      })
-
-      it('redirects caller with matching tenant query param to path-scoped products route', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: multiUserId,
-          }),
-        )
-
-        await expect(
-          LegacyProductsPage({
-            searchParams: Promise.resolve({ tenant: multiTenantFixture1.tenantId }),
-          }),
-        ).rejects.toThrow(`NEXT_REDIRECT:/dashboard/${multiTenantFixture1.slug}/products`)
-        expect(redirect).toHaveBeenCalledWith(`/dashboard/${multiTenantFixture1.slug}/products`)
-      })
-
-      it('redirects multi-tenant caller without tenant param to /dashboard', async () => {
-        vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-          createMerchantSession({
-            userId: multiUserId,
-          }),
-        )
-
-        await expect(LegacyProductsPage({})).rejects.toThrow('NEXT_REDIRECT:/dashboard')
-        expect(redirect).toHaveBeenCalledWith('/dashboard')
       })
     })
   })

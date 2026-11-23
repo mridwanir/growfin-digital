@@ -26,6 +26,18 @@ import { createTestTenant } from '../fixtures/tenant-fixture'
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
+const mockCookieStore = {
+  delete: vi.fn(),
+  get: vi.fn(),
+  getAll: vi.fn(() => []),
+  has: vi.fn(() => false),
+  set: vi.fn(),
+}
+
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(async () => mockCookieStore),
+  headers: vi.fn(async () => new Headers()),
+}))
 
 const mockUserId = crypto.randomUUID()
 const mockTenantId = crypto.randomUUID()
@@ -192,6 +204,76 @@ describe('updateTenantSettingsAction seam', () => {
     expect(updated.city).toBe('Jakarta Selatan')
     expect(updated.phone).toBe('08123456789')
   })
+
+  it('resolves active organization from session.activeOrganizationId when tenantId is omitted', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: mockTenantId, userId: mockUserId }),
+    )
+
+    const payload = {
+      address: 'Jl. Melawai No. 12',
+      city: 'Jakarta Selatan',
+    }
+
+    const result = await updateTenantSettingsAction(payload)
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        id: mockTenantId,
+        address: 'Jl. Melawai No. 12',
+      },
+    })
+  })
+
+  it('resolves active organization from cookie when tenantId is omitted and session activeOrganizationId is null', async () => {
+    mockCookieStore.get.mockImplementation((name: string) => {
+      if (name === 'better-auth.active_organization_id') {
+        return { name, value: mockTenantId }
+      }
+      return undefined
+    })
+
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: null, userId: mockUserId }),
+    )
+
+    const payload = {
+      address: 'Jl. Panglima Polim No. 5',
+    }
+
+    const result = await updateTenantSettingsAction(payload)
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        id: mockTenantId,
+        address: 'Jl. Panglima Polim No. 5',
+      },
+    })
+  })
+
+  it('falls back to user first organization when tenantId is omitted and no cookie or session activeOrganizationId exists', async () => {
+    mockCookieStore.get.mockReturnValue(undefined)
+
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: null, userId: mockUserId }),
+    )
+
+    const payload = {
+      city: 'Jakarta Pusat',
+    }
+
+    const result = await updateTenantSettingsAction(payload)
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        id: mockTenantId,
+        city: 'Jakarta Pusat',
+      },
+    })
+  })
 })
 
 describe('createProductCategoryAction seam', () => {
@@ -265,6 +347,24 @@ describe('createProductCategoryAction seam', () => {
       data: {
         name: 'Minuman Segar',
         tenantId: mockTenantId,
+      },
+    })
+  })
+
+  it('resolves active organization from session when tenantId is omitted', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: mockTenantId, userId: mockUserId }),
+    )
+
+    const result = await createProductCategoryAction({
+      name: 'Minuman Dingin Session',
+    })
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        name: 'Minuman Dingin Session',
+        organizationId: mockTenantId,
       },
     })
   })
@@ -543,6 +643,27 @@ describe('createProductAction seam', () => {
             options: [expect.objectContaining({ label: 'Sedang', priceModifier: 0 })],
           }),
         ],
+      },
+    })
+  })
+
+  it('resolves active organization from session when tenantId is omitted', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: mockTenantId, userId: mockUserId }),
+    )
+
+    const result = await createProductAction({
+      name: 'Mie Ayam Session',
+      basePrice: 20000,
+      categoryId: seededCategoryId,
+      description: 'Session scoped product',
+    })
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        name: 'Mie Ayam Session',
+        organizationId: mockTenantId,
       },
     })
   })

@@ -6,11 +6,13 @@ export interface MockSessionOptions {
   role?: string
   user?: null
   userId?: string
+  activeOrganizationId?: string | null
 }
 
 interface SessionData {
   session: {
     id: string
+    activeOrganizationId?: string | null
     createdAt: Date
     expiresAt: Date
     ipAddress: string | null
@@ -52,6 +54,7 @@ function createSessionPayload(
     data: {
       session: {
         id: `sess-${crypto.randomUUID()}`,
+        activeOrganizationId: options.activeOrganizationId ?? null,
         createdAt: new Date(),
         expiresAt: options.expiresAt ?? new Date(Date.now() + 86400000),
         ipAddress: null,

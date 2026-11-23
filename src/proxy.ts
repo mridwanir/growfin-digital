@@ -64,7 +64,11 @@ export default async function proxy(request: NextRequest) {
   }
 
   // 3. Fall through to authentication middleware for protected routes and static/public handlers
-  return authMiddleware(request)
+  const response = await authMiddleware(request)
+  if (pathname.startsWith('/preview')) {
+    response.headers.set('Content-Security-Policy', "frame-ancestors 'self'")
+  }
+  return response
 }
 
 export const config = {

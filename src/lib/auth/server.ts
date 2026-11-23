@@ -10,11 +10,12 @@ import { env } from '@/lib/env'
  */
 export function getSessionCookieDomain(
   nodeEnv: string = process.env.NODE_ENV || 'development',
-  baseDomain: string = env.NEXT_PUBLIC_BASE_DOMAIN,
+  baseDomain?: string,
 ): string | undefined {
+  const domain = baseDomain ?? env.NEXT_PUBLIC_BASE_DOMAIN
   if (nodeEnv === 'development') return 'localhost'
-  if (nodeEnv === 'production') {
-    return baseDomain.startsWith('.') ? baseDomain : `.${baseDomain}`
+  if (nodeEnv === 'production' && domain) {
+    return domain.startsWith('.') ? domain : `.${domain}`
   }
   return undefined
 }

@@ -70,6 +70,17 @@ Tests verify external visual output and token validity without coupling to inter
 - Building the Storefront Editor compound panels.
 - Reorganizing dashboard route segments.
 
+## Required Skills
+
+The implementing agent must consult and follow these skills:
+
+- `better-colors`: Palette calibration, contrast ratios (4.5:1 text, 3:1 controls), OKLCH token mapping.
+- `better-accessibility`: WCAG 2.2 AA compliance, visible focus indicators, non-text contrast.
+- `better-typography`: Font loading, weights, type scale, tabular numbers.
+- `better-ui`: Surface polish, button press scale (0.96), optical alignment.
+- `shadcn`: Component primitive installation, registry configuration, CSS variables mapping.
+- `vitest`: Browser component tests in Playwright.
+
 ## Further Notes
 
 All styling adheres to `better-colors`, `better-typography`, and `better-ui` guidelines.

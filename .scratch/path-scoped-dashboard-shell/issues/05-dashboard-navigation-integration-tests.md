@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Root dashboard overview and redirect, 04: Migrate settings and products to path params.
 
-**Status:** ready-for-agent
+Status: claimed
 
 - [ ] Tests verify single-tenant redirect to `/dashboard/[tenantSlug]`.
 - [ ] Tests verify multi-tenant matrix rendering at `/dashboard`.

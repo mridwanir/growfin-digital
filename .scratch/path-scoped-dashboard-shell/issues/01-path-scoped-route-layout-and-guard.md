@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Route layout extracts `tenantSlug` from params and verifies ownership against the session user.
 - [ ] Unauthorized access to non-owned tenant slugs redirects to `/dashboard`.

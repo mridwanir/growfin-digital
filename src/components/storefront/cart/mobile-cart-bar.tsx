@@ -39,7 +39,7 @@ export function MobileCartBar(props: MobileCartBarProps) {
             </div>
             <div className="text-left">
               <div className="text-xs opacity-90">{itemCount} produk</div>
-              <div className="font-bold">{formatCurrency(total)}</div>
+              <div className="font-bold tabular-nums">{formatCurrency(total)}</div>
             </div>
           </div>
           <div className="flex items-center gap-1 text-sm font-semibold">Lihat Keranjang</div>

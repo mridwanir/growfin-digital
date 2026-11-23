@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { MeracikWordmark } from '@/components/brand/meracik-wordmark'
 import { cn } from '@/lib/utils'
 
 export interface MeracikWatermarkProps {
@@ -30,11 +31,7 @@ export function MeracikWatermark({
           ⚡
         </span>
         <span className="text-muted-foreground">
-          Website UMKM oleh{' '}
-          <strong className="text-card-foreground group-hover:text-primary font-bold transition-colors">
-            <span>Meracik</span>
-            <span className="text-primary italic">Web</span>
-          </strong>
+          Website UMKM oleh <MeracikWordmark size="sm" />
         </span>
         <span aria-hidden="true" className="text-muted-foreground font-bold select-none">
           —

@@ -21,13 +21,18 @@ export interface StorefrontEditorContextValue {
   draft: StorefrontConfig
   iframeRef: RefObject<HTMLIFrameElement | null>
   isPending: boolean
+  isPublishing: boolean
   moveSection: (sectionId: string, direction: 'up' | 'down') => void
+  publishDraft: () => Promise<void>
+  publishError: string | null
+  publishNotification: string | null
   reorderSections: (newSections: StorefrontSection[]) => void
   saveStatus: SaveStatus
   sections: StorefrontSection[]
   selectedSectionId: string | null
   setActiveViewport: (viewport: ViewportMode) => void
   setSaveStatus: (status: SaveStatus) => void
+  setPublishNotification: (notification: string | null) => void
   setSelectedSectionId: (id: string | null) => void
   tenant: Tenant
   theme: StorefrontTheme

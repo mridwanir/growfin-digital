@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components -- Next.js route segment config */
 import type { Metadata } from 'next'
 
 import { redirect } from 'next/navigation'
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
   title: 'Onboarding Toko Baru - MeracikWeb',
 }
 
+export const instant = false
 export default async function OnboardingPage() {
   const { data: session } = await getSession()
 

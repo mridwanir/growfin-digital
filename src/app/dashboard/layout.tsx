@@ -1,10 +1,12 @@
-/* oxlint-disable tailwindcss/no-conflicting-classes -- accessible skip link uses focus:not-sr-only with focus:absolute */
+/* oxlint-disable tailwindcss/no-conflicting-classes, react/only-export-components -- Next.js route config and accessible skip link */
 import type { ReactNode } from 'react'
 
 import { DashboardSidebar } from '@/components/dashboard/sidebar'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
+
+export const instant = false
 
 export async function DashboardGuard({ children }: { children: ReactNode }) {
   await requireActiveTenantContext()

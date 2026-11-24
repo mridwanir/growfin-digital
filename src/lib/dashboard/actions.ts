@@ -680,9 +680,3 @@ export async function discardStorefrontDraftAction(): Promise<ActionResult<Store
   revalidatePath('/dashboard/editor')
   return { data: draftRecord, success: true }
 }
-
-export {
-  createStoreOnboardingAction,
-  type CreateStoreOnboardingData,
-  type CreateStoreOnboardingInput,
-} from '@/lib/onboarding/actions'

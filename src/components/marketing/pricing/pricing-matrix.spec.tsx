@@ -111,9 +111,10 @@ describe('PricingMatrix Component (Screen 4)', () => {
     await expect.element(proPrice).toHaveClass('font-mono')
     await expect.element(proPrice).toHaveClass('tabular-nums')
 
-    await expect.element(page.getByText(/custom domain mapping/i)).toBeVisible()
-    await expect.element(page.getByText(/produk katalog tanpa batas/i)).toBeVisible()
-    await expect.element(page.getByText(/analitik trafik & penjualan harian/i)).toBeVisible()
+    await expect.element(page.getByText(/ringkasan pesanan langsung/i)).toBeVisible()
+    await expect.element(page.getByText(/domain kustom/i)).toBeVisible()
+    await expect.element(page.getByText(/produk tak terbatas/i)).toBeVisible()
+    await expect.element(page.getByText(/analitik harian/i)).toBeVisible()
     await expect.element(page.getByText(/dukungan prioritas whatsapp/i)).toBeVisible()
 
     const proCta = page.getByRole('link', { name: /pilih paket pro/i })

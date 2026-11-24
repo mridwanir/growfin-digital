@@ -198,7 +198,7 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
     <section
       aria-label="Simulator Pemesanan WhatsApp"
       data-testid="whatsapp-simulator-section"
-      id="pesanan-whatsapp"
+      id="order-flow"
       className={cn(
         'bg-background text-foreground border-border/50 relative flex min-h-screen w-full flex-col justify-center overflow-hidden border-t py-16 lg:py-24',
         className,
@@ -225,6 +225,53 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
             potongan 20% sampai 30% dari agregator makanan. Data pelanggan dan seluruh nominal
             transaksi menjadi milik toko Anda sepenuhnya.
           </p>
+        </div>
+
+        {/* 3-Step WhatsApp Order Flow Walkthrough */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3" data-testid="order-walkthrough">
+          {/* Step 1 */}
+          <div className="bg-card border-border/70 rounded-xl border p-4 sm:p-5">
+            <div className="flex items-center gap-3">
+              <span className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold">
+                1
+              </span>
+              <h3 className="text-foreground text-sm font-semibold">Pilih Menu &amp; Varian</h3>
+            </div>
+            <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
+              Pelanggan memilih menu, varian rasa, tingkat gula, dan opsi layanan langsung dari
+              katalog online toko.
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="bg-card border-border/70 rounded-xl border p-4 sm:p-5">
+            <div className="flex items-center gap-3">
+              <span className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold">
+                2
+              </span>
+              <h3 className="text-foreground text-sm font-semibold">Masuk ke Keranjang Otomatis</h3>
+            </div>
+            <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
+              Semua pilihan dan pengubah harga terakumulasi secara instan dalam format Rupiah tanpa
+              salah hitung.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="bg-card border-border/70 rounded-xl border p-4 sm:p-5">
+            <div className="flex items-center gap-3">
+              <span className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold">
+                3
+              </span>
+              <h3 className="text-foreground text-sm font-semibold">
+                Pesanan Terkirim ke WhatsApp Merchant
+              </h3>
+            </div>
+            <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
+              Format pesan pesanan terstruktur dikirimkan langsung ke WhatsApp penjual dengan komisi
+              0%.
+            </p>
+          </div>
         </div>
 
         {/* Dual Column Layout: Features & Calculator (Left) + Interactive Simulator (Right) */}
@@ -284,9 +331,7 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Komisi MeracikWeb (0%):</span>
-                  <span className="font-mono font-semibold text-emerald-600 tabular-nums dark:text-emerald-400">
-                    Rp 0
-                  </span>
+                  <span className="text-primary font-mono font-semibold tabular-nums">Rp 0</span>
                 </div>
                 <div className="border-border/60 flex items-center justify-between border-t pt-3">
                   <span className="text-foreground text-sm font-medium">

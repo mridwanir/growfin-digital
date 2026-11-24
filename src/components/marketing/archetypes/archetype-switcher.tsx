@@ -17,14 +17,8 @@ import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { formatCurrency } from '@/lib/storefront/currency'
 import { cn } from '@/lib/utils'
-
-/**
- * Formats an integer amount in IDR to formatted Indonesian Rupiah currency string.
- */
-function formatRupiah(amount: number): string {
-  return `Rp ${amount.toLocaleString('id-ID')}`
-}
 
 export interface ArchetypeSwitcherProps {
   className?: string
@@ -127,6 +121,18 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
   const [retailSize, setRetailSize] = useState<RetailSize>('M')
   const [retailColor, setRetailColor] = useState<RetailColor>('indigo')
   const [retailFulfillment, setRetailFulfillment] = useState<'delivery' | 'pickup'>('delivery')
+  const [fnbAdded, setFnbAdded] = useState(false)
+  const [retailAdded, setRetailAdded] = useState(false)
+
+  function handleAddFnbToCart() {
+    setFnbAdded(true)
+    setTimeout(setFnbAdded, 2000, false)
+  }
+
+  function handleAddRetailToCart() {
+    setRetailAdded(true)
+    setTimeout(setRetailAdded, 2000, false)
+  }
 
   // Calculations
   const fnbBasePrice = 18000
@@ -249,7 +255,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                           </div>
                           <span className="text-muted-foreground mt-1 text-xs">{opt.volume}</span>
                           <span className="text-primary mt-2 font-mono text-xs font-semibold tabular-nums">
-                            {opt.modifier > 0 ? `+${formatRupiah(opt.modifier)}` : '+Rp 0'}
+                            {opt.modifier > 0 ? `+${formatCurrency(opt.modifier)}` : '+Rp 0'}
                           </span>
                         </button>
                       )
@@ -459,7 +465,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                           className="text-foreground font-mono text-lg font-extrabold tabular-nums"
                           data-testid="fnb-calculated-price"
                         >
-                          {formatRupiah(fnbCalculatedTotal)}
+                          {formatCurrency(fnbCalculatedTotal)}
                         </span>
                       </div>
 
@@ -484,9 +490,20 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       <Button
                         className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 text-xs font-semibold shadow-xs"
                         size="sm"
+                        type="button"
+                        onClick={handleAddFnbToCart}
                       >
-                        <ShoppingBag className="size-3.5" />
-                        <span>Tambah ke Keranjang • {formatRupiah(fnbCalculatedTotal)}</span>
+                        {fnbAdded ? (
+                          <>
+                            <Check className="size-3.5" />
+                            <span>Ditambahkan ke Keranjang</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingBag className="size-3.5" />
+                            <span>Tambah ke Keranjang • {formatCurrency(fnbCalculatedTotal)}</span>
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>
@@ -762,7 +779,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       <div className="border-border/50 mt-3 flex items-baseline justify-between border-t pt-2.5">
                         <span className="text-muted-foreground text-xs">Harga Satuan:</span>
                         <span className="text-foreground font-mono text-lg font-extrabold tabular-nums">
-                          {formatRupiah(retailBasePrice)}
+                          {formatCurrency(retailBasePrice)}
                         </span>
                       </div>
 
@@ -802,9 +819,20 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       <Button
                         className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 text-xs font-semibold shadow-xs"
                         size="sm"
+                        type="button"
+                        onClick={handleAddRetailToCart}
                       >
-                        <ShoppingBag className="size-3.5" />
-                        <span>Beli Sekarang • {formatRupiah(retailBasePrice)}</span>
+                        {retailAdded ? (
+                          <>
+                            <Check className="size-3.5" />
+                            <span>Pesanan Disiapkan!</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingBag className="size-3.5" />
+                            <span>Beli Sekarang • {formatCurrency(retailBasePrice)}</span>
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>

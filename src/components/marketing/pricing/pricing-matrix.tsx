@@ -46,7 +46,7 @@ export function PricingMatrix({
         <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-3 lg:items-stretch">
           {/* 1. Gratis Tier */}
           <div
-            className="border-border bg-card relative flex flex-col justify-between rounded-2xl border p-6 shadow-sm transition-colors sm:p-8"
+            className="border-border bg-card relative flex flex-col justify-between rounded-2xl border p-6 shadow-sm transition-colors motion-reduce:transition-none sm:p-8"
             data-testid="pricing-card-gratis"
           >
             <div>
@@ -105,7 +105,7 @@ export function PricingMatrix({
 
           {/* 2. Pro Tier (Highlighted) */}
           <div
-            className="border-primary bg-card relative flex flex-col justify-between rounded-2xl border-2 p-6 shadow-xl transition-all sm:p-8 lg:-translate-y-2"
+            className="border-primary bg-card relative flex flex-col justify-between rounded-2xl border-2 p-6 shadow-xl transition-all motion-reduce:transition-none sm:p-8 lg:-translate-y-2 lg:motion-reduce:translate-y-0"
             data-testid="pricing-card-pro"
           >
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
@@ -138,15 +138,19 @@ export function PricingMatrix({
               <ul className="border-border/60 mt-8 space-y-3.5 border-t pt-8 text-sm" role="list">
                 <li className="text-foreground flex items-start gap-3 leading-normal font-medium text-pretty">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
-                  <span>Custom domain mapping</span>
+                  <span>Ringkasan pesanan langsung</span>
                 </li>
                 <li className="text-foreground flex items-start gap-3 leading-normal font-medium text-pretty">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
-                  <span>Produk katalog tanpa batas</span>
+                  <span>Domain kustom</span>
+                </li>
+                <li className="text-foreground flex items-start gap-3 leading-normal font-medium text-pretty">
+                  <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
+                  <span>Produk tak terbatas</span>
                 </li>
                 <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
-                  <span>Analitik trafik &amp; penjualan harian</span>
+                  <span>Analitik harian</span>
                 </li>
                 <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
@@ -170,7 +174,7 @@ export function PricingMatrix({
 
           {/* 3. Enterprise Tier */}
           <div
-            className="border-border bg-card relative flex flex-col justify-between rounded-2xl border p-6 shadow-sm transition-colors sm:p-8"
+            className="border-border bg-card relative flex flex-col justify-between rounded-2xl border p-6 shadow-sm transition-colors motion-reduce:transition-none sm:p-8"
             data-testid="pricing-card-enterprise"
           >
             <div>

@@ -205,14 +205,24 @@ describe('Marketing Page Integration (Screens 1 to 5)', () => {
     await page.viewport(1440, 900)
     render(<MarketingPage />)
 
-    const primaryLightHex = '#1e3a8a'
-    const backgroundHex = '#ffffff'
-    const primaryForegroundHex = '#ffffff'
+    const headline = page.getByRole('heading', { level: 1 })
+    await expect.element(headline).toBeVisible()
 
-    const primaryButtonContrast = getContrastRatio(primaryForegroundHex, primaryLightHex)
-    expect(primaryButtonContrast).toBeGreaterThanOrEqual(4.5)
+    const heroSection = page.getByTestId('marketing-hero')
+    await expect.element(heroSection).toBeVisible()
 
-    const textContrast = getContrastRatio(primaryLightHex, backgroundHex)
-    expect(textContrast).toBeGreaterThanOrEqual(4.5)
+    const headlineColor = window.getComputedStyle(headline.element()).color
+    const heroBg = window.getComputedStyle(heroSection.element()).backgroundColor || '#ffffff'
+    const headlineContrast = getContrastRatio(headlineColor, heroBg)
+    expect(headlineContrast).toBeGreaterThanOrEqual(4.5)
+
+    const primaryCta = page.getByRole('link', { name: /mulai toko gratis/i }).first()
+    await expect.element(primaryCta).toBeVisible()
+
+    const primaryCtaEl = primaryCta.element()
+    const ctaBg = window.getComputedStyle(primaryCtaEl).backgroundColor
+    const ctaColor = window.getComputedStyle(primaryCtaEl).color
+    const ctaContrast = getContrastRatio(ctaColor, ctaBg)
+    expect(ctaContrast).toBeGreaterThanOrEqual(4.5)
   })
 })

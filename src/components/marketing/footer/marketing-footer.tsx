@@ -6,19 +6,16 @@ import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
+const REGISTRATION_URL = '/register'
+const LOGIN_URL = '/login'
+const CONSULTATION_URL =
+  'https://wa.me/6289630352370?text=Halo%20MeracikWeb%2C%20saya%20tertarik%20konsultasi%20layanan'
+
 export interface MarketingFooterProps {
   className?: string
-  registrationUrl?: string
-  loginUrl?: string
-  consultationUrl?: string
 }
 
-export function MarketingFooter({
-  className,
-  registrationUrl = '/register',
-  loginUrl = '/login',
-  consultationUrl = 'https://wa.me/6289630352370?text=Halo%20MeracikWeb%2C%20saya%20tertarik%20konsultasi%20layanan',
-}: MarketingFooterProps) {
+export function MarketingFooter({ className }: MarketingFooterProps) {
   return (
     <div className={cn('w-full', className)} data-testid="marketing-footer">
       {/* Screen 5: Closing Conversion Trigger Block */}
@@ -47,7 +44,7 @@ export function MarketingFooter({
             {/* Primary Action Button */}
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href={registrationUrl}
+                href={REGISTRATION_URL}
                 className={cn(
                   buttonVariants({ size: 'lg' }),
                   'focus-visible:ring-ring min-h-[44px] min-w-[44px] gap-2 px-8 text-base font-semibold shadow-md focus-visible:ring-2 focus-visible:outline-hidden',
@@ -152,10 +149,7 @@ export function MarketingFooter({
                 Indonesia.
               </p>
               <div className="flex items-center gap-2 text-xs">
-                <CheckCircle2
-                  aria-hidden="true"
-                  className="size-4 text-emerald-600 dark:text-emerald-500"
-                />
+                <CheckCircle2 aria-hidden="true" className="text-primary size-4" />
                 <span className="text-foreground font-medium">Platform SaaS UMKM Indonesia</span>
               </div>
             </div>
@@ -165,25 +159,25 @@ export function MarketingFooter({
               <h4 className="text-foreground text-sm font-semibold">Navigasi</h4>
               <nav aria-label="Navigasi Halaman" className="flex flex-col">
                 <a
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
                   href="#editor-simulator"
                 >
                   Simulator Editor
                 </a>
                 <a
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
                   href="#archetypes"
                 >
                   Model Bisnis
                 </a>
                 <a
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
-                  href="#pesanan-whatsapp"
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
+                  href="#order-flow"
                 >
-                  Pesanan WhatsApp
+                  Alur Pesanan
                 </a>
                 <a
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
                   href="#harga"
                 >
                   Harga Paket
@@ -196,20 +190,20 @@ export function MarketingFooter({
               <h4 className="text-foreground text-sm font-semibold">Layanan</h4>
               <nav aria-label="Layanan Pengguna" className="flex flex-col">
                 <Link
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
-                  href={loginUrl}
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
+                  href={LOGIN_URL}
                 >
                   Masuk ke Dashboard
                 </Link>
                 <Link
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
-                  href={registrationUrl}
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
+                  href={REGISTRATION_URL}
                 >
                   Mulai Toko Gratis
                 </Link>
                 <a
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
-                  href={consultationUrl}
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
+                  href={CONSULTATION_URL}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -223,13 +217,13 @@ export function MarketingFooter({
               <h4 className="text-foreground text-sm font-semibold">Legalitas</h4>
               <nav aria-label="Tautan Hukum" className="flex flex-col">
                 <Link
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
                   href="/privacy"
                 >
                   Kebijakan Privasi
                 </Link>
                 <Link
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-[44px] items-center text-sm transition-colors focus-visible:ring-2 focus-visible:outline-hidden motion-reduce:transition-none"
                   href="/terms"
                 >
                   Syarat & Ketentuan

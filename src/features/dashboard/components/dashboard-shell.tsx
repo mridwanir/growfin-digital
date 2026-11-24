@@ -12,11 +12,10 @@ import { DashboardSidebar } from './sidebar'
 export interface DashboardShellProps {
   children: ReactNode
   currentTenant: TenantSwitcherTenant
-  tenants: TenantSwitcherTenant[]
   user: SidebarUser
 }
 
-export function DashboardShell({ children, currentTenant, tenants, user }: DashboardShellProps) {
+export function DashboardShell({ children, currentTenant, user }: DashboardShellProps) {
   return (
     <SidebarProvider>
       <a
@@ -25,7 +24,7 @@ export function DashboardShell({ children, currentTenant, tenants, user }: Dashb
       >
         Skip to main content
       </a>
-      <DashboardSidebar currentTenant={currentTenant} tenants={tenants} user={user} />
+      <DashboardSidebar currentTenant={currentTenant} user={user} />
       <SidebarInset>
         <header className="bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />

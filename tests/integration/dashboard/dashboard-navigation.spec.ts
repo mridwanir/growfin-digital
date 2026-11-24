@@ -17,7 +17,7 @@ import { SidebarProvider } from '@/components/ui/sidebar'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { userInNeonAuth } from '@/db/schema/auth'
-import { NavMain, TenantSwitcher } from '@/features/dashboard'
+import { DashboardSidebar, NavMain, TenantSwitcher } from '@/features/dashboard'
 import { createCategory, createProduct } from '@/features/dashboard/server'
 import { auth } from '@/lib/auth/server'
 import { env } from '@/lib/env'
@@ -555,14 +555,13 @@ describe('Dashboard Navigation Integration Seam', () => {
       expect(html).not.toContain('/dashboard/[tenantSlug]')
     })
 
-    it('renders tenant switcher displaying active store identity and branding cleanly', () => {
+    it('renders tenant header displaying active store identity without multi-tenant scaffolding', () => {
       const html = renderToStaticMarkup(
         React.createElement(
           SidebarProvider,
           null,
           React.createElement(TenantSwitcher, {
             currentTenant: multiTenantFixture1.tenant,
-            tenants: [multiTenantFixture1.tenant, multiTenantFixture2.tenant],
           }),
         ),
       )
@@ -570,6 +569,29 @@ describe('Dashboard Navigation Integration Seam', () => {
       expect(html).toContain(multiTenantFixture1.tenant.name)
       expect(html).toContain('INSTANT')
       expect(html).not.toContain('Buat Toko Baru')
+      expect(html).not.toContain('data-[state=open]')
+      expect(html).not.toContain(multiTenantFixture2.tenant.name)
+    })
+
+    it('renders DashboardSidebar accepting only active tenant context and user', () => {
+      const html = renderToStaticMarkup(
+        React.createElement(
+          SidebarProvider,
+          null,
+          React.createElement(DashboardSidebar, {
+            currentTenant: multiTenantFixture1.tenant,
+            user: {
+              name: 'Test Merchant',
+              email: 'merchant@growfin.test',
+            },
+          }),
+        ),
+      )
+
+      expect(html).toContain(multiTenantFixture1.tenant.name)
+      expect(html).toContain('href="/dashboard"')
+      expect(html).toContain('Test Merchant')
+      expect(html).not.toContain(multiTenantFixture2.tenant.name)
     })
   })
 })

@@ -4,13 +4,14 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
-import { StorefrontEditor, useStorefrontEditor } from '@/components/dashboard/editor'
 import { MERACIK_PREVIEW_UPDATE } from '@/features/storefront'
-import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
+
+import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '../actions'
+import { StorefrontEditor, useStorefrontEditor } from './index'
 
 import '@/styles/globals.css'
 
-vi.mock('@/lib/dashboard/actions', () => ({
+vi.mock('../actions', () => ({
   publishStorefrontDraftAction: vi.fn(),
   saveStorefrontDraftAction: vi.fn(),
 }))

@@ -18,8 +18,8 @@ import type {
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 
 import { MERACIK_PREVIEW_UPDATE } from '@/features/storefront'
-import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
 
+import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '../actions'
 import { StorefrontEditorContext } from './context'
 
 export interface StorefrontEditorRootProps {

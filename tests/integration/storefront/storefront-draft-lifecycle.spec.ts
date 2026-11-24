@@ -9,13 +9,13 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
 import { storefrontConfigs, tenants } from '@/db/schema/tenants'
-import { getStorefrontDataBySlug } from '@/features/storefront/server'
-import { auth } from '@/lib/auth/server'
 import {
   discardStorefrontDraftAction,
   publishStorefrontDraftAction,
   saveStorefrontDraftAction,
-} from '@/lib/dashboard/actions'
+} from '@/features/editor/server'
+import { getStorefrontDataBySlug } from '@/features/storefront/server'
+import { auth } from '@/lib/auth/server'
 
 import { createMerchantSession, createUnauthenticatedSession } from '../../fixtures/session-fixture'
 import { createTestTenant } from '../../fixtures/tenant-fixture'

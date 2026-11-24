@@ -1,4 +1,4 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
 import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
 
 import { and, eq } from 'drizzle-orm'
@@ -9,12 +9,12 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
 import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/features/editor/server'
 import { getStorefrontDataBySlug, getStorefrontDraftDataBySlug } from '@/features/storefront/server'
 import { auth } from '@/lib/auth/server'
-import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
 
-import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createMerchantSession, createUnauthenticatedSession } from '../../fixtures/session-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),

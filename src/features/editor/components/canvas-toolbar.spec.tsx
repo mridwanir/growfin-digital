@@ -4,11 +4,11 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
-import { StorefrontEditor } from '@/components/dashboard/editor'
+import { StorefrontEditor } from './index'
 
 import '@/styles/globals.css'
 
-vi.mock('@/lib/dashboard/actions', () => ({
+vi.mock('../actions', () => ({
   publishStorefrontDraftAction: vi.fn(),
   saveStorefrontDraftAction: vi.fn(),
 }))

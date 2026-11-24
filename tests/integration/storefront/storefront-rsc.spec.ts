@@ -8,7 +8,7 @@ import SitePage, {
   generateMetadata as generateSiteMetadata,
 } from '@/app/(storefront)/site/[slug]/page'
 import { db } from '@/db'
-import { tenants } from '@/db/schema/tenants'
+import { organization as tenants } from '@/db/schema/auth'
 import { persistGeneratedWebsite } from '@/features/generator/server'
 import { ExpiredSiteScreen } from '@/features/storefront'
 import { getStorefrontDataBySlug } from '@/features/storefront/server'

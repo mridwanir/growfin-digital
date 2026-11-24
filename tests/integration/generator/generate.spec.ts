@@ -7,8 +7,9 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { POST as generateHandler } from '@/app/api/generate/route'
 import { db } from '@/db'
+import { organization as tenants } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { storefrontConfigs } from '@/db/schema/storefront'
 import { generatedWebsiteSchema, persistGeneratedWebsite } from '@/features/generator/server'
 
 import { server } from '../setup'

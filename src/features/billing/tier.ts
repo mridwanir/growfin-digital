@@ -1,4 +1,4 @@
-import type { PackageTier } from '@/db/schema/tenants'
+import type { PackageTier } from '@/db/schema/auth'
 
 export function normalizePackageTier(tier?: string | null): PackageTier {
   if (!tier) return 'instant'

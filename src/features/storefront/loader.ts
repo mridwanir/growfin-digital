@@ -1,7 +1,7 @@
 import type { ProductWithVariants } from './catalog'
+import type { Tenant } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
 import type { StorefrontConfig } from '@/db/schema/storefront'
-import type { Tenant } from '@/db/schema/tenants'
 
 import { and, eq, inArray, or } from 'drizzle-orm'
 import crypto from 'node:crypto'
@@ -10,9 +10,9 @@ import { cache } from 'react'
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { storefrontConfigs } from '@/db/schema/storefront'
-import { tenants } from '@/db/schema/tenants'
+import { tenants } from '@/features/auth/server'
 
-import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from './utils/compatibility'
+import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from './constants'
 
 import 'server-only'
 

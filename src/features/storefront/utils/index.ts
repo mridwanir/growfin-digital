@@ -1,5 +1,4 @@
 export * from './archetype'
-export * from './compatibility'
 export * from './currency'
 export * from './fulfillment'
 export * from './mock-data'

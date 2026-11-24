@@ -1,14 +1,11 @@
+import type { OperatingHours, PackageTier, Tenant, TenantStatus } from '@/db/schema/auth'
 import type {
   BrandingContent,
-  OperatingHours,
-  PackageTier,
   StorefrontConfig,
   StorefrontSection,
   StorefrontTheme,
-  Tenant,
-  TenantStatus,
   ThemeConfig,
-} from '@/db/schema/tenants'
+} from '@/db/schema/storefront'
 
 import { eq } from 'drizzle-orm'
 

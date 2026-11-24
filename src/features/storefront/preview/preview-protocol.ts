@@ -1,4 +1,4 @@
-import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
+import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 
 export const MERACIK_PREVIEW_UPDATE = 'MERACIK_PREVIEW_UPDATE' as const
 

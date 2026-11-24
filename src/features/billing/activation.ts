@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { db } from '@/db'
 import { member } from '@/db/schema/auth'
 import { orders } from '@/db/schema/orders'
-import { tenants } from '@/db/schema/tenants'
+import { tenants } from '@/features/auth/server'
 
 import { sendInvoiceEmail } from './invoice'
 import { normalizePackageTier } from './tier'

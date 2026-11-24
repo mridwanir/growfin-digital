@@ -1,5 +1,5 @@
 import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
-import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
+import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 
 import { NextRequest } from 'next/server'
 import { renderToStaticMarkup } from 'react-dom/server'

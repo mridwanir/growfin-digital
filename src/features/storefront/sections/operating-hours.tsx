@@ -1,9 +1,5 @@
-import type {
-  DailySchedule,
-  OperatingHoursSectionContent,
-  OperatingHours as OperatingHoursType,
-  Tenant,
-} from '@/db/schema/tenants'
+import type { DailySchedule, OperatingHours as OperatingHoursType, Tenant } from '@/db/schema/auth'
+import type { OperatingHoursSectionContent } from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 import { Calendar, Clock, MapPin, Phone } from 'lucide-react'

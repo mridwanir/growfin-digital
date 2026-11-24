@@ -1,11 +1,12 @@
-import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
+import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 
 import { and, eq } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { afterAll, describe, expect, it } from 'vitest'
 
 import { db } from '@/db'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { organization as tenants } from '@/db/schema/auth'
+import { storefrontConfigs } from '@/db/schema/storefront'
 import { getStorefrontDataBySlug, getStorefrontDraftDataBySlug } from '@/features/storefront/server'
 
 import { createTestTenant } from '../../fixtures/tenant-fixture'

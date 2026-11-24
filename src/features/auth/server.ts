@@ -1,4 +1,10 @@
-import type { ActiveTenantContext, NewTenant, Tenant, TenantContextResult } from './types'
+import type {
+  ActiveTenantContext,
+  NewTenant,
+  Tenant,
+  TenantContextResult,
+  TenantStatus,
+} from './types'
 import type { SessionPayload, SessionResult } from '@/lib/auth/server'
 
 import { eq } from 'drizzle-orm'
@@ -19,7 +25,9 @@ export type {
   SessionResult,
   Tenant,
   TenantContextResult,
+  TenantStatus,
 }
+export { organization as tenants } from '@/db/schema/auth'
 export { auth, getSession, getSessionCookieDomain, requireAuth }
 
 /**

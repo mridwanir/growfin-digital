@@ -1,7 +1,8 @@
 'use client'
 
 import type { ProductWithVariants } from '../catalog'
-import type { Tenant, ThemeConfig } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { ThemeConfig } from '@/db/schema/storefront'
 
 import { useEffect, useState } from 'react'
 

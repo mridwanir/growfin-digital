@@ -3,12 +3,8 @@
 import type { ReactNode } from 'react'
 
 import type { SaveStatus, StorefrontEditorContextValue, ViewportMode } from './context'
-import type {
-  StorefrontConfig,
-  StorefrontSection,
-  StorefrontTheme,
-  Tenant,
-} from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { StorefrontConfig, StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 import type {
   MeracikPreviewUpdateMessage,
   MeracikPreviewUpdatePayload,

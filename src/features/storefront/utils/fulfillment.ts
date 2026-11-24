@@ -1,4 +1,4 @@
-import type { ThemeConfig } from '@/db/schema/tenants'
+import type { ThemeConfig } from '@/db/schema/storefront'
 
 import { resolveArchetype } from './archetype'
 

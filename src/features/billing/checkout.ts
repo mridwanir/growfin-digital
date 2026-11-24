@@ -10,7 +10,7 @@ import { eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { orders } from '@/db/schema/orders'
-import { tenants } from '@/db/schema/tenants'
+import { tenants } from '@/features/auth/server'
 import { auth } from '@/lib/auth/server'
 import { siteConfig } from '@/lib/site-config'
 

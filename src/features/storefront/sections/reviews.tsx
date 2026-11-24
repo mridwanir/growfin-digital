@@ -1,4 +1,5 @@
-import type { BrandingContent, ReviewsSectionContent, Tenant } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { BrandingContent, ReviewsSectionContent } from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 import { ExternalLink, Heart, Star } from 'lucide-react'

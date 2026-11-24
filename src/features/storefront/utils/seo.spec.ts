@@ -1,4 +1,4 @@
-import type { Tenant } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
 
 import { describe, expect, it } from 'vitest'
 

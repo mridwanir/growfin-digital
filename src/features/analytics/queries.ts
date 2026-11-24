@@ -5,7 +5,7 @@ import { and, desc, eq, gte, isNotNull, sql } from 'drizzle-orm'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { member } from '@/db/schema/auth'
-import { tenants } from '@/db/schema/tenants'
+import { tenants } from '@/features/auth/server'
 
 import 'server-only'
 

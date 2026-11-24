@@ -1,4 +1,5 @@
-import type { BrandingContent, FooterSectionContent, Tenant } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { BrandingContent, FooterSectionContent } from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 import { ExternalLink, MapPin, MessageCircle, Phone, Share2 } from 'lucide-react'

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
@@ -46,6 +46,10 @@ function getContrastRatio(foreground: string, background: string): number {
 }
 
 describe('MarketingHero Component', () => {
+  beforeEach(async () => {
+    await page.viewport(1440, 900)
+  })
+
   it('renders viewport height cleanly with display typography and navigation links', async () => {
     render(<MarketingHero />)
 

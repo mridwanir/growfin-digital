@@ -46,7 +46,7 @@ export function MarketingHero({ className }: MarketingHeroProps) {
   const [price, setPrice] = useState('18000')
   const [variantOption, setVariantOption] = useState('Ukuran Regular (350ml)')
   const categoryName = 'Minuman Kopi'
-
+  const [mobileSimulatorTab, setMobileSimulatorTab] = useState<'admin' | 'buyer'>('admin')
   return (
     <section
       aria-label="Marketing Hero"
@@ -58,7 +58,7 @@ export function MarketingHero({ className }: MarketingHeroProps) {
     >
       {/* Brand Header Navigation */}
       <header className="border-border/40 bg-background/85 sticky top-0 z-50 w-full border-b backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-8">
             <Link aria-label="Beranda MeracikWeb" className="flex items-center gap-2" href="/">
               <MeracikWordmark size="md" />
@@ -79,7 +79,7 @@ export function MarketingHero({ className }: MarketingHeroProps) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login"
               className={cn(
@@ -103,7 +103,7 @@ export function MarketingHero({ className }: MarketingHeroProps) {
       </header>
 
       {/* Hero Content & Dual-Pane Simulator */}
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         {/* Top Text & Headline */}
         <div className="mb-8 max-w-3xl text-center md:mb-10">
           <div className="border-primary/20 bg-primary/5 text-primary mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium">
@@ -185,13 +185,53 @@ export function MarketingHero({ className }: MarketingHeroProps) {
               </Badge>
             </div>
           </div>
+          {/* Mobile Viewport Toggle Bar (<640px) */}
+          <div
+            aria-label="Mode Simulasi"
+            className="border-border bg-muted/40 flex items-center justify-center border-b p-2 sm:hidden"
+            role="tablist"
+          >
+            <div className="border-border bg-muted inline-flex rounded-lg border p-1">
+              <button
+                aria-selected={mobileSimulatorTab === 'admin'}
+                role="tab"
+                type="button"
+                onClick={() => setMobileSimulatorTab('admin')}
+                className={cn(
+                  'focus-visible:ring-ring inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md px-4 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-hidden',
+                  mobileSimulatorTab === 'admin'
+                    ? 'bg-background text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+              >
+                Mode Admin
+              </button>
+              <button
+                aria-selected={mobileSimulatorTab === 'buyer'}
+                role="tab"
+                type="button"
+                onClick={() => setMobileSimulatorTab('buyer')}
+                className={cn(
+                  'focus-visible:ring-ring inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md px-4 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-hidden',
+                  mobileSimulatorTab === 'buyer'
+                    ? 'bg-background text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+              >
+                Mode Pembeli
+              </button>
+            </div>
+          </div>
 
           {/* Dual-Pane Workspace */}
           <div className="divide-border grid grid-cols-1 divide-y lg:grid-cols-12 lg:divide-x lg:divide-y-0">
             {/* Left Pane: Storefront Editor Form Inputs */}
             <div
-              className="bg-card flex flex-col justify-between p-5 sm:p-6 lg:col-span-6"
               data-testid="editor-pane"
+              className={cn(
+                'bg-card flex flex-col justify-between p-5 sm:p-6 lg:col-span-6',
+                mobileSimulatorTab !== 'admin' && 'hidden sm:flex',
+              )}
             >
               <div className="space-y-4">
                 <div className="border-border/60 flex items-center justify-between border-b pb-3">
@@ -294,8 +334,11 @@ export function MarketingHero({ className }: MarketingHeroProps) {
 
             {/* Right Pane: Live Mobile Customer Storefront Preview */}
             <div
-              className="bg-muted/20 flex items-center justify-center p-5 sm:p-6 lg:col-span-6"
               data-testid="mobile-preview"
+              className={cn(
+                'bg-muted/20 flex items-center justify-center p-3 sm:p-6 lg:col-span-6',
+                mobileSimulatorTab !== 'buyer' && 'hidden sm:flex',
+              )}
             >
               {/* Phone Mockup Frame */}
               <div className="border-foreground/20 bg-background w-full max-w-[310px] rounded-[2rem] border-4 shadow-xl">
@@ -411,12 +454,7 @@ export function MarketingHero({ className }: MarketingHeroProps) {
             </div>
           </div>
         </div>
-      </main>
-
-      {/* Hero Bottom Minimal Footer */}
-      <footer className="border-border/40 text-muted-foreground w-full border-t py-3 text-center text-xs">
-        <span>&copy; 2026 MeracikWeb. Platform Digitalisasi UMKM Indonesia.</span>
-      </footer>
+      </div>
     </section>
   )
 }

@@ -2,8 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
-import LoginPage from '@/app/login/page'
 import { authClient } from '@/lib/auth/client'
+
+import { LoginForm } from './login-form'
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({
@@ -24,16 +25,16 @@ vi.mock('@/lib/auth/client', () => ({
   },
 }))
 
-describe('LoginPage component', () => {
+describe('LoginForm component', () => {
   it('renders Google sign-in button alongside credentials form', async () => {
-    render(<LoginPage />)
+    render(<LoginForm />)
 
     const googleBtn = page.getByRole('button', { name: /google/i })
     await expect.element(googleBtn).toBeVisible()
   })
 
   it('triggers Google OAuth sign-in when clicking Google button', async () => {
-    render(<LoginPage />)
+    render(<LoginForm />)
 
     const googleBtn = page.getByRole('button', { name: /google/i })
     await expect.element(googleBtn).toBeVisible()

@@ -24,7 +24,7 @@ import { authClient } from '@/lib/auth/client'
 
 type LoginStep = 'credentials' | 'reset_password_sent' | 'reset_password'
 
-export default function LoginPage() {
+export function LoginForm() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,6 +33,7 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
+
   const validateEmail = (): boolean => {
     if (!email || !email.includes('@')) {
       setError('Please enter a valid email address.')

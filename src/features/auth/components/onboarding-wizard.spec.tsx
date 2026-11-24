@@ -16,6 +16,7 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/lib/auth/client', () => ({
   authClient: {
     signIn: {
+      email: vi.fn().mockResolvedValue({ error: null }),
       social: vi
         .fn()
         .mockResolvedValue({ data: { url: 'https://accounts.google.com' }, error: null }),
@@ -26,7 +27,7 @@ vi.mock('@/lib/auth/client', () => ({
   },
 }))
 
-vi.mock('@/lib/onboarding/actions', () => ({
+vi.mock('../actions', () => ({
   createStoreOnboardingAction: vi.fn().mockResolvedValue({
     data: { organizationId: 'org-123', redirectUrl: '/dashboard', slug: 'toko-kopi' },
     redirect: '/dashboard',

@@ -13,9 +13,10 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { authClient } from '@/lib/auth/client'
-import { createStoreOnboardingAction } from '@/lib/onboarding/actions'
-import { STORE_CATEGORIES } from '@/lib/onboarding/constants'
-import { generateSlug } from '@/lib/onboarding/utils'
+
+import { createStoreOnboardingAction } from '../actions'
+import { STORE_CATEGORIES } from '../constants'
+import { generateSlug } from '../utils'
 
 interface OnboardingWizardProps {
   initialStep?: 1 | 2
@@ -75,6 +76,7 @@ function WizardHeader({ step }: { step: 1 | 2 }) {
     </CardHeader>
   )
 }
+
 export function OnboardingWizard({
   initialStep = 1,
   userEmail = null,
@@ -100,6 +102,7 @@ export function OnboardingWizard({
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
+
   // Handle store name change with auto-slug generation
   const handleStoreNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextName = e.target.value
@@ -120,11 +123,13 @@ export function OnboardingWizard({
     e.preventDefault()
     setError(null)
     setFieldErrors({})
+
     const validationError = validateStep1Credentials(name, email, password)
     if (validationError) {
       setError(validationError)
       return
     }
+
     setLoading(true)
     try {
       const result = await authClient.signUp.email({

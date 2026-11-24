@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { StorefrontEditor } from '@/components/dashboard/editor'
-import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
+import { requireActiveTenantContext } from '@/features/auth/server'
 import { getStorefrontDraftDataBySlug } from '@/lib/storefront/loader'
 import { serializeRecord } from '@/lib/storefront/serialization'
 

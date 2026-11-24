@@ -5,7 +5,7 @@ import { TenantStatusBadge, TenantTierBadge } from '@/components/dashboard/tenan
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
-import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
+import { requireActiveTenantContext } from '@/features/auth/server'
 import { env } from '@/lib/env'
 
 export default async function DashboardPage() {

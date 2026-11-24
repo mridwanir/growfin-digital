@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { DashboardSidebar } from '@/components/dashboard/sidebar'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
+import { requireActiveTenantContext } from '@/features/auth/server'
 
 export const instant = false
 

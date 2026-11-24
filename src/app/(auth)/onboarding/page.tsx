@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 
 import { redirect } from 'next/navigation'
 
-import { OnboardingWizard } from '@/components/onboarding/onboarding-wizard'
-import { getSession } from '@/lib/auth/server'
+import { OnboardingWizard } from '@/features/auth'
+import { getSession } from '@/features/auth/server'
 import { getMerchantTenants } from '@/lib/dashboard/mutations'
 
 export const metadata: Metadata = {

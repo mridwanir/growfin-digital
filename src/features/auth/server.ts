@@ -1,5 +1,5 @@
-import type { SessionPayload } from '@/lib/auth/server'
-import type { MerchantTenantSummary } from '@/lib/dashboard/mutations'
+import type { ActiveTenantContext, NewTenant, Tenant, TenantContextResult } from './types'
+import type { SessionPayload, SessionResult } from '@/lib/auth/server'
 
 import { eq } from 'drizzle-orm'
 import { cookies } from 'next/headers'
@@ -7,26 +7,27 @@ import { redirect } from 'next/navigation'
 
 import { db } from '@/db'
 import { organization, session as sessionTable } from '@/db/schema/auth'
-import { getSession, getSessionCookieDomain } from '@/lib/auth/server'
+import { auth, getSession, getSessionCookieDomain, requireAuth } from '@/lib/auth/server'
 import { getMerchantTenants } from '@/lib/dashboard/mutations'
 
-export interface ActiveTenantContext {
-  currentTenant: typeof organization.$inferSelect
-  session: SessionPayload
-  tenants: MerchantTenantSummary[]
-}
+import 'server-only'
 
-export type TenantContextResult =
-  | { status: 'unauthenticated' }
-  | { status: 'no_tenant' }
-  | ({ status: 'authenticated' } & ActiveTenantContext)
+export type {
+  ActiveTenantContext,
+  NewTenant,
+  SessionPayload,
+  SessionResult,
+  Tenant,
+  TenantContextResult,
+}
+export { auth, getSession, getSessionCookieDomain, requireAuth }
 
 /**
- * Resolves the active organization/tenant for the current merchant session.
+ * Resolves the active Tenant for the current merchant session.
  *
  * 1. Reads session and activeOrganizationId from session.
- * 2. If missing, reads active organization from cookie `better-auth.active_organization_id`.
- * 3. Falls back to user's first organization.
+ * 2. If missing, reads active organization ID from cookie.
+ * 3. Falls back to merchant user's first tenant.
  * 4. Sets cookie and updates DB session record if needed.
  */
 export async function resolveActiveTenantContext(): Promise<TenantContextResult> {
@@ -94,18 +95,18 @@ export async function resolveActiveTenantContext(): Promise<TenantContextResult>
     }
   }
 
-  const [fullOrg] = await db
+  const [fullTenant] = await db
     .select()
     .from(organization)
     .where(eq(organization.id, currentTenantSummary.id))
     .limit(1)
 
-  if (!fullOrg) {
+  if (!fullTenant) {
     return { status: 'no_tenant' }
   }
 
   return {
-    currentTenant: fullOrg,
+    currentTenant: fullTenant,
     session: sessionData,
     status: 'authenticated',
     tenants,
@@ -113,8 +114,8 @@ export async function resolveActiveTenantContext(): Promise<TenantContextResult>
 }
 
 /**
- * Enforces authenticated merchant session with an active organization. Redirects to `/login` if
- * unauthenticated, and `/onboarding` if no store exists.
+ * Enforces authenticated merchant session with an active Tenant. Redirects to `/login` if
+ * unauthenticated, and `/onboarding` if no tenant exists.
  */
 export async function requireActiveTenantContext(): Promise<ActiveTenantContext> {
   const result = await resolveActiveTenantContext()

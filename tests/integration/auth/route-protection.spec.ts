@@ -1,4 +1,4 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
 
 import { inArray } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
@@ -33,8 +33,8 @@ import {
   createCustomerSession,
   createMerchantSession,
   createUnauthenticatedSession,
-} from '../fixtures/session-fixture'
-import { createTestTenant } from '../fixtures/tenant-fixture'
+} from '../../fixtures/session-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),

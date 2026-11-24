@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
+import { requireActiveTenantContext } from '@/features/auth/server'
 import { getTenantSettings } from '@/lib/dashboard/mutations'
-import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
 
 import { SettingsClient } from './settings-client'
 

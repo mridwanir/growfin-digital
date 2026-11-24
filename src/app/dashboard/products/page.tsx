@@ -1,5 +1,5 @@
+import { requireActiveTenantContext } from '@/features/auth/server'
 import { getTenantCategories, getTenantProducts } from '@/lib/dashboard/mutations'
-import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
 
 import { ProductsClient } from './products-client'
 

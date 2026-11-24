@@ -1,10 +1,14 @@
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 
-import { buildGeminiPrompt, generateWithGemini } from '@/lib/generator/gemini'
-import { generateInputSchema, generateTenantSlug } from '@/lib/generator/schema'
+import {
+  buildGeminiPrompt,
+  generateInputSchema,
+  generateTenantSlug,
+  generateWithGemini,
+} from '@/features/generator/server'
 
-import { server } from './setup'
+import { server } from '../setup'
 
 describe('Gemini Generator & Schema Unit / Integration Seam', () => {
   describe('generateTenantSlug', () => {

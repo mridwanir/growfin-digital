@@ -4,7 +4,7 @@ import { cn } from 'cn'
 import { MinusIcon, PlusIcon, ShoppingBagIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 
-import { trackEvent } from '@/lib/analytics'
+import { trackEvent } from '@/features/analytics'
 import {
   formatCurrency,
   useCartActions,

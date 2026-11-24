@@ -1,4 +1,4 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
 
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
@@ -8,7 +8,7 @@ import { POST as trackHandler } from '@/app/api/analytics/track/route'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 describe('Checkout funnel analytics integration', () => {
   let fixture: TestTenantFixture

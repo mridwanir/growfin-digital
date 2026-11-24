@@ -1,4 +1,4 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
 
 import { eq } from 'drizzle-orm'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -6,9 +6,9 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { userInNeonAuth } from '@/db/schema/auth'
-import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
+import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
 
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 describe('Dashboard analytics metrics seam (getTenantAnalyticsMetrics)', () => {
   const merchant1Id = '99999999-9999-4999-8999-999999999991'

@@ -1,4 +1,4 @@
-import type { GeneratedWebsiteData } from '@/lib/generator/schema'
+import type { GeneratedWebsiteData } from '@/features/generator/server'
 
 import { eq } from 'drizzle-orm'
 import { http, HttpResponse } from 'msw'
@@ -9,10 +9,9 @@ import { POST as generateHandler } from '@/app/api/generate/route'
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { storefrontConfigs, tenants } from '@/db/schema/tenants'
-import { persistGeneratedWebsite } from '@/lib/generator/persistence'
-import { generatedWebsiteSchema } from '@/lib/generator/schema'
+import { generatedWebsiteSchema, persistGeneratedWebsite } from '@/features/generator/server'
 
-import { server } from './setup'
+import { server } from '../setup'
 
 const mockGeminiOutput: GeneratedWebsiteData = generatedWebsiteSchema.parse({
   business: {

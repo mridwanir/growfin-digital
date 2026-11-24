@@ -13,6 +13,31 @@ describe('Server-only core infrastructure guards (Ticket #37)', () => {
     expect(authSource).toMatch(/^import ['"]server-only['"]/m)
   })
 })
+describe('Server-only feature slice entrypoint guards (Ticket #39)', () => {
+  it('guards @/features/billing/server with server-only', () => {
+    const billingSource = readFileSync(
+      resolve(process.cwd(), 'src/features/billing/server.ts'),
+      'utf-8',
+    )
+    expect(billingSource).toMatch(/^import ['"]server-only['"]/m)
+  })
+
+  it('guards @/features/analytics/server with server-only', () => {
+    const analyticsSource = readFileSync(
+      resolve(process.cwd(), 'src/features/analytics/server.ts'),
+      'utf-8',
+    )
+    expect(analyticsSource).toMatch(/^import ['"]server-only['"]/m)
+  })
+
+  it('guards @/features/generator/server with server-only', () => {
+    const generatorSource = readFileSync(
+      resolve(process.cwd(), 'src/features/generator/server.ts'),
+      'utf-8',
+    )
+    expect(generatorSource).toMatch(/^import ['"]server-only['"]/m)
+  })
+})
 
 describe('Vitest component discovery (Ticket #37)', () => {
   it('includes all src/**/*.spec.tsx files in component project', () => {

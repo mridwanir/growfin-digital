@@ -4,6 +4,8 @@ import { env } from '@/lib/env'
 
 import { generatedWebsiteSchema } from './schema'
 
+import 'server-only'
+
 export function buildGeminiPrompt(input: GenerateInput): string {
   const mapsUrl = input.mapsUrl || input.googleMapsUrl || ''
 

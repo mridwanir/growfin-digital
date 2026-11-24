@@ -1,4 +1,4 @@
-import type { GeneratedWebsiteData } from '@/lib/generator/schema'
+import type { GeneratedWebsiteData } from '@/features/generator/server'
 
 import { eq } from 'drizzle-orm'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -8,7 +8,7 @@ import SitePage, { generateMetadata as generateSiteMetadata } from '@/app/site/[
 import { ExpiredSiteScreen } from '@/components/storefront/expired-screen'
 import { db } from '@/db'
 import { tenants } from '@/db/schema/tenants'
-import { persistGeneratedWebsite } from '@/lib/generator/persistence'
+import { persistGeneratedWebsite } from '@/features/generator/server'
 import { getStorefrontDataBySlug } from '@/lib/storefront/loader'
 
 vi.mock('next/navigation', () => ({

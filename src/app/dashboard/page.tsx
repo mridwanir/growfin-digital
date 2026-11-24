@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { TenantStatusBadge, TenantTierBadge } from '@/components/dashboard/tenant-badges'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { getTenantAnalyticsMetrics } from '@/lib/dashboard/analytics'
+import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
 import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
 import { env } from '@/lib/env'
 

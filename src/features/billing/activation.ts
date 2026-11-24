@@ -1,5 +1,4 @@
-import type { Organization } from '@/db/schema/auth'
-import type { PackageTier } from '@/db/schema/tenants'
+import type { ActivateOrderAndTenantParams, ActivationResult } from './types'
 
 import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
@@ -7,32 +6,16 @@ import { revalidatePath } from 'next/cache'
 import { db } from '@/db'
 import { member, organization } from '@/db/schema/auth'
 import { orders } from '@/db/schema/orders'
-import { sendInvoiceEmail } from '@/lib/email/invoice'
 
-export interface ActivateOrderAndTenantParams {
-  orderId: string
-  paymentMethod?: string | null
-  paymentGatewayRef?: string | null
-  grossAmount?: number | null
-}
+import { sendInvoiceEmail } from './invoice'
+import { normalizePackageTier } from './tier'
 
-export interface ActivationResult {
-  order: typeof orders.$inferSelect
-  tenant: Organization
-  alreadyPaid: boolean
-}
-export function normalizePackageTier(tier?: string | null): PackageTier {
-  if (!tier) return 'instant'
-  if (tier === 'pro' || tier.startsWith('pro') || tier === 'enterprise') return 'pro'
-  if (tier === 'instant' || tier === 'instan') return 'instant'
-  if (tier === 'free' || tier === 'free_trial') return 'free'
-  return 'instant'
-}
+import 'server-only'
 
 export async function activateOrderAndTenant({
   orderId,
-  paymentMethod,
   paymentGatewayRef,
+  paymentMethod,
 }: ActivateOrderAndTenantParams): Promise<ActivationResult> {
   const result = await db.transaction(async tx => {
     const [existingOrder] = await tx.select().from(orders).where(eq(orders.id, orderId))

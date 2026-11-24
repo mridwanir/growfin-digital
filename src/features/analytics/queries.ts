@@ -1,17 +1,12 @@
+import type { TenantAnalyticsMetrics } from './types'
+
 import { and, desc, eq, gte, isNotNull, sql } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { member, organization } from '@/db/schema/auth'
 
-export interface TenantAnalyticsMetrics {
-  checkoutCompletes: number
-  checkoutStarts: number
-  conversionRate: number
-  pageViews: number
-  topSources: Array<{ count: number; source: string }>
-  uniqueVisitors: number
-}
+import 'server-only'
 
 /**
  * Returns today's analytics metrics for a tenant owned by the given merchant user. Metrics are

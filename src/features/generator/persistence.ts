@@ -12,6 +12,8 @@ import { storefrontConfigs } from '@/db/schema/storefront'
 
 import { generateCategorySlug, generateTenantSlug } from './slug'
 
+import 'server-only'
+
 export interface PersistResult {
   categories: (typeof categories.$inferSelect)[]
   products: (typeof products.$inferSelect)[]

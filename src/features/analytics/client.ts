@@ -1,4 +1,4 @@
-export type AnalyticsEvent = 'page_view' | 'checkout_start' | 'checkout_complete'
+import type { AnalyticsEvent } from './types'
 
 function getSlugFromPathname(pathname: string): string | null {
   const match = pathname.match(/^\/site\/([^/?#]+)/)

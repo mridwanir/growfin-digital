@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { trackEvent } from '@/lib/analytics'
+import { trackEvent } from './client'
 
 interface WindowMock {
   location: {

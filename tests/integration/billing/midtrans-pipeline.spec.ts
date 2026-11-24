@@ -1,4 +1,4 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
 
 import { eq } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
@@ -15,7 +15,7 @@ import { orders } from '@/db/schema/orders'
 import { tenants } from '@/db/schema/tenants'
 import { env } from '@/lib/env'
 
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {

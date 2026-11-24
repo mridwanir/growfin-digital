@@ -34,15 +34,16 @@ export function StorefrontPreviewClient({
         ? initialConfig.updatedAt
         : new Date(initialConfig.updatedAt ?? 0),
   }))
-  const [isInIframe, setIsInIframe] = useState(() => {
-    if (typeof window === 'undefined') return true
-    try {
-      return window.self !== window.top
-    } catch {
-      return true
-    }
-  })
-  void setIsInIframe
+  const isInIframe =
+    typeof window === 'undefined'
+      ? true
+      : (() => {
+          try {
+            return window.self !== window.top
+          } catch {
+            return true
+          }
+        })()
 
   useEffect(() => {
     function handleMessage(event: MessageEvent<unknown>) {

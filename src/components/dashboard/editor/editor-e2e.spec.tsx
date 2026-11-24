@@ -1,18 +1,17 @@
-import type { MeracikPreviewUpdateMessage } from '@/components/storefront/preview-protocol'
 import type { StorefrontConfig, StorefrontSection, Tenant } from '@/db/schema/tenants'
+import type { MeracikPreviewUpdateMessage } from '@/features/storefront'
 
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
 import { StorefrontEditor } from '@/components/dashboard/editor'
+import { MERACIK_PREVIEW_UPDATE, StorefrontPreviewClient } from '@/features/storefront'
 import {
   mockFnbCategories,
   mockFnbProduct,
   mockStorefrontTenant,
-} from '@/components/storefront/__fixtures__/storefront-fixtures'
-import { StorefrontPreviewClient } from '@/components/storefront/preview-client'
-import { MERACIK_PREVIEW_UPDATE } from '@/components/storefront/preview-protocol'
+} from '@/features/storefront/__fixtures__/storefront-fixtures'
 
 import '@/styles/globals.css'
 

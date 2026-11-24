@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation'
 
 import { StorefrontEditor } from '@/components/dashboard/editor'
 import { requireActiveTenantContext } from '@/features/auth/server'
-import { getStorefrontDraftDataBySlug } from '@/lib/storefront/loader'
-import { serializeRecord } from '@/lib/storefront/serialization'
+import { serializeRecord } from '@/features/storefront'
+import { getStorefrontDraftDataBySlug } from '@/features/storefront/server'
 
 export default async function StorefrontEditorPage() {
   const { currentTenant } = await requireActiveTenantContext()

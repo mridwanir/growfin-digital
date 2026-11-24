@@ -18,10 +18,7 @@ import { member, organization, user } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { orders } from '@/db/schema/orders'
 import { storefrontConfigs } from '@/db/schema/storefront'
-import {
-  DEFAULT_STOREFRONT_SECTIONS,
-  DEFAULT_STOREFRONT_THEME,
-} from '@/lib/storefront/compatibility'
+import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from '@/features/storefront'
 
 export const DEFAULT_TEST_THEME: StorefrontTheme = DEFAULT_STOREFRONT_THEME
 export const DEFAULT_TEST_SECTIONS: StorefrontSection[] = DEFAULT_STOREFRONT_SECTIONS

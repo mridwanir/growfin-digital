@@ -13,6 +13,7 @@ import { z } from 'zod'
 import { db } from '@/db'
 import { member, organization } from '@/db/schema/auth'
 import { storefrontConfigs } from '@/db/schema/storefront'
+import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from '@/features/storefront'
 import { auth } from '@/lib/auth/server'
 import {
   createCategory,
@@ -23,10 +24,6 @@ import {
   updateProduct,
   updateTenantSettings,
 } from '@/lib/dashboard/mutations'
-import {
-  DEFAULT_STOREFRONT_SECTIONS,
-  DEFAULT_STOREFRONT_THEME,
-} from '@/lib/storefront/compatibility'
 
 export type ActionResult<T> =
   | { data: T; success: true }

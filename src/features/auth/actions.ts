@@ -10,11 +10,8 @@ import { z } from 'zod'
 import { db } from '@/db'
 import { member, organization, session as sessionTable } from '@/db/schema/auth'
 import { storefrontConfigs } from '@/db/schema/storefront'
+import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from '@/features/storefront'
 import { auth, getSessionCookieDomain } from '@/lib/auth/server'
-import {
-  DEFAULT_STOREFRONT_SECTIONS,
-  DEFAULT_STOREFRONT_THEME,
-} from '@/lib/storefront/compatibility'
 
 import 'server-only'
 

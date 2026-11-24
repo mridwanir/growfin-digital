@@ -5,7 +5,7 @@ import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
 import { StorefrontEditor, useStorefrontEditor } from '@/components/dashboard/editor'
-import { MERACIK_PREVIEW_UPDATE } from '@/components/storefront/preview-protocol'
+import { MERACIK_PREVIEW_UPDATE } from '@/features/storefront'
 import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
 
 import '@/styles/globals.css'

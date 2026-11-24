@@ -4,20 +4,20 @@ import type { ReactNode } from 'react'
 
 import type { SaveStatus, StorefrontEditorContextValue, ViewportMode } from './context'
 import type {
-  MeracikPreviewUpdateMessage,
-  MeracikPreviewUpdatePayload,
-} from '@/components/storefront/preview-protocol'
-import type {
   StorefrontConfig,
   StorefrontSection,
   StorefrontTheme,
   Tenant,
 } from '@/db/schema/tenants'
-import type { Serializable } from '@/lib/storefront/serialization'
+import type {
+  MeracikPreviewUpdateMessage,
+  MeracikPreviewUpdatePayload,
+  Serializable,
+} from '@/features/storefront'
 
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 
-import { MERACIK_PREVIEW_UPDATE } from '@/components/storefront/preview-protocol'
+import { MERACIK_PREVIEW_UPDATE } from '@/features/storefront'
 import { publishStorefrontDraftAction, saveStorefrontDraftAction } from '@/lib/dashboard/actions'
 
 import { StorefrontEditorContext } from './context'

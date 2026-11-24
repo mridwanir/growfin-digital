@@ -9,11 +9,8 @@ import { db } from '@/db'
 import { member, organization, session as sessionTable, user } from '@/db/schema/auth'
 import { storefrontConfigs } from '@/db/schema/storefront'
 import { createStoreOnboardingAction } from '@/features/auth/actions'
+import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from '@/features/storefront'
 import { auth } from '@/lib/auth/server'
-import {
-  DEFAULT_STOREFRONT_SECTIONS,
-  DEFAULT_STOREFRONT_THEME,
-} from '@/lib/storefront/compatibility'
 
 import { createMerchantSession, createUnauthenticatedSession } from '../../fixtures/session-fixture'
 import { createTestTenant } from '../../fixtures/tenant-fixture'

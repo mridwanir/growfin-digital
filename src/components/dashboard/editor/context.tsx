@@ -2,13 +2,13 @@
 
 import type { RefObject } from 'react'
 
-import type { MeracikPreviewUpdatePayload } from '@/components/storefront/preview-protocol'
 import type {
   StorefrontConfig,
   StorefrontSection,
   StorefrontTheme,
   Tenant,
 } from '@/db/schema/tenants'
+import type { MeracikPreviewUpdatePayload } from '@/features/storefront'
 
 import { createContext, use } from 'react'
 

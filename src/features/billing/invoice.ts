@@ -4,9 +4,9 @@ import { eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
+import { formatCurrency } from '@/features/storefront'
 import { resend } from '@/lib/email/resend'
 import { env } from '@/lib/env'
-import { formatCurrency } from '@/lib/storefront/currency'
 
 import 'server-only'
 

@@ -1,5 +1,5 @@
+import { resolveArchetype } from '@/features/storefront'
 import { env } from '@/lib/env'
-import { resolveArchetype } from '@/lib/storefront/archetype'
 
 import { generateWithGemini } from './gemini'
 import { persistGeneratedWebsite } from './persistence'

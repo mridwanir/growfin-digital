@@ -43,7 +43,7 @@ export default defineConfig({
         resolve: {
           alias: {
             'next/image': fileURLToPath(
-              new URL('./src/components/storefront/__fixtures__/mock-image.tsx', import.meta.url),
+              new URL('./src/features/storefront/__fixtures__/mock-image.tsx', import.meta.url),
             ),
           },
         },

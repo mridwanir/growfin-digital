@@ -60,6 +60,18 @@ Integration tests run in Node under `tests/integration/**/*.spec.ts` against an 
 - Targeted via `pnpm test:integration`.
 - Examples: `tests/integration/dashboard-actions.spec.ts`, `tests/integration/checkout-funnel.spec.ts`, `tests/integration/midtrans-pipeline.spec.ts`.
 
+### Server-only modules in Node test environments
+
+Modules guarded by `import 'server-only'` throw at import time outside Next.js React Server Component bundler conditions. Vitest runs in standard Node without RSC conditions.
+
+All Tier 3 integration test files import `tests/integration/setup.ts`, which mocks `server-only` globally:
+
+```typescript
+vi.mock('server-only', () => ({}))
+```
+
+If an individual unit test in `src/**/*.spec.ts` needs to exercise a server-only module directly in Node, either include `vi.mock('server-only', () => ({}))` at the top of the test file or run it as an integration test.
+
 ### Test execution commands
 
 | Command                 | Scope                                  | Target project                                   |

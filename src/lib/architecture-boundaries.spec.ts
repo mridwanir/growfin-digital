@@ -178,6 +178,52 @@ describe('static architecture boundaries (Ticket #43)', () => {
         `Found ${violations.length} deep cross-feature import violation(s):\n${violations.join('\n')}`,
       ).toEqual([])
     })
+
+    it('forbids passthrough re-exports of other features in client feature barrels', () => {
+      const barrelFiles = allSourceFiles.filter(f =>
+        /^features\/[^/]+\/index\.(?:ts|tsx)$/.test(f.relativeFile),
+      )
+      const violations: string[] = []
+
+      for (const barrel of barrelFiles) {
+        const imports = extractImports(barrel.content)
+        for (const imp of imports) {
+          if (imp.importPath.startsWith('@/features/') || imp.importPath.startsWith('../')) {
+            violations.push(
+              `${barrel.relativeFile}:${imp.line} re-exports from external feature "${imp.importPath}". Feature barrels must only export local slice members, not act as middle-man re-exporters.`,
+            )
+          }
+        }
+      }
+
+      expect(
+        violations,
+        `Found ${violations.length} passthrough re-export violation(s):\n${violations.join('\n')}`,
+      ).toEqual([])
+    })
+
+    it('forbids node built-in imports or server-only leaks in client feature barrels', () => {
+      const barrelFiles = allSourceFiles.filter(f =>
+        /^features\/[^/]+\/index\.(?:ts|tsx)$/.test(f.relativeFile),
+      )
+      const violations: string[] = []
+
+      for (const barrel of barrelFiles) {
+        const imports = extractImports(barrel.content)
+        for (const imp of imports) {
+          if (imp.importPath.startsWith('node:') || imp.importPath === 'server-only') {
+            violations.push(
+              `${barrel.relativeFile}:${imp.line} imports server module "${imp.importPath}". Client barrels must never leak node builtins or server-only code.`,
+            )
+          }
+        }
+      }
+
+      expect(
+        violations,
+        `Found ${violations.length} server leak in client barrel(s):\n${violations.join('\n')}`,
+      ).toEqual([])
+    })
   })
 
   describe('better Auth organization vs Tenant boundary', () => {
@@ -330,6 +376,16 @@ describe('static architecture boundaries (Ticket #43)', () => {
         expect(routeShell!.content).not.toMatch(/useState/)
         expect(routeShell!.content).not.toMatch(/MERACIK_PREVIEW_UPDATE/)
       })
+    })
+  })
+
+  describe('domain glossary alignment (GLOSSARY.md)', () => {
+    it('forbids deprecated Store terminology in Tenant switcher and headers', () => {
+      const tenantSwitcher = allSourceFiles.find(
+        f => f.relativeFile === 'features/dashboard/components/sidebar/tenant-switcher.tsx',
+      )
+      expect(tenantSwitcher).toBeDefined()
+      expect(tenantSwitcher!.content).not.toMatch(/['"]Store['"]/)
     })
   })
 })

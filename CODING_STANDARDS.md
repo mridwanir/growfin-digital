@@ -8,6 +8,18 @@ Code is organized by vertical domain slices (`src/features/`), thin App Router s
 
 - **`src/app/` is thin route wiring only.** Group pages into Route Groups: `(marketing)`, `(auth)`, `(dashboard)`, and `(storefront)`, with `api/` for external endpoints. Keep domain logic and UI components inside `src/features/`.
 - **Features live in `src/features/<name>/`.** Canonical slices are `auth`, `storefront`, `editor`, `dashboard`, `billing`, `analytics`, and `generator`. Standardize on `components/`, `actions.ts`, `queries.ts` (or `loader.ts`), `schemas.ts`/`types.ts`, domain files, and colocated `.spec.ts`/`.spec.tsx` tests. Add sub-domain folders only for large features (such as `storefront/cart`, `storefront/catalog`, `storefront/layouts`, `storefront/sections`).
+
+  ```text
+  src/features/<slice>/
+  ├── index.ts        # Client/shared public barrel (no server code or node builtins)
+  ├── server.ts       # Server-only entry point (import 'server-only')
+  ├── actions.ts      # Server Actions ('use server')
+  ├── queries.ts      # Direct database loaders/queries (optional, or in server.ts)
+  ├── types.ts        # Shared TypeScript contracts and schemas
+  ├── components/     # Feature-internal UI components
+  └── [subdomain]/    # Sub-domain folders for complex slices (e.g. storefront/catalog)
+  ```
+
 - **No cross-feature deep imports.** Features may only import another feature's explicit public entry points—never its internal `components/` or private helpers.
 - **Split client and server entry points.** Never mix `'use client'` exports and server-only (`@/db`, `next/headers`) exports in the same `index.ts` barrel. Expose `index.ts` for client/shared exports and `server.ts` (or `actions.ts` / `queries.ts`) for server-only code.
 - **Keep `src/components/ui/`, `src/components/brand/`, and `src/hooks/` truly shared.** Do not place feature-specific components in `src/components/`.

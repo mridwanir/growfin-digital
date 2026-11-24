@@ -18,8 +18,8 @@ import { cookies } from 'next/headers'
 import { z } from 'zod'
 
 import { db } from '@/db'
-import { organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
+import { tenants } from '@/db/schema/tenants'
 import { resolveActiveTenantContext } from '@/features/auth/server'
 
 import { getProductById, getTenantSettings } from './queries'
@@ -124,7 +124,7 @@ export async function updateTenantSettings(
   }
 
   const [updated] = await db
-    .update(organization)
+    .update(tenants)
     .set({
       address: input.address !== undefined ? input.address : current.address,
       city: input.city !== undefined ? input.city : current.city,
@@ -132,7 +132,7 @@ export async function updateTenantSettings(
       phone: input.phone !== undefined ? input.phone : current.phone,
       updatedAt: new Date(),
     })
-    .where(eq(organization.id, tenantId))
+    .where(eq(tenants.id, tenantId))
     .returning()
   return updated ?? null
 }

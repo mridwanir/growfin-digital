@@ -9,8 +9,8 @@ import type {
 import { eq } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { organization } from '@/db/schema/auth'
 import { orders } from '@/db/schema/orders'
+import { tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import { siteConfig } from '@/lib/site-config'
 
@@ -38,7 +38,7 @@ export async function createCheckoutSession(
     }
   }
 
-  const [tenant] = await db.select().from(organization).where(eq(organization.slug, slug))
+  const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug))
 
   if (!tenant) {
     return {
@@ -114,10 +114,7 @@ export async function getCheckoutOrderStatus(orderId: string) {
   }
 
   if (order.status === 'paid') {
-    const [tenant] = await db
-      .select()
-      .from(organization)
-      .where(eq(organization.id, order.organizationId))
+    const [tenant] = await db.select().from(tenants).where(eq(tenants.id, order.organizationId))
 
     return {
       alreadyPaid: true,
@@ -167,10 +164,7 @@ export async function verifyCheckoutOrder({
     }
   }
 
-  const [tenant] = await db
-    .select()
-    .from(organization)
-    .where(eq(organization.id, order.organizationId))
+  const [tenant] = await db.select().from(tenants).where(eq(tenants.id, order.organizationId))
 
   if (!tenant) {
     return {

@@ -4,7 +4,8 @@ import { and, desc, eq, gte, isNotNull, sql } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { member, organization } from '@/db/schema/auth'
+import { member } from '@/db/schema/auth'
+import { tenants } from '@/db/schema/tenants'
 
 import 'server-only'
 
@@ -19,10 +20,10 @@ export async function getTenantAnalyticsMetrics(
   // If userId is provided, verify tenant ownership
   if (userId) {
     const [ownedTenant] = await db
-      .select({ id: organization.id })
-      .from(organization)
-      .innerJoin(member, eq(member.organizationId, organization.id))
-      .where(and(eq(organization.id, tenantId), eq(member.userId, userId)))
+      .select({ id: tenants.id })
+      .from(tenants)
+      .innerJoin(member, eq(member.organizationId, tenants.id))
+      .where(and(eq(tenants.id, tenantId), eq(member.userId, userId)))
       .limit(1)
 
     if (!ownedTenant) {

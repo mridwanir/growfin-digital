@@ -4,8 +4,9 @@ import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 
 import { db } from '@/db'
-import { member, organization } from '@/db/schema/auth'
+import { member } from '@/db/schema/auth'
 import { orders } from '@/db/schema/orders'
+import { tenants } from '@/db/schema/tenants'
 
 import { sendInvoiceEmail } from './invoice'
 import { normalizePackageTier } from './tier'
@@ -26,8 +27,8 @@ export async function activateOrderAndTenant({
 
     const [existingTenant] = await tx
       .select()
-      .from(organization)
-      .where(eq(organization.id, existingOrder.organizationId))
+      .from(tenants)
+      .where(eq(tenants.id, existingOrder.organizationId))
 
     if (!existingTenant) {
       throw new Error(`Tenant ${existingOrder.organizationId} not found`)
@@ -101,7 +102,7 @@ export async function activateOrderAndTenant({
     }
 
     const [updatedTenant] = await tx
-      .update(organization)
+      .update(tenants)
       .set({
         domainActiveUntil,
         packageTier: tier,
@@ -109,7 +110,7 @@ export async function activateOrderAndTenant({
         status: 'published',
         updatedAt: now,
       })
-      .where(eq(organization.id, existingTenant.id))
+      .where(eq(tenants.id, existingTenant.id))
       .returning()
 
     return {

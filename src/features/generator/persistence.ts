@@ -1,14 +1,14 @@
 import type { GeneratedWebsiteData } from './schema'
 import type { Database } from '@/db'
-import type { Organization } from '@/db/schema/auth'
 import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
+import type { Tenant } from '@/db/schema/tenants'
 
 import crypto from 'node:crypto'
 
 import { db } from '@/db'
-import { organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { storefrontConfigs } from '@/db/schema/storefront'
+import { tenants } from '@/db/schema/tenants'
 
 import { generateCategorySlug, generateTenantSlug } from './slug'
 
@@ -17,7 +17,7 @@ import 'server-only'
 export interface PersistResult {
   categories: (typeof categories.$inferSelect)[]
   products: (typeof products.$inferSelect)[]
-  tenant: Organization
+  tenant: Tenant
 }
 
 /**
@@ -34,7 +34,7 @@ export async function persistGeneratedWebsite(
   return database.transaction(async tx => {
     // 1. Insert tenant record
     const [insertedTenant] = await tx
-      .insert(organization)
+      .insert(tenants)
       .values({
         name: data.business.name,
         address: data.business.address || null,

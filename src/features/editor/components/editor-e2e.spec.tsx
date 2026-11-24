@@ -6,11 +6,6 @@ import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
 import { MERACIK_PREVIEW_UPDATE, StorefrontPreviewClient } from '@/features/storefront'
-import {
-  mockFnbCategories,
-  mockFnbProduct,
-  mockStorefrontTenant,
-} from '@/features/storefront/__fixtures__/storefront-fixtures'
 
 import { StorefrontEditor } from './index'
 
@@ -22,7 +17,8 @@ vi.mock('../actions', () => ({
 }))
 
 const mockTenant: Tenant = {
-  ...mockStorefrontTenant,
+  id: 'fnb-tenant-123',
+  name: 'Kopi Artisan Senopati',
   address: 'Jl. Senopati No. 12',
   category: 'Cafe & Coffee Shop',
   city: 'Jakarta Selatan',
@@ -40,6 +36,61 @@ const mockTenant: Tenant = {
   updatedAt: new Date(),
   userId: null,
 } as unknown as Tenant
+
+const mockFnbCategories = [
+  {
+    id: 'cat-fnb-1',
+    name: 'Kopi & Minuman',
+    slug: 'kopi-dan-minuman',
+    sortOrder: 1,
+    tenantId: 'fnb-tenant-123',
+  },
+  {
+    id: 'cat-fnb-2',
+    name: 'Makanan & Snack',
+    slug: 'makanan-dan-snack',
+    sortOrder: 2,
+    tenantId: 'fnb-tenant-123',
+  },
+]
+
+const mockFnbProduct = {
+  id: 'prod-coffee-1',
+  name: 'Kopi Susu Gula Aren',
+  basePrice: 20000,
+  categoryId: 'cat-fnb-1',
+  description: 'Espresso dengan susu segar dan gula aren asli',
+  imageUrl: 'https://images.unsplash.com/photo-coffee',
+  originalPrice: 25000,
+  addons: [
+    { id: 'addon-shot', name: 'Ekstra Shot', price: 4000 },
+    { id: 'addon-jelly', name: 'Jelly Karamel', price: 3000 },
+  ],
+  imageGallery: [
+    'https://images.unsplash.com/photo-coffee-1',
+    'https://images.unsplash.com/photo-coffee-2',
+  ],
+  variants: [
+    {
+      id: 'var-size',
+      name: 'Ukuran',
+      required: true,
+      options: [
+        { id: 'opt-reg', label: 'Regular', priceModifier: 0 },
+        { id: 'opt-lrg', label: 'Large', priceModifier: 5000 },
+      ],
+    },
+    {
+      id: 'var-temp',
+      name: 'Suhu',
+      required: true,
+      options: [
+        { id: 'opt-cold', label: 'Dingin', priceModifier: 0 },
+        { id: 'opt-hot', label: 'Panas', priceModifier: 0 },
+      ],
+    },
+  ],
+}
 
 const initialSections: StorefrontSection[] = [
   {

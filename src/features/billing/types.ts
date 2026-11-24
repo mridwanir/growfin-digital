@@ -1,6 +1,5 @@
-import type { Organization } from '@/db/schema/auth'
 import type { orders } from '@/db/schema/orders'
-import type { PackageTier } from '@/db/schema/tenants'
+import type { PackageTier, Tenant } from '@/db/schema/tenants'
 
 export interface CreateSnapTransactionParams {
   orderId: string
@@ -40,7 +39,7 @@ export interface ActivateOrderAndTenantParams {
 
 export interface ActivationResult {
   order: typeof orders.$inferSelect
-  tenant: Organization
+  tenant: Tenant
   alreadyPaid: boolean
 }
 

@@ -1,16 +1,16 @@
 import type { ProductWithVariants } from './catalog'
-import type { Organization } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
 import type { StorefrontConfig } from '@/db/schema/storefront'
+import type { Tenant } from '@/db/schema/tenants'
 
 import { and, eq, inArray, or } from 'drizzle-orm'
 import crypto from 'node:crypto'
 import { cache } from 'react'
 
 import { db } from '@/db'
-import { organization } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { storefrontConfigs } from '@/db/schema/storefront'
+import { tenants } from '@/db/schema/tenants'
 
 import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from './utils/compatibility'
 
@@ -20,7 +20,7 @@ export interface StorefrontData {
   categories: Category[]
   config: StorefrontConfig
   products: ProductWithVariants[]
-  tenant: Organization
+  tenant: Tenant
 }
 
 /**
@@ -34,8 +34,8 @@ export const getStorefrontDataBySlug = cache(
   async (slugOrDomain: string): Promise<StorefrontData | null> => {
     const [tenant] = await db
       .select()
-      .from(organization)
-      .where(or(eq(organization.slug, slugOrDomain), eq(organization.customDomain, slugOrDomain)))
+      .from(tenants)
+      .where(or(eq(tenants.slug, slugOrDomain), eq(tenants.customDomain, slugOrDomain)))
       .limit(1)
 
     if (!tenant) return null
@@ -144,8 +144,8 @@ export const getStorefrontDraftDataBySlug = cache(
   async (slugOrDomain: string): Promise<StorefrontData | null> => {
     const [tenant] = await db
       .select()
-      .from(organization)
-      .where(or(eq(organization.slug, slugOrDomain), eq(organization.customDomain, slugOrDomain)))
+      .from(tenants)
+      .where(or(eq(tenants.slug, slugOrDomain), eq(tenants.customDomain, slugOrDomain)))
       .limit(1)
 
     if (!tenant) return null

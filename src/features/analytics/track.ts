@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { organization } from '@/db/schema/auth'
+import { tenants } from '@/db/schema/tenants'
 
 import { parseAcquisition } from './acquisition'
 import { computeVisitorHash } from './visitor-hash'
@@ -61,9 +61,9 @@ export async function handleAnalyticsTrack(request: NextRequest): Promise<Respon
   }
 
   const [tenant] = await db
-    .select({ id: organization.id })
-    .from(organization)
-    .where(eq(organization.slug, slug))
+    .select({ id: tenants.id })
+    .from(tenants)
+    .where(eq(tenants.slug, slug))
     .limit(1)
 
   if (!tenant) {

@@ -7,8 +7,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import { db } from '@/db'
-import { organization } from '@/db/schema/auth'
 import { storefrontConfigs } from '@/db/schema/storefront'
+import { tenants } from '@/db/schema/tenants'
 import { resolveActiveTenantContext } from '@/features/auth/server'
 import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from '@/features/storefront'
 
@@ -232,7 +232,7 @@ export async function publishStorefrontDraftAction(): Promise<ActionResult<Store
       published = inserted
     }
 
-    await tx.update(organization).set({ updatedAt: now }).where(eq(organization.id, auth.tenant.id))
+    await tx.update(tenants).set({ updatedAt: now }).where(eq(tenants.id, auth.tenant.id))
 
     return published
   })

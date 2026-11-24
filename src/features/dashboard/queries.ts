@@ -3,8 +3,9 @@ import type { MerchantTenantSummary, ProductWithVariants } from './types'
 import { and, desc, eq, inArray } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { member, organization } from '@/db/schema/auth'
+import { member } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
+import { tenants } from '@/db/schema/tenants'
 import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
 import { requireActiveTenantContext } from '@/features/auth/server'
 
@@ -16,24 +17,24 @@ import 'server-only'
 export async function getMerchantTenants(userId: string): Promise<MerchantTenantSummary[]> {
   return db
     .select({
-      id: organization.id,
-      name: organization.name,
-      address: organization.address,
-      category: organization.category,
-      city: organization.city,
-      createdAt: organization.createdAt,
-      customDomain: organization.customDomain,
-      packageTier: organization.packageTier,
-      phone: organization.phone,
-      siteActiveUntil: organization.siteActiveUntil,
-      slug: organization.slug,
-      status: organization.status,
-      updatedAt: organization.updatedAt,
+      id: tenants.id,
+      name: tenants.name,
+      address: tenants.address,
+      category: tenants.category,
+      city: tenants.city,
+      createdAt: tenants.createdAt,
+      customDomain: tenants.customDomain,
+      packageTier: tenants.packageTier,
+      phone: tenants.phone,
+      siteActiveUntil: tenants.siteActiveUntil,
+      slug: tenants.slug,
+      status: tenants.status,
+      updatedAt: tenants.updatedAt,
     })
-    .from(organization)
-    .innerJoin(member, eq(member.organizationId, organization.id))
+    .from(tenants)
+    .innerJoin(member, eq(member.organizationId, tenants.id))
     .where(eq(member.userId, userId))
-    .orderBy(desc(organization.createdAt))
+    .orderBy(desc(tenants.createdAt))
 }
 
 /**
@@ -46,29 +47,29 @@ export async function getTenantBySlug(slug: string, userId: string) {
 
   const [tenant] = await db
     .select({
-      id: organization.id,
-      name: organization.name,
-      address: organization.address,
-      category: organization.category,
-      city: organization.city,
-      createdAt: organization.createdAt,
-      customDomain: organization.customDomain,
-      domainActiveUntil: organization.domainActiveUntil,
-      googleMapsUrl: organization.googleMapsUrl,
-      logo: organization.logo,
-      metadata: organization.metadata,
-      operatingHours: organization.operatingHours,
-      packageTier: organization.packageTier,
-      phone: organization.phone,
-      siteActiveUntil: organization.siteActiveUntil,
-      slug: organization.slug,
-      status: organization.status,
-      updatedAt: organization.updatedAt,
+      id: tenants.id,
+      name: tenants.name,
+      address: tenants.address,
+      category: tenants.category,
+      city: tenants.city,
+      createdAt: tenants.createdAt,
+      customDomain: tenants.customDomain,
+      domainActiveUntil: tenants.domainActiveUntil,
+      googleMapsUrl: tenants.googleMapsUrl,
+      logo: tenants.logo,
+      metadata: tenants.metadata,
+      operatingHours: tenants.operatingHours,
+      packageTier: tenants.packageTier,
+      phone: tenants.phone,
+      siteActiveUntil: tenants.siteActiveUntil,
+      slug: tenants.slug,
+      status: tenants.status,
+      updatedAt: tenants.updatedAt,
       userId: member.userId,
     })
-    .from(organization)
-    .innerJoin(member, eq(member.organizationId, organization.id))
-    .where(and(eq(organization.slug, slug), eq(member.userId, userId)))
+    .from(tenants)
+    .innerJoin(member, eq(member.organizationId, tenants.id))
+    .where(and(eq(tenants.slug, slug), eq(member.userId, userId)))
     .limit(1)
 
   return tenant ?? null
@@ -80,26 +81,26 @@ export async function getTenantBySlug(slug: string, userId: string) {
 export async function getTenantSettings(tenantId: string, userId: string) {
   const [tenant] = await db
     .select({
-      id: organization.id,
-      name: organization.name,
-      address: organization.address,
-      category: organization.category,
-      city: organization.city,
-      customDomain: organization.customDomain,
-      domainActiveUntil: organization.domainActiveUntil,
-      googleMapsUrl: organization.googleMapsUrl,
-      operatingHours: organization.operatingHours,
-      packageTier: organization.packageTier,
-      phone: organization.phone,
-      siteActiveUntil: organization.siteActiveUntil,
-      slug: organization.slug,
-      status: organization.status,
-      updatedAt: organization.updatedAt,
+      id: tenants.id,
+      name: tenants.name,
+      address: tenants.address,
+      category: tenants.category,
+      city: tenants.city,
+      customDomain: tenants.customDomain,
+      domainActiveUntil: tenants.domainActiveUntil,
+      googleMapsUrl: tenants.googleMapsUrl,
+      operatingHours: tenants.operatingHours,
+      packageTier: tenants.packageTier,
+      phone: tenants.phone,
+      siteActiveUntil: tenants.siteActiveUntil,
+      slug: tenants.slug,
+      status: tenants.status,
+      updatedAt: tenants.updatedAt,
       userId: member.userId,
     })
-    .from(organization)
-    .innerJoin(member, eq(member.organizationId, organization.id))
-    .where(and(eq(organization.id, tenantId), eq(member.userId, userId)))
+    .from(tenants)
+    .innerJoin(member, eq(member.organizationId, tenants.id))
+    .where(and(eq(tenants.id, tenantId), eq(member.userId, userId)))
     .limit(1)
 
   return tenant ?? null

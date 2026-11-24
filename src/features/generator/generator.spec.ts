@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
+import * as clientIndex from './index'
 import {
   buildGeminiPrompt,
   generateCategorySlug,
@@ -55,6 +56,13 @@ describe('Generator feature slice - domain unit logic', () => {
       })
       expect(prompt).toContain('Toko Bunga Mawar')
       expect(prompt).toContain('https://maps.google.com/?cid=999')
+    })
+  })
+
+  describe('generator index public barrel', () => {
+    it('does not export node:crypto or slug generator from client index', () => {
+      expect('generateTenantSlug' in clientIndex).toBe(false)
+      expect('generateCategorySlug' in clientIndex).toBe(false)
     })
   })
 })

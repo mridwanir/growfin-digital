@@ -4,8 +4,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { OnboardingWizard } from '@/features/auth'
-import { getSession } from '@/features/auth/server'
-import { getMerchantTenants } from '@/features/dashboard/server'
+import { getMerchantTenants, getSession } from '@/features/auth/server'
 
 export const metadata: Metadata = {
   description: 'Daftarkan akun dan siapkan website toko online Anda dalam dua langkah mudah.',

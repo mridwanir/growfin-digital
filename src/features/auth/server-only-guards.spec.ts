@@ -27,5 +27,6 @@ describe('Auth feature server-only guards (Ticket #38)', () => {
   it('exports canonical Tenant helpers from @/features/auth/server', () => {
     expect(serverModule.resolveActiveTenantContext).toBeDefined()
     expect(serverModule.requireActiveTenantContext).toBeDefined()
+    expect(serverModule.getMerchantTenants).toBeDefined()
   })
 })

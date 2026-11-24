@@ -1,5 +1,6 @@
 import type {
   ActiveTenantContext,
+  MerchantTenantSummary,
   NewTenant,
   Tenant,
   TenantContextResult,
@@ -7,19 +8,19 @@ import type {
 } from './types'
 import type { SessionPayload, SessionResult } from '@/lib/auth/server'
 
-import { eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { db } from '@/db'
-import { organization, session as sessionTable } from '@/db/schema/auth'
-import { getMerchantTenants } from '@/features/dashboard/server'
+import { member, organization, session as sessionTable } from '@/db/schema/auth'
 import { auth, getSession, getSessionCookieDomain, requireAuth } from '@/lib/auth/server'
 
 import 'server-only'
 
 export type {
   ActiveTenantContext,
+  MerchantTenantSummary,
   NewTenant,
   SessionPayload,
   SessionResult,
@@ -29,6 +30,32 @@ export type {
 }
 export { organization as tenants } from '@/db/schema/auth'
 export { auth, getSession, getSessionCookieDomain, requireAuth }
+
+/**
+ * Returns all tenants owned by the given merchant user.
+ */
+export async function getMerchantTenants(userId: string): Promise<MerchantTenantSummary[]> {
+  return db
+    .select({
+      id: organization.id,
+      name: organization.name,
+      address: organization.address,
+      category: organization.category,
+      city: organization.city,
+      createdAt: organization.createdAt,
+      customDomain: organization.customDomain,
+      packageTier: organization.packageTier,
+      phone: organization.phone,
+      siteActiveUntil: organization.siteActiveUntil,
+      slug: organization.slug,
+      status: organization.status,
+      updatedAt: organization.updatedAt,
+    })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(eq(member.userId, userId))
+    .orderBy(desc(organization.createdAt))
+}
 
 /**
  * Resolves the active Tenant for the current merchant session.

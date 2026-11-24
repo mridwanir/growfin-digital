@@ -3,6 +3,7 @@ export { OnboardingWizard } from './components/onboarding-wizard'
 export { STORE_CATEGORIES, type StoreCategory } from './constants'
 export type {
   ActiveTenantContext,
+  MerchantTenantSummary,
   NewTenant,
   Tenant,
   TenantContextResult,

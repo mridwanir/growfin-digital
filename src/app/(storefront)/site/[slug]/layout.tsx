@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { PageViewTracker } from '@/features/storefront'
+import { PageViewTracker } from '@/features/analytics'
 
 interface SiteLayoutProps {
   children: ReactNode

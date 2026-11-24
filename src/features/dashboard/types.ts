@@ -1,29 +1,14 @@
 import type { Tenant } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
 import type { BrandingContent, OperatingHours } from '@/db/schema/storefront'
+import type { MerchantTenantSummary } from '@/features/auth'
 
 export type ActionResult<T> =
   | { data: T; success: true }
   | { error: string; fieldErrors?: Record<string, string[]>; success: false }
 
 export type TenantSettings = Tenant
-export type { Category }
-
-export interface MerchantTenantSummary {
-  id: string
-  name: string
-  address: string | null
-  category: string | null
-  city: string | null
-  createdAt: Date
-  customDomain: string | null
-  packageTier: string
-  phone: string | null
-  siteActiveUntil: Date | null
-  slug: string
-  status: string
-  updatedAt: Date
-}
+export type { Category, MerchantTenantSummary }
 
 export interface UpdateTenantSettingsInput {
   phone?: string | null

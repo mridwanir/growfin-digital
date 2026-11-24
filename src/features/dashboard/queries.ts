@@ -1,4 +1,4 @@
-import type { MerchantTenantSummary, ProductWithVariants } from './types'
+import type { ProductWithVariants } from './types'
 
 import { and, desc, eq, inArray } from 'drizzle-orm'
 
@@ -6,35 +6,11 @@ import { db } from '@/db'
 import { member } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
-import { requireActiveTenantContext, tenants } from '@/features/auth/server'
+import { getMerchantTenants, requireActiveTenantContext, tenants } from '@/features/auth/server'
 
 import 'server-only'
 
-/**
- * Returns all tenants owned by the given merchant user.
- */
-export async function getMerchantTenants(userId: string): Promise<MerchantTenantSummary[]> {
-  return db
-    .select({
-      id: tenants.id,
-      name: tenants.name,
-      address: tenants.address,
-      category: tenants.category,
-      city: tenants.city,
-      createdAt: tenants.createdAt,
-      customDomain: tenants.customDomain,
-      packageTier: tenants.packageTier,
-      phone: tenants.phone,
-      siteActiveUntil: tenants.siteActiveUntil,
-      slug: tenants.slug,
-      status: tenants.status,
-      updatedAt: tenants.updatedAt,
-    })
-    .from(tenants)
-    .innerJoin(member, eq(member.organizationId, tenants.id))
-    .where(eq(member.userId, userId))
-    .orderBy(desc(tenants.createdAt))
-}
+export { getMerchantTenants }
 
 /**
  * Returns a tenant matching both slug and userId, or null if not found.

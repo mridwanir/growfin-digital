@@ -84,5 +84,3 @@ export const generatedWebsiteSchema = z.object({
 })
 
 export type GeneratedWebsiteData = z.infer<typeof generatedWebsiteSchema>
-
-export { generateTenantSlug } from './slug'

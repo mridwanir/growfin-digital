@@ -31,7 +31,7 @@ export function TenantSwitcher({ currentTenant }: TenantSwitcherProps) {
             <span className="text-muted-foreground truncate text-xs">
               {(currentTenant.packageTier
                 ? currentTenant.packageTier.toUpperCase()
-                : currentTenant.category) || 'Store'}
+                : currentTenant.category) || 'Tenant'}
             </span>
           </div>
         </SidebarMenuButton>

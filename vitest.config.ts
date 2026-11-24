@@ -9,6 +9,9 @@ const { loadEnvConfig } = nextEnv
 
 export default defineConfig({
   plugins: [tailwindcss(), react()],
+  optimizeDeps: {
+    include: ['@base-ui/react/tabs'],
+  },
   oxc: {
     jsx: {
       importSource: 'react',

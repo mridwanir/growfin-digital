@@ -3,8 +3,9 @@
 import type { ProductWithVariants } from '../catalog'
 import type { Serializable } from '../utils/serialization'
 import type { MeracikPreviewUpdateMessage } from './preview-protocol'
+import type { Tenant } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
-import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
+import type { StorefrontConfig } from '@/db/schema/storefront'
 
 import { createElement, useEffect, useState } from 'react'
 

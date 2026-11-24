@@ -1,5 +1,5 @@
+import type { PackageTier, Tenant } from '@/db/schema/auth'
 import type { orders } from '@/db/schema/orders'
-import type { PackageTier, Tenant } from '@/db/schema/tenants'
 
 export interface CreateSnapTransactionParams {
   orderId: string

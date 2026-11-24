@@ -1,5 +1,5 @@
 import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
-import type { StorefrontSection, StorefrontTheme } from '@/db/schema/tenants'
+import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 
 import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
@@ -7,8 +7,8 @@ import crypto from 'node:crypto'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { db } from '@/db'
-import { userInNeonAuth } from '@/db/schema/auth'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { organization as tenants, userInNeonAuth } from '@/db/schema/auth'
+import { storefrontConfigs } from '@/db/schema/storefront'
 import {
   discardStorefrontDraftAction,
   publishStorefrontDraftAction,

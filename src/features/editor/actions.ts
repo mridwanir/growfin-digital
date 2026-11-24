@@ -1,6 +1,7 @@
 'use server'
 
-import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { StorefrontConfig } from '@/db/schema/storefront'
 
 import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
@@ -8,8 +9,7 @@ import { z } from 'zod'
 
 import { db } from '@/db'
 import { storefrontConfigs } from '@/db/schema/storefront'
-import { tenants } from '@/db/schema/tenants'
-import { resolveActiveTenantContext } from '@/features/auth/server'
+import { resolveActiveTenantContext, tenants } from '@/features/auth/server'
 import { DEFAULT_STOREFRONT_SECTIONS, DEFAULT_STOREFRONT_THEME } from '@/features/storefront'
 
 import 'server-only'

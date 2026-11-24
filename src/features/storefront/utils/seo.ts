@@ -1,17 +1,15 @@
 import type { Metadata } from 'next'
 
 import type { StorefrontArchetype } from './archetype'
+import type { OperatingHours, Tenant } from '@/db/schema/auth'
 import type {
-  BrandingContent,
-  OperatingHours,
+  FooterSectionContent,
+  HeroSectionContent,
   OperatingHoursSectionContent,
   StorefrontConfig,
-  Tenant,
-} from '@/db/schema/tenants'
+} from '@/db/schema/storefront'
 
 import { env } from '@/lib/env'
-
-import { extractLegacyBrandingFromSections } from './compatibility'
 
 export { resolveArchetype, type StorefrontArchetype } from './archetype'
 
@@ -43,25 +41,23 @@ function resolveStorefrontUrls(
     ? `https://${tenant.customDomain}`
     : `https://${baseDomain}/${tenant.slug}`
 
-  const legacyBranding =
-    'brandingContent' in tenant ? (tenant.brandingContent as Record<string, unknown> | null) : null
-  const branding = {
-    ...(legacyBranding || {}),
-    ...(config?.sections ? extractLegacyBrandingFromSections(config.sections) : {}),
-  }
+  const heroSection = config?.sections?.find(s => s.type === 'hero')
+  const heroContent = heroSection?.content as HeroSectionContent | undefined
+
   const rawImage =
-    (branding.logoUrl as string) ||
-    (branding.heroImageUrl as string) ||
-    (branding.heroImage as string) ||
+    (heroContent?.logoUrl as string) ||
+    (heroContent?.heroImageUrl as string) ||
+    (tenant.logo as string) ||
     '/image/landing/growfin-logo-icon.png'
   const ogImageUrl = rawImage.startsWith('http')
     ? rawImage
     : `https://${baseDomain}${rawImage.startsWith('/') ? '' : '/'}${rawImage}`
 
-  const logoUrl = branding.logoUrl
-    ? (branding.logoUrl as string).startsWith('http')
-      ? (branding.logoUrl as string)
-      : `https://${baseDomain}${(branding.logoUrl as string).startsWith('/') ? '' : '/'}${branding.logoUrl}`
+  const resolvedLogo = (heroContent?.logoUrl as string) || (tenant.logo as string)
+  const logoUrl = resolvedLogo
+    ? resolvedLogo.startsWith('http')
+      ? resolvedLogo
+      : `https://${baseDomain}${resolvedLogo.startsWith('/') ? '' : '/'}${resolvedLogo}`
     : ogImageUrl
 
   return { logoUrl, ogImageUrl, siteUrl }
@@ -69,15 +65,16 @@ function resolveStorefrontUrls(
 
 export function buildSiteMetadata(tenant: Tenant, config?: StorefrontConfig): Metadata {
   const { ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant, config)
-  const legacyBranding =
-    'brandingContent' in tenant ? (tenant.brandingContent as Record<string, unknown> | null) : null
-  const branding = {
-    ...(legacyBranding || {}),
-    ...(config?.sections ? extractLegacyBrandingFromSections(config.sections) : {}),
-  }
+  const heroSection = config?.sections?.find(s => s.type === 'hero')
+  const heroContent = heroSection?.content as HeroSectionContent | undefined
+  const footerSection = config?.sections?.find(s => s.type === 'footer')
+  const footerContent = footerSection?.content as FooterSectionContent | undefined
+
   const clientName = tenant.name
   const description =
-    (branding.tagline as string) ||
+    footerContent?.tagline ||
+    heroContent?.subtitle ||
+    heroContent?.description ||
     `Website resmi ${clientName}. Temukan informasi, produk, promo, dan layanan terbaik kami di sini.`
   return {
     description,
@@ -120,19 +117,18 @@ export function buildLocalBusinessJsonLd(
   config?: StorefrontConfig,
 ) {
   const { logoUrl, ogImageUrl, siteUrl } = resolveStorefrontUrls(tenant, config)
-  const legacyBranding =
-    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent | null) : null
-  const branding = {
-    ...(legacyBranding || {}),
-    ...(config?.sections ? extractLegacyBrandingFromSections(config.sections) : {}),
-  }
+  const heroSection = config?.sections?.find(s => s.type === 'hero')
+  const heroContent = heroSection?.content as HeroSectionContent | undefined
+  const footerSection = config?.sections?.find(s => s.type === 'footer')
+  const footerContent = footerSection?.content as FooterSectionContent | undefined
   const operatingHours = (tenant.operatingHours as OperatingHours | null) || {}
   const hoursSection = config?.sections?.find(s => s.type === 'operating_hours')
   const hoursContent = hoursSection?.content as OperatingHoursSectionContent | undefined
   const openTime = hoursContent?.openTime || operatingHours.openTime
   const closeTime = hoursContent?.closeTime || operatingHours.closeTime
 
-  const description = branding.tagline || branding.heroSubtitle || `Website resmi ${tenant.name}`
+  const description =
+    footerContent?.tagline || heroContent?.subtitle || `Website resmi ${tenant.name}`
   return {
     name: tenant.name,
     '@context': 'https://schema.org',

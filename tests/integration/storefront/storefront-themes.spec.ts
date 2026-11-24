@@ -1,5 +1,5 @@
+import type { Tenant } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
-import type { Tenant } from '@/db/schema/tenants'
 import type { ProductWithVariants } from '@/features/storefront'
 
 import React from 'react'

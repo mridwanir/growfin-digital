@@ -2,12 +2,8 @@
 
 import type { RefObject } from 'react'
 
-import type {
-  StorefrontConfig,
-  StorefrontSection,
-  StorefrontTheme,
-  Tenant,
-} from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { StorefrontConfig, StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
 import type { MeracikPreviewUpdatePayload } from '@/features/storefront'
 
 import { createContext, use } from 'react'

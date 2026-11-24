@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-img-element -- Dynamic storefront images require raw img elements for CDN URLs */
-import type { BrandingContent, GallerySectionContent, Tenant } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { BrandingContent, GallerySectionContent } from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 import { Camera } from 'lucide-react'

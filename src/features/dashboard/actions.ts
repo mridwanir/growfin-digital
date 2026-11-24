@@ -19,8 +19,7 @@ import { z } from 'zod'
 
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
-import { resolveActiveTenantContext } from '@/features/auth/server'
+import { resolveActiveTenantContext, tenants } from '@/features/auth/server'
 
 import { getProductById, getTenantSettings } from './queries'
 

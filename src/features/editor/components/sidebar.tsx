@@ -1,6 +1,6 @@
 'use client'
 
-import type { SectionType, StorefrontSection } from '@/db/schema/tenants'
+import type { SectionType, StorefrontSection } from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 import { ChevronDown, ChevronUp } from 'lucide-react'

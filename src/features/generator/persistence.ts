@@ -1,14 +1,14 @@
 import type { GeneratedWebsiteData } from './schema'
 import type { Database } from '@/db'
+import type { Tenant } from '@/db/schema/auth'
 import type { StorefrontSection, StorefrontTheme } from '@/db/schema/storefront'
-import type { Tenant } from '@/db/schema/tenants'
 
 import crypto from 'node:crypto'
 
 import { db } from '@/db'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
 import { storefrontConfigs } from '@/db/schema/storefront'
-import { tenants } from '@/db/schema/tenants'
+import { tenants } from '@/features/auth/server'
 
 import { generateCategorySlug, generateTenantSlug } from './slug'
 

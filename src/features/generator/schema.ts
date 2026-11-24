@@ -1,4 +1,5 @@
-import type { BrandingContent, OperatingHours, ThemeConfig } from '@/db/schema/tenants'
+import type { OperatingHours } from '@/db/schema/auth'
+import type { BrandingContent, ThemeConfig } from '@/db/schema/storefront'
 
 import { z } from 'zod'
 

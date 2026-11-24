@@ -5,9 +5,8 @@ import { and, desc, eq, inArray } from 'drizzle-orm'
 import { db } from '@/db'
 import { member } from '@/db/schema/auth'
 import { categories, products, productVariants, variantOptions } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
 import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
-import { requireActiveTenantContext } from '@/features/auth/server'
+import { requireActiveTenantContext, tenants } from '@/features/auth/server'
 
 import 'server-only'
 

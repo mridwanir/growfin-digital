@@ -6,9 +6,8 @@ import crypto from 'node:crypto'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { db } from '@/db'
-import { userInNeonAuth } from '@/db/schema/auth'
+import { organization as tenants, userInNeonAuth } from '@/db/schema/auth'
 import { categories, products } from '@/db/schema/catalog'
-import { tenants } from '@/db/schema/tenants'
 import {
   createProductAction,
   createProductCategoryAction,

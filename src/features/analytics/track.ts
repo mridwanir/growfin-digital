@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { tenants } from '@/db/schema/tenants'
+import { tenants } from '@/features/auth/server'
 
 import { parseAcquisition } from './acquisition'
 import { computeVisitorHash } from './visitor-hash'

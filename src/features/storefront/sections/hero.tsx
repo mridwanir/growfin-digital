@@ -1,10 +1,6 @@
 /* oxlint-disable next/no-img-element -- Dynamic storefront images require raw img elements for CDN URLs */
-import type {
-  BrandingContent,
-  HeroSectionContent,
-  OperatingHours,
-  Tenant,
-} from '@/db/schema/tenants'
+import type { OperatingHours, Tenant } from '@/db/schema/auth'
+import type { BrandingContent, HeroSectionContent } from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 import { ArrowRight, MessageCircle, ShoppingBag } from 'lucide-react'

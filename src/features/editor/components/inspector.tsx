@@ -8,7 +8,7 @@ import type {
   OperatingHoursSectionContent,
   ReviewsSectionContent,
   SectionType,
-} from '@/db/schema/tenants'
+} from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 

@@ -1,14 +1,12 @@
 import type { BaseStorefrontLayoutProps } from './types'
 import type {
-  BrandingContent,
   CatalogSectionContent,
   FooterSectionContent,
   GallerySectionContent,
   HeroSectionContent,
   OperatingHoursSectionContent,
   ReviewsSectionContent,
-  ThemeConfig,
-} from '@/db/schema/tenants'
+} from '@/db/schema/storefront'
 
 import { cn } from 'cn'
 
@@ -17,7 +15,6 @@ import { isSectionVisible } from '@/lib/section-utils'
 import { ProductCatalog } from '../catalog'
 import { Footer, Gallery, Hero, OperatingHours, Reviews } from '../sections'
 import { resolveArchetype } from '../utils/archetype'
-import { extractLegacyBrandingFromSections, extractLegacyThemeConfig } from '../utils/compatibility'
 import { DynamicThemeProvider } from './dynamic-theme-provider'
 
 export function BaseStorefrontLayout({
@@ -41,29 +38,22 @@ export function BaseStorefrontLayout({
   containerClassName,
 }: BaseStorefrontLayoutProps) {
   const sections = config?.sections
-  const legacyBranding =
-    'brandingContent' in tenant ? (tenant.brandingContent as BrandingContent) || {} : {}
-  const branding = {
-    ...legacyBranding,
-    ...(sections ? extractLegacyBrandingFromSections(sections) : {}),
-  }
-  const legacyThemeConfig = 'themeConfig' in tenant ? (tenant.themeConfig as ThemeConfig) || {} : {}
-  const themeConfig = config ? extractLegacyThemeConfig(config) : legacyThemeConfig
+  const themeRecord = (config?.theme || {}) as Record<string, unknown>
+  const hiddenSections = Array.isArray(themeRecord.hiddenSections)
+    ? (themeRecord.hiddenSections as string[])
+    : []
   const order =
-    themeConfig.sectionOrder && themeConfig.sectionOrder.length > 0
-      ? themeConfig.sectionOrder
+    Array.isArray(themeRecord.sectionOrder) && (themeRecord.sectionOrder as string[]).length > 0
+      ? (themeRecord.sectionOrder as string[])
       : defaultSectionOrder
 
-  const hidden = themeConfig.hiddenSections
-
-  const resolvedFontFamily = config?.theme?.fontFamily || themeConfig.fontFamily || fontFamily
-  const resolvedThemeColor = config?.theme?.themeColor || themeConfig.themeColor
+  const resolvedFontFamily = config?.theme?.fontFamily || fontFamily
+  const resolvedThemeColor = config?.theme?.themeColor
   const renderCatalog = (id: string, catalogContent?: CatalogSectionContent) => {
     const title =
       catalogContent?.title ||
-      branding.menuTitle ||
       (resolveArchetype(tenant.category) === 'retail' ? 'Katalog Produk' : 'Menu Pilihan')
-    const description = catalogContent?.description || branding.menuDescription
+    const description = catalogContent?.description
     const placeholder = catalogContent?.searchPlaceholder || 'Cari produk / menu...'
     const activeCategoryVariant = catalogContent?.categoryVariant || categoryVariant
     const activeCardDensity = catalogContent?.cardDensity || cardDensity
@@ -107,7 +97,7 @@ export function BaseStorefrontLayout({
   }
 
   const renderSection = (id: string) => {
-    if (!isSectionVisible(id, hidden)) return null
+    if (!isSectionVisible(id, hiddenSections)) return null
 
     switch (id) {
       case 'hero':
@@ -149,7 +139,7 @@ export function BaseStorefrontLayout({
   if (sections && sections.length > 0) {
     const sortedSections = [...sections].sort((a, b) => a.sortOrder - b.sortOrder)
     const hasFooterSection = sortedSections.some(s => s.type === 'footer')
-    shouldRenderFooter = !hasFooterSection && isSectionVisible('footer', themeConfig.hiddenSections)
+    shouldRenderFooter = !hasFooterSection && isSectionVisible('footer', hiddenSections)
 
     mainContent = sortedSections.map(section => {
       if (!section.isVisible) return null
@@ -212,7 +202,7 @@ export function BaseStorefrontLayout({
     })
   } else {
     const hasFooterInOrder = order.includes('footer')
-    shouldRenderFooter = !hasFooterInOrder && isSectionVisible('footer', hidden)
+    shouldRenderFooter = !hasFooterInOrder && isSectionVisible('footer', hiddenSections)
     mainContent = order.map(sectionId => renderSection(sectionId))
   }
   return (

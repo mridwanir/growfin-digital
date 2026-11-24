@@ -1,4 +1,5 @@
-import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
+import type { Tenant } from '@/db/schema/auth'
+import type { StorefrontConfig } from '@/db/schema/storefront'
 
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'

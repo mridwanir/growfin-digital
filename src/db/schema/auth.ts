@@ -87,6 +87,9 @@ export const organization = pgTable('organization', {
   status: text('status').$type<StoreStatus>().default('draft').notNull(),
   updatedAt: timestamp('updated_at', { mode: 'date', withTimezone: true }).defaultNow().notNull(),
 })
+export type Tenant = typeof organization.$inferSelect
+export type NewTenant = typeof organization.$inferInsert
+export type TenantStatus = StoreStatus
 
 export const member = pgTable(
   'member',

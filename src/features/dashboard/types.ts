@@ -1,6 +1,6 @@
+import type { Tenant } from '@/db/schema/auth'
 import type { Category } from '@/db/schema/catalog'
 import type { BrandingContent, OperatingHours } from '@/db/schema/storefront'
-import type { Tenant } from '@/db/schema/tenants'
 
 export type ActionResult<T> =
   | { data: T; success: true }

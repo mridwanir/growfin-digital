@@ -201,7 +201,7 @@ describe('static architecture boundaries (Ticket #43)', () => {
 
           if (importsFromAuthSchema && mentionsOrg) {
             violations.push(
-              `${file.relativeFile}:${imp.line} imports Better Auth organization ("${imp.importedSymbols}") from "${imp.importPath}". Features and routes outside auth/db boundary must use Tenant from @/db/schema/tenants.`,
+              `${file.relativeFile}:${imp.line} imports Better Auth organization ("${imp.importedSymbols}") from "${imp.importPath}". Features and routes outside auth/db boundary must use Tenant from @/db/schema or @/features/auth.`,
             )
           }
         }
@@ -210,6 +210,30 @@ describe('static architecture boundaries (Ticket #43)', () => {
       expect(
         violations,
         `Found ${violations.length} organization boundary violation(s):\n${violations.join('\n')}`,
+      ).toEqual([])
+    })
+
+    it('ensures no imports reference the legacy tenants schema shim or compatibility adapter', () => {
+      const violations: string[] = []
+
+      for (const file of allSourceFiles) {
+        const imports = extractImports(file.content)
+        for (const imp of imports) {
+          if (
+            imp.importPath.includes('schema/tenants') ||
+            imp.importPath.endsWith('/tenants') ||
+            imp.importPath.includes('utils/compatibility')
+          ) {
+            violations.push(
+              `${file.relativeFile}:${imp.line} imports from legacy shim "${imp.importPath}". Use canonical Tenant boundary exports or normalized Storefront records directly.`,
+            )
+          }
+        }
+      }
+
+      expect(
+        violations,
+        `Found ${violations.length} legacy shim import violation(s):\n${violations.join('\n')}`,
       ).toEqual([])
     })
   })

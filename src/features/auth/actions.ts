@@ -1,5 +1,7 @@
 'use server'
 
+import type { Tenant } from './types'
+
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
@@ -14,22 +16,26 @@ import {
   DEFAULT_STOREFRONT_THEME,
 } from '@/lib/storefront/compatibility'
 
+import 'server-only'
+
 export type ActionResult<T> =
   | { data: T; redirect?: string; success: true }
   | { error: string; fieldErrors?: Record<string, string[]>; success: false }
 
 export interface CreateStoreOnboardingInput {
-  name: string
-  slug: string
   category: string
+  name: string
   phone: string
+  slug: string
 }
 
 export interface CreateStoreOnboardingData {
-  organization: typeof organization.$inferSelect
+  organization?: Tenant
   organizationId: string
   redirectUrl: string
   slug: string
+  tenant: Tenant
+  tenantId: string
 }
 
 const createStoreOnboardingSchema = z.object({
@@ -76,7 +82,7 @@ export async function createStoreOnboardingAction(
     }
   }
 
-  const { name, slug, category, phone } = parsed.data
+  const { category, name, phone, slug } = parsed.data
   const normalizedSlug = slug.toLowerCase()
 
   // 3. Validate slug uniqueness
@@ -186,6 +192,8 @@ export async function createStoreOnboardingAction(
         organizationId: createdOrg.id,
         redirectUrl: '/dashboard',
         slug: createdOrg.slug,
+        tenant: createdOrg,
+        tenantId: createdOrg.id,
       },
     }
   } catch (err) {

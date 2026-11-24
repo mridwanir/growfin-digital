@@ -11,8 +11,8 @@ import { authClient } from '@/lib/auth/client'
 import { auth } from '@/lib/auth/server'
 import { resend } from '@/lib/email/resend'
 
-import { createMerchantSession } from '../fixtures/session-fixture'
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createMerchantSession } from '../../fixtures/session-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 const mockCookieStore = {
   delete: vi.fn(),

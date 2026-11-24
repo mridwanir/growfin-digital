@@ -8,15 +8,15 @@ import { DashboardGuard } from '@/app/dashboard/layout'
 import { db } from '@/db'
 import { member, organization, session as sessionTable, user } from '@/db/schema/auth'
 import { storefrontConfigs } from '@/db/schema/storefront'
+import { createStoreOnboardingAction } from '@/features/auth/actions'
 import { auth } from '@/lib/auth/server'
-import { createStoreOnboardingAction } from '@/lib/onboarding/actions'
 import {
   DEFAULT_STOREFRONT_SECTIONS,
   DEFAULT_STOREFRONT_THEME,
 } from '@/lib/storefront/compatibility'
 
-import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createMerchantSession, createUnauthenticatedSession } from '../../fixtures/session-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 const mockCookieStore = {
   delete: vi.fn(),

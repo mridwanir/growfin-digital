@@ -8,7 +8,6 @@ import {
   Layers,
   MapPin,
   ShoppingBag,
-  Tag,
   Truck,
   UtensilsCrossed,
 } from 'lucide-react'
@@ -148,8 +147,9 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
       aria-label="Pilihan Model Bisnis"
       data-testid="archetype-switcher-section"
       id="archetypes"
+      style={{ '--h': 1 } as React.CSSProperties}
       className={cn(
-        'bg-background text-foreground relative flex min-h-screen flex-col justify-center overflow-hidden py-16 lg:py-24',
+        'bg-background text-foreground relative flex min-h-screen flex-col justify-center overflow-hidden py-10 lg:h-screen lg:max-h-screen lg:py-6',
         className,
       )}
     >
@@ -161,12 +161,12 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
             <span>Arsitektur Multi-Model</span>
           </div>
 
-          <h2 className="font-display text-foreground text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="font-display text-foreground text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
             Dua Model Bisnis UMKM dalam Satu Platform
           </h2>
 
           <p
-            className="text-muted-foreground mx-auto mt-4 max-w-2xl font-sans text-base sm:text-lg"
+            className="mx-auto mt-3 max-w-2xl font-sans text-sm text-zinc-700 sm:text-base dark:text-zinc-300"
             data-testid="archetype-value-prop"
           >
             Pilih model bisnis Anda. MeracikWeb menyediakan alur pesanan kuliner F&B dengan varian
@@ -210,10 +210,10 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     <Coffee className="size-3.5" />
                     <span>Preset Kafe & Restoran</span>
                   </div>
-                  <h3 className="font-display text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
+                  <h3 className="text-foreground font-sans text-lg font-bold tracking-tight sm:text-xl">
                     Logika Pengubah Harga dan Preferensi Rasa
                   </h3>
-                  <p className="text-muted-foreground font-sans text-sm sm:text-base">
+                  <p className="font-sans text-sm text-zinc-700 sm:text-base dark:text-zinc-300">
                     Menu kuliner membutuhkan fleksibilitas ukuran porsi serta catatan kustomisasi
                     bebas biaya. MeracikWeb menghitung total harga pesanan secara otomatis tanpa
                     kesalahan perhitungan kasir.
@@ -221,7 +221,10 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                 </div>
 
                 {/* Interactive Modifiers Box */}
-                <div className="border-border bg-card rounded-2xl border p-5 shadow-xs sm:p-6">
+                <div
+                  className="border-border bg-card rounded-2xl border p-5 shadow-xs sm:p-6"
+                  data-ui="archetype-modifiers"
+                >
                   <div className="border-border/60 mb-4 flex items-center justify-between border-b pb-3">
                     <span className="text-foreground text-xs font-semibold tracking-wide uppercase">
                       Uji Interaktif: Varian Ukuran Gelas
@@ -230,18 +233,24 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Cup Size Options */}
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <div
+                    aria-label="Pilihan Ukuran Gelas"
+                    className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+                    role="radiogroup"
+                  >
                     {CUP_OPTIONS.map(opt => {
                       const isSelected = fnbCupSize === opt.id
                       const testId = `fnb-cup-${opt.id}`
                       return (
                         <button
                           key={opt.id}
+                          aria-checked={isSelected}
                           data-testid={testId}
+                          role="radio"
                           type="button"
                           onClick={() => setFnbCupSize(opt.id)}
                           className={cn(
-                            'group flex min-h-[44px] flex-col justify-between rounded-xl border p-3 text-left transition-all',
+                            'group flex min-h-[44px] flex-col justify-between rounded-lg border p-3 text-left transition-all',
                             isSelected
                               ? 'border-primary bg-primary/5 ring-primary/20 ring-2'
                               : 'border-border bg-background hover:border-border/80 hover:bg-muted/30',
@@ -269,21 +278,27 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       <label className="text-foreground mb-2 block text-xs font-semibold">
                         Tingkat Kemanisan (Sugar Level)
                       </label>
-                      <div className="flex flex-col gap-2">
+                      <div
+                        aria-label="Tingkat Kemanisan"
+                        className="flex flex-col gap-2"
+                        role="radiogroup"
+                      >
                         {SUGAR_OPTIONS.map(opt => {
                           const isSelected = fnbSugar === opt.id
                           const testId = `fnb-sugar-${opt.id}`
                           return (
                             <button
                               key={opt.id}
+                              aria-checked={isSelected}
                               data-testid={testId}
+                              role="radio"
                               type="button"
                               onClick={() => setFnbSugar(opt.id)}
                               className={cn(
                                 'flex min-h-[44px] items-center justify-between rounded-lg border px-3 py-2 text-left text-xs transition-colors',
                                 isSelected
                                   ? 'border-primary bg-primary/5 text-primary font-semibold'
-                                  : 'border-border bg-background text-muted-foreground hover:bg-muted/30 hover:text-foreground',
+                                  : 'border-border bg-background hover:bg-muted/30 hover:text-foreground text-zinc-600 dark:text-zinc-400',
                               )}
                             >
                               <span>{opt.label}</span>
@@ -299,21 +314,27 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       <label className="text-foreground mb-2 block text-xs font-semibold">
                         Takaran Es (Ice Level)
                       </label>
-                      <div className="flex flex-col gap-2">
+                      <div
+                        aria-label="Takaran Es"
+                        className="flex flex-col gap-2"
+                        role="radiogroup"
+                      >
                         {ICE_OPTIONS.map(opt => {
                           const isSelected = fnbIce === opt.id
                           const testId = `fnb-ice-${opt.id}`
                           return (
                             <button
                               key={opt.id}
+                              aria-checked={isSelected}
                               data-testid={testId}
+                              role="radio"
                               type="button"
                               onClick={() => setFnbIce(opt.id)}
                               className={cn(
                                 'flex min-h-[44px] items-center justify-between rounded-lg border px-3 py-2 text-left text-xs transition-colors',
                                 isSelected
                                   ? 'border-primary bg-primary/5 text-primary font-semibold'
-                                  : 'border-border bg-background text-muted-foreground hover:bg-muted/30 hover:text-foreground',
+                                  : 'border-border bg-background hover:bg-muted/30 hover:text-foreground text-zinc-600 dark:text-zinc-400',
                               )}
                             >
                               <span>{opt.label}</span>
@@ -330,30 +351,38 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     <label className="text-foreground mb-2 block text-xs font-semibold">
                       Mode Layanan Pelanggan (Fulfillment Mode)
                     </label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div
+                      aria-label="Mode Layanan"
+                      className="grid grid-cols-2 gap-3"
+                      role="radiogroup"
+                    >
                       <button
+                        aria-checked={fnbFulfillment === 'dinein'}
                         data-testid="fnb-fulfillment-dinein"
+                        role="radio"
                         type="button"
                         onClick={() => setFnbFulfillment('dinein')}
                         className={cn(
                           'flex min-h-[44px] items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors',
                           fnbFulfillment === 'dinein'
                             ? 'border-primary bg-primary/5 text-primary font-semibold'
-                            : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                            : 'border-border bg-background hover:text-foreground text-zinc-600 dark:text-zinc-400',
                         )}
                       >
                         <UtensilsCrossed className="size-3.5" />
                         <span>Makan di Tempat</span>
                       </button>
                       <button
+                        aria-checked={fnbFulfillment === 'takeaway'}
                         data-testid="fnb-fulfillment-takeaway"
+                        role="radio"
                         type="button"
                         onClick={() => setFnbFulfillment('takeaway')}
                         className={cn(
                           'flex min-h-[44px] items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors',
                           fnbFulfillment === 'takeaway'
                             ? 'border-primary bg-primary/5 text-primary font-semibold'
-                            : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                            : 'border-border bg-background hover:text-foreground text-zinc-600 dark:text-zinc-400',
                         )}
                       >
                         <ShoppingBag className="size-3.5" />
@@ -365,31 +394,31 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
                 {/* Feature Value Badges */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <div className="border-border bg-card/60 flex items-start gap-2.5 rounded-xl border p-3">
+                  <div className="border-border bg-card flex items-start gap-2.5 rounded-xl border p-3 shadow-xs">
                     <CheckCircle2 className="text-primary mt-0.5 size-4 shrink-0" />
                     <div>
                       <p className="text-foreground text-xs font-semibold">
                         Pengubah Harga Otomatis
                       </p>
-                      <p className="text-muted-foreground mt-0.5 text-xs">
+                      <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
                         Tambahan biaya varian terhitung instan.
                       </p>
                     </div>
                   </div>
-                  <div className="border-border bg-card/60 flex items-start gap-2.5 rounded-xl border p-3">
+                  <div className="border-border bg-card flex items-start gap-2.5 rounded-xl border p-3 shadow-xs">
                     <CheckCircle2 className="text-primary mt-0.5 size-4 shrink-0" />
                     <div>
                       <p className="text-foreground text-xs font-semibold">Catatan Dapur Rapi</p>
-                      <p className="text-muted-foreground mt-0.5 text-xs">
+                      <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
                         Instruksi rasa langsung masuk ke pesanan.
                       </p>
                     </div>
                   </div>
-                  <div className="border-border bg-card/60 flex items-start gap-2.5 rounded-xl border p-3">
+                  <div className="border-border bg-card flex items-start gap-2.5 rounded-xl border p-3 shadow-xs">
                     <CheckCircle2 className="text-primary mt-0.5 size-4 shrink-0" />
                     <div>
                       <p className="text-foreground text-xs font-semibold">Bebas Biaya Komisi</p>
-                      <p className="text-muted-foreground mt-0.5 text-xs">
+                      <p className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
                         Omzet utuh 100% milik pemilik kafe.
                       </p>
                     </div>
@@ -398,7 +427,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
               </div>
 
               {/* Right Column: Customer Storefront Mobile Mockup */}
-              <div className="flex justify-center lg:col-span-5">
+              <div className="flex justify-center lg:col-span-5" data-ui="archetype-showcase">
                 <div className="border-border/80 bg-card w-full max-w-[360px] rounded-3xl border-2 p-4 shadow-xl">
                   {/* Phone Mockup Top Bar */}
                   <div className="border-border/60 text-muted-foreground mb-3 flex items-center justify-between border-b pb-2 text-xs">
@@ -429,25 +458,31 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Product Card Container */}
-                  <div className="border-border bg-background overflow-hidden rounded-2xl border">
+                  <div className="bg-card overflow-hidden rounded-2xl">
                     {/* Visual Banner */}
-                    <div className="from-muted/50 to-muted/20 relative flex h-36 items-center justify-center bg-linear-to-b p-4">
-                      <div className="flex flex-col items-center">
-                        <div className="border-border/80 bg-card flex size-14 items-center justify-center rounded-2xl border shadow-sm">
-                          <Coffee className="text-primary size-7" />
-                        </div>
-                        <span className="text-muted-foreground mt-2 text-[11px] font-medium">
-                          Minuman Kopi Susu
-                        </span>
+                    {/* Authentic Visual Banner */}
+                    <div
+                      className="bg-muted relative h-44 w-full overflow-hidden"
+                      data-ui="fnb-visual"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element -- Authentic lifestyle photography of Indonesian coffee shop */}
+                      <img
+                        alt="Suasana kedai kopi Kopi Sudut Senja"
+                        className="size-full object-cover transition-transform hover:scale-102"
+                        src="/images/marketing/fnb-coffee.jpg"
+                      />
+                      <div className="absolute top-2.5 left-2.5">
+                        <Badge className="bg-background/90 text-foreground border-border/80 text-[10px] font-medium backdrop-blur-xs">
+                          Kedai Kopi Lokal
+                        </Badge>
                       </div>
                     </div>
-
                     {/* Product Details */}
                     <div className="p-4">
                       <div className="flex items-start justify-between">
                         <div>
                           <h3
-                            className="font-display text-foreground text-base font-bold"
+                            className="text-foreground font-sans text-base font-bold"
                             data-testid="fnb-product-name"
                           >
                             Es Kopi Susu Aren
@@ -488,8 +523,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
                       {/* Add to Cart Simulation Button */}
                       <Button
-                        className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 text-xs font-semibold shadow-xs"
-                        size="sm"
+                        className="mt-4 flex h-11 min-h-[44px] w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold shadow-xs"
                         type="button"
                         onClick={handleAddFnbToCart}
                       >
@@ -526,10 +560,10 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     <ShoppingBag className="size-3.5" />
                     <span>Preset Toko & Butik Fashion</span>
                   </div>
-                  <h3 className="font-display text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
+                  <h3 className="text-foreground font-sans text-lg font-bold tracking-tight sm:text-xl">
                     Manajemen Ukuran, Warna, dan Status Ketersediaan Stok
                   </h3>
-                  <p className="text-muted-foreground font-sans text-sm sm:text-base">
+                  <p className="font-sans text-sm text-zinc-700 sm:text-base dark:text-zinc-300">
                     Produk retail memerlukan inventaris per kombinasi ukuran dan corak warna.
                     MeracikWeb menyajikan peringatan sisa stok secara langsung sehingga pelanggan
                     mengetahui ketersediaan barang sebelum checkout.
@@ -555,18 +589,24 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-5 gap-2 sm:gap-3">
+                    <div
+                      aria-label="Pilihan Ukuran Pakaian"
+                      className="grid grid-cols-5 gap-2 sm:gap-3"
+                      role="radiogroup"
+                    >
                       {(['S', 'M', 'L', 'XL', 'XXL'] as RetailSize[]).map(size => {
                         const isSelected = retailSize === size
                         const stock = RETAIL_STOCK_MAP[size]
                         return (
                           <button
                             key={size}
+                            aria-checked={isSelected}
                             data-testid={`retail-size-${size}`}
+                            role="radio"
                             type="button"
                             onClick={() => setRetailSize(size)}
                             className={cn(
-                              'flex min-h-[44px] flex-col items-center justify-center rounded-xl border p-2 text-center transition-all',
+                              'flex min-h-[44px] flex-col items-center justify-center rounded-lg border p-2 text-center transition-all',
                               isSelected
                                 ? 'border-primary bg-primary/5 ring-primary/20 ring-2'
                                 : 'border-border bg-background hover:bg-muted/30',
@@ -608,18 +648,24 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div
+                      aria-label="Pilihan Warna Produk"
+                      className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+                      role="radiogroup"
+                    >
                       {(['indigo', 'marun', 'emerald'] as RetailColor[]).map(colorKey => {
                         const isSelected = retailColor === colorKey
                         const cInfo = RETAIL_COLORS[colorKey]
                         return (
                           <button
                             key={colorKey}
+                            aria-checked={isSelected}
                             data-testid={`retail-color-${colorKey}`}
+                            role="radio"
                             type="button"
                             onClick={() => setRetailColor(colorKey)}
                             className={cn(
-                              'flex min-h-[44px] items-center gap-3 rounded-xl border p-2.5 text-left transition-all',
+                              'flex min-h-[44px] items-center gap-3 rounded-lg border p-2.5 text-left transition-all',
                               isSelected
                                 ? 'border-primary bg-primary/5 ring-primary/20 ring-2'
                                 : 'border-border bg-background hover:bg-muted/30',
@@ -648,28 +694,36 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     <label className="text-foreground mb-2 block text-xs font-semibold">
                       Opsi Pengiriman Produk Retail
                     </label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div
+                      aria-label="Opsi Pengiriman Produk Retail"
+                      className="grid grid-cols-2 gap-3"
+                      role="radiogroup"
+                    >
                       <button
+                        aria-checked={retailFulfillment === 'delivery'}
+                        role="radio"
                         type="button"
                         onClick={() => setRetailFulfillment('delivery')}
                         className={cn(
                           'flex min-h-[44px] items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors',
                           retailFulfillment === 'delivery'
                             ? 'border-primary bg-primary/5 text-primary font-semibold'
-                            : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                            : 'border-border bg-background hover:text-foreground text-zinc-600 dark:text-zinc-400',
                         )}
                       >
                         <Truck className="size-3.5" />
                         <span>Kirim Ekspedisi (JNE/SiCepat)</span>
                       </button>
                       <button
+                        aria-checked={retailFulfillment === 'pickup'}
+                        role="radio"
                         type="button"
                         onClick={() => setRetailFulfillment('pickup')}
                         className={cn(
                           'flex min-h-[44px] items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors',
                           retailFulfillment === 'pickup'
                             ? 'border-primary bg-primary/5 text-primary font-semibold'
-                            : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                            : 'border-border bg-background hover:text-foreground text-zinc-600 dark:text-zinc-400',
                         )}
                       >
                         <MapPin className="size-3.5" />
@@ -712,7 +766,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
               </div>
 
               {/* Right Column: Customer Storefront Retail Mockup */}
-              <div className="flex justify-center lg:col-span-5">
+              <div className="flex justify-center lg:col-span-5" data-ui="retail-showcase">
                 <div className="border-border/80 bg-card w-full max-w-[360px] rounded-3xl border-2 p-4 shadow-xl">
                   {/* Phone Mockup Top Bar */}
                   <div className="border-border/60 text-muted-foreground mb-3 flex items-center justify-between border-b pb-2 text-xs">
@@ -743,19 +797,23 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Product Card Container */}
-                  <div className="border-border bg-background overflow-hidden rounded-2xl border">
+                  <div className="bg-card overflow-hidden rounded-2xl">
                     {/* Visual Banner */}
-                    <div className="from-muted/50 to-muted/20 relative flex h-36 items-center justify-center bg-linear-to-b p-4">
-                      <div className="flex flex-col items-center">
-                        <div
-                          className="border-border/80 flex size-14 items-center justify-center rounded-2xl border shadow-sm"
-                          style={{ backgroundColor: `${currentColorInfo.hex}18` }}
-                        >
-                          <Tag className="size-7" style={{ color: currentColorInfo.hex }} />
-                        </div>
-                        <span className="text-muted-foreground mt-2 text-[11px] font-medium">
-                          {currentColorInfo.name} • Ukuran {retailSize}
-                        </span>
+                    {/* Authentic Visual Banner */}
+                    <div
+                      className="bg-muted relative h-44 w-full overflow-hidden"
+                      data-ui="retail-visual"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element -- Authentic lifestyle photography of Indonesian textile craft */}
+                      <img
+                        alt="Kain tenun Jepara Tenun Nusantara"
+                        className="size-full object-cover transition-transform hover:scale-102"
+                        src="/images/marketing/retail-textile.jpg"
+                      />
+                      <div className="absolute top-2.5 left-2.5">
+                        <Badge className="bg-background/90 text-foreground border-border/80 text-[10px] font-medium backdrop-blur-xs">
+                          Kerajinan Tenun
+                        </Badge>
                       </div>
                     </div>
 
@@ -764,7 +822,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       <div className="flex items-start justify-between">
                         <div>
                           <h3
-                            className="font-display text-foreground text-base font-bold"
+                            className="text-foreground font-sans text-base font-bold"
                             data-testid="retail-product-name"
                           >
                             Kemeja Tenun Ikat Jepara
@@ -817,8 +875,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
                       {/* Add to Cart Simulation Button */}
                       <Button
-                        className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 text-xs font-semibold shadow-xs"
-                        size="sm"
+                        className="mt-4 flex h-11 min-h-[44px] w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold shadow-xs"
                         type="button"
                         onClick={handleAddRetailToCart}
                       >

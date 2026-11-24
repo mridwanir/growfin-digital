@@ -51,7 +51,7 @@ describe('MarketingHero Component', () => {
   })
 
   it('renders viewport height cleanly with display typography and navigation links', async () => {
-    render(<MarketingHero />)
+    render(<MarketingHero showHeader />)
 
     const heroSection = page.getByTestId('marketing-hero')
     await expect.element(heroSection).toBeVisible()

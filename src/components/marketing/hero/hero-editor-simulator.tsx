@@ -14,7 +14,6 @@ import {
 import { useState } from 'react'
 
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/storefront/currency'
@@ -40,6 +39,7 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
   return (
     <div
       data-testid="app-frame"
+      data-ui="storefront-editor"
       id="editor-simulator"
       className={cn(
         'border-border bg-card w-full max-w-5xl rounded-xl border shadow-2xl transition-all motion-reduce:transition-none',
@@ -111,11 +111,11 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
         <div
           data-testid="editor-pane"
           className={cn(
-            'bg-card flex flex-col justify-between p-5 sm:p-6 lg:col-span-6',
+            'bg-card flex flex-col justify-between p-3.5 sm:p-4 lg:col-span-6',
             mobileSimulatorTab !== 'admin' && 'hidden sm:flex',
           )}
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="border-border/60 flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
                 <Sliders className="text-primary size-4" />
@@ -133,9 +133,9 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
                 Nama Toko
               </Label>
               <div className="relative">
-                <Store className="text-muted-foreground absolute top-2.5 left-3 size-4" />
+                <Store className="text-muted-foreground absolute top-3.5 left-3 size-4" />
                 <Input
-                  className="pl-9 text-sm"
+                  className="h-11 min-h-[44px] pl-9 text-sm"
                   id="store-name-input"
                   placeholder="Contoh: Kopi Sudut Senja"
                   value={storeName}
@@ -150,9 +150,9 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
                 Nama Produk
               </Label>
               <div className="relative">
-                <Package className="text-muted-foreground absolute top-2.5 left-3 size-4" />
+                <Package className="text-muted-foreground absolute top-3.5 left-3 size-4" />
                 <Input
-                  className="pl-9 text-sm"
+                  className="h-11 min-h-[44px] pl-9 text-sm"
                   id="product-name-input"
                   placeholder="Contoh: Es Kopi Susu Aren"
                   value={productName}
@@ -167,11 +167,11 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
                 Harga (IDR)
               </Label>
               <div className="relative">
-                <span className="text-muted-foreground absolute top-2.5 left-3 font-mono text-xs font-semibold">
+                <span className="text-muted-foreground absolute top-3.5 left-3 font-mono text-xs font-semibold">
                   Rp
                 </span>
                 <Input
-                  className="pl-9 font-mono text-sm tabular-nums"
+                  className="h-11 min-h-[44px] pl-9 font-mono text-sm tabular-nums"
                   id="product-price-input"
                   placeholder="18000"
                   type="number"
@@ -187,7 +187,7 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
                 Varian Produk
               </Label>
               <Input
-                className="text-sm"
+                className="h-11 min-h-[44px] text-sm"
                 id="variant-option-input"
                 placeholder="Contoh: Ukuran Regular (350ml)"
                 value={variantOption}
@@ -197,7 +197,7 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
           </div>
 
           {/* Informative hint footer */}
-          <div className="border-border/80 bg-muted/30 text-muted-foreground mt-6 rounded-lg border p-3 text-xs">
+          <div className="border-border/80 bg-muted/30 mt-2 rounded-lg border p-2 text-[11px] text-zinc-600 dark:text-zinc-400">
             <p>
               Ketik nama produk, harga, atau varian di atas untuk melihat sinkronisasi instan ke
               tampilan website pembeli di panel kanan.
@@ -209,7 +209,7 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
         <div
           data-testid="mobile-preview"
           className={cn(
-            'bg-muted/20 flex items-center justify-center p-3 sm:p-6 lg:col-span-6',
+            'bg-muted/20 flex items-center justify-center p-2.5 sm:p-4 lg:col-span-6',
             mobileSimulatorTab !== 'buyer' && 'hidden sm:flex',
           )}
         >
@@ -297,14 +297,10 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
                   >
                     {formatCurrency(price)}
                   </span>
-                  <Button
-                    className="h-6 gap-1 px-2.5 text-[10px] font-semibold"
-                    size="sm"
-                    variant="default"
-                  >
+                  <div className="bg-primary text-primary-foreground inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-[10px] font-semibold">
                     <MessageCircle className="size-2.5" />
                     <span>Pesan</span>
-                  </Button>
+                  </div>
                 </div>
               </div>
 

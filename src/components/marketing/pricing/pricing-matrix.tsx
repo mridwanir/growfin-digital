@@ -2,7 +2,6 @@ import { Check } from 'lucide-react'
 import Link from 'next/link'
 
 import { Badge } from '@/components/ui/badge'
-import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 export interface PricingMatrixProps {
@@ -12,38 +11,42 @@ export interface PricingMatrixProps {
 
 export function PricingMatrix({
   className,
-  enterpriseConsultationUrl = 'https://wa.me/6289630352370?text=Halo%20MeracikWeb%2C%20saya%20tertarik%20konsultasi%20Paket%20Enterprise',
+  enterpriseConsultationUrl = 'https://wa.me/6281234567890?text=Halo%20MeracikWeb%2C%20saya%20tertarik%20konsultasi%20Paket%20Enterprise',
 }: PricingMatrixProps) {
   return (
     <section
       aria-label="Harga Paket MeracikWeb"
       data-testid="pricing-section"
       id="harga"
+      style={{ '--h': 1 } as React.CSSProperties}
       className={cn(
-        'bg-background text-foreground relative flex min-h-screen w-full flex-col justify-center py-16 sm:py-20 lg:min-h-[900px] lg:py-24',
+        'bg-background text-foreground relative flex min-h-screen w-full flex-col justify-center overflow-hidden py-10 lg:h-screen lg:max-h-screen lg:py-6',
         className,
       )}
     >
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-12 max-w-3xl text-center lg:mb-16">
+        <div className="mb-6 max-w-3xl text-center lg:mb-8">
           <Badge
             className="border-border text-foreground px-3 py-1 text-xs font-semibold"
             variant="outline"
           >
             Biaya Transparan
           </Badge>
-          <h2 className="font-display text-foreground mt-4 text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">
-            Pilih paket sesuai skala bisnis Anda
+          <h2 className="font-display text-foreground mt-4 text-2xl font-bold tracking-tight text-balance sm:text-3xl lg:text-4xl">
+            Pilih Paket Sesuai Skala Bisnis Anda
           </h2>
-          <p className="text-muted-foreground mt-4 text-base text-pretty sm:text-lg">
+          <p className="mt-2 text-sm text-pretty text-zinc-700 sm:text-base dark:text-zinc-300">
             Semua paket ditagih per bulan tanpa biaya tersembunyi dan tanpa potongan komisi
             transaksi.
           </p>
         </div>
 
         {/* Three-Tier Pricing Grid */}
-        <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-3 lg:items-stretch">
+        <div
+          className="grid w-full grid-cols-1 gap-6 lg:grid-cols-3 lg:items-stretch"
+          data-ui="pricing-cards"
+        >
           {/* 1. Gratis Tier */}
           <div
             className="border-border bg-card relative flex flex-col justify-between rounded-2xl border p-6 shadow-sm transition-colors motion-reduce:transition-none sm:p-8"
@@ -51,11 +54,9 @@ export function PricingMatrix({
           >
             <div>
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-foreground text-xl font-bold text-balance">
-                  Gratis
-                </h3>
+                <h3 className="text-foreground font-sans text-xl font-bold text-balance">Gratis</h3>
               </div>
-              <p className="text-muted-foreground mt-2 min-h-[40px] text-sm text-pretty">
+              <p className="mt-2 min-h-[40px] text-sm text-pretty text-zinc-600 dark:text-zinc-400">
                 Untuk UMKM pemula yang baru memulai katalog online tanpa risiko biaya.
               </p>
 
@@ -66,11 +67,13 @@ export function PricingMatrix({
                 >
                   Rp 0
                 </span>
-                <span className="text-muted-foreground font-sans text-sm font-medium">/bulan</span>
+                <span className="font-sans text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  /bulan
+                </span>
               </div>
 
-              <ul className="border-border/60 mt-8 space-y-3.5 border-t pt-8 text-sm" role="list">
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+              <ul className="border-border/60 mt-6 space-y-3 border-t pt-6 text-sm" role="list">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>
                     Subdomain{' '}
@@ -79,24 +82,22 @@ export function PricingMatrix({
                     </code>
                   </span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Maksimal 30 produk katalog aktif</span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Checkout pesanan WhatsApp standar</span>
                 </li>
               </ul>
             </div>
 
-            <div className="mt-8 pt-4">
+            <div className="mt-6 pt-2">
               <Link
+                className="border-border text-foreground hover:bg-muted/40 inline-flex h-11 min-h-[44px] w-full items-center justify-center rounded-lg border px-5 text-sm font-semibold transition-colors"
+                data-testid="cta-gratis"
                 href="/register"
-                className={cn(
-                  buttonVariants({ size: 'lg', variant: 'outline' }),
-                  'text-foreground min-h-[44px] w-full rounded-lg text-sm font-semibold',
-                )}
               >
                 Mulai Gratis
               </Link>
@@ -119,9 +120,9 @@ export function PricingMatrix({
 
             <div>
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-foreground text-xl font-bold text-balance">Pro</h3>
+                <h3 className="text-foreground font-sans text-xl font-bold text-balance">Pro</h3>
               </div>
-              <p className="text-muted-foreground mt-2 min-h-[40px] text-sm text-pretty">
+              <p className="mt-2 min-h-[40px] text-sm text-pretty text-zinc-600 dark:text-zinc-400">
                 Untuk bisnis berkembang yang butuh domain mandiri dan katalog lengkap.
               </p>
 
@@ -132,10 +133,12 @@ export function PricingMatrix({
                 >
                   Rp 49.000
                 </span>
-                <span className="text-muted-foreground font-sans text-sm font-medium">/bulan</span>
+                <span className="font-sans text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  /bulan
+                </span>
               </div>
 
-              <ul className="border-border/60 mt-8 space-y-3.5 border-t pt-8 text-sm" role="list">
+              <ul className="border-border/60 mt-6 space-y-3 border-t pt-6 text-sm" role="list">
                 <li className="text-foreground flex items-start gap-3 leading-normal font-medium text-pretty">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Ringkasan pesanan langsung</span>
@@ -148,24 +151,22 @@ export function PricingMatrix({
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Produk tak terbatas</span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Analitik harian</span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Dukungan prioritas WhatsApp</span>
                 </li>
               </ul>
             </div>
 
-            <div className="mt-8 pt-4">
+            <div className="mt-6 pt-2">
               <Link
+                className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-11 min-h-[44px] w-full items-center justify-center rounded-lg px-5 text-sm font-semibold shadow-xs transition-colors"
+                data-testid="cta-pro"
                 href="/register?tier=pro"
-                className={cn(
-                  buttonVariants({ size: 'lg', variant: 'default' }),
-                  'min-h-[44px] w-full rounded-lg text-sm font-semibold shadow-sm',
-                )}
               >
                 Pilih Paket Pro
               </Link>
@@ -179,11 +180,11 @@ export function PricingMatrix({
           >
             <div>
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-foreground text-xl font-bold text-balance">
+                <h3 className="text-foreground font-sans text-xl font-bold text-balance">
                   Enterprise
                 </h3>
               </div>
-              <p className="text-muted-foreground mt-2 min-h-[40px] text-sm text-pretty">
+              <p className="mt-2 min-h-[40px] text-sm text-pretty text-zinc-600 dark:text-zinc-400">
                 Untuk jaringan multi-cabang dengan volume pesanan besar dan integrasi POS.
               </p>
 
@@ -194,40 +195,38 @@ export function PricingMatrix({
                 >
                   Harga Kustom
                 </span>
-                <span className="text-muted-foreground font-sans text-sm font-medium">
+                <span className="font-sans text-sm font-medium text-zinc-600 dark:text-zinc-400">
                   /kebutuhan
                 </span>
               </div>
 
-              <ul className="border-border/60 mt-8 space-y-3.5 border-t pt-8 text-sm" role="list">
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+              <ul className="border-border/60 mt-6 space-y-3 border-t pt-6 text-sm" role="list">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Manajemen multi-cabang terpusat</span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Sinkronisasi stok POS real-time</span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Integrasi kustom WhatsApp Business API</span>
                 </li>
-                <li className="text-muted-foreground flex items-start gap-3 leading-normal text-pretty">
+                <li className="flex items-start gap-3 leading-normal text-pretty text-zinc-700 dark:text-zinc-300">
                   <Check aria-hidden="true" className="text-primary mt-0.5 size-4 shrink-0" />
                   <span>Dedicated account manager</span>
                 </li>
               </ul>
             </div>
 
-            <div className="mt-8 pt-4">
+            <div className="mt-6 pt-2">
               <a
+                className="border-border text-foreground hover:bg-muted/40 inline-flex h-11 min-h-[44px] w-full items-center justify-center rounded-lg border px-5 text-sm font-semibold transition-colors"
+                data-testid="cta-enterprise"
                 href={enterpriseConsultationUrl}
                 rel="noopener noreferrer"
                 target="_blank"
-                className={cn(
-                  buttonVariants({ size: 'lg', variant: 'outline' }),
-                  'text-foreground min-h-[44px] w-full rounded-lg text-sm font-semibold',
-                )}
               >
                 Konsultasi Enterprise
               </a>

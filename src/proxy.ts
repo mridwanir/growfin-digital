@@ -16,6 +16,7 @@ const authMiddleware = auth.middleware({
     '/demo',
     '/site',
     '/preview',
+    '/images',
   ],
 })
 
@@ -30,6 +31,7 @@ const RESERVED_PATHS = [
   '/api',
   '/site',
   '/preview',
+  '/images',
 ]
 
 export default async function proxy(request: NextRequest) {
@@ -82,5 +84,5 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|images).*)'],
 }

@@ -12,7 +12,7 @@ export async function DashboardGuard({ children }: { children: ReactNode }) {
 }
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const { currentTenant, session, tenants } = await requireActiveTenantContext()
+  const { currentTenant, session } = await requireActiveTenantContext()
 
   const currentTenantDto = {
     id: currentTenant.id,
@@ -22,14 +22,6 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     slug: currentTenant.slug,
   }
 
-  const tenantsDto = tenants.map(tenant => ({
-    id: tenant.id,
-    name: tenant.name,
-    category: tenant.category,
-    packageTier: tenant.packageTier,
-    slug: tenant.slug,
-  }))
-
   const userDto = {
     name: session.user.name,
     avatar: session.user.image,
@@ -38,7 +30,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   }
 
   return (
-    <DashboardShell currentTenant={currentTenantDto} tenants={tenantsDto} user={userDto}>
+    <DashboardShell currentTenant={currentTenantDto} user={userDto}>
       {children}
     </DashboardShell>
   )

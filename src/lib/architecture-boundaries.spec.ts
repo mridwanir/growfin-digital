@@ -303,5 +303,33 @@ describe('static architecture boundaries (Ticket #43)', () => {
         expect(file).toMatch(/^use-[a-z0-9-]+\.(?:ts|tsx)$/)
       }
     })
+
+    describe('storefront preview client boundary (Ticket #44)', () => {
+      it('has only one canonical preview client implementation in the codebase', () => {
+        const previewClientFiles = allSourceFiles.filter(f =>
+          /(?:^|\/)preview-client\.(?:ts|tsx)$/.test(f.relativeFile),
+        )
+        expect(previewClientFiles).toHaveLength(1)
+        expect(previewClientFiles[0].relativeFile).toBe(
+          'features/storefront/preview/preview-client.tsx',
+        )
+      })
+
+      it('delegates from preview route shell without duplicating state or event logic', () => {
+        const routeShell = allSourceFiles.find(
+          f => f.relativeFile === 'app/(storefront)/preview/[tenantSlug]/page.tsx',
+        )
+        expect(routeShell).toBeDefined()
+
+        const imports = extractImports(routeShell!.content)
+        const storefrontImport = imports.find(imp => imp.importPath === '@/features/storefront')
+        expect(storefrontImport).toBeDefined()
+        expect(storefrontImport!.importedSymbols).toContain('StorefrontPreviewClient')
+
+        expect(routeShell!.content).not.toMatch(/addEventListener/)
+        expect(routeShell!.content).not.toMatch(/useState/)
+        expect(routeShell!.content).not.toMatch(/MERACIK_PREVIEW_UPDATE/)
+      })
+    })
   })
 })

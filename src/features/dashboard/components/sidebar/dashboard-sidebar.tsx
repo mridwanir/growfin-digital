@@ -19,20 +19,14 @@ import { TenantSwitcher } from './tenant-switcher'
 
 export interface DashboardSidebarProps extends React.ComponentProps<typeof Sidebar> {
   currentTenant: TenantSwitcherTenant
-  tenants: TenantSwitcherTenant[]
   user: SidebarUser
 }
 
-export function DashboardSidebar({
-  currentTenant,
-  tenants,
-  user,
-  ...props
-}: DashboardSidebarProps) {
+export function DashboardSidebar({ currentTenant, user, ...props }: DashboardSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TenantSwitcher currentTenant={currentTenant} tenants={tenants} />
+        <TenantSwitcher currentTenant={currentTenant} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain tenantSlug={currentTenant.slug} />

@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { afterAll, describe, expect, it, vi } from 'vitest'
 
 import PreviewPage, { generateMetadata } from '@/app/(storefront)/preview/[tenantSlug]/page'
+import { StorefrontPreviewClient } from '@/features/storefront'
 import proxy from '@/proxy'
 
 import { createTestTenant } from '../../fixtures/tenant-fixture'
@@ -106,5 +107,20 @@ describe('Isolated Storefront Preview Route (/preview/[tenantSlug])', () => {
         params: Promise.resolve({ tenantSlug: 'does-not-exist-slug' }),
       }),
     ).rejects.toThrow('NEXT_NOT_FOUND')
+  })
+
+  it('delegates directly to canonical StorefrontPreviewClient without route duplication', async () => {
+    const fixture = await createTestTenant({
+      name: 'Preview Direct Delegation Store',
+    })
+    fixtures.push(fixture)
+
+    const element = await PreviewPage({
+      params: Promise.resolve({ tenantSlug: fixture.slug }),
+    })
+
+    expect(element.type).toBe(StorefrontPreviewClient)
+    expect(element.props.tenant.slug).toBe(fixture.slug)
+    expect(element.props.config).toBeDefined()
   })
 })

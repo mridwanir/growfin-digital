@@ -37,6 +37,14 @@ describe('Server-only feature slice entrypoint guards (Ticket #39)', () => {
     )
     expect(generatorSource).toMatch(/^import ['"]server-only['"]/m)
   })
+
+  it('guards @/features/dashboard/server with server-only (Ticket #42)', () => {
+    const dashboardSource = readFileSync(
+      resolve(process.cwd(), 'src/features/dashboard/server.ts'),
+      'utf-8',
+    )
+    expect(dashboardSource).toMatch(/^import ['"]server-only['"]/m)
+  })
 })
 
 describe('Vitest component discovery (Ticket #37)', () => {

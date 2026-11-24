@@ -1,18 +1,46 @@
 import { ExternalLink, Package, Palette, Settings } from 'lucide-react'
 import Link from 'next/link'
 
-import { TenantStatusBadge, TenantTierBadge } from '@/components/dashboard/tenant-badges'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { getTenantAnalyticsMetrics } from '@/features/analytics/server'
-import { requireActiveTenantContext } from '@/features/auth/server'
 import { env } from '@/lib/env'
 
-export default async function DashboardPage() {
-  const { currentTenant: tenant, session } = await requireActiveTenantContext()
+import { TenantStatusBadge, TenantTierBadge } from './tenant-badges'
 
-  const metrics = await getTenantAnalyticsMetrics(tenant.id, session.user.id)
-  const analytics = metrics ?? {
+export interface DashboardOverviewMetrics {
+  checkoutCompletes: number
+  checkoutStarts: number
+  conversionRate: number
+  pageViews: number
+  topSources: Array<{ count: number; source: string }>
+  uniqueVisitors: number
+}
+
+export interface DashboardOverviewTenant {
+  address?: string | null
+  category?: string | null
+  city?: string | null
+  customDomain?: string | null
+  id: string
+  name: string
+  packageTier?: string | null
+  phone?: string | null
+  slug: string
+  status?: string | null
+}
+
+export interface DashboardOverviewProps {
+  baseDomain?: string
+  metrics?: DashboardOverviewMetrics | null
+  tenant: DashboardOverviewTenant
+}
+
+export function DashboardOverview({
+  baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN,
+  metrics,
+  tenant,
+}: DashboardOverviewProps) {
+  const analytics: DashboardOverviewMetrics = metrics ?? {
     checkoutCompletes: 0,
     checkoutStarts: 0,
     conversionRate: 0,
@@ -21,7 +49,6 @@ export default async function DashboardPage() {
     uniqueVisitors: 0,
   }
 
-  const baseDomain = env.NEXT_PUBLIC_BASE_DOMAIN
   const liveUrl =
     tenant.status === 'published' ? `https://${tenant.slug}.${baseDomain}` : `/demo/${tenant.slug}`
 

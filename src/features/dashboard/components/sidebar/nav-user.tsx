@@ -60,7 +60,7 @@ export function NavUser({ user }: NavUserProps) {
               />
             }
           >
-            <div className="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-lg text-xs font-semibold uppercase">
+            <div className="bg-sidebar-accent text-sidebar-accent-foreground flex aspect-square size-8 items-center justify-center rounded-lg text-xs font-medium">
               {initials}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
@@ -71,14 +71,14 @@ export function NavUser({ user }: NavUserProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-(--anchor-width) min-w-56 rounded-lg"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <div className="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-lg text-xs font-semibold uppercase">
+                  <div className="bg-muted text-muted-foreground flex aspect-square size-8 items-center justify-center rounded-lg text-xs font-medium">
                     {initials}
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -90,13 +90,19 @@ export function NavUser({ user }: NavUserProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              className="text-destructive focus:text-destructive cursor-pointer"
               onClick={async () => {
-                await authClient.signOut()
-                window.location.href = '/login'
+                await authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      window.location.href = '/login'
+                    },
+                  },
+                })
               }}
             >
-              <LogOut className="size-4" />
-              <span>Log out</span>
+              <LogOut className="mr-2 size-4" />
+              <span>Keluar</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

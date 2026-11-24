@@ -7,8 +7,8 @@ import { redirect } from 'next/navigation'
 
 import { db } from '@/db'
 import { organization, session as sessionTable } from '@/db/schema/auth'
+import { getMerchantTenants } from '@/features/dashboard/server'
 import { auth, getSession, getSessionCookieDomain, requireAuth } from '@/lib/auth/server'
-import { getMerchantTenants } from '@/lib/dashboard/mutations'
 
 import 'server-only'
 

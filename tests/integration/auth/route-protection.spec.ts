@@ -8,26 +8,28 @@ import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import DashboardLayout from '@/app/(dashboard)/dashboard/layout'
+import DashboardPage from '@/app/(dashboard)/dashboard/page'
+import TenantProductsPage from '@/app/(dashboard)/dashboard/products/page'
+import TenantSettingsPage from '@/app/(dashboard)/dashboard/settings/page'
 import { POST as storageDeleteRoute } from '@/app/api/storage/delete/route'
 import { POST as storageUploadRoute } from '@/app/api/storage/upload/route'
-import DashboardLayout from '@/app/dashboard/layout'
-import DashboardPage from '@/app/dashboard/page'
-import TenantProductsPage from '@/app/dashboard/products/page'
-import TenantSettingsPage from '@/app/dashboard/settings/page'
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
 import { userInNeonAuth } from '@/db/schema/auth'
-import { auth } from '@/lib/auth/server'
 import {
+  createCategory,
+  createProduct,
   createProductAction,
   createProductCategoryAction,
   deleteProductAction,
   deleteProductCategoryAction,
+  getTenantBySlug,
   updateProductAction,
   updateProductCategoryAction,
   updateTenantSettingsAction,
-} from '@/lib/dashboard/actions'
-import { createCategory, createProduct, getTenantBySlug } from '@/lib/dashboard/mutations'
+} from '@/features/dashboard/server'
+import { auth } from '@/lib/auth/server'
 
 import {
   createCustomerSession,

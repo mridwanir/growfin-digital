@@ -1,9 +1,8 @@
 import { redirect } from 'next/navigation'
 
 import { requireActiveTenantContext } from '@/features/auth/server'
-import { getTenantSettings } from '@/lib/dashboard/mutations'
-
-import { SettingsClient } from './settings-client'
+import { SettingsClient } from '@/features/dashboard'
+import { getTenantSettings } from '@/features/dashboard/server'
 
 export default async function TenantSettingsPage() {
   const { currentTenant: tenant, session } = await requireActiveTenantContext()

@@ -1,4 +1,4 @@
-import type { TestTenantFixture } from '../fixtures/tenant-fixture'
+import type { TestTenantFixture } from '../../fixtures/tenant-fixture'
 
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
@@ -9,7 +9,6 @@ import { db } from '@/db'
 import { userInNeonAuth } from '@/db/schema/auth'
 import { categories, products } from '@/db/schema/catalog'
 import { tenants } from '@/db/schema/tenants'
-import { auth } from '@/lib/auth/server'
 import {
   createProductAction,
   createProductCategoryAction,
@@ -18,10 +17,11 @@ import {
   updateProductAction,
   updateProductCategoryAction,
   updateTenantSettingsAction,
-} from '@/lib/dashboard/actions'
+} from '@/features/dashboard/server'
+import { auth } from '@/lib/auth/server'
 
-import { createMerchantSession, createUnauthenticatedSession } from '../fixtures/session-fixture'
-import { createTestTenant } from '../fixtures/tenant-fixture'
+import { createMerchantSession, createUnauthenticatedSession } from '../../fixtures/session-fixture'
+import { createTestTenant } from '../../fixtures/tenant-fixture'
 
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),

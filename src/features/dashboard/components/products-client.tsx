@@ -20,12 +20,12 @@ import {
 import Image from 'next/image'
 import { useState, useTransition } from 'react'
 
-import { MediaUploader } from '@/components/dashboard/media-uploader'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+
 import {
   createProductAction,
   createProductCategoryAction,
@@ -33,7 +33,8 @@ import {
   deleteProductCategoryAction,
   updateProductAction,
   updateProductCategoryAction,
-} from '@/lib/dashboard/actions'
+} from '../actions'
+import { MediaUploader } from './media-uploader'
 
 interface CategoryItem {
   id: string

@@ -1,6 +1,6 @@
 import type { organization } from '@/db/schema/auth'
+import type { MerchantTenantSummary } from '@/features/dashboard'
 import type { SessionPayload } from '@/lib/auth/server'
-import type { MerchantTenantSummary } from '@/lib/dashboard/mutations'
 
 export type Tenant = typeof organization.$inferSelect
 export type NewTenant = typeof organization.$inferInsert

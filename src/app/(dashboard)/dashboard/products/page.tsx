@@ -1,7 +1,6 @@
 import { requireActiveTenantContext } from '@/features/auth/server'
-import { getTenantCategories, getTenantProducts } from '@/lib/dashboard/mutations'
-
-import { ProductsClient } from './products-client'
+import { ProductsClient } from '@/features/dashboard'
+import { getTenantCategories, getTenantProducts } from '@/features/dashboard/server'
 
 export default async function TenantProductsPage() {
   const { currentTenant: tenant, session } = await requireActiveTenantContext()

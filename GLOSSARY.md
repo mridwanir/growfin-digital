@@ -18,6 +18,9 @@ _Avoid_: Seller, vendor, business owner, shopkeeper
 The public, visitor-facing website rendered dynamically at `<slug>.growfin.my.id` or on a custom mapped domain.
 _Avoid_: Demo site, website preview, site page
 
+**Marketing Page**:
+The public marketing and acquisition website rendered at the root domain introducing MeracikWeb and converting prospective merchants.
+_Avoid_: Storefront, landing page, platform portal, demo site
 **Archetype**:
 A core business category model determining catalog behavior, checkout flows, and theme layouts. Scoped to F&B (`fnb`) and Retail (`retail`).
 _Avoid_: Template type, vertical, business type

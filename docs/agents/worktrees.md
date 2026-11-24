@@ -12,11 +12,15 @@ When creating an isolated worktree for an implementer subagent:
    git worktree add -b feat/ticket-<N> ../wt-ticket-<N> <base-branch>
    ```
 
-2. If dependency installation is necessary inside the worktree, **always use `--ignore-scripts`**:
+2. Install dependencies inside the worktree:
+
    ```bash
-   pnpm install --ignore-scripts
+   pnpm install
    ```
-   Omitting `--ignore-scripts` triggers the `prepare` lifecycle hook (`simple-git-hooks && skills sync -y`), which attempts to rewrite git hooks and can fail on locked files or lockfile mismatches across worktrees.
+
+   Standard `pnpm install` executes the `prepare` lifecycle hook (`simple-git-hooks && skills sync -y`), synchronizing all required agent skills (such as `tdd`, `code-review`, `drizzle`, `diagnosing-bugs`) into the worktree's `.agents/skills` directory.
+
+   Do not use `--ignore-scripts`. Omitting lifecycle scripts prevents skill synchronization and leaves the subagent without the necessary domain and engineering skills.
 
 ## Teardown and cleanup
 

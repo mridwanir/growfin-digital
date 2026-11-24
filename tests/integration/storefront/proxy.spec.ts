@@ -14,14 +14,11 @@ describe('Next.js Proxy Authentication Route Protection', () => {
     expect(location).toContain('/login')
   })
 
-  it('redirects unauthenticated requests to /admin to /login', async () => {
+  it('rewrites unreserved /admin to /site/admin instead of redirecting to /login', async () => {
     const request = new NextRequest('http://localhost:3000/admin')
     const response = await proxy(request)
 
-    expect(response.status).toBeGreaterThanOrEqual(300)
-    expect(response.status).toBeLessThan(400)
-    const location = response.headers.get('location')
-    expect(location).toContain('/login')
+    expect(response.headers.get('x-middleware-rewrite')).toContain('/site/admin')
   })
 
   it('allows access to public routes like /, /login, /register, /onboarding, and /api/generate', async () => {

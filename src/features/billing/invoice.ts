@@ -57,7 +57,8 @@ export async function sendInvoiceEmail(params: InvoiceEmailParams) {
   }
 
   if (!recipient) {
-    recipient = env.ADMIN_EMAILS.split(',')[0].trim()
+    console.warn('[Invoice Email] No recipient email found for order:', params.orderId)
+    return null
   }
 
   const formattedAmount = formatCurrency(params.amount)

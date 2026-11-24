@@ -26,7 +26,6 @@ const RESERVED_PATHS = [
   '/onboarding',
   '/demo',
   '/checkout',
-  '/admin',
   '/api',
   '/site',
   '/preview',

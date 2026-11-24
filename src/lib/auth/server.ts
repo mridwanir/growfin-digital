@@ -14,6 +14,8 @@ import * as authSchema from '@/db/schema/auth'
 import { resend } from '@/lib/email/resend'
 import { env } from '@/lib/env'
 
+import 'server-only'
+
 /**
  * Computes the cookie domain for session persistence. In production, sets
  * `.${env.NEXT_PUBLIC_BASE_DOMAIN}` (e.g. `.growfin.my.id`) to allow cross-subdomain sharing. In

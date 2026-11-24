@@ -8,7 +8,7 @@ This glossary defines the ubiquitous language for MeracikWeb's multi-tenant stor
 
 **Tenant**:
 A merchant business entity with a dedicated slug, subscription tier, branding, and operational configuration.
-_Avoid_: Store, shop, merchant account, client
+_Avoid_: Store, shop, merchant account, client, organization
 
 **Merchant**:
 An authenticated user who owns and manages a tenant through the merchant dashboard.

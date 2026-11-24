@@ -1,0 +1,31 @@
+import { notFound } from 'next/navigation'
+
+import { StorefrontEditor } from '@/features/editor'
+import { getStorefrontEditorDraftData } from '@/features/editor/server'
+import { serializeRecord } from '@/features/storefront'
+
+export default async function StorefrontEditorPage() {
+  const draftData = await getStorefrontEditorDraftData()
+  if (!draftData) {
+    notFound()
+  }
+
+  const { config, tenant } = draftData
+
+  return (
+    <div className="-m-4 flex h-[calc(100vh-4rem)] flex-col overflow-hidden md:-m-6">
+      <StorefrontEditor.Root
+        className="flex h-full flex-col"
+        initialConfig={serializeRecord(config)}
+        tenant={serializeRecord(tenant)}
+      >
+        <StorefrontEditor.Toolbar />
+        <div className="flex flex-1 overflow-hidden">
+          <StorefrontEditor.Sidebar />
+          <StorefrontEditor.Canvas />
+          <StorefrontEditor.Inspector />
+        </div>
+      </StorefrontEditor.Root>
+    </div>
+  )
+}

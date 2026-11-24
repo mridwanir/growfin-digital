@@ -5,5 +5,5 @@ export default ashtrathFmt({
   sortPackageJson: true,
   sortTailwindcss: true,
 
-  ignorePatterns: ['migrations/**/*', 'frontend'],
+  ignorePatterns: ['migrations/**/*'],
 })

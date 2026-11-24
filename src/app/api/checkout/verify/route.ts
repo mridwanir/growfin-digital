@@ -1,42 +1,21 @@
 import type { NextRequest } from 'next/server'
 
-import { eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 
-import { db } from '@/db'
-import { orders } from '@/db/schema/orders'
-import { activateOrderAndTenant } from '@/lib/midtrans/activation'
-import { fetchMidtransStatus, isSettlementOrAccept } from '@/lib/midtrans/client'
+import { getCheckoutOrderStatus, verifyCheckoutOrder } from '@/features/billing/server'
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const orderId = searchParams.get('order_id') || searchParams.get('orderId')
 
-    if (!orderId) {
-      return NextResponse.json({ error: 'Order ID is required' }, { status: 400 })
+    const result = await getCheckoutOrderStatus(orderId ?? '')
+
+    if ('error' in result && typeof result.status === 'number') {
+      return NextResponse.json({ error: result.error }, { status: result.status })
     }
 
-    const [order] = await db.select().from(orders).where(eq(orders.id, orderId))
-
-    if (!order) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
-    }
-
-    if (order.status === 'paid') {
-      return NextResponse.json({
-        orderId: order.id,
-        paidAt: order.paidAt,
-        status: 'paid',
-        success: true,
-      })
-    }
-
-    return NextResponse.json({
-      orderId: order.id,
-      status: order.status,
-      success: false,
-    })
+    return NextResponse.json(result)
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Failed to verify checkout order'
     console.error('[Checkout Verify GET Error]:', error)
@@ -53,50 +32,20 @@ export async function POST(request: NextRequest) {
       | string
       | undefined
 
-    if (!orderId) {
-      return NextResponse.json({ error: 'Order ID is required' }, { status: 400 })
+    const result = await verifyCheckoutOrder({
+      orderId: orderId ?? '',
+      paymentGatewayRef,
+      paymentMethod,
+    })
+
+    if (!result.success) {
+      if ('status' in result && typeof result.status === 'number') {
+        return NextResponse.json({ error: result.error }, { status: result.status })
+      }
+      return NextResponse.json(result, { status: 400 })
     }
 
-    const [order] = await db.select().from(orders).where(eq(orders.id, orderId))
-
-    if (!order) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
-    }
-
-    if (order.status === 'paid') {
-      return NextResponse.json({
-        message: 'Transaction already paid',
-        status: 'paid',
-        success: true,
-      })
-    }
-
-    // Query Midtrans status API directly server-to-server
-    const midtransStatus = await fetchMidtransStatus(order.id)
-
-    if (isSettlementOrAccept(midtransStatus)) {
-      const result = await activateOrderAndTenant({
-        orderId: order.id,
-        paymentGatewayRef: midtransStatus.transaction_id || paymentGatewayRef,
-        paymentMethod: midtransStatus.payment_type || paymentMethod,
-      })
-
-      return NextResponse.json({
-        message: 'Payment successfully verified and business published',
-        orderId: result.order.id,
-        status: 'paid',
-        success: true,
-      })
-    }
-
-    return NextResponse.json(
-      {
-        error: `Payment status not accepted: ${midtransStatus.transaction_status}`,
-        status: midtransStatus.transaction_status,
-        success: false,
-      },
-      { status: 400 },
-    )
+    return NextResponse.json(result)
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Failed to verify checkout order'
     console.error('[Checkout Verify POST Error]:', error)

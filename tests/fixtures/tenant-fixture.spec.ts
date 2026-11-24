@@ -4,7 +4,8 @@ import { eq } from 'drizzle-orm'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { db } from '@/db'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { organization as tenants } from '@/db/schema/auth'
+import { storefrontConfigs } from '@/db/schema/storefront'
 
 import { createTestTenant, DEFAULT_TEST_SECTIONS, DEFAULT_TEST_THEME } from './tenant-fixture'
 

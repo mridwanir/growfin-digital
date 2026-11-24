@@ -1,0 +1,164 @@
+import type {
+  ActiveTenantContext,
+  MerchantTenantSummary,
+  NewTenant,
+  Tenant,
+  TenantContextResult,
+  TenantStatus,
+} from './types'
+import type { SessionPayload, SessionResult } from '@/lib/auth/server'
+
+import { desc, eq } from 'drizzle-orm'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+import { db } from '@/db'
+import { member, organization, session as sessionTable } from '@/db/schema/auth'
+import { auth, getSession, getSessionCookieDomain, requireAuth } from '@/lib/auth/server'
+
+import 'server-only'
+
+export type {
+  ActiveTenantContext,
+  MerchantTenantSummary,
+  NewTenant,
+  SessionPayload,
+  SessionResult,
+  Tenant,
+  TenantContextResult,
+  TenantStatus,
+}
+export { organization as tenants } from '@/db/schema/auth'
+export { auth, getSession, getSessionCookieDomain, requireAuth }
+
+/**
+ * Returns all tenants owned by the given merchant user.
+ */
+export async function getMerchantTenants(userId: string): Promise<MerchantTenantSummary[]> {
+  return db
+    .select({
+      id: organization.id,
+      name: organization.name,
+      address: organization.address,
+      category: organization.category,
+      city: organization.city,
+      createdAt: organization.createdAt,
+      customDomain: organization.customDomain,
+      packageTier: organization.packageTier,
+      phone: organization.phone,
+      siteActiveUntil: organization.siteActiveUntil,
+      slug: organization.slug,
+      status: organization.status,
+      updatedAt: organization.updatedAt,
+    })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(eq(member.userId, userId))
+    .orderBy(desc(organization.createdAt))
+}
+
+/**
+ * Resolves the active Tenant for the current merchant session.
+ *
+ * 1. Reads session and activeOrganizationId from session.
+ * 2. If missing, reads active organization ID from cookie.
+ * 3. Falls back to merchant user's first tenant.
+ * 4. Sets cookie and updates DB session record if needed.
+ */
+export async function resolveActiveTenantContext(): Promise<TenantContextResult> {
+  const { data: sessionData } = await getSession()
+  if (!sessionData?.user?.id) {
+    return { status: 'unauthenticated' }
+  }
+
+  const tenants = await getMerchantTenants(sessionData.user.id)
+  if (tenants.length === 0) {
+    return { status: 'no_tenant' }
+  }
+
+  let activeOrgId: string | null = sessionData.session?.activeOrganizationId ?? null
+
+  if (!activeOrgId) {
+    try {
+      const cookieStore = await cookies()
+      activeOrgId =
+        cookieStore.get('better-auth.active_organization_id')?.value ??
+        cookieStore.get('__Secure-better-auth.active_organization_id')?.value ??
+        null
+    } catch {
+      // Ignored outside request context
+    }
+  }
+
+  let currentTenantSummary = activeOrgId ? tenants.find(t => t.id === activeOrgId) : undefined
+
+  if (!currentTenantSummary) {
+    currentTenantSummary = tenants[0]
+    activeOrgId = currentTenantSummary.id
+  }
+
+  // Set cookie if needed (safely in Server Action or Route Handler, ignored in RSC render)
+  try {
+    const cookieStore = await cookies()
+    const existingCookie = cookieStore.get('better-auth.active_organization_id')?.value
+    if (existingCookie !== currentTenantSummary.id) {
+      cookieStore.set('better-auth.active_organization_id', currentTenantSummary.id, {
+        domain: getSessionCookieDomain(),
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      })
+    }
+  } catch {
+    // Ignored in RSC render
+  }
+
+  // Update session in DB if different and session ID exists
+  if (
+    sessionData.session?.id &&
+    sessionData.session.activeOrganizationId !== currentTenantSummary.id
+  ) {
+    try {
+      await db
+        .update(sessionTable)
+        .set({ activeOrganizationId: currentTenantSummary.id, updatedAt: new Date() })
+        .where(eq(sessionTable.id, sessionData.session.id))
+    } catch {
+      // Ignored
+    }
+  }
+
+  const [fullTenant] = await db
+    .select()
+    .from(organization)
+    .where(eq(organization.id, currentTenantSummary.id))
+    .limit(1)
+
+  if (!fullTenant) {
+    return { status: 'no_tenant' }
+  }
+
+  return {
+    currentTenant: fullTenant,
+    session: sessionData,
+    status: 'authenticated',
+    tenants,
+  }
+}
+
+/**
+ * Enforces authenticated merchant session with an active Tenant. Redirects to `/login` if
+ * unauthenticated, and `/onboarding` if no tenant exists.
+ */
+export async function requireActiveTenantContext(): Promise<ActiveTenantContext> {
+  const result = await resolveActiveTenantContext()
+  if (result.status === 'unauthenticated') {
+    redirect('/login')
+  }
+  if (result.status === 'no_tenant') {
+    redirect('/onboarding')
+  }
+  return result
+}

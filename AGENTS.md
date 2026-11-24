@@ -23,3 +23,7 @@ Consult `CODING_STANDARDS.md` before writing or modifying components, Server Act
 ### Testing standards
 
 Consult `docs/TESTING_STANDARDS.md` before writing or modifying unit, integration, or browser component tests.
+
+### Worktrees
+
+Guidelines for creating, installing dependencies in, and cleaning up isolated Git worktrees for subagents. See `docs/agents/worktrees.md`.

@@ -1,6 +1,6 @@
 # 0003. Storefront Directory Layout and Compound Component Architecture
 
-> Status: Accepted
+> Status: Partially Superseded by [ADR-0008](./0008-feature-sliced-architecture-and-route-groups.md)
 
 ## Context
 
@@ -8,7 +8,7 @@ The legacy storefront implementation stored over 100 components in `src/componen
 
 ## Decision
 
-1. Establish a canonical directory at `src/components/storefront/` with clear architectural layers:
+1. Establish a canonical directory with clear architectural layers (originally `src/components/storefront/`, relocated to `src/features/storefront/` under ADR-0008):
    - `catalog/`: Compound components (`ProductCatalog.Root`, `CategoryBar`, `Grid`, `Card`, `SearchInput`).
    - `cart/`: Client islands (`StorefrontCartDrawer`, `ProductCustomizationDialog`, `MobileCartBar`).
    - `sections/`: Server-rendered presentation blocks (`Hero`, `Gallery`, `Reviews`, `Footer`).
@@ -22,3 +22,7 @@ The legacy storefront implementation stored over 100 components in `src/componen
 - Clean separation between server-rendered presentation sections and client interactive islands.
 - Eliminates the legacy prototype code and obsolete "demo" naming.
 - Centralizes shared theme building blocks while allowing declarative visual customization.
+
+## Supersession Note
+
+ADR-0008 relocated `src/components/storefront/` into the vertical domain slice `src/features/storefront/`. The compound component hierarchy, client islands, tenant-scoped Zustand cart store, and discriminated union fulfillment engine remain in effect, now exposed through feature slice entry points (`index.ts` for client components and `server.ts` for data loaders).

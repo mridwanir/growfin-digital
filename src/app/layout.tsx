@@ -1,13 +1,35 @@
 import type { Metadata } from 'next'
 
-import { Geist, Plus_Jakarta_Sans } from 'next/font/google'
+import { Bricolage_Grotesque, DM_Sans, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
+const bricolageGrotesque = Bricolage_Grotesque({
+  adjustFontFallback: true,
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-display',
+})
+
+const dmSans = DM_Sans({
+  adjustFontFallback: true,
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  adjustFontFallback: true,
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-mono',
+})
+
 const plusJakartaSans = Plus_Jakarta_Sans({
+  adjustFontFallback: true,
+  display: 'swap',
   subsets: ['latin'],
   variable: '--font-plus-jakarta',
   weight: ['800'],
@@ -24,7 +46,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html className={cn('font-sans', geist.variable, plusJakartaSans.variable)} lang="id">
+    <html
+      lang="id"
+      className={cn(
+        'font-sans',
+        dmSans.variable,
+        bricolageGrotesque.variable,
+        jetbrainsMono.variable,
+        plusJakartaSans.variable,
+      )}
+    >
       <body>{children}</body>
     </html>
   )

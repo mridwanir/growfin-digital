@@ -5,6 +5,8 @@ import { env } from '@/lib/env'
 
 import { relations } from './schema/relations'
 
+import 'server-only'
+
 const isProduction = env.NODE_ENV === 'production'
 
 // Prevent multiple Pool instances during Next.js hot reloading in local dev

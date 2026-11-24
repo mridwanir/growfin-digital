@@ -49,7 +49,7 @@ export default defineConfig({
         },
         test: {
           name: 'components',
-          include: ['src/components/**/*.spec.tsx'],
+          include: ['src/**/*.spec.tsx'],
           browser: {
             enabled: true,
             headless: true,

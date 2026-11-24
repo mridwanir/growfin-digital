@@ -1,9 +1,11 @@
 import { setupServer } from 'msw/node'
 import fs from 'node:fs'
 import path from 'node:path'
-import { afterAll, afterEach, beforeAll } from 'vitest'
+import { afterAll, afterEach, beforeAll, vi } from 'vitest'
 
 import { handlers } from './msw/handlers'
+
+vi.mock('server-only', () => ({}))
 
 try {
   const dbUrl = fs.readFileSync(path.join(process.cwd(), '.temp/test-db-url'), 'utf-8').trim()

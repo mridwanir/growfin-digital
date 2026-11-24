@@ -22,6 +22,5 @@ export default ashtrathLint({
     'src/lib/themes.ts',
     'src/lib/template-resolver.ts',
     'src/lib/catalog.ts',
-    'frontend',
   ],
 })

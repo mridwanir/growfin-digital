@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/knip/schema.json",
   "entry": ["src/**/*.{js,jsx,ts,tsx}"],
-  "ignore": ["frontend/**/*"],
   "ignoreDependencies": ["@ashtrath/skills"],
   "treatConfigHintsAsErrors": true
 }

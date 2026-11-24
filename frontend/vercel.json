@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/fomo-reminder",
-      "schedule": "0 9 * * *"
-    }
-  ]
-}

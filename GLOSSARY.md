@@ -11,7 +11,7 @@ A merchant business entity with a dedicated slug, subscription tier, branding, a
 _Avoid_: Store, shop, merchant account, client
 
 **Merchant**:
-An authenticated user who owns and manages one or more tenants through the merchant dashboard.
+An authenticated user who owns and manages a tenant through the merchant dashboard.
 _Avoid_: Seller, vendor, business owner, shopkeeper
 
 **Storefront**:

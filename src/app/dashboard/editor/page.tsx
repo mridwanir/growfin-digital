@@ -1,30 +1,14 @@
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import { StorefrontEditor } from '@/components/dashboard/editor'
-import { getSession } from '@/lib/auth/server'
-import { getTenantBySlug } from '@/lib/dashboard/mutations'
+import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
 import { getStorefrontDraftDataBySlug } from '@/lib/storefront/loader'
 import { serializeRecord } from '@/lib/storefront/serialization'
 
-interface EditorPageProps {
-  params: Promise<{ tenantSlug: string }>
-}
+export default async function StorefrontEditorPage() {
+  const { currentTenant } = await requireActiveTenantContext()
 
-export default async function StorefrontEditorPage({ params }: EditorPageProps) {
-  const { data: session } = await getSession()
-
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
-
-  const { tenantSlug } = await params
-  const currentTenant = await getTenantBySlug(tenantSlug, session.user.id)
-
-  if (!currentTenant) {
-    redirect('/dashboard')
-  }
-
-  const draftData = await getStorefrontDraftDataBySlug(tenantSlug)
+  const draftData = await getStorefrontDraftDataBySlug(currentTenant.slug)
 
   if (!draftData) {
     notFound()

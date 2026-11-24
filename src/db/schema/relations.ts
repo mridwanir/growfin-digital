@@ -1,50 +1,77 @@
 import { defineRelations } from 'drizzle-orm'
 
 import { analyticsEvents } from './analytics'
-import { organizationInNeonAuth, userInNeonAuth } from './auth'
+import { invitation, member, organization, user } from './auth'
 import { categories, products, productVariants, variantOptions } from './catalog'
 import { orders } from './orders'
-import { storefrontConfigs, tenants } from './tenants'
+import { storefrontConfigs } from './storefront'
 
 export const relations = defineRelations(
   {
     analyticsEvents,
     categories,
+    invitation,
+    member,
     orders,
-    organizationInNeonAuth,
+    organization,
     products,
     productVariants,
     storefrontConfigs,
-    tenants,
-    userInNeonAuth,
+    user,
     variantOptions,
   },
   r => ({
     analyticsEvents: {
-      tenant: r.one.tenants({
-        from: r.analyticsEvents.tenantId,
-        to: r.tenants.id,
+      organization: r.one.organization({
+        from: r.analyticsEvents.organizationId,
+        to: r.organization.id,
       }),
     },
     categories: {
       products: r.many.products(),
-      tenant: r.one.tenants({
-        from: r.categories.tenantId,
-        to: r.tenants.id,
+      organization: r.one.organization({
+        from: r.categories.organizationId,
+        to: r.organization.id,
+      }),
+    },
+    invitation: {
+      inviter: r.one.user({
+        from: r.invitation.inviterId,
+        to: r.user.id,
+      }),
+      organization: r.one.organization({
+        from: r.invitation.organizationId,
+        to: r.organization.id,
+      }),
+    },
+    member: {
+      organization: r.one.organization({
+        from: r.member.organizationId,
+        to: r.organization.id,
+      }),
+      user: r.one.user({
+        from: r.member.userId,
+        to: r.user.id,
       }),
     },
     orders: {
-      tenant: r.one.tenants({
-        from: r.orders.tenantId,
-        to: r.tenants.id,
+      organization: r.one.organization({
+        from: r.orders.organizationId,
+        to: r.organization.id,
       }),
-      user: r.one.userInNeonAuth({
+      user: r.one.user({
         from: r.orders.userId,
-        to: r.userInNeonAuth.id,
+        to: r.user.id,
       }),
     },
-    organizationInNeonAuth: {
-      tenants: r.many.tenants(),
+    organization: {
+      analyticsEvents: r.many.analyticsEvents(),
+      categories: r.many.categories(),
+      invitations: r.many.invitation(),
+      members: r.many.member(),
+      orders: r.many.orders(),
+      products: r.many.products(),
+      storefrontConfigs: r.many.storefrontConfigs(),
     },
     products: {
       variants: r.many.productVariants(),
@@ -52,9 +79,9 @@ export const relations = defineRelations(
         from: r.products.categoryId,
         to: r.categories.id,
       }),
-      tenant: r.one.tenants({
-        from: r.products.tenantId,
-        to: r.tenants.id,
+      organization: r.one.organization({
+        from: r.products.organizationId,
+        to: r.organization.id,
       }),
     },
     productVariants: {
@@ -65,29 +92,15 @@ export const relations = defineRelations(
       }),
     },
     storefrontConfigs: {
-      tenant: r.one.tenants({
-        from: r.storefrontConfigs.tenantId,
-        to: r.tenants.id,
+      organization: r.one.organization({
+        from: r.storefrontConfigs.organizationId,
+        to: r.organization.id,
       }),
     },
-    tenants: {
-      analyticsEvents: r.many.analyticsEvents(),
-      categories: r.many.categories(),
+    user: {
+      invitationsSent: r.many.invitation(),
+      memberships: r.many.member(),
       orders: r.many.orders(),
-      products: r.many.products(),
-      storefrontConfigs: r.many.storefrontConfigs(),
-      organization: r.one.organizationInNeonAuth({
-        from: r.tenants.organizationId,
-        to: r.organizationInNeonAuth.id,
-      }),
-      user: r.one.userInNeonAuth({
-        from: r.tenants.userId,
-        to: r.userInNeonAuth.id,
-      }),
-    },
-    userInNeonAuth: {
-      orders: r.many.orders(),
-      tenants: r.many.tenants(),
     },
     variantOptions: {
       variant: r.one.productVariants({

@@ -4,8 +4,8 @@ import { eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 
 import { db } from '@/db'
+import { organization } from '@/db/schema/auth'
 import { orders } from '@/db/schema/orders'
-import { tenants } from '@/db/schema/tenants'
 import { auth } from '@/lib/auth/server'
 import { normalizePackageTier } from '@/lib/midtrans/activation'
 import { createSnapTransaction } from '@/lib/midtrans/client'
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Tenant slug is required' }, { status: 400 })
     }
 
-    const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug))
+    const [tenant] = await db.select().from(organization).where(eq(organization.slug, slug))
 
     if (!tenant) {
       return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
@@ -51,9 +51,9 @@ export async function POST(request: NextRequest) {
       .insert(orders)
       .values({
         amount: finalAmount,
+        organizationId: tenant.id,
         snapshotTier: targetTier,
         status: 'pending',
-        tenantId: tenant.id,
         userId: effectiveUserId ?? null,
       })
       .returning()

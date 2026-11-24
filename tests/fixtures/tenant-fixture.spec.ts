@@ -25,13 +25,13 @@ describe('createTestTenant fixture', () => {
     expect(fixture.tenantId).toBe(fixture.tenant.id)
     expect(fixture.publishedConfig).toBeDefined()
     expect(fixture.publishedConfig.status).toBe('published')
-    expect(fixture.publishedConfig.tenantId).toBe(fixture.tenantId)
+    expect(fixture.publishedConfig.organizationId).toBe(fixture.tenantId)
     expect(fixture.publishedConfig.theme).toEqual(DEFAULT_TEST_THEME)
     expect(fixture.publishedConfig.sections).toEqual(DEFAULT_TEST_SECTIONS)
 
     expect(fixture.draftConfig).toBeDefined()
     expect(fixture.draftConfig.status).toBe('draft')
-    expect(fixture.draftConfig.tenantId).toBe(fixture.tenantId)
+    expect(fixture.draftConfig.organizationId).toBe(fixture.tenantId)
     expect(fixture.draftConfig.theme).toEqual(DEFAULT_TEST_THEME)
     expect(fixture.draftConfig.sections).toEqual(DEFAULT_TEST_SECTIONS)
 
@@ -39,7 +39,7 @@ describe('createTestTenant fixture', () => {
     const configsInDb = await db
       .select()
       .from(storefrontConfigs)
-      .where(eq(storefrontConfigs.tenantId, fixture.tenantId))
+      .where(eq(storefrontConfigs.organizationId, fixture.tenantId))
 
     expect(configsInDb).toHaveLength(2)
     const publishedInDb = configsInDb.find(c => c.status === 'published')
@@ -104,7 +104,7 @@ describe('createTestTenant fixture', () => {
     const configRows = await db
       .select()
       .from(storefrontConfigs)
-      .where(eq(storefrontConfigs.tenantId, tenantId))
+      .where(eq(storefrontConfigs.organizationId, tenantId))
     expect(configRows).toHaveLength(0)
   })
 })

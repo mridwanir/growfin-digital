@@ -1,36 +1,33 @@
-import { redirect } from 'next/navigation'
+import { getTenantCategories, getTenantProducts } from '@/lib/dashboard/mutations'
+import { requireActiveTenantContext } from '@/lib/dashboard/tenant-context'
 
-import { getSession } from '@/lib/auth/server'
-import { getMerchantTenants } from '@/lib/dashboard/mutations'
+import { ProductsClient } from './products-client'
 
-interface LegacyProductsPageProps {
-  searchParams?: Promise<{ tenant?: string }>
-}
+export default async function TenantProductsPage() {
+  const { currentTenant: tenant, session } = await requireActiveTenantContext()
 
-export default async function LegacyProductsPage({ searchParams }: LegacyProductsPageProps) {
-  const { data: session } = await getSession()
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
+  const [categories, products] = await Promise.all([
+    getTenantCategories(tenant.id, session.user.id),
+    getTenantProducts(tenant.id, session.user.id),
+  ])
 
-  const tenants = await getMerchantTenants(session.user.id)
-  if (tenants.length === 0) {
-    redirect('/dashboard')
-  }
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-heading text-2xl font-bold tracking-tight">
+          Katalog Produk: {tenant.name}
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Kelola kategori, daftar menu, variasi harga, dan stok barang untuk storefront Anda.
+        </p>
+      </div>
 
-  const resolvedParams = searchParams ? await searchParams : undefined
-  const tenantParam = resolvedParams?.tenant
-
-  if (tenantParam) {
-    const matched = tenants.find(t => t.id === tenantParam || t.slug === tenantParam)
-    if (matched) {
-      redirect(`/dashboard/${matched.slug}/products`)
-    }
-  }
-
-  if (tenants.length === 1) {
-    redirect(`/dashboard/${tenants[0].slug}/products`)
-  }
-
-  redirect('/dashboard')
+      <ProductsClient
+        initialCategories={categories || []}
+        initialProducts={products || []}
+        tenantId={tenant.id}
+        tenantSlug={tenant.slug}
+      />
+    </div>
+  )
 }

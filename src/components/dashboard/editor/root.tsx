@@ -139,7 +139,7 @@ export function StorefrontEditorRoot({
       setSaveStatus('saving')
       startTransition(async () => {
         try {
-          const res = await saveStorefrontDraftAction(tenant.id, {
+          const res = await saveStorefrontDraftAction({
             sections: draft.sections,
             theme: draft.theme,
           })
@@ -269,7 +269,7 @@ export function StorefrontEditorRoot({
           saveTimeoutRef.current = null
         }
 
-        const saveRes = await saveStorefrontDraftAction(tenant.id, {
+        const saveRes = await saveStorefrontDraftAction({
           sections: draftRef.current.sections,
           theme: draftRef.current.theme,
         })
@@ -279,7 +279,7 @@ export function StorefrontEditorRoot({
           return
         }
         setSaveStatus('saved')
-        const res = await publishStorefrontDraftAction(tenant.id)
+        const res = await publishStorefrontDraftAction()
         if (res.success) {
           setPublishNotification('Storefront published successfully')
         } else {
@@ -290,7 +290,7 @@ export function StorefrontEditorRoot({
         setPublishError(msg)
       }
     })
-  }, [tenant.id])
+  }, [])
 
   const contextValue: StorefrontEditorContextValue = useMemo(
     () => ({

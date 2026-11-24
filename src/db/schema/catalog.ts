@@ -10,7 +10,7 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core'
 
-import { tenants } from './tenants'
+import { organization } from './auth'
 
 export interface SpecificationItem {
   label: string
@@ -27,11 +27,11 @@ export const categories = pgTable(
     name: text('name').notNull(),
     slug: text('slug').notNull(),
     sortOrder: integer('sort_order').notNull().default(0),
-    tenantId: uuid('tenant_id')
+    organizationId: text('organization_id')
       .notNull()
-      .references(() => tenants.id, { onDelete: 'cascade' }),
+      .references(() => organization.id, { onDelete: 'cascade' }),
   },
-  table => [index('categories_tenant_id_idx').on(table.tenantId)],
+  table => [index('categories_organization_id_idx').on(table.organizationId)],
 )
 
 // ---------------------------------------------------------------------------
@@ -56,12 +56,12 @@ export const products = pgTable(
     specifications: jsonb('specifications').$type<SpecificationItem[]>().default([]),
     stock: integer('stock'),
     updatedAt: timestamp('updated_at', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
-    tenantId: uuid('tenant_id')
+    organizationId: text('organization_id')
       .notNull()
-      .references(() => tenants.id, { onDelete: 'cascade' }),
+      .references(() => organization.id, { onDelete: 'cascade' }),
   },
   table => [
-    index('products_tenant_id_idx').on(table.tenantId),
+    index('products_organization_id_idx').on(table.organizationId),
     index('products_category_id_idx').on(table.categoryId),
   ],
 )
@@ -99,7 +99,21 @@ export const variantOptions = pgTable(
   table => [index('variant_options_variant_id_idx').on(table.variantId)],
 )
 
-export type Category = typeof categories.$inferSelect
-export type Product = typeof products.$inferSelect
+export type Category = Omit<typeof categories.$inferSelect, 'organizationId'> & {
+  organizationId?: string
+  tenantId?: string
+}
+export type NewCategory = Omit<typeof categories.$inferInsert, 'organizationId'> & {
+  organizationId?: string
+  tenantId?: string
+}
+export type Product = Omit<typeof products.$inferSelect, 'organizationId'> & {
+  organizationId?: string
+  tenantId?: string
+}
+export type NewProduct = Omit<typeof products.$inferInsert, 'organizationId'> & {
+  organizationId?: string
+  tenantId?: string
+}
 export type ProductVariant = typeof productVariants.$inferSelect
 export type VariantOption = typeof variantOptions.$inferSelect

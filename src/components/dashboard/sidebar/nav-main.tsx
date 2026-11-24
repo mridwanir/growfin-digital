@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/sidebar'
 
 export interface NavMainProps {
-  tenantSlug: string
+  tenantSlug?: string
 }
 
 interface NavItem {
@@ -26,39 +26,33 @@ interface NavItem {
   isActive: boolean
 }
 
-export function NavMain({ tenantSlug }: NavMainProps) {
+export function NavMain({ tenantSlug: _tenantSlug }: NavMainProps = {}) {
   const pathname = usePathname() || ''
 
   const items: NavItem[] = [
     {
       icon: LayoutDashboard,
-      isActive: pathname === `/dashboard/${tenantSlug}` || pathname === `/dashboard/${tenantSlug}/`,
+      isActive: pathname === '/dashboard' || pathname === '/dashboard/',
       title: 'Overview',
-      url: `/dashboard/${tenantSlug}`,
+      url: '/dashboard',
     },
     {
       icon: Palette,
+      isActive: pathname === '/dashboard/editor' || pathname.startsWith('/dashboard/editor/'),
       title: 'Storefront Editor',
-      url: `/dashboard/${tenantSlug}/editor`,
-      isActive:
-        pathname === `/dashboard/${tenantSlug}/editor` ||
-        pathname.startsWith(`/dashboard/${tenantSlug}/editor/`),
+      url: '/dashboard/editor',
     },
     {
       icon: Package,
+      isActive: pathname === '/dashboard/products' || pathname.startsWith('/dashboard/products/'),
       title: 'Catalog',
-      url: `/dashboard/${tenantSlug}/products`,
-      isActive:
-        pathname === `/dashboard/${tenantSlug}/products` ||
-        pathname.startsWith(`/dashboard/${tenantSlug}/products/`),
+      url: '/dashboard/products',
     },
     {
       icon: Settings,
+      isActive: pathname === '/dashboard/settings' || pathname.startsWith('/dashboard/settings/'),
       title: 'Settings',
-      url: `/dashboard/${tenantSlug}/settings`,
-      isActive:
-        pathname === `/dashboard/${tenantSlug}/settings` ||
-        pathname.startsWith(`/dashboard/${tenantSlug}/settings/`),
+      url: '/dashboard/settings',
     },
   ]
   return (

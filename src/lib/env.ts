@@ -19,6 +19,8 @@ export const env = createEnv({
     EMAIL_FROM: z.string().default('Growfin Digital <auth@growfin.my.id>'),
 
     GEMINI_API_KEY: z.string().min(1),
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
     GOOGLE_MAPS_API_KEY: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
 
@@ -28,12 +30,15 @@ export const env = createEnv({
     AWS_REGION: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
 
+    BETTER_AUTH_URL: z.string().url().default('http://localhost:3000'),
     DATABASE_URL: z.string().min(1),
     DATABASE_URL_UNPOOLED: z.string().min(1).optional(),
-    NEON_AUTH_BASE_URL: z.url(),
-    NEON_AUTH_COOKIE_SECRET: z
+    NEON_AUTH_BASE_URL: z.string().optional(),
+    NEON_AUTH_COOKIE_SECRET: z.string().optional(),
+    BETTER_AUTH_SECRET: z
       .string()
-      .min(32, { message: 'NEON_AUTH_COOKIE_SECRET must be at least 32 characters long' }),
+      .min(32, { message: 'BETTER_AUTH_SECRET must be at least 32 characters long' })
+      .default('test_better_auth_secret_at_least_32_characters_long'),
 
     MIDTRANS_CLIENT_KEY: z.string().min(1),
     MIDTRANS_IS_PRODUCTION: z.stringbool().default(false),

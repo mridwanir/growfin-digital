@@ -6,7 +6,7 @@ import crypto from 'node:crypto'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { tenants } from '@/db/schema/tenants'
+import { organization } from '@/db/schema/auth'
 import { env } from '@/lib/env'
 
 const ALLOWED_EVENTS = ['page_view', 'checkout_start', 'checkout_complete'] as const
@@ -131,9 +131,9 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id })
-    .from(tenants)
-    .where(eq(tenants.slug, slug))
+    .select({ id: organization.id })
+    .from(organization)
+    .where(eq(organization.slug, slug))
     .limit(1)
 
   if (!tenant) {
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     acquisition,
     event,
     eventData: (metadata as Record<string, unknown>) || null,
-    tenantId: tenant.id,
+    organizationId: tenant.id,
     visitorHash,
   })
 

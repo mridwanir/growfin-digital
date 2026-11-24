@@ -168,7 +168,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       },
     ]
 
-    const saveResult = await saveStorefrontDraftAction(fixture.tenantId, {
+    const saveResult = await saveStorefrontDraftAction({
       sections: updatedSections,
       theme: updatedTheme,
     })
@@ -188,7 +188,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'draft'),
         ),
       )
@@ -212,7 +212,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'published'),
         ),
       )
@@ -226,8 +226,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     expect((publishedInDb.sections as StorefrontSection[])[2]?.isVisible).toBe(true)
 
     // 3. Verify editor cache path revalidation was requested
-    expect(revalidatePath).toHaveBeenCalledWith(`/dashboard/${fixture.slug}/editor`)
-    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/[tenantSlug]/editor')
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/editor')
   })
 
   it('confirms draft edits are not visible in public loader getStorefrontDataBySlug until published', async () => {
@@ -282,7 +281,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'draft'),
         ),
       )
@@ -290,7 +289,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     expect(draftBeforePublish).toBeDefined()
 
     // Execute publish action
-    const publishResult = await publishStorefrontDraftAction(fixture.tenantId)
+    const publishResult = await publishStorefrontDraftAction()
 
     expect(publishResult).toMatchObject({
       success: true,
@@ -307,7 +306,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'published'),
         ),
       )
@@ -348,8 +347,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     expect(liveSections[2]?.isVisible).toBe(false)
 
     // 4. Verify cache revalidations triggered on publish
-    expect(revalidatePath).toHaveBeenCalledWith('/site/[slug]')
-    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/[tenantSlug]')
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard')
     expect(revalidatePath).toHaveBeenCalledWith(`/site/${fixture.slug}`)
   })
 
@@ -357,19 +355,21 @@ describe('Storefront Editor draft save and transactional publish integration sui
     // 1. Unauthenticated saveStorefrontDraftAction
     vi.spyOn(auth, 'getSession').mockResolvedValue(createUnauthenticatedSession())
 
-    const unauthSave = await saveStorefrontDraftAction(fixture.tenantId, {
+    const unauthSave = await saveStorefrontDraftAction({
       theme: { layoutId: 'intruder-layout' },
     })
     expect(unauthSave).toEqual({ error: 'Unauthorized', success: false })
 
     // 2. Unauthenticated publishStorefrontDraftAction
-    const unauthPublish = await publishStorefrontDraftAction(fixture.tenantId)
+    const unauthPublish = await publishStorefrontDraftAction()
     expect(unauthPublish).toEqual({ error: 'Unauthorized', success: false })
 
     // 3. Cross-tenant merchant attempting to save draft
-    vi.spyOn(auth, 'getSession').mockResolvedValue(createMerchantSession({ userId: otherUserId }))
+    vi.spyOn(auth, 'getSession').mockResolvedValue(
+      createMerchantSession({ activeOrganizationId: fixture.tenantId, userId: otherUserId }),
+    )
 
-    const forbiddenSave = await saveStorefrontDraftAction(fixture.tenantId, {
+    const forbiddenSave = await saveStorefrontDraftAction({
       theme: { layoutId: 'intruder-layout' },
     })
     expect(forbiddenSave).toEqual({
@@ -378,7 +378,7 @@ describe('Storefront Editor draft save and transactional publish integration sui
     })
 
     // 4. Cross-tenant merchant attempting to publish draft
-    const forbiddenPublish = await publishStorefrontDraftAction(fixture.tenantId)
+    const forbiddenPublish = await publishStorefrontDraftAction()
     expect(forbiddenPublish).toEqual({
       error: 'Tenant not found or forbidden',
       success: false,
@@ -390,10 +390,27 @@ describe('Storefront Editor draft save and transactional publish integration sui
       .from(storefrontConfigs)
       .where(
         and(
-          eq(storefrontConfigs.tenantId, fixture.tenantId),
+          eq(storefrontConfigs.organizationId, fixture.tenantId),
           eq(storefrontConfigs.status, 'draft'),
         ),
       )
     expect(draftInDb.theme).not.toEqual(expect.objectContaining({ layoutId: 'intruder-layout' }))
+  })
+
+  it('resolves active organization from session when tenantId is omitted in draft actions', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValue(
+      createMerchantSession({ activeOrganizationId: fixture.tenantId, userId: merchantUserId }),
+    )
+
+    const saveRes = await saveStorefrontDraftAction({
+      theme: { fontFamily: 'font-mono', layoutId: 'artisan', themeColor: '#10b981' },
+    })
+
+    expect(saveRes.success).toBe(true)
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard/editor')
+
+    const pubRes = await publishStorefrontDraftAction()
+    expect(pubRes.success).toBe(true)
+    expect(revalidatePath).toHaveBeenCalledWith('/dashboard')
   })
 })

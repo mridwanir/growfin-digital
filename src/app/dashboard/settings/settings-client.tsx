@@ -46,11 +46,11 @@ export interface TenantSettingsData {
 
 export interface SettingsClientProps {
   initialTenant: TenantSettingsData
-  tenantId: string
-  tenantSlug: string
+  tenantId?: string
+  tenantSlug?: string
 }
 
-export function SettingsClient({ initialTenant, tenantId }: SettingsClientProps) {
+export function SettingsClient({ initialTenant }: SettingsClientProps) {
   const [phone, setPhone] = useState(initialTenant.phone || '')
   const [city, setCity] = useState(initialTenant.city || '')
   const [address, setAddress] = useState(initialTenant.address || '')
@@ -96,7 +96,7 @@ export function SettingsClient({ initialTenant, tenantId }: SettingsClientProps)
     }
 
     startTransition(async () => {
-      const res = await updateTenantSettingsAction(tenantId, payload)
+      const res = await updateTenantSettingsAction(payload)
       if (!res.success) {
         if (res.fieldErrors) {
           setFieldErrors(res.fieldErrors)

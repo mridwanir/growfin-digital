@@ -1,15 +1,18 @@
 'use server'
 
 import type { Category } from '@/db/schema/catalog'
-import type { StorefrontConfig, Tenant } from '@/db/schema/tenants'
+import type { StorefrontConfig } from '@/db/schema/storefront'
+import type { Tenant } from '@/db/schema/tenants'
 import type { ProductWithVariants } from '@/lib/dashboard/mutations'
 
 import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { z } from 'zod'
 
 import { db } from '@/db'
-import { storefrontConfigs, tenants } from '@/db/schema/tenants'
+import { member, organization } from '@/db/schema/auth'
+import { storefrontConfigs } from '@/db/schema/storefront'
 import { auth } from '@/lib/auth/server'
 import {
   createCategory,
@@ -40,7 +43,7 @@ interface AuthenticatedUser {
 }
 
 type AuthCheckResult =
-  | { success: true; user: AuthenticatedUser; userId: string }
+  | { activeOrganizationId: string | null; success: true; user: AuthenticatedUser; userId: string }
   | { error: string; success: false }
 
 async function requireMerchantSession(): Promise<AuthCheckResult> {
@@ -48,7 +51,66 @@ async function requireMerchantSession(): Promise<AuthCheckResult> {
   if (!session?.user?.id) {
     return { error: 'Unauthorized', success: false }
   }
-  return { success: true, user: session.user, userId: session.user.id }
+
+  let activeOrgId: string | null = session.session?.activeOrganizationId ?? null
+
+  if (!activeOrgId) {
+    try {
+      const cookieStore = await cookies()
+      activeOrgId =
+        cookieStore.get('better-auth.active_organization_id')?.value ??
+        cookieStore.get('__Secure-better-auth.active_organization_id')?.value ??
+        null
+    } catch {
+      // Ignored outside request context
+    }
+  }
+
+  if (!activeOrgId) {
+    const [firstOrg] = await db
+      .select({ organizationId: member.organizationId })
+      .from(member)
+      .where(eq(member.userId, session.user.id))
+      .limit(1)
+
+    activeOrgId = firstOrg?.organizationId ?? null
+  }
+
+  return {
+    activeOrganizationId: activeOrgId,
+    success: true,
+    user: session.user,
+    userId: session.user.id,
+  }
+}
+
+interface AuthenticatedMerchant {
+  tenantId: string
+  user: AuthenticatedUser
+  userId: string
+}
+
+async function resolveActiveStore(): Promise<
+  { data: AuthenticatedMerchant; success: true } | { error: string; success: false }
+> {
+  const authResult = await requireMerchantSession()
+  if (!authResult.success) {
+    return authResult
+  }
+
+  const tenantId = authResult.activeOrganizationId
+  if (!tenantId) {
+    return { error: 'No active store found', success: false }
+  }
+
+  return {
+    success: true,
+    data: {
+      tenantId,
+      user: authResult.user,
+      userId: authResult.userId,
+    },
+  }
 }
 function validateInput<T>(
   schema: z.ZodType<T>,
@@ -158,12 +220,11 @@ const updateProductSchema = z.object({
 })
 
 export async function updateTenantSettingsAction(
-  tenantId: string,
   input: unknown,
 ): Promise<ActionResult<TenantSettings>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const validation = validateInput(updateSettingsSchema, input)
@@ -171,27 +232,21 @@ export async function updateTenantSettingsAction(
     return validation
   }
 
-  const updated = await updateTenantSettings(tenantId, authResult.userId, validation.data)
+  const updated = await updateTenantSettings(auth.data.tenantId, auth.data.userId, validation.data)
   if (!updated) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/settings')
-  revalidatePath('/dashboard/[tenantSlug]/settings')
-  if (updated.slug) {
-    revalidatePath(`/dashboard/${updated.slug}/settings`)
-  }
 
   return { data: updated, success: true }
 }
 
-export async function createProductCategoryAction(
-  tenantId: string,
-  input: unknown,
-): Promise<ActionResult<Category>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+export async function createProductCategoryAction(input: unknown): Promise<ActionResult<Category>> {
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const validation = validateInput(createProductCategorySchema, input)
@@ -199,25 +254,24 @@ export async function createProductCategoryAction(
     return validation
   }
 
-  const created = await createCategory(tenantId, authResult.userId, validation.data)
+  const created = await createCategory(auth.data.tenantId, auth.data.userId, validation.data)
   if (!created) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: created, success: true }
 }
 
 export async function updateProductCategoryAction(
-  tenantId: string,
   categoryId: string,
   input: unknown,
 ): Promise<ActionResult<Category>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const validation = validateInput(updateProductCategorySchema, input)
@@ -225,44 +279,47 @@ export async function updateProductCategoryAction(
     return validation
   }
 
-  const updated = await updateCategory(tenantId, authResult.userId, categoryId, validation.data)
+  const updated = await updateCategory(
+    auth.data.tenantId,
+    auth.data.userId,
+    categoryId,
+    validation.data,
+  )
   if (!updated) {
     return { error: 'Category or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: updated, success: true }
 }
 
 export async function deleteProductCategoryAction(
-  tenantId: string,
   categoryId: string,
 ): Promise<ActionResult<{ success: true }>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  const deleted = await deleteCategory(tenantId, authResult.userId, categoryId)
+  const deleted = await deleteCategory(auth.data.tenantId, auth.data.userId, categoryId)
   if (!deleted) {
     return { error: 'Category or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: { success: true }, success: true }
 }
 
 export async function createProductAction(
-  tenantId: string,
   input: unknown,
 ): Promise<ActionResult<ProductWithVariants>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const validation = validateInput(createProductSchema, input)
@@ -270,45 +327,43 @@ export async function createProductAction(
     return validation
   }
 
-  const created = await createProduct(tenantId, authResult.userId, validation.data)
+  const created = await createProduct(auth.data.tenantId, auth.data.userId, validation.data)
   if (!created) {
     return { error: 'Tenant not found or forbidden', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: created, success: true }
 }
 
 export async function deleteProductAction(
-  tenantId: string,
   productId: string,
 ): Promise<ActionResult<{ success: true }>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  const deleted = await deleteProduct(tenantId, authResult.userId, productId)
+  const deleted = await deleteProduct(auth.data.tenantId, auth.data.userId, productId)
   if (!deleted) {
     return { error: 'Product or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: { success: true }, success: true }
 }
 
 export async function updateProductAction(
-  tenantId: string,
   productId: string,
   input: unknown,
 ): Promise<ActionResult<ProductWithVariants>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const validation = validateInput(updateProductSchema, input)
@@ -316,13 +371,18 @@ export async function updateProductAction(
     return validation
   }
 
-  const updated = await updateProduct(tenantId, authResult.userId, productId, validation.data)
+  const updated = await updateProduct(
+    auth.data.tenantId,
+    auth.data.userId,
+    productId,
+    validation.data,
+  )
   if (!updated) {
     return { error: 'Product or tenant not found', success: false }
   }
 
+  revalidatePath('/dashboard')
   revalidatePath('/dashboard/products')
-  revalidatePath('/dashboard/[tenantSlug]/products')
 
   return { data: updated, success: true }
 }
@@ -362,23 +422,23 @@ const saveDraftSchema = z.object({
 })
 
 export async function saveStorefrontDraftAction(
-  tenantId: string,
-  input: unknown,
+  input?: unknown,
 ): Promise<ActionResult<StorefrontConfig>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
-  const validation = validateInput(saveDraftSchema, input)
+  const validation = validateInput(saveDraftSchema, input ?? {})
   if (!validation.success) {
     return validation
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id, slug: tenants.slug })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .select({ id: organization.id, slug: organization.slug })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, auth.data.tenantId), eq(member.userId, auth.data.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -388,7 +448,12 @@ export async function saveStorefrontDraftAction(
   const [existingDraft] = await db
     .select()
     .from(storefrontConfigs)
-    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+    .where(
+      and(
+        eq(storefrontConfigs.organizationId, auth.data.tenantId),
+        eq(storefrontConfigs.status, 'draft'),
+      ),
+    )
     .limit(1)
 
   const now = new Date()
@@ -416,7 +481,10 @@ export async function saveStorefrontDraftAction(
       .select()
       .from(storefrontConfigs)
       .where(
-        and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')),
+        and(
+          eq(storefrontConfigs.organizationId, auth.data.tenantId),
+          eq(storefrontConfigs.status, 'published'),
+        ),
       )
       .limit(1)
 
@@ -427,9 +495,9 @@ export async function saveStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
+        organizationId: auth.data.tenantId,
         sections: initialSections,
         status: 'draft',
-        tenantId,
         theme: initialTheme,
         updatedAt: now,
       })
@@ -437,24 +505,23 @@ export async function saveStorefrontDraftAction(
     draftRecord = inserted
   }
 
-  revalidatePath('/dashboard/[tenantSlug]/editor')
-  revalidatePath(`/dashboard/${tenant.slug}/editor`)
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/editor')
 
   return { data: draftRecord, success: true }
 }
 
-export async function publishStorefrontDraftAction(
-  tenantId: string,
-): Promise<ActionResult<StorefrontConfig>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+export async function publishStorefrontDraftAction(): Promise<ActionResult<StorefrontConfig>> {
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id, slug: tenants.slug })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .select({ id: organization.id, slug: organization.slug })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, auth.data.tenantId), eq(member.userId, auth.data.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -465,7 +532,12 @@ export async function publishStorefrontDraftAction(
     const [draft] = await tx
       .select()
       .from(storefrontConfigs)
-      .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+      .where(
+        and(
+          eq(storefrontConfigs.organizationId, auth.data.tenantId),
+          eq(storefrontConfigs.status, 'draft'),
+        ),
+      )
       .limit(1)
 
     if (!draft) {
@@ -478,7 +550,10 @@ export async function publishStorefrontDraftAction(
       .select()
       .from(storefrontConfigs)
       .where(
-        and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')),
+        and(
+          eq(storefrontConfigs.organizationId, auth.data.tenantId),
+          eq(storefrontConfigs.status, 'published'),
+        ),
       )
       .limit(1)
 
@@ -499,9 +574,9 @@ export async function publishStorefrontDraftAction(
       const [inserted] = await tx
         .insert(storefrontConfigs)
         .values({
+          organizationId: auth.data.tenantId,
           sections: draft.sections,
           status: 'published',
-          tenantId,
           theme: draft.theme,
           updatedAt: now,
         })
@@ -509,7 +584,10 @@ export async function publishStorefrontDraftAction(
       published = inserted
     }
 
-    await tx.update(tenants).set({ updatedAt: now }).where(eq(tenants.id, tenantId))
+    await tx
+      .update(organization)
+      .set({ updatedAt: now })
+      .where(eq(organization.id, auth.data.tenantId))
 
     return published
   })
@@ -518,26 +596,26 @@ export async function publishStorefrontDraftAction(
     return { error: 'Draft configuration not found', success: false }
   }
 
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/editor')
   revalidatePath('/site/[slug]')
-  revalidatePath('/dashboard/[tenantSlug]')
-  revalidatePath(`/site/${tenant.slug}`)
-  revalidatePath(`/dashboard/${tenant.slug}`)
-
+  if (tenant.slug) {
+    revalidatePath(`/site/${tenant.slug}`)
+  }
   return { data: publishedRecord, success: true }
 }
 
-export async function discardStorefrontDraftAction(
-  tenantId: string,
-): Promise<ActionResult<StorefrontConfig>> {
-  const authResult = await requireMerchantSession()
-  if (!authResult.success) {
-    return { error: authResult.error, success: false }
+export async function discardStorefrontDraftAction(): Promise<ActionResult<StorefrontConfig>> {
+  const auth = await resolveActiveStore()
+  if (!auth.success) {
+    return auth
   }
 
   const [tenant] = await db
-    .select({ id: tenants.id, slug: tenants.slug })
-    .from(tenants)
-    .where(and(eq(tenants.id, tenantId), eq(tenants.userId, authResult.userId)))
+    .select({ id: organization.id, slug: organization.slug })
+    .from(organization)
+    .innerJoin(member, eq(member.organizationId, organization.id))
+    .where(and(eq(organization.id, auth.data.tenantId), eq(member.userId, auth.data.userId)))
     .limit(1)
 
   if (!tenant) {
@@ -547,7 +625,12 @@ export async function discardStorefrontDraftAction(
   const [published] = await db
     .select()
     .from(storefrontConfigs)
-    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'published')))
+    .where(
+      and(
+        eq(storefrontConfigs.organizationId, auth.data.tenantId),
+        eq(storefrontConfigs.status, 'published'),
+      ),
+    )
     .limit(1)
 
   if (!published) {
@@ -557,7 +640,12 @@ export async function discardStorefrontDraftAction(
   const [existingDraft] = await db
     .select()
     .from(storefrontConfigs)
-    .where(and(eq(storefrontConfigs.tenantId, tenantId), eq(storefrontConfigs.status, 'draft')))
+    .where(
+      and(
+        eq(storefrontConfigs.organizationId, auth.data.tenantId),
+        eq(storefrontConfigs.status, 'draft'),
+      ),
+    )
     .limit(1)
 
   const now = new Date()
@@ -578,9 +666,9 @@ export async function discardStorefrontDraftAction(
     const [inserted] = await db
       .insert(storefrontConfigs)
       .values({
+        organizationId: auth.data.tenantId,
         sections: published.sections,
         status: 'draft',
-        tenantId,
         theme: published.theme,
         updatedAt: now,
       })
@@ -588,8 +676,7 @@ export async function discardStorefrontDraftAction(
     draftRecord = inserted
   }
 
-  revalidatePath('/dashboard/[tenantSlug]/editor')
-  revalidatePath(`/dashboard/${tenant.slug}/editor`)
-
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/editor')
   return { data: draftRecord, success: true }
 }

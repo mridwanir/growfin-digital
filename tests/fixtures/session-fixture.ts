@@ -6,15 +6,19 @@ export interface MockSessionOptions {
   role?: string
   user?: null
   userId?: string
+  activeOrganizationId?: string | null
 }
 
 interface SessionData {
   session: {
     id: string
+    activeOrganizationId?: string | null
     createdAt: Date
     expiresAt: Date
+    ipAddress: string | null
     token: string
     updatedAt: Date
+    userAgent: string | null
     userId: string
   }
   user: {
@@ -23,6 +27,7 @@ interface SessionData {
     createdAt: Date
     email: string
     emailVerified: boolean
+    image: string | null
     role: string
     updatedAt: Date
   }
@@ -49,10 +54,13 @@ function createSessionPayload(
     data: {
       session: {
         id: `sess-${crypto.randomUUID()}`,
+        activeOrganizationId: options.activeOrganizationId ?? null,
         createdAt: new Date(),
         expiresAt: options.expiresAt ?? new Date(Date.now() + 86400000),
+        ipAddress: null,
         token: `tok-${crypto.randomUUID()}`,
         updatedAt: new Date(),
+        userAgent: null,
         userId,
       },
       user:
@@ -64,6 +72,7 @@ function createSessionPayload(
               createdAt: new Date(),
               email: options.email ?? defaults.getDefaultEmail(userId),
               emailVerified: options.emailVerified ?? true,
+              image: null,
               role: options.role ?? defaults.role,
               updatedAt: new Date(),
             },

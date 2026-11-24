@@ -1,11 +1,12 @@
+import type { Organization } from '@/db/schema/auth'
 import type { PackageTier } from '@/db/schema/tenants'
 
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 
 import { db } from '@/db'
+import { member, organization } from '@/db/schema/auth'
 import { orders } from '@/db/schema/orders'
-import { tenants } from '@/db/schema/tenants'
 import { sendInvoiceEmail } from '@/lib/email/invoice'
 
 export interface ActivateOrderAndTenantParams {
@@ -17,7 +18,7 @@ export interface ActivateOrderAndTenantParams {
 
 export interface ActivationResult {
   order: typeof orders.$inferSelect
-  tenant: typeof tenants.$inferSelect
+  tenant: Organization
   alreadyPaid: boolean
 }
 export function normalizePackageTier(tier?: string | null): PackageTier {
@@ -42,11 +43,11 @@ export async function activateOrderAndTenant({
 
     const [existingTenant] = await tx
       .select()
-      .from(tenants)
-      .where(eq(tenants.id, existingOrder.tenantId))
+      .from(organization)
+      .where(eq(organization.id, existingOrder.organizationId))
 
     if (!existingTenant) {
-      throw new Error(`Tenant ${existingOrder.tenantId} not found`)
+      throw new Error(`Tenant ${existingOrder.organizationId} not found`)
     }
 
     // Idempotency: if already paid, return without mutating
@@ -94,17 +95,38 @@ export async function activateOrderAndTenant({
       .where(eq(orders.id, orderId))
       .returning()
 
+    if (existingOrder.userId) {
+      const [existingMember] = await tx
+        .select()
+        .from(member)
+        .where(
+          and(
+            eq(member.organizationId, existingTenant.id),
+            eq(member.userId, existingOrder.userId),
+          ),
+        )
+        .limit(1)
+
+      if (!existingMember) {
+        await tx.insert(member).values({
+          id: crypto.randomUUID(),
+          organizationId: existingTenant.id,
+          role: 'owner',
+          userId: existingOrder.userId,
+        })
+      }
+    }
+
     const [updatedTenant] = await tx
-      .update(tenants)
+      .update(organization)
       .set({
         domainActiveUntil,
         packageTier: tier,
         siteActiveUntil,
         status: 'published',
         updatedAt: now,
-        userId: existingOrder.userId ?? existingTenant.userId,
       })
-      .where(eq(tenants.id, existingTenant.id))
+      .where(eq(organization.id, existingTenant.id))
       .returning()
 
     return {

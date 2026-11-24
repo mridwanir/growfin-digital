@@ -5,13 +5,171 @@ import {
   index,
   jsonb,
   pgSchema,
+  pgTable,
   text,
   timestamp,
   unique,
   uuid,
+  varchar,
 } from 'drizzle-orm/pg-core'
 
+export type StoreStatus = 'draft' | 'published' | 'suspended' | 'locked'
+export type PackageTier = 'free' | 'instant' | 'pro'
+
+export interface DailySchedule {
+  day?: string
+  open: string
+  close: string
+  closed?: boolean
+  isOpen?: boolean
+}
+
+export interface OperatingHours {
+  friday?: DailySchedule
+  monday?: DailySchedule
+  saturday?: DailySchedule
+  sunday?: DailySchedule
+  thursday?: DailySchedule
+  tuesday?: DailySchedule
+  wednesday?: DailySchedule
+  closeTime?: string
+  isOpen?: boolean
+  openTime?: string
+  raw?: string
+  schedules?: DailySchedule[]
+  [key: string]: unknown
+}
+
 export const neonAuth = pgSchema('neon_auth')
+export const user = pgTable('user', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').default(false).notNull(),
+  image: text('image'),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+export const session = pgTable('session', {
+  id: text('id').primaryKey(),
+  activeOrganizationId: text('active_organization_id'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  ipAddress: text('ip_address'),
+  token: text('token').notNull().unique(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  userAgent: text('user_agent'),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+})
+
+export const organization = pgTable('organization', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull(),
+  address: text('address'),
+  category: text('category'),
+  city: varchar('city', { length: 100 }),
+  createdAt: timestamp('created_at', { mode: 'date', withTimezone: true }).defaultNow().notNull(),
+  customDomain: varchar('custom_domain', { length: 255 }).unique(),
+  domainActiveUntil: timestamp('domain_active_until', { mode: 'date', withTimezone: true }),
+  googleMapsUrl: text('google_maps_url'),
+  logo: text('logo'),
+  metadata: text('metadata'),
+  operatingHours: jsonb('operating_hours').$type<OperatingHours>().default({}),
+  packageTier: text('package_tier').$type<PackageTier>().default('free').notNull(),
+  phone: varchar('phone', { length: 32 }),
+  siteActiveUntil: timestamp('site_active_until', { mode: 'date', withTimezone: true }),
+  slug: text('slug').notNull().unique(),
+  status: text('status').$type<StoreStatus>().default('draft').notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'date', withTimezone: true }).defaultNow().notNull(),
+})
+
+export const member = pgTable(
+  'member',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    createdAt: timestamp('created_at', { mode: 'date', withTimezone: true }).defaultNow().notNull(),
+    role: text('role').notNull().default('member'),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+  },
+  table => [
+    index('member_organization_id_idx').on(table.organizationId),
+    index('member_user_id_idx').on(table.userId),
+  ],
+)
+
+export const invitation = pgTable(
+  'invitation',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    createdAt: timestamp('created_at', { mode: 'date', withTimezone: true }).defaultNow().notNull(),
+    email: text('email').notNull(),
+    expiresAt: timestamp('expires_at', { mode: 'date', withTimezone: true }).notNull(),
+    role: text('role'),
+    status: text('status').notNull().default('pending'),
+    inviterId: text('inviter_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+  },
+  table => [
+    index('invitation_organization_id_idx').on(table.organizationId),
+    index('invitation_email_idx').on(table.email),
+  ],
+)
+
+export const account = pgTable('account', {
+  id: text('id').primaryKey(),
+  accessToken: text('access_token'),
+  accessTokenExpiresAt: timestamp('access_token_expires_at'),
+  accountId: text('account_id').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  idToken: text('id_token'),
+  password: text('password'),
+  providerId: text('provider_id').notNull(),
+  refreshToken: text('refresh_token'),
+  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  scope: text('scope'),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+})
+
+export const verification = pgTable('verification', {
+  id: text('id').primaryKey(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  identifier: text('identifier').notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  value: text('value').notNull(),
+})
+
+export type User = typeof user.$inferSelect
+export type Session = typeof session.$inferSelect
+export type Account = typeof account.$inferSelect
+export type Verification = typeof verification.$inferSelect
+export type Organization = typeof organization.$inferSelect
+export type NewOrganization = typeof organization.$inferInsert
+export type Member = typeof member.$inferSelect
+export type NewMember = typeof member.$inferInsert
+export type Invitation = typeof invitation.$inferSelect
+export type NewInvitation = typeof invitation.$inferInsert
 
 export const userInNeonAuth = neonAuth.table(
   'user',

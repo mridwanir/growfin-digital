@@ -2,7 +2,7 @@ import { and, desc, eq, gte, isNotNull, sql } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { analyticsEvents } from '@/db/schema/analytics'
-import { tenants } from '@/db/schema/tenants'
+import { member, organization } from '@/db/schema/auth'
 
 export interface TenantAnalyticsMetrics {
   checkoutCompletes: number
@@ -24,9 +24,10 @@ export async function getTenantAnalyticsMetrics(
   // If userId is provided, verify tenant ownership
   if (userId) {
     const [ownedTenant] = await db
-      .select({ id: tenants.id })
-      .from(tenants)
-      .where(and(eq(tenants.id, tenantId), eq(tenants.userId, userId)))
+      .select({ id: organization.id })
+      .from(organization)
+      .innerJoin(member, eq(member.organizationId, organization.id))
+      .where(and(eq(organization.id, tenantId), eq(member.userId, userId)))
       .limit(1)
 
     if (!ownedTenant) {
@@ -44,7 +45,9 @@ export async function getTenantAnalyticsMetrics(
       uniqueVisitors: sql<number>`coalesce(count(distinct ${analyticsEvents.visitorHash}), 0)::int`,
     })
     .from(analyticsEvents)
-    .where(and(eq(analyticsEvents.tenantId, tenantId), gte(analyticsEvents.createdAt, todayStart)))
+    .where(
+      and(eq(analyticsEvents.organizationId, tenantId), gte(analyticsEvents.createdAt, todayStart)),
+    )
 
   const pageViews = Number(metrics?.pageViews ?? 0)
   const uniqueVisitors = Number(metrics?.uniqueVisitors ?? 0)
@@ -62,7 +65,7 @@ export async function getTenantAnalyticsMetrics(
     .from(analyticsEvents)
     .where(
       and(
-        eq(analyticsEvents.tenantId, tenantId),
+        eq(analyticsEvents.organizationId, tenantId),
         gte(analyticsEvents.createdAt, todayStart),
         isNotNull(analyticsEvents.acquisition),
         isNotNull(sourceExpr),

@@ -25,7 +25,7 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
   })
 
   beforeEach(async () => {
-    await db.delete(analyticsEvents).where(eq(analyticsEvents.tenantId, tenantId))
+    await db.delete(analyticsEvents).where(eq(analyticsEvents.organizationId, tenantId))
   })
 
   afterAll(async () => {
@@ -94,11 +94,11 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const rows = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(rows).toHaveLength(1)
     const row = rows[0]
-    expect(row.tenantId).toBe(tenantId)
+    expect(row.organizationId).toBe(tenantId)
     expect(row.event).toBe('page_view')
     expect(typeof row.visitorHash).toBe('string')
     expect(row.visitorHash.length).toBe(64)
@@ -129,7 +129,7 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const [row] = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(row.acquisition).toEqual({
       campaign: 'summer-sale',
@@ -158,7 +158,7 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const [row] = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(row.acquisition).toBeNull()
   })
@@ -184,7 +184,7 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const [row] = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(row.event).toBe('checkout_start')
     expect(row.eventData).toEqual(metadata)
@@ -219,7 +219,7 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const rows = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(rows).toHaveLength(2)
     expect(rows[0].visitorHash).not.toBe(rows[1].visitorHash)
@@ -254,7 +254,7 @@ describe('Analytics tracking API seam: POST /api/analytics/track', () => {
     const rows = await db
       .select()
       .from(analyticsEvents)
-      .where(eq(analyticsEvents.tenantId, tenantId))
+      .where(eq(analyticsEvents.organizationId, tenantId))
 
     expect(rows).toHaveLength(2)
     expect(rows[0].visitorHash).toBe(rows[1].visitorHash)

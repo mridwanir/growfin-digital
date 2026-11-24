@@ -26,6 +26,18 @@ import { createTestTenant } from '../fixtures/tenant-fixture'
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
+const mockCookieStore = {
+  delete: vi.fn(),
+  get: vi.fn(),
+  getAll: vi.fn(() => []),
+  has: vi.fn(() => false),
+  set: vi.fn(),
+}
+
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(async () => mockCookieStore),
+  headers: vi.fn(async () => new Headers()),
+}))
 
 const mockUserId = crypto.randomUUID()
 const mockTenantId = crypto.randomUUID()
@@ -66,9 +78,9 @@ beforeAll(async () => {
     .insert(categories)
     .values({
       name: 'Kategori Default',
+      organizationId: mockTenantId,
       slug: `cat-default-${Date.now()}`,
       sortOrder: 0,
-      tenantId: mockTenantId,
     })
     .returning()
   seededCategoryId = cat.id
@@ -87,7 +99,7 @@ describe('updateTenantSettingsAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await updateTenantSettingsAction(mockTenantId, {
+    const result = await updateTenantSettingsAction({
       address: 'Jl. Merdeka No. 1',
     })
 
@@ -101,7 +113,7 @@ describe('updateTenantSettingsAction seam', () => {
   it('rejects unauthenticated requests when session user id is missing', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
-    const result = await updateTenantSettingsAction(mockTenantId, {
+    const result = await updateTenantSettingsAction({
       address: 'Jl. Merdeka No. 1',
     })
 
@@ -124,7 +136,7 @@ describe('updateTenantSettingsAction seam', () => {
       },
     }
 
-    const result = await updateTenantSettingsAction(mockTenantId, invalidInput)
+    const result = await updateTenantSettingsAction(invalidInput)
 
     expect(result).toMatchObject({
       error: expect.any(String),
@@ -138,10 +150,10 @@ describe('updateTenantSettingsAction seam', () => {
 
   it('rejects modification of tenant owned by another user or non-existent tenant', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-      createMerchantSession({ userId: mockUserId }),
+      createMerchantSession({ activeOrganizationId: crypto.randomUUID(), userId: mockUserId }),
     )
 
-    const result = await updateTenantSettingsAction(crypto.randomUUID(), {
+    const result = await updateTenantSettingsAction({
       address: 'Jl. Sudirman No. 10',
       city: 'Jakarta Selatan',
       phone: '08123456789',
@@ -174,7 +186,7 @@ describe('updateTenantSettingsAction seam', () => {
       },
     }
 
-    const result = await updateTenantSettingsAction(mockTenantId, payload)
+    const result = await updateTenantSettingsAction(payload)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/settings')
     expect(result).toMatchObject({
@@ -192,6 +204,76 @@ describe('updateTenantSettingsAction seam', () => {
     expect(updated.city).toBe('Jakarta Selatan')
     expect(updated.phone).toBe('08123456789')
   })
+
+  it('resolves active organization from session.activeOrganizationId when tenantId is omitted', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: mockTenantId, userId: mockUserId }),
+    )
+
+    const payload = {
+      address: 'Jl. Melawai No. 12',
+      city: 'Jakarta Selatan',
+    }
+
+    const result = await updateTenantSettingsAction(payload)
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        id: mockTenantId,
+        address: 'Jl. Melawai No. 12',
+      },
+    })
+  })
+
+  it('resolves active organization from cookie when tenantId is omitted and session activeOrganizationId is null', async () => {
+    mockCookieStore.get.mockImplementation((name: string) => {
+      if (name === 'better-auth.active_organization_id') {
+        return { name, value: mockTenantId }
+      }
+      return undefined
+    })
+
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: null, userId: mockUserId }),
+    )
+
+    const payload = {
+      address: 'Jl. Panglima Polim No. 5',
+    }
+
+    const result = await updateTenantSettingsAction(payload)
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        id: mockTenantId,
+        address: 'Jl. Panglima Polim No. 5',
+      },
+    })
+  })
+
+  it('falls back to user first organization when tenantId is omitted and no cookie or session activeOrganizationId exists', async () => {
+    mockCookieStore.get.mockReturnValue(undefined)
+
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: null, userId: mockUserId }),
+    )
+
+    const payload = {
+      city: 'Jakarta Pusat',
+    }
+
+    const result = await updateTenantSettingsAction(payload)
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        id: mockTenantId,
+        city: 'Jakarta Pusat',
+      },
+    })
+  })
 })
 
 describe('createProductCategoryAction seam', () => {
@@ -202,7 +284,7 @@ describe('createProductCategoryAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await createProductCategoryAction(mockTenantId, { name: 'Makanan' })
+    const result = await createProductCategoryAction({ name: 'Makanan' })
 
     expect(result).toEqual({
       error: 'Unauthorized',
@@ -216,7 +298,7 @@ describe('createProductCategoryAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await createProductCategoryAction(mockTenantId, {
+    const result = await createProductCategoryAction({
       name: '',
       sortOrder: 1.5,
     })
@@ -234,10 +316,10 @@ describe('createProductCategoryAction seam', () => {
 
   it('rejects creation when tenant is not found or forbidden', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-      createMerchantSession({ userId: mockUserId }),
+      createMerchantSession({ activeOrganizationId: crypto.randomUUID(), userId: mockUserId }),
     )
 
-    const result = await createProductCategoryAction(crypto.randomUUID(), { name: 'Minuman' })
+    const result = await createProductCategoryAction({ name: 'Minuman' })
 
     expect(result).toEqual({
       error: 'Tenant not found or forbidden',
@@ -245,7 +327,6 @@ describe('createProductCategoryAction seam', () => {
     })
     expect(revalidatePath).not.toHaveBeenCalled()
   })
-
   it('creates category, calls revalidatePath, and returns success result object', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
       createMerchantSession({ userId: mockUserId }),
@@ -257,7 +338,7 @@ describe('createProductCategoryAction seam', () => {
       sortOrder: 0,
     }
 
-    const result = await createProductCategoryAction(mockTenantId, payload)
+    const result = await createProductCategoryAction(payload)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toMatchObject({
@@ -265,6 +346,24 @@ describe('createProductCategoryAction seam', () => {
       data: {
         name: 'Minuman Segar',
         tenantId: mockTenantId,
+      },
+    })
+  })
+
+  it('resolves active organization from session when tenantId is omitted', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: mockTenantId, userId: mockUserId }),
+    )
+
+    const result = await createProductCategoryAction({
+      name: 'Minuman Dingin Session',
+    })
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        name: 'Minuman Dingin Session',
+        organizationId: mockTenantId,
       },
     })
   })
@@ -278,7 +377,7 @@ describe('updateProductCategoryAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await updateProductCategoryAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductCategoryAction(crypto.randomUUID(), {
       name: 'Makanan Baru',
     })
 
@@ -294,7 +393,7 @@ describe('updateProductCategoryAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await updateProductCategoryAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductCategoryAction(crypto.randomUUID(), {
       name: '',
       sortOrder: 'invalid' as unknown as number,
     })
@@ -315,7 +414,7 @@ describe('updateProductCategoryAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await updateProductCategoryAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductCategoryAction(crypto.randomUUID(), {
       name: 'Makanan Edit',
     })
 
@@ -335,9 +434,9 @@ describe('updateProductCategoryAction seam', () => {
       .insert(categories)
       .values({
         name: 'Makanan Lama',
+        organizationId: mockTenantId,
         slug: `makanan-lama-${Date.now()}`,
         sortOrder: 0,
-        tenantId: mockTenantId,
       })
       .returning()
 
@@ -347,7 +446,7 @@ describe('updateProductCategoryAction seam', () => {
       sortOrder: 1,
     }
 
-    const result = await updateProductCategoryAction(mockTenantId, testCat.id, payload)
+    const result = await updateProductCategoryAction(testCat.id, payload)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toMatchObject({
@@ -369,7 +468,7 @@ describe('deleteProductCategoryAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await deleteProductCategoryAction(mockTenantId, crypto.randomUUID())
+    const result = await deleteProductCategoryAction(crypto.randomUUID())
 
     expect(result).toEqual({
       error: 'Unauthorized',
@@ -383,7 +482,7 @@ describe('deleteProductCategoryAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await deleteProductCategoryAction(mockTenantId, crypto.randomUUID())
+    const result = await deleteProductCategoryAction(crypto.randomUUID())
 
     expect(result).toEqual({
       error: 'Category or tenant not found',
@@ -391,7 +490,6 @@ describe('deleteProductCategoryAction seam', () => {
     })
     expect(revalidatePath).not.toHaveBeenCalled()
   })
-
   it('deletes category, calls revalidatePath, and returns success result object', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
       createMerchantSession({ userId: mockUserId }),
@@ -401,13 +499,13 @@ describe('deleteProductCategoryAction seam', () => {
       .insert(categories)
       .values({
         name: 'Makanan Hapus',
+        organizationId: mockTenantId,
         slug: `makanan-hapus-${Date.now()}`,
         sortOrder: 0,
-        tenantId: mockTenantId,
       })
       .returning()
 
-    const result = await deleteProductCategoryAction(mockTenantId, cat.id)
+    const result = await deleteProductCategoryAction(cat.id)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toEqual({
@@ -428,7 +526,7 @@ describe('createProductAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await createProductAction(mockTenantId, {
+    const result = await createProductAction({
       name: 'Test Product',
       basePrice: 50000,
     })
@@ -443,7 +541,7 @@ describe('createProductAction seam', () => {
   it('rejects unauthenticated requests when session user id is missing', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
-    const result = await createProductAction(mockTenantId, {
+    const result = await createProductAction({
       name: 'Test Product',
       basePrice: 50000,
     })
@@ -460,7 +558,7 @@ describe('createProductAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await createProductAction(mockTenantId, {
+    const result = await createProductAction({
       name: '',
       basePrice: -10,
       variants: [
@@ -484,10 +582,10 @@ describe('createProductAction seam', () => {
 
   it('rejects creation when tenant is not found or forbidden', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
-      createMerchantSession({ userId: mockUserId }),
+      createMerchantSession({ activeOrganizationId: crypto.randomUUID(), userId: mockUserId }),
     )
 
-    const result = await createProductAction(crypto.randomUUID(), {
+    const result = await createProductAction({
       name: 'Nasi Goreng',
       basePrice: 25000,
     })
@@ -529,7 +627,7 @@ describe('createProductAction seam', () => {
       ],
     }
 
-    const result = await createProductAction(mockTenantId, payload)
+    const result = await createProductAction(payload)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toMatchObject({
@@ -546,6 +644,27 @@ describe('createProductAction seam', () => {
       },
     })
   })
+
+  it('resolves active organization from session when tenantId is omitted', async () => {
+    vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
+      createMerchantSession({ activeOrganizationId: mockTenantId, userId: mockUserId }),
+    )
+
+    const result = await createProductAction({
+      name: 'Mie Ayam Session',
+      basePrice: 20000,
+      categoryId: seededCategoryId,
+      description: 'Session scoped product',
+    })
+
+    expect(result).toMatchObject({
+      success: true,
+      data: {
+        name: 'Mie Ayam Session',
+        organizationId: mockTenantId,
+      },
+    })
+  })
 })
 
 describe('deleteProductAction seam', () => {
@@ -556,7 +675,7 @@ describe('deleteProductAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await deleteProductAction(mockTenantId, crypto.randomUUID())
+    const result = await deleteProductAction(crypto.randomUUID())
 
     expect(result).toEqual({
       error: 'Unauthorized',
@@ -568,7 +687,7 @@ describe('deleteProductAction seam', () => {
   it('rejects unauthenticated requests when session user id is missing', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
-    const result = await deleteProductAction(mockTenantId, crypto.randomUUID())
+    const result = await deleteProductAction(crypto.randomUUID())
 
     expect(result).toEqual({
       error: 'Unauthorized',
@@ -582,7 +701,7 @@ describe('deleteProductAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await deleteProductAction(mockTenantId, crypto.randomUUID())
+    const result = await deleteProductAction(crypto.randomUUID())
 
     expect(result).toEqual({
       error: 'Product or tenant not found',
@@ -601,11 +720,11 @@ describe('deleteProductAction seam', () => {
       .values({
         name: 'Prod To Delete',
         basePrice: 20000,
-        tenantId: mockTenantId,
+        organizationId: mockTenantId,
       })
       .returning()
 
-    const result = await deleteProductAction(mockTenantId, prod.id)
+    const result = await deleteProductAction(prod.id)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toEqual({
@@ -626,7 +745,7 @@ describe('updateProductAction seam', () => {
   it('rejects unauthenticated requests with Unauthorized error', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createUnauthenticatedSession())
 
-    const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductAction(crypto.randomUUID(), {
       name: 'Updated Product',
       basePrice: 50000,
     })
@@ -641,7 +760,7 @@ describe('updateProductAction seam', () => {
   it('rejects unauthenticated requests when session user id is missing', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(createMerchantSession({ userId: '' }))
 
-    const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductAction(crypto.randomUUID(), {
       name: 'Updated Product',
       basePrice: 50000,
     })
@@ -658,7 +777,7 @@ describe('updateProductAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductAction(crypto.randomUUID(), {
       name: '',
       basePrice: -5000,
       variants: [
@@ -685,7 +804,7 @@ describe('updateProductAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductAction(crypto.randomUUID(), {
       variants: [
         {
           name: 'Ukuran',
@@ -712,7 +831,7 @@ describe('updateProductAction seam', () => {
       createMerchantSession({ userId: mockUserId }),
     )
 
-    const result = await updateProductAction(mockTenantId, crypto.randomUUID(), {
+    const result = await updateProductAction(crypto.randomUUID(), {
       name: 'Nasi Goreng Mercon',
       basePrice: 28000,
     })
@@ -723,7 +842,6 @@ describe('updateProductAction seam', () => {
     })
     expect(revalidatePath).not.toHaveBeenCalled()
   })
-
   it('updates product and variants atomically, calls revalidatePath, and returns success result object', async () => {
     vi.spyOn(auth, 'getSession').mockResolvedValueOnce(
       createMerchantSession({ userId: mockUserId }),
@@ -735,7 +853,7 @@ describe('updateProductAction seam', () => {
         name: 'Nasi Goreng Lama',
         basePrice: 25000,
         categoryId: seededCategoryId,
-        tenantId: mockTenantId,
+        organizationId: mockTenantId,
       })
       .returning()
 
@@ -764,7 +882,7 @@ describe('updateProductAction seam', () => {
       ],
     }
 
-    const result = await updateProductAction(mockTenantId, prod.id, payload)
+    const result = await updateProductAction(prod.id, payload)
 
     expect(revalidatePath).toHaveBeenCalledWith('/dashboard/products')
     expect(result).toMatchObject({

@@ -16,15 +16,15 @@ const mockTenant: Tenant = {
   customDomain: null,
   domainActiveUntil: null,
   googleMapsUrl: null,
+  logo: null,
+  metadata: null,
   operatingHours: null,
-  organizationId: null,
   packageTier: 'free',
   phone: null,
   siteActiveUntil: null,
   slug: 'toko-test',
   status: 'published',
   updatedAt: new Date(),
-  userId: null,
 }
 
 describe('BaseStorefrontLayout footer visibility', () => {

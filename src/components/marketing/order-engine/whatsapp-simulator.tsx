@@ -95,16 +95,15 @@ const INITIAL_ITEMS: SimulatorCartItem[] = [
   },
 ]
 
+const DEFAULT_TENANT_NAME = 'Kopi Sudut Senja'
+const DEFAULT_TENANT_PHONE = '081234567890'
+
 export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
   const [items, setItems] = useState<SimulatorCartItem[]>(INITIAL_ITEMS)
   const [customerName, setCustomerName] = useState('Budi Santoso')
   const [fulfillmentMode, setFulfillmentMode] = useState<'TAKEAWAY' | 'DINE_IN'>('TAKEAWAY')
   const [activeView, setActiveView] = useState<'cart' | 'chat'>('cart')
   const [copied, setCopied] = useState(false)
-
-  const tenantName = 'Kopi Sudut Senja'
-  const tenantPhone = '081234567890'
-
   function updateQuantity(itemId: string, delta: number) {
     setItems(currentItems =>
       currentItems.map(item => {
@@ -179,8 +178,8 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
     cartItems: cartSummaryInput,
     fulfillment,
     tenant: {
-      name: tenantName,
-      phone: tenantPhone,
+      name: DEFAULT_TENANT_NAME,
+      phone: DEFAULT_TENANT_PHONE,
     },
   })
   const fullWhatsAppMessage = [
@@ -201,7 +200,6 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
       aria-label="Simulator Pemesanan WhatsApp"
       data-testid="whatsapp-simulator-section"
       id="order-flow"
-      style={{ '--h': 1 } as React.CSSProperties}
       className={cn(
         'bg-background text-foreground border-border/50 relative flex min-h-screen w-full flex-col justify-center overflow-hidden border-t py-10 lg:h-screen lg:max-h-screen lg:py-6',
         className,
@@ -322,7 +320,7 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
             </div>
 
             {/* Value Pillar 2 */}
-            <div className="bg-card border-border/70 rounded-xl border p-5 transition-colors">
+            <div className="bg-card border-border/70 rounded-xl border p-4 transition-colors">
               <div className="flex items-start gap-4">
                 <div className="bg-primary/10 text-primary mt-1 flex size-9 shrink-0 items-center justify-center rounded-lg">
                   <Receipt className="size-4" />
@@ -337,38 +335,41 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
                   </p>
                 </div>
               </div>
+            </div>
 
-              {/* Commission Comparison Card */}
-              <div className="bg-card border-border/80 rounded-xl border p-6">
-                <div className="border-border/60 flex items-center justify-between border-b pb-3">
-                  <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-                    Perbandingan komisi pesanan saat ini
-                  </span>
-                  <span className="text-primary font-mono text-xs font-medium">Simulasi riil</span>
-                </div>
-                <div className="mt-4 flex flex-col gap-3">
+            {/* Commission Comparison Card */}
+            <div className="bg-card border-border/80 rounded-xl border p-4 sm:p-5">
+              <div className="border-border/60 flex items-center justify-between border-b pb-2 sm:pb-3">
+                <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                  Perbandingan komisi pesanan saat ini
+                </span>
+                <span className="text-primary font-mono text-xs font-medium">Simulasi riil</span>
+              </div>
+              <div className="mt-3 flex flex-col gap-2.5 sm:mt-4 sm:gap-3">
+                <div className="flex items-center justify-between text-sm">
                   <span className="text-zinc-600 dark:text-zinc-400">Komisi agregator (20%):</span>
                   <span className="text-destructive font-mono font-medium tabular-nums">
                     -{formatCurrency(marketplaceCommission20)}
                   </span>
                 </div>
-                <span className="text-zinc-600 dark:text-zinc-400">Komisi MeracikWeb (0%):</span>
-                <span className="text-primary font-mono font-semibold tabular-nums">Rp 0</span>
-              </div>
-              <div className="border-border/60 flex items-center justify-between border-t pt-3">
-                <span className="text-foreground text-sm font-medium">
-                  Keuntungan bersih yang disimpan:
-                </span>
-                <span className="text-primary font-mono text-base font-bold tabular-nums">
-                  +{formatCurrency(marketplaceCommission20)}
-                </span>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-zinc-600 dark:text-zinc-400">Komisi MeracikWeb (0%):</span>
+                  <span className="text-primary font-mono font-semibold tabular-nums">Rp 0</span>
+                </div>
+                <div className="border-border/60 flex items-center justify-between border-t pt-2.5 sm:pt-3">
+                  <span className="text-foreground text-sm font-medium">
+                    Keuntungan bersih yang disimpan:
+                  </span>
+                  <span className="text-primary font-mono text-base font-bold tabular-nums">
+                    +{formatCurrency(marketplaceCommission20)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Column: Interactive WhatsApp Dispatch Simulator */}
-        <div className="lg:col-span-7">
+          {/* Right Column: Interactive WhatsApp Dispatch Simulator */}
+          <div className="lg:col-span-7">
           <div
             className="bg-card border-border/80 overflow-hidden rounded-2xl border shadow-xs"
             data-ui="whatsapp-cart-simulator"
@@ -379,7 +380,7 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
                 <div className="bg-primary/10 text-primary flex size-7 items-center justify-center rounded-md">
                   <Store className="size-4" />
                 </div>
-                <span className="text-foreground text-sm font-semibold">{tenantName}</span>
+                <span className="text-foreground text-sm font-semibold">{DEFAULT_TENANT_NAME}</span>
               </div>
 
               {/* View Switcher Tabs */}
@@ -606,7 +607,7 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
                     </div>
                     <div>
                       <div className="text-foreground text-sm leading-tight font-semibold">
-                        {tenantName}
+                        {DEFAULT_TENANT_NAME}
                       </div>
                       <div className="text-muted-foreground flex items-center gap-1 text-[11px]">
                         <span className="bg-primary inline-block size-1.5 rounded-full" />
@@ -689,6 +690,7 @@ export function WhatsAppSimulator({ className }: WhatsAppSimulatorProps) {
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     </section>

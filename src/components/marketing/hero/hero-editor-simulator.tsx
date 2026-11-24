@@ -19,6 +19,8 @@ import { Label } from '@/components/ui/label'
 import { formatCurrency } from '@/lib/storefront/currency'
 import { cn } from '@/lib/utils'
 
+const CATEGORY_NAME = 'Minuman Kopi'
+
 export interface HeroEditorSimulatorProps {
   className?: string
 }
@@ -28,7 +30,6 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
   const [productName, setProductName] = useState('Es Kopi Susu Aren')
   const [price, setPrice] = useState<number>(18000)
   const [variantOption, setVariantOption] = useState('Ukuran Regular (350ml)')
-  const categoryName = 'Minuman Kopi'
   const [mobileSimulatorTab, setMobileSimulatorTab] = useState<'admin' | 'buyer'>('admin')
 
   const domainSlug = storeName
@@ -258,7 +259,7 @@ export function HeroEditorSimulator({ className }: HeroEditorSimulatorProps) {
               {/* Category Pill */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px]">
                 <span className="bg-primary text-primary-foreground rounded-full px-2.5 py-0.5 font-medium">
-                  {categoryName}
+                  {CATEGORY_NAME}
                 </span>
                 <span className="bg-secondary text-secondary-foreground rounded-full px-2 py-0.5">
                   Menu Populer

@@ -27,10 +27,18 @@ type CupSize = 'regular' | 'large' | 'liter'
 type SugarLevel = 'normal' | 'less' | 'none'
 type IceLevel = 'normal' | 'less' | 'none'
 type FulfillmentMode = 'dinein' | 'takeaway'
-
 type RetailSize = 'S' | 'M' | 'L' | 'XL' | 'XXL'
 type RetailColor = 'indigo' | 'marun' | 'emerald'
 
+const FNB_BASE_PRICE = 18000
+const RETAIL_BASE_PRICE = 245000
+
+const RETAIL_SIZES: readonly RetailSize[] = ['S', 'M', 'L', 'XL', 'XXL'] as const
+const RETAIL_COLOR_KEYS: readonly RetailColor[] = ['indigo', 'marun', 'emerald'] as const
+
+function isArchetypeTab(val: string): val is 'fnb' | 'retail' {
+  return val === 'fnb' || val === 'retail'
+}
 interface CupOption {
   id: CupSize
   label: string
@@ -134,22 +142,18 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
   }
 
   // Calculations
-  const fnbBasePrice = 18000
   const selectedCup = CUP_OPTIONS.find(opt => opt.id === fnbCupSize) ?? CUP_OPTIONS[0]
-  const fnbCalculatedTotal = fnbBasePrice + selectedCup.modifier
+  const fnbCalculatedTotal = FNB_BASE_PRICE + selectedCup.modifier
 
-  const retailBasePrice = 245000
   const currentStockInfo = RETAIL_STOCK_MAP[retailSize]
   const currentColorInfo = RETAIL_COLORS[retailColor]
-
   return (
     <section
       aria-label="Pilihan Model Bisnis"
       data-testid="archetype-switcher-section"
       id="archetypes"
-      style={{ '--h': 1 } as React.CSSProperties}
       className={cn(
-        'bg-background text-foreground relative flex min-h-screen flex-col justify-center overflow-hidden py-10 lg:h-screen lg:max-h-screen lg:py-6',
+        'bg-background text-foreground relative flex min-h-screen flex-col justify-center overflow-hidden py-8 lg:h-screen lg:max-h-screen lg:py-3.5',
         className,
       )}
     >
@@ -177,9 +181,13 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
         {/* Segmented Tab Control */}
         <Tabs
-          className="mt-8 w-full"
+          className="mt-4 sm:mt-5 lg:mt-3 w-full"
           value={activeTab}
-          onValueChange={val => setActiveTab(val as 'fnb' | 'retail')}
+          onValueChange={val => {
+            if (isArchetypeTab(val)) {
+              setActiveTab(val)
+            }
+          }}
         >
           <div className="flex justify-center">
             <TabsList className="border-border/60 bg-muted/70 h-12 min-h-[44px] rounded-xl border p-1 shadow-xs">
@@ -201,10 +209,10 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
           </div>
 
           {/* F&B Archetype Panel */}
-          <TabsContent className="mt-10 outline-none" data-testid="fnb-archetype-view" value="fnb">
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+          <TabsContent className="mt-4 sm:mt-5 lg:mt-3 outline-none" data-testid="fnb-archetype-view" value="fnb">
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
               {/* Left Column: Model Explanation & Interactive Modifiers */}
-              <div className="space-y-6 lg:col-span-7">
+              <div className="space-y-4 lg:space-y-2.5 lg:col-span-7">
                 <div className="space-y-2">
                   <div className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase">
                     <Coffee className="size-3.5" />
@@ -222,7 +230,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
                 {/* Interactive Modifiers Box */}
                 <div
-                  className="border-border bg-card rounded-2xl border p-5 shadow-xs sm:p-6"
+                  className="border-border bg-card rounded-2xl border p-4 shadow-xs sm:p-5 lg:p-3.5"
                   data-ui="archetype-modifiers"
                 >
                   <div className="border-border/60 mb-4 flex items-center justify-between border-b pb-3">
@@ -272,7 +280,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Sugar & Ice Levels Grid */}
-                  <div className="mt-6 grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2">
+                  <div className="mt-3.5 grid grid-cols-1 gap-3 pt-3 sm:grid-cols-2">
                     {/* Sugar Level */}
                     <div>
                       <label className="text-foreground mb-2 block text-xs font-semibold">
@@ -347,7 +355,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Fulfillment Mode */}
-                  <div className="border-border/60 mt-6 border-t pt-4">
+                  <div className="border-border/60 mt-3.5 border-t pt-3">
                     <label className="text-foreground mb-2 block text-xs font-semibold">
                       Mode Layanan Pelanggan (Fulfillment Mode)
                     </label>
@@ -428,7 +436,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
               {/* Right Column: Customer Storefront Mobile Mockup */}
               <div className="flex justify-center lg:col-span-5" data-ui="archetype-showcase">
-                <div className="border-border/80 bg-card w-full max-w-[360px] rounded-3xl border-2 p-4 shadow-xl">
+                <div className="border-border/80 bg-card w-full max-w-[340px] rounded-3xl border-2 p-3 sm:p-3.5 shadow-xl">
                   {/* Phone Mockup Top Bar */}
                   <div className="border-border/60 text-muted-foreground mb-3 flex items-center justify-between border-b pb-2 text-xs">
                     <span className="font-mono font-semibold">09:41</span>
@@ -462,7 +470,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     {/* Visual Banner */}
                     {/* Authentic Visual Banner */}
                     <div
-                      className="bg-muted relative h-44 w-full overflow-hidden"
+                      className="bg-muted relative h-28 sm:h-32 lg:h-28 w-full overflow-hidden"
                       data-ui="fnb-visual"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element -- Authentic lifestyle photography of Indonesian coffee shop */}
@@ -478,7 +486,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </div>
                     </div>
                     {/* Product Details */}
-                    <div className="p-4">
+                    <div className="p-3">
                       <div className="flex items-start justify-between">
                         <div>
                           <h3
@@ -494,7 +502,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </div>
 
                       {/* Dynamic Price Display */}
-                      <div className="border-border/50 mt-3 flex items-baseline justify-between border-t pt-2.5">
+                      <div className="border-border/50 mt-2 flex items-baseline justify-between border-t pt-1.5">
                         <span className="text-muted-foreground text-xs">Harga Total:</span>
                         <span
                           className="text-foreground font-mono text-lg font-extrabold tabular-nums"
@@ -505,7 +513,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </div>
 
                       {/* Selected Options Summary */}
-                      <div className="border-border/70 bg-muted/30 mt-3 rounded-xl border p-2.5">
+                      <div className="border-border/70 bg-muted/30 mt-2 rounded-xl border p-2">
                         <div className="text-foreground flex items-center gap-1 text-[11px] font-semibold">
                           <Info className="text-primary size-3" />
                           <span>Rincian Varian Terpilih:</span>
@@ -523,7 +531,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
                       {/* Add to Cart Simulation Button */}
                       <Button
-                        className="mt-4 flex h-11 min-h-[44px] w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold shadow-xs"
+                        className="mt-2.5 sm:mt-3 flex h-11 min-h-[44px] w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold shadow-xs"
                         type="button"
                         onClick={handleAddFnbToCart}
                       >
@@ -548,13 +556,13 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
           {/* Retail Archetype Panel */}
           <TabsContent
-            className="mt-10 outline-none"
+            className="mt-4 sm:mt-5 lg:mt-3 outline-none"
             data-testid="retail-archetype-view"
             value="retail"
           >
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
               {/* Left Column: Model Explanation & Sizing/Color Matrix */}
-              <div className="space-y-6 lg:col-span-7">
+              <div className="space-y-4 lg:space-y-2.5 lg:col-span-7">
                 <div className="space-y-2">
                   <div className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase">
                     <ShoppingBag className="size-3.5" />
@@ -571,7 +579,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                 </div>
 
                 {/* Interactive Retail Matrix Box */}
-                <div className="border-border bg-card rounded-2xl border p-5 shadow-xs sm:p-6">
+                <div className="border-border bg-card rounded-2xl border p-4 shadow-xs sm:p-5 lg:p-3.5">
                   {/* Sizing Section */}
                   <div>
                     <div className="mb-3 flex items-center justify-between">
@@ -594,7 +602,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       className="grid grid-cols-5 gap-2 sm:gap-3"
                       role="radiogroup"
                     >
-                      {(['S', 'M', 'L', 'XL', 'XXL'] as RetailSize[]).map(size => {
+                      {RETAIL_SIZES.map(size => {
                         const isSelected = retailSize === size
                         const stock = RETAIL_STOCK_MAP[size]
                         return (
@@ -632,7 +640,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Color Swatches Section */}
-                  <div className="border-border/60 mt-6 border-t pt-5">
+                  <div className="border-border/60 mt-3.5 border-t pt-3">
                     <div className="mb-3 flex items-center justify-between">
                       <span className="text-foreground text-xs font-semibold tracking-wide uppercase">
                         Pilihan Warna Produk
@@ -653,7 +661,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       className="grid grid-cols-1 gap-3 sm:grid-cols-3"
                       role="radiogroup"
                     >
-                      {(['indigo', 'marun', 'emerald'] as RetailColor[]).map(colorKey => {
+                      {RETAIL_COLOR_KEYS.map(colorKey => {
                         const isSelected = retailColor === colorKey
                         const cInfo = RETAIL_COLORS[colorKey]
                         return (
@@ -690,7 +698,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                   </div>
 
                   {/* Delivery / Pickup Fulfillment */}
-                  <div className="border-border/60 mt-6 border-t pt-4">
+                  <div className="border-border/60 mt-3.5 border-t pt-3">
                     <label className="text-foreground mb-2 block text-xs font-semibold">
                       Opsi Pengiriman Produk Retail
                     </label>
@@ -767,7 +775,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
               {/* Right Column: Customer Storefront Retail Mockup */}
               <div className="flex justify-center lg:col-span-5" data-ui="retail-showcase">
-                <div className="border-border/80 bg-card w-full max-w-[360px] rounded-3xl border-2 p-4 shadow-xl">
+                <div className="border-border/80 bg-card w-full max-w-[340px] rounded-3xl border-2 p-3 sm:p-3.5 shadow-xl">
                   {/* Phone Mockup Top Bar */}
                   <div className="border-border/60 text-muted-foreground mb-3 flex items-center justify-between border-b pb-2 text-xs">
                     <span className="font-mono font-semibold">09:41</span>
@@ -801,7 +809,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     {/* Visual Banner */}
                     {/* Authentic Visual Banner */}
                     <div
-                      className="bg-muted relative h-44 w-full overflow-hidden"
+                      className="bg-muted relative h-28 sm:h-32 lg:h-28 w-full overflow-hidden"
                       data-ui="retail-visual"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element -- Authentic lifestyle photography of Indonesian textile craft */}
@@ -818,7 +826,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                     </div>
 
                     {/* Product Details */}
-                    <div className="p-4">
+                    <div className="p-3">
                       <div className="flex items-start justify-between">
                         <div>
                           <h3
@@ -834,15 +842,15 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </div>
 
                       {/* Retail Price Display */}
-                      <div className="border-border/50 mt-3 flex items-baseline justify-between border-t pt-2.5">
+                      <div className="border-border/50 mt-2 flex items-baseline justify-between border-t pt-1.5">
                         <span className="text-muted-foreground text-xs">Harga Satuan:</span>
                         <span className="text-foreground font-mono text-lg font-extrabold tabular-nums">
-                          {formatCurrency(retailBasePrice)}
+                          {formatCurrency(RETAIL_BASE_PRICE)}
                         </span>
                       </div>
 
                       {/* Dynamic Stock Indicator Badge */}
-                      <div className="mt-3">
+                      <div className="mt-2">
                         <div
                           data-testid="retail-stock-indicator"
                           className={cn(
@@ -863,7 +871,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                       </div>
 
                       {/* Selected Attribute Pills */}
-                      <div className="text-muted-foreground mt-3 flex items-center gap-2 text-[11px]">
+                      <div className="text-muted-foreground mt-2 flex items-center gap-2 text-[11px]">
                         <span className="border-border bg-muted/30 rounded-md border px-2 py-0.5 font-medium">
                           Ukuran: <strong className="text-foreground">{retailSize}</strong>
                         </span>
@@ -875,7 +883,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
 
                       {/* Add to Cart Simulation Button */}
                       <Button
-                        className="mt-4 flex h-11 min-h-[44px] w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold shadow-xs"
+                        className="mt-2.5 sm:mt-3 flex h-11 min-h-[44px] w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold shadow-xs"
                         type="button"
                         onClick={handleAddRetailToCart}
                       >
@@ -887,7 +895,7 @@ export function ArchetypeSwitcher({ className }: ArchetypeSwitcherProps) {
                         ) : (
                           <>
                             <ShoppingBag className="size-3.5" />
-                            <span>Beli Sekarang • {formatCurrency(retailBasePrice)}</span>
+                            <span>Beli Sekarang • {formatCurrency(RETAIL_BASE_PRICE)}</span>
                           </>
                         )}
                       </Button>

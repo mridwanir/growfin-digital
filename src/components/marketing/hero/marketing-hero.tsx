@@ -89,9 +89,8 @@ export function MarketingHero({ className, showHeader = false }: MarketingHeroPr
       <section
         aria-label="Marketing Hero"
         data-testid="marketing-hero"
-        style={{ '--h': 1 } as React.CSSProperties}
         className={cn(
-          'bg-background text-foreground relative flex min-h-screen flex-col justify-center overflow-hidden py-3 lg:h-svh lg:max-h-svh lg:py-2',
+          'bg-background text-foreground relative flex min-h-screen flex-col justify-center overflow-hidden py-3 lg:h-[calc(100svh-4rem)] lg:max-h-[calc(100svh-4rem)] lg:py-2',
           className,
         )}
       >

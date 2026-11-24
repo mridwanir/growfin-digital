@@ -20,7 +20,6 @@ export function MarketingFooter({ className }: MarketingFooterProps) {
       aria-label="Mulai Toko Gratis dan Informasi Platform MeracikWeb"
       data-testid="marketing-footer"
       id="mulai"
-      style={{ '--h': 1 } as React.CSSProperties}
       className={cn(
         'closing border-border bg-background relative flex min-h-screen w-full flex-col justify-between overflow-hidden border-t py-6 lg:h-screen lg:max-h-screen lg:py-2.5',
         className,

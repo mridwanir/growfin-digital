@@ -18,7 +18,6 @@ export function PricingMatrix({
       aria-label="Harga Paket MeracikWeb"
       data-testid="pricing-section"
       id="harga"
-      style={{ '--h': 1 } as React.CSSProperties}
       className={cn(
         'bg-background text-foreground relative flex min-h-screen w-full flex-col justify-center overflow-hidden py-10 lg:h-screen lg:max-h-screen lg:py-6',
         className,

@@ -2,57 +2,11 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 import { page } from 'vitest/browser'
 
+import { getContrastRatio } from '@/components/marketing/test-utils/contrast'
+
 import MarketingPage from '@/app/page'
 
 import '@/styles/globals.css'
-
-/**
- * Returns rendered sRGB values from a CSS color string.
- */
-function getRenderedRgb(color: string, background?: string): [number, number, number] {
-  const canvas = document.createElement('canvas')
-  canvas.width = 1
-  canvas.height = 1
-  const ctx = canvas.getContext('2d', { willReadFrequently: true })
-  if (!ctx) {
-    throw new Error('Canvas 2D context unavailable')
-  }
-
-  if (background) {
-    ctx.fillStyle = background
-    ctx.fillRect(0, 0, 1, 1)
-  }
-
-  ctx.fillStyle = color
-  ctx.fillRect(0, 0, 1, 1)
-
-  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data
-  return [r, g, b]
-}
-
-/**
- * Calculates WCAG 2.2 relative luminance from sRGB values.
- */
-function getRelativeLuminance(rgb: [number, number, number]): number {
-  const [r, g, b] = rgb.map(val => {
-    const s = val / 255
-    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
-  })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
-/**
- * Calculates WCAG 2.2 contrast ratio between two colors.
- */
-function getContrastRatio(foreground: string, background: string): number {
-  const fgRgb = getRenderedRgb(foreground, background)
-  const bgRgb = getRenderedRgb(background)
-  const l1 = getRelativeLuminance(fgRgb)
-  const l2 = getRelativeLuminance(bgRgb)
-  const lighter = Math.max(l1, l2)
-  const darker = Math.min(l1, l2)
-  return (lighter + 0.05) / (darker + 0.05)
-}
 
 describe('Marketing Page Integration (Screens 1 to 5)', () => {
   afterEach(async () => {
